@@ -133,8 +133,8 @@
 
         <div class="formula-card">
           <div class="formula-math-area">
-            $$\text{Memoria}_{\text{Full FT}} \approx \underbrace{2 P}_{\text{Pesos (FP16)}} + \underbrace{2 P}_{\text{Gradientes}} + \underbrace{8 P}_{\text{AdamW (2xFP32)}} + \underbrace{4 P}_{\text{Activaciones}} \approx 16 P \text{ bytes}$$
-            $$\text{Memoria}_{\text{QLoRA}} \approx \underbrace{0.5 P}_{\text{Pesos (INT4)}} + \underbrace{2 P_{\text{adapter}}}_{\text{Gradientes LoRA}} + \underbrace{0.8 P_{\text{adapter}}}_{\text{Paged AdamW}} + \underbrace{1.5 \text{ GB}}_{\text{Activaciones Checkpointing}} \approx 0.6 P + 2\text{ GB}$$
+            $$\text{Memoria}_{\text{Full FT}} \approx 2P_{\text{pesos}} + 2P_{\text{grad}} + 8P_{\text{AdamW}} + 4P_{\text{act}} \approx 16 P \text{ bytes}$$
+            $$\text{Memoria}_{\text{QLoRA}} \approx 0.5P_{\text{base}} + 2P_{\text{adapter}} + 0.8P_{\text{adapter}} + 1.5\text{ GB}_{\text{act}} \approx 0.6 P + 2\text{ GB}$$
           </div>
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
@@ -180,7 +180,7 @@
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Ahorro Total}$</span>
+                  <span class="breakdown-row-badge">$\Delta\text{VRAM}$ (Ahorro Total)</span>
                   <div class="breakdown-row-text">
                     <strong>Factor de Reducción:</strong> Full Fine-Tuning de 8B requiere 128 GB de VRAM (A100); QLoRA permite entrenarlo en una RTX 3060 de 8 GB/12 GB.
                   </div>
@@ -197,6 +197,9 @@
           <div class="workbench-label">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
             Banco de Pruebas 1.3.1: Matriz Interactiva de Decisión Arquitectónica
+          </div>
+          <div class="workbench-actions">
+            <span class="workbench-tag">Simulador Multicriterio RAG vs FT</span>
           </div>
         </div>
 
@@ -336,7 +339,7 @@
         <div class="formula-card">
           <div class="formula-math-area">
             $$h = W_0 x + \Delta W x = W_0 x + \frac{\alpha}{r} (B \cdot A) x$$
-            $$\text{Inicialización: } A \sim \mathcal{N}\left(0, \frac{1}{r}\right), \quad B = 0 \implies \Delta W = 0 \text{ al inicio}$$
+            $$\text{Inicializaci\acute{o}n: } A \sim \mathcal{N}\left(0, \frac{1}{r}\right), \quad B = 0 \implies \Delta W = 0 \text{ al inicio}$$
           </div>
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
@@ -382,7 +385,7 @@
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Fusión (Zero Latency)}$</span>
+                  <span class="breakdown-row-badge">$\Delta W \to 0$ (Zero Latency)</span>
                   <div class="breakdown-row-text">
                     <strong>Despliegue sin Sobrecosto:</strong> En producción, se calcula $W_{\text{final}} = W_0 + \frac{\alpha}{r}(BA)$ una sola vez, eliminando cualquier latencia extra en inferencia.
                   </div>
@@ -399,6 +402,9 @@
           <div class="workbench-label">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
             Banco de Pruebas 1.3.2: Calculadora de Matrices LoRA & Visualizador Gráfico
+          </div>
+          <div class="workbench-actions">
+            <span class="workbench-tag">Álgebra Lineal & Canvas 2D</span>
           </div>
         </div>
 
@@ -542,7 +548,7 @@
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{dequantize}(\dots)$</span>
+                  <span class="breakdown-row-badge">$\text{dequantize}(c_1, c_2, q)$</span>
                   <div class="breakdown-row-text">
                     <strong>Descuantización On-The-Fly:</strong> Durante el cálculo matricial, el tensor cuantizado se expande momentáneamente a FP16 en la caché de la GPU y se descarta de inmediato.
                   </div>
@@ -571,6 +577,9 @@
           <div class="workbench-label">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
             Banco de Pruebas 1.3.3: Simulador de Memoria VRAM de Entrenamiento
+          </div>
+          <div class="workbench-actions">
+            <span class="workbench-tag">Estimador Hardware & Diagnóstico OOM</span>
           </div>
         </div>
 
@@ -696,7 +705,7 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\mathcal{L}_{\text{SFT}}(\theta)$</span>
+                  <span class="breakdown-row-badge">$\mathcal{L}_{\text{SFT}}(\theta)$ (Loss SFT)</span>
                   <div class="breakdown-row-text">
                     <strong>Pérdida de Entropía Cruzada Condicional:</strong> Métrica de error que los optimizadores minimizan ajustando los parámetros adaptadores $\theta$.
                   </div>
@@ -708,19 +717,19 @@
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$Y = (y_1, \dots, y_{|Y|})$</span>
+                  <span class="breakdown-row-badge">$Y$ (Tokens de Salida)</span>
                   <div class="breakdown-row-text">
                     <strong>Respuesta Objetivo del Asistente:</strong> La secuencia exacta de tokens de respuesta sobre los cuales sí se calcula el gradiente $\nabla_\theta \mathcal{L}$.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{label} = -100$</span>
+                  <span class="breakdown-row-badge">$\text{label} = -100$ (Ignored Index)</span>
                   <div class="breakdown-row-text">
                     <strong>Índice de Ignorado en PyTorch:</strong> Convención estándar en <code>torch.nn.CrossEntropyLoss(ignore_index=-100)</code> para omitir tokens en el cálculo del gradiente.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\log P_\theta(y_t \mid \dots)$</span>
+                  <span class="breakdown-row-badge">$\log P_\theta(y_t \mid \dots)$ (Log-Prob)</span>
                   <div class="breakdown-row-text">
                     <strong>Log-Verosimilitud Autoregresiva:</strong> Probabilidad asignada por Llama 3 al token objetivo $y_t$ condicionado en todos los tokens previos.
                   </div>
@@ -737,6 +746,9 @@
           <div class="workbench-label">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
             Banco de Pruebas 1.3.4: Validador JSONL & Visor de Loss Masking
+          </div>
+          <div class="workbench-actions">
+            <span class="workbench-tag">Tokenizador & Loss Masking</span>
           </div>
         </div>
 
@@ -804,7 +816,7 @@
         <div class="formula-card">
           <div class="formula-math-area">
             $$\text{Batch Size}_{\text{Efectivo}} = \text{Micro Batch Size} \times \text{Gradient Accumulation Steps} \times N_{\text{GPUs}}$$
-            $$\text{Steps Totales} = \left\lceil \frac{N_{\text{ejemplos}}}{\text{Batch Size}_{\text{Efectivo}}} \right\rceil \times \text{Épocas}$$
+            $$\text{Steps Totales} = \left\lceil \frac{N_{\text{ejemplos}}}{\text{Batch Size}_{\text{Efectivo}}} \right\rceil \times \text{Epocas}$$
           </div>
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
@@ -820,31 +832,31 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Micro Batch}$</span>
+                  <span class="breakdown-row-badge">$B$ (Micro Batch)</span>
                   <div class="breakdown-row-text">
                     <strong>Lote Físico por GPU:</strong> Cantidad de secuencias procesadas en cada forward pass simultáneo (ej. 2 o 4 ejemplos, limitado por la VRAM).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Grad Accum}$</span>
+                  <span class="breakdown-row-badge">$G$ (Grad Accum)</span>
                   <div class="breakdown-row-text">
                     <strong>Pasos de Acumulación:</strong> Acumula gradientes a lo largo de múltiples micro-batches antes de ejecutar una sola actualización de pesos en el optimizador.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Batch Efectivo}$</span>
+                  <span class="breakdown-row-badge">$B_{\text{eff}}$ (Batch Efectivo)</span>
                   <div class="breakdown-row-text">
                     <strong>Tamaño de Lote Teórico:</strong> Un batch size efectivo de 16 a 64 ejemplos estabiliza la estimación del gradiente estocástico de AdamW.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Warmup Ratio}$</span>
+                  <span class="breakdown-row-badge">$\text{Warmup}$ (Ratio)</span>
                   <div class="breakdown-row-text">
                     <strong>Porcentaje de Calentamiento:</strong> Típicamente el 3% al 5% de los steps totales, donde el learning rate asciende linealmente desde 0 hasta el valor máximo.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Cosine Decay}$</span>
+                  <span class="breakdown-row-badge">$\eta(t)$ (Cosine Decay)</span>
                   <div class="breakdown-row-text">
                     <strong>Reducción Progresiva:</strong> Disminuye suavemente la tasa de aprendizaje siguiendo una curva cosenoidal hasta alcanzar $\eta_{\text{min}} \approx 0.1 \times \eta_{\text{max}}$.
                   </div>
@@ -861,6 +873,9 @@
           <div class="workbench-label">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
             Banco de Pruebas 1.3.5: Planificador de Hiperparámetros & Curva de Learning Rate
+          </div>
+          <div class="workbench-actions">
+            <span class="workbench-tag">Cosine Annealing Schedule</span>
           </div>
         </div>
 
@@ -1005,7 +1020,7 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{PPL}(W)$</span>
+                  <span class="breakdown-row-badge">$\text{PPL}(W)$ (Perplexity)</span>
                   <div class="breakdown-row-text">
                     <strong>Perplexity Intrínseca:</strong> Si $\text{PPL} = 5.2$, significa que en promedio el modelo dudaba entre aproximadamente 5 palabras equiprobables en cada token.
                   </div>
@@ -1023,19 +1038,19 @@
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{LCS}$ (Subsecuencia Común)</span>
+                  <span class="breakdown-row-badge">$\text{LCS}$ (Subsecuencia)</span>
                   <div class="breakdown-row-text">
                     <strong>Longest Common Subsequence:</strong> La secuencia más larga de palabras compartidas en el mismo orden cronológico relativo, sin requerir contigüidad estricta.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$R_{\text{LCS}}, P_{\text{LCS}}$</span>
+                  <span class="breakdown-row-badge">$R_{\text{LCS}}, P_{\text{LCS}}$ (Recall/Prec)</span>
                   <div class="breakdown-row-text">
                     <strong>Recall y Precisión de Estructura:</strong> $R_{\text{LCS}} = \text{LCS} / |Ref|$ y $P_{\text{LCS}} = \text{LCS} / |Hyp|$.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{F1-Score}$</span>
+                  <span class="breakdown-row-badge">$\text{F1}_{\text{ROUGE}}$ (Media Armónica)</span>
                   <div class="breakdown-row-text">
                     <strong>Media Armónica:</strong> Balance equilibrado entre precisión léxica y cobertura exhaustiva de conceptos.
                   </div>
@@ -1052,6 +1067,9 @@
           <div class="workbench-label">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
             Banco de Pruebas 1.3.6: Calculadora en Vivo de PPL, BLEU-4 y ROUGE-L
+          </div>
+          <div class="workbench-actions">
+            <span class="workbench-tag">Métricas de Evaluación NLP</span>
           </div>
         </div>
 
@@ -1151,7 +1169,7 @@
 
         <div class="formula-card">
           <div class="formula-math-area">
-            $$\bar{S} = \frac{1}{M} \sum_{j=1}^{M} S_j, \quad S_j = f_{\text{Judge}}\left(X, Y_{\text{ref}}, \hat{Y}, \mathcal{R}_{\text{Rúbrica}}\right)$$
+            $$\bar{S} = \frac{1}{M} \sum_{j=1}^{M} S_j, \quad S_j = f_{\text{Judge}}\left(X, Y_{\text{ref}}, \hat{Y}, \mathcal{R}\right)$$
             $$\text{LlamaGuard}(X, \hat{Y}) \in \{\text{safe}\} \cup \{\text{unsafe}, S_1, S_2, \dots, S_{14}\}$$
           </div>
           <details class="formula-breakdown-details">
@@ -1174,25 +1192,25 @@
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\mathcal{R}_{\text{Rúbrica}}$</span>
+                  <span class="breakdown-row-badge">$\mathcal{R}$ (Rúbrica Juez)</span>
                   <div class="breakdown-row-text">
                     <strong>Criterios de Evaluación Explícitos:</strong> Prompt del juez con instrucciones precisas para mitigar sesgos de verbosidad (preferencia por respuestas largas) y sesgo de posición.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$S_1 \dots S_{14}$</span>
+                  <span class="breakdown-row-badge">$S_1, \dots, S_{14}$ (Riesgos)</span>
                   <div class="breakdown-row-text">
                     <strong>Taxonomía de Riesgo Llama Guard 3:</strong> Códigos de violación de seguridad oficiales (ej. $S_{11}$: Asesoramiento Médico No Calificado, $S_{14}$: Inyección de Prompt / Jailbreak).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{safe} / \text{unsafe}$</span>
+                  <span class="breakdown-row-badge">$\text{safe} / \text{unsafe}$ (Veredicto)</span>
                   <div class="breakdown-row-text">
                     <strong>Veredicto Binario en Pipeline:</strong> Si Llama Guard emite <code>unsafe</code>, el microservicio HTTP interrumpe el streaming y emite un mensaje de seguridad institucional.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Latencia Guard}$</span>
+                  <span class="breakdown-row-badge">$\Delta t_{\text{Guard}}$ (Latencia Guard)</span>
                   <div class="breakdown-row-text">
                     <strong>Auditoría Ultrarrápida:</strong> Llama Guard 3 8B cuantizado en 4 bits toma menos de 40 ms en clasificar la petición del usuario antes de pasarla al agente principal.
                   </div>
@@ -1209,6 +1227,9 @@
           <div class="workbench-label">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
             Banco de Pruebas 1.3.7: Simulador LLM-as-a-Judge & Auditor Llama Guard 3
+          </div>
+          <div class="workbench-actions">
+            <span class="workbench-tag">Juez Sintético & Blindaje</span>
           </div>
         </div>
 
