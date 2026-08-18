@@ -762,4 +762,11 @@
     });
   });
 
+  /* 12. FEEDBACK DE AUDIO PARA ACORDEÓN DE EJERCICIOS */
+  document.querySelectorAll(".exercise-solution-summary").forEach(function(summary){
+    summary.addEventListener("click", function(){
+      if(window.SOUND) window.SOUND.playPop(420);
+    });
+  });
+
 })();
