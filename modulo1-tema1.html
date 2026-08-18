@@ -36,11 +36,14 @@
       <span class="brand-text">Meta AI</span>
     </a>
 
-    <nav class="nav-links"><a href="index.html" class="nav-link-item" style="font-weight: 700;">&larr; Inicio</a>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link-item" style="font-weight: 700;">&larr; Inicio</a>
       <a href="#intro-modulo" class="nav-link-item">Visión</a>
       <a href="#unidad-principal" class="nav-link-item">Contenido</a>
+      <a href="#ejercicios" class="nav-link-item">Ejercicios</a>
       <a href="#glosario" class="nav-link-item">Glosario</a>
-      <a href="modulo1-tema2.html" class="nav-link-item" style="color: var(--meta-blue); font-weight: 700;">Tema 1.2 &rarr;</a></nav>
+      <a href="modulo1-tema2.html" class="nav-link-item" style="color: var(--meta-blue); font-weight: 700;">Tema 1.2 &rarr;</a>
+    </nav>
 
     <div class="header-controls">
       <!-- Botón de Audio con Icono SVG Vectorial -->
@@ -1551,11 +1554,94 @@
         </div>
       </div>
 
-      <!-- 7. CONCLUSIÓN -->
-      <div class="conclusion-box">
-        <div class="conclusion-title">7. Conclusión & Puntos Clave</div>
-        <p class="conclusion-text">La inferencia con streaming y telemetría elimina los bloqueos en la interfaz de usuario, ofreciendo una experiencia fluida e inmediata idéntica a las aplicaciones comerciales de vanguardia.</p>
+  <!-- ==========================================================================
+       SECCIÓN DE EJERCICIOS PRÁCTICOS Y AUTOEVALUACIÓN (CURSO.MD)
+       ========================================================================== -->
+  <section class="module-block" id="ejercicios" style="margin-bottom: 4rem;">
+    <div class="module-header">
+      <span class="module-tag">Autoevaluación Práctica</span>
+      <h2 class="module-title">Ejercicios de Ingeniería & Análisis Crítico</h2>
+      <p class="module-desc">Pon a prueba tu comprensión técnica resolviendo estos casos de ingeniería. Reflexiona tu respuesta y despliega la solución para comparar tu análisis.</p>
+    </div>
+
+    <!-- EJERCICIO 1 -->
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 1</span>
+        <h4 class="exercise-title">Análisis de Eficiencia en Tokenización (Español vs. Inglés)</h4>
       </div>
+      <p class="exercise-prompt">
+        Escribe una misma instrucción en español y en inglés: <i>"Configura la alarma para las siete de la mañana"</i> vs. <i>"Set the alarm for seven in the morning"</i>. Identifica qué palabras del español se fragmentan en más tokens y explica por qué las conjugaciones y las preposiciones aumentan el consumo de tokens y el costo computacional.
+      </p>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Criterio de Solución & Análisis de Ingeniería</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <p><b>Análisis Técnico:</b></p>
+          <ul>
+            <li>En inglés, <i>"Set the alarm for seven in the morning"</i> se tokeniza casi palabra por palabra (7-8 tokens) porque los vocabularios BPE están altamente optimizados para la frecuencia del inglés.</li>
+            <li>En español, palabras como <i>"Configura"</i> suelen dividirse en subpalabras (ej. <code>["Config", "ura"]</code>) debido a las variaciones flexivas de los verbos y desinencias gramaticales.</li>
+            <li><b>Impacto en Producción:</b> Un mayor número de tokens incrementa la latencia (más pasos autorregresivos), reduce la longitud efectiva de la ventana de contexto y aumenta los costos en APIs por token o consumo de memoria en inferencia local.</li>
+          </ul>
+        </div>
+      </details>
+    </article>
+
+    <!-- EJERCICIO 2 -->
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 2</span>
+        <h4 class="exercise-title">Diagnóstico de Coherencia y Mecanismos de Atención</h4>
+      </div>
+      <p class="exercise-prompt">
+        Un asistente virtual confunde el nombre de un producto mencionado al inicio de un párrafo largo con otro similar que aparece al final. Explica qué mecanismo de la arquitectura Transformer está fallando en ponderar la relevancia correcta y propón una variable de diseño o estrategia de prompting para mitigar el error.
+      </p>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Criterio de Solución & Análisis de Ingeniería</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <p><b>Diagnóstico Arquitectónico:</b></p>
+          <ul>
+            <li>El mecanismo de <b>Self-Attention ($Q \cdot K^T$)</b> no asignó suficiente peso de atención a los tokens del inicio debido al fenómeno de dispersión de atención en contextos extensos (*lost in the middle*).</li>
+            <li><b>Solución de Ingeniería:</b>
+              <ol>
+                <li><b>Prompting Estructurado:</b> Colocar la entidad clave inmediatamente antes de la instrucción final (*recency bias*).</li>
+                <li><b>Temperatura ($T$):</b> Reducir $T$ a $\le 0.2$ para evitar muestreos probabilísticos aleatorios en la distribución Softmax.</li>
+                <li><b>Técnica CoT (Chain-of-Thought):</b> Forzar al modelo a listar primero las entidades detectadas antes de emitir la conclusión.</li>
+              </ol>
+            </li>
+          </ul>
+        </div>
+      </details>
+    </article>
+
+    <!-- EJERCICIO 3 -->
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 3</span>
+        <h4 class="exercise-title">Decisión de Despliegue: Pesos Abiertos vs. APIs Cerradas</h4>
+      </div>
+      <p class="exercise-prompt">
+        Evalúa tres escenarios de negocio: (a) Un hospital rural sin conexión estable a internet, (b) Una fintech regulada que debe auditar sesgos y trazabilidad interna, y (c) Un chatbot de marketing temporal para una campaña en línea de 48 horas. Argumenta qué arquitectura de modelo (Pesos Abiertos Llama vs. API Comercial Cerrada) es la más adecuada para cada caso.
+      </p>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Criterio de Solución & Análisis de Ingeniería</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <p><b>Resolución Justificada:</b></p>
+          <ul>
+            <li><b>(a) Hospital Rural:</b> <u>Pesos Abiertos (Meta Llama 3 local)</u>. Al no requerir conexión a internet, garantiza operación continua (*offline availability*) y privacidad absoluta de los historiales clínicos.</li>
+            <li><b>(b) Fintech Regulada:</b> <u>Pesos Abiertos (Meta Llama 3)</u>. Permite auditar pesos, calcular perplejidad exacta de respuestas, ejecutar fine-tuning LoRA en servidores propios y cumplir con normativas de soberanía de datos sin filtraciones a terceros.</li>
+            <li><b>(c) Campaña de Marketing de 48 horas:</b> <u>API Comercial Cerrada</u>. No justifica aprovisionar infraestructura ni hardware local para un evento efímero; el pago por consumo temporal optimiza tiempo y costos.</li>
+          </ul>
+        </div>
+      </details>
     </article>
   </section>
 

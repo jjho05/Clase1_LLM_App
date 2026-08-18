@@ -2733,6 +2733,101 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
   box-shadow: 0 16px 40px -10px rgba(8, 102, 255, 0.25);
 }
 
+/* ==========================================================================
+   ESTILOS ESTÁNDAR PARA EJERCICIOS Y AUTOEVALUACIÓN DIDÁCTICA
+   ========================================================================== */
+.exercise-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.5rem 1.6rem;
+  margin-bottom: 1.25rem;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.exercise-card:hover {
+  border-color: var(--meta-blue);
+  box-shadow: var(--shadow-sm);
+}
+
+.exercise-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.exercise-num-badge {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  background: var(--meta-blue-subtle);
+  color: var(--meta-blue);
+  border: 1px solid var(--meta-blue-border);
+}
+
+.exercise-title {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.exercise-prompt {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.exercise-solution-details {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 0.9rem;
+}
+
+.exercise-solution-summary {
+  padding: 0.75rem 1.15rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--meta-blue);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.exercise-solution-summary:hover {
+  background: var(--meta-blue-subtle);
+}
+
+.exercise-solution-summary::-webkit-details-marker {
+  display: none;
+}
+
+.exercise-solution-panel {
+  padding: 1rem 1.15rem;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+}
+
+.exercise-solution-panel p:last-child {
+  margin-bottom: 0;
+}
+
+
 /* Botones con elevación suave */
 .btn-primary:hover {
   transform: translateY(-2px);
