@@ -379,7 +379,8 @@
     var ctx = canvas.getContext("2d");
     var simVal = document.getElementById("vec-sim-val");
     var btnResetCanvas = document.getElementById("btn-reset-canvas");
-    var width, height;
+    var cssWidth = 380, cssHeight = 280;
+    var dpr = window.devicePixelRatio || 1;
 
     var defaultNodes = [
       { id: "rey", name: "Rey", x: 0.28, y: 0.3 },
@@ -392,8 +393,17 @@
 
     function resize(){
       var rect = canvas.parentElement.getBoundingClientRect();
-      width = canvas.width = rect.width;
-      height = canvas.height = rect.height;
+      cssWidth = rect.width || 380;
+      cssHeight = 280;
+      dpr = window.devicePixelRatio || 1;
+
+      canvas.width = Math.round(cssWidth * dpr);
+      canvas.height = Math.round(cssHeight * dpr);
+      canvas.style.width = cssWidth + "px";
+      canvas.style.height = cssHeight + "px";
+
+      if(ctx.resetTransform) { ctx.resetTransform(); } else { ctx.setTransform(1, 0, 0, 1, 0, 0); }
+      ctx.scale(dpr, dpr);
       draw();
     }
     window.addEventListener("resize", resize);
@@ -406,32 +416,46 @@
     }
 
     function draw(){
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(0, 0, cssWidth, cssHeight);
+      var isDark = document.documentElement.getAttribute("data-theme") === "dark";
 
-      ctx.strokeStyle = "rgba(148, 163, 184, 0.18)";
+      // Cuadrícula sutil
+      ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)";
       ctx.lineWidth = 1;
-      for(var x = 0; x < width; x += 35){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,height); ctx.stroke(); }
-      for(var y = 0; y < height; y += 35){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(width,y); ctx.stroke(); }
+      for(var x = 0; x < cssWidth; x += 35){ ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, cssHeight); ctx.stroke(); }
+      for(var y = 0; y < cssHeight; y += 35){ ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(cssWidth, y); ctx.stroke(); }
 
-      ctx.setLineDash([4, 4]);
-      ctx.strokeStyle = "#0866ff";
-      ctx.lineWidth = 2;
+      // Líneas de analogía semántica
+      ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = "#3b82f6";
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.moveTo(nodes[0].x * width, nodes[0].y * height);
-      ctx.lineTo(nodes[1].x * width, nodes[1].y * height);
-      ctx.lineTo(nodes[2].x * width, nodes[2].y * height);
-      ctx.lineTo(nodes[3].x * width, nodes[3].y * height);
+      ctx.moveTo(nodes[0].x * cssWidth, nodes[0].y * cssHeight);
+      ctx.lineTo(nodes[1].x * cssWidth, nodes[1].y * cssHeight);
+      ctx.lineTo(nodes[2].x * cssWidth, nodes[2].y * cssHeight);
+      ctx.lineTo(nodes[3].x * cssWidth, nodes[3].y * cssHeight);
       ctx.stroke();
       ctx.setLineDash([]);
 
+      // Renderizado de Nodos Vectoriales Nítidos
       nodes.forEach(function(n){
-        var px = n.x * width, py = n.y * height;
-        ctx.fillStyle = "#0866ff";
-        ctx.beginPath(); ctx.arc(px, py, 11, 0, Math.PI*2); ctx.fill();
+        var px = n.x * cssWidth, py = n.y * cssHeight;
 
-        ctx.fillStyle = document.documentElement.getAttribute("data-theme") === "dark" ? "#ffffff" : "#0f172a";
+        // Halo suave exterior
+        ctx.fillStyle = "rgba(59, 130, 246, 0.25)";
+        ctx.beginPath(); ctx.arc(px, py, 16, 0, Math.PI*2); ctx.fill();
+
+        // Punto vectorial
+        ctx.fillStyle = "#0866ff";
+        ctx.beginPath(); ctx.arc(px, py, 9, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Texto con soporte Retina
+        ctx.fillStyle = isDark ? "#ffffff" : "#0f172a";
         ctx.font = "bold 13px 'Plus Jakarta Sans', sans-serif";
-        ctx.fillText(n.name, px + 15, py + 4);
+        ctx.fillText(n.name, px + 18, py + 5);
       });
       calcSim();
     }
@@ -440,15 +464,15 @@
       var rect = canvas.getBoundingClientRect();
       var mx = clientX - rect.left, my = clientY - rect.top;
       nodes.forEach(function(n){
-        if(Math.hypot(mx - n.x * width, my - n.y * height) < 24){ dragNode = n; }
+        if(Math.hypot(mx - n.x * cssWidth, my - n.y * cssHeight) < 28){ dragNode = n; }
       });
     }
 
     function handleMove(clientX, clientY){
       if(!dragNode) return;
       var rect = canvas.getBoundingClientRect();
-      dragNode.x = Math.max(0.05, Math.min(0.95, (clientX - rect.left) / width));
-      dragNode.y = Math.max(0.05, Math.min(0.95, (clientY - rect.top) / height));
+      dragNode.x = Math.max(0.08, Math.min(0.92, (clientX - rect.left) / cssWidth));
+      dragNode.y = Math.max(0.08, Math.min(0.92, (clientY - rect.top) / cssHeight));
       draw();
     }
 

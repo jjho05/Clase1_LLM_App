@@ -38,20 +38,22 @@
 
     <nav class="nav-links">
       <a href="index.html" class="nav-link-item" style="font-weight: 700;">&larr; Inicio</a>
-      <a href="#tema-1-1-1" class="nav-link-item">1.1.1 Muestreo</a>
-      <a href="#tema-1-1-2" class="nav-link-item">1.1.2 NLP</a>
-      <a href="#tema-1-2-1" class="nav-link-item">1.1.3 Tokenización</a>
-      <a href="#tema-1-2-2" class="nav-link-item">1.1.4 Embeddings</a>
-      <a href="#tema-1-3-1" class="nav-link-item">1.1.5 Transformers</a>
-      <a href="#tema-1-3-2" class="nav-link-item">1.1.6 GQA</a>
-      <a href="#tema-1-4-1" class="nav-link-item">1.1.7 Pesos Abiertos</a>
-      <a href="#tema-1-4-2" class="nav-link-item">1.1.8 Inferencia</a>
+      <a href="#intro-modulo" class="nav-link-item">Visión</a>
+      <a href="#unidad-principal" class="nav-link-item">Subtemas</a>
+      <a href="#simuladores" class="nav-link-item">Simuladores</a>
       <a href="#ejercicios" class="nav-link-item">Ejercicios</a>
       <a href="#glosario" class="nav-link-item">Glosario</a>
+      <a href="#fuentes-oficiales" class="nav-link-item">Fuentes</a>
       <a href="modulo1-tema2.html" class="nav-link-item" style="color: var(--meta-blue); font-weight: 700;">Tema 1.2 &rarr;</a>
     </nav>
 
     <div class="header-controls">
+      <!-- Indicador de Evaluación -->
+      <div class="quiz-pill-badge" title="Progreso de autoevaluación del tema">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span id="quiz-counter-text">0 / 8</span>
+      </div>
+
       <!-- Botón de Audio con Icono SVG Vectorial -->
       <button class="btn-icon" id="sound-btn" title="Alternar Audio">
         <span id="sound-icon-container">
@@ -68,9 +70,13 @@
         <span class="btn-text-label" id="theme-label">Modo Claro</span>
       </button>
 
-      <!-- Botón Menú Hamburguesa Móvil -->
+      <!-- Botón Menú Hamburguesa para Móviles -->
       <button class="btn-menu-toggle" id="menu-toggle-btn" aria-label="Abrir menú de navegación" aria-expanded="false">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
       </button>
     </div>
   </div>

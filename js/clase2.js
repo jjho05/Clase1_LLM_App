@@ -366,45 +366,80 @@
 
     function drawVectors(pairKey){
       var pair = pairs[pairKey];
-      var w = canvas.width = canvas.parentElement.clientWidth || 380;
-      var h = canvas.height = 260;
-      ctx.clearRect(0, 0, w, h);
+      var dpr = window.devicePixelRatio || 1;
+      var cssWidth = canvas.parentElement.clientWidth || 380;
+      var cssHeight = 270;
 
-      var ox = 40, oy = h - 35;
-      var scale = Math.min(w - 70, h - 60);
+      canvas.width = Math.round(cssWidth * dpr);
+      canvas.height = Math.round(cssHeight * dpr);
+      canvas.style.width = cssWidth + "px";
+      canvas.style.height = cssHeight + "px";
 
-      // Ejes coordenados
-      ctx.strokeStyle = document.documentElement.getAttribute("data-theme") === "dark" ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)";
-      ctx.lineWidth = 1.5;
+      if(ctx.resetTransform) { ctx.resetTransform(); } else { ctx.setTransform(1, 0, 0, 1, 0, 0); }
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+      var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      var ox = 45, oy = cssHeight - 38;
+      var scale = Math.min(cssWidth - 85, cssHeight - 65);
+
+      // Cuadrícula sutil
+      ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)";
+      ctx.lineWidth = 1;
+      for(var x = ox; x < cssWidth - 20; x += 40){ ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x, oy); ctx.stroke(); }
+      for(var y = 20; y <= oy; y += 40){ ctx.beginPath(); ctx.moveTo(ox, y); ctx.lineTo(cssWidth - 20, y); ctx.stroke(); }
+
+      // Ejes coordenados principales
+      ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.3)" : "rgba(15, 23, 42, 0.25)";
+      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(ox, oy); ctx.lineTo(w - 20, oy);
-      ctx.moveTo(ox, oy); ctx.lineTo(ox, 20);
+      ctx.moveTo(ox, oy); ctx.lineTo(cssWidth - 15, oy);
+      ctx.moveTo(ox, oy); ctx.lineTo(ox, 15);
       ctx.stroke();
+
+      // Flechas de ejes
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.beginPath(); ctx.moveTo(cssWidth - 12, oy); ctx.lineTo(cssWidth - 20, oy - 4); ctx.lineTo(cssWidth - 20, oy + 4); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(ox, 12); ctx.lineTo(ox - 4, 20); ctx.lineTo(ox + 4, 20); ctx.fill();
 
       // Vector A
       var ax = ox + pair.vecA[0] * scale;
       var ay = oy - pair.vecA[1] * scale;
-      ctx.strokeStyle = "#0866ff";
-      ctx.fillStyle = "#0866ff";
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#3b82f6";
+      ctx.fillStyle = "#3b82f6";
+      ctx.lineWidth = 3.5;
       ctx.beginPath();
       ctx.moveTo(ox, oy); ctx.lineTo(ax, ay);
       ctx.stroke();
-      ctx.beginPath(); ctx.arc(ax, ay, 5, 0, Math.PI*2); ctx.fill();
-      ctx.font = "bold 12px var(--font-mono)";
-      ctx.fillText("Vector u (Frase A)", ax + 8, ay - 4);
+
+      // Cabeza de flecha Vector A
+      var angA = Math.atan2(pair.vecA[1], pair.vecA[0]);
+      ctx.beginPath(); ctx.arc(ax, ay, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "rgba(59, 130, 246, 0.25)";
+      ctx.beginPath(); ctx.arc(ax, ay, 12, 0, Math.PI*2); ctx.fill();
+
+      ctx.fillStyle = isDark ? "#ffffff" : "#0f172a";
+      ctx.font = "bold 12px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillText("Vector u (Frase A)", ax + 12, ay - 6);
 
       // Vector B
       var bx = ox + pair.vecB[0] * scale;
       var by = oy - pair.vecB[1] * scale;
       ctx.strokeStyle = "#10b981";
       ctx.fillStyle = "#10b981";
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 3.5;
       ctx.beginPath();
       ctx.moveTo(ox, oy); ctx.lineTo(bx, by);
       ctx.stroke();
-      ctx.beginPath(); ctx.arc(bx, by, 5, 0, Math.PI*2); ctx.fill();
-      ctx.fillText("Vector v (Frase B)", bx + 8, by - 4);
+
+      // Cabeza de flecha Vector B
+      var angB = Math.atan2(pair.vecB[1], pair.vecB[0]);
+      ctx.beginPath(); ctx.arc(bx, by, 6, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = "rgba(16, 185, 129, 0.25)";
+      ctx.beginPath(); ctx.arc(bx, by, 12, 0, Math.PI*2); ctx.fill();
+
+      ctx.fillStyle = isDark ? "#ffffff" : "#0f172a";
+      ctx.fillText("Vector v (Frase B)", bx + 12, by + 14);
 
       // Cálculo matemático real
       var dot = pair.vecA[0] * pair.vecB[0] + pair.vecA[1] * pair.vecB[1];
@@ -415,16 +450,15 @@
 
       // Arco del ángulo theta
       ctx.strokeStyle = "#f59e0b";
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 2;
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
-      var angA = Math.atan2(pair.vecA[1], pair.vecA[0]);
-      var angB = Math.atan2(pair.vecB[1], pair.vecB[0]);
-      ctx.arc(ox, oy, 38, -Math.max(angA, angB), -Math.min(angA, angB));
+      ctx.arc(ox, oy, 42, -Math.max(angA, angB), -Math.min(angA, angB));
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = "#f59e0b";
-      ctx.fillText("θ = " + angleDeg.toFixed(1) + "°", ox + 44, oy - 22);
+      ctx.font = "bold 12px 'Fira Code', monospace";
+      ctx.fillText("θ = " + angleDeg.toFixed(1) + "°", ox + 48, oy - 24);
 
       if(simScoreDisplay) simScoreDisplay.textContent = cosSim.toFixed(4);
       if(angleDisplay) angleDisplay.textContent = angleDeg.toFixed(1) + "°";

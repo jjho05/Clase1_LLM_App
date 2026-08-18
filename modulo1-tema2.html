@@ -54,7 +54,7 @@
       <!-- Indicador de Evaluación -->
       <div class="quiz-pill-badge" title="Progreso de autoevaluación del tema">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-        <span id="quiz-counter-text">0 / 7</span>
+        <span id="quiz-counter-text">0 / 8</span>
       </div>
 
       <!-- Botón de Audio con Icono SVG Vectorial -->
@@ -126,7 +126,7 @@
       <span class="hero-badge-label">TEMA 2 · PROMPT ENGINEERING Y RAG CON LLAMA</span>
     </div>
     <h1 class="hero-title">Prompt Engineering y RAG con Llama</h1>
-    <p class="hero-subtitle"><b>Cuándo pedir mejor y cuándo darle documentos reales</b>. Aprende a dominar las técnicas de instrucción Zero-shot, Few-shot y Chain-of-Thought, comprende las barreras de la memoria estática y construye arquitecturas de Generación Aumentada por Recuperación (RAG) con búsqueda semántica y embeddings vectoriales.</p>
+    <p class="hero-subtitle"><b>Cuándo pedir mejor y cuándo darle documentos reales</b>. Domina las estrategias de instrucción Zero-shot, Few-shot y Chain-of-Thought, comprende las barreras de la memoria estática y construye arquitecturas de Generación Aumentada por Recuperación (RAG) con búsqueda semántica y embeddings vectoriales.</p>
 
     <div class="hero-actions-row">
       <a href="#intro-modulo" class="btn-secondary" style="border-radius: 24px; padding: 0.65rem 1.25rem;">
@@ -712,7 +712,7 @@
         <div class="workbench-top">
           <div class="workbench-label">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-            Banco de Pruebas 1.2.4: Calculadora Vectorial 2D & Similitud Coseno
+            Banco de Pruebas 1.2.4: Calculadora Vectorial 2D & Similitud Coseno (Gráficos Retina HiDPI)
           </div>
           <div class="workbench-actions">
             <span class="workbench-tag">Álgebra Lineal en Tiempo Real</span>
@@ -730,7 +730,7 @@
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; align-items: center;">
           <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1rem; text-align: center;">
-            <canvas id="vector-cosine-canvas" style="width: 100%; height: 260px;"></canvas>
+            <canvas id="vector-cosine-canvas" style="width: 100%; height: 270px;"></canvas>
           </div>
 
           <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 1.4rem; display: flex; flex-direction: column; gap: 0.9rem;">
@@ -985,6 +985,49 @@ collection.add(
         <button class="quiz-option" data-correct="false">B) Porque BM25 elimina la necesidad de contar con una GPU en el servidor.</button>
         <button class="quiz-option" data-correct="false">C) Porque los embeddings no pueden procesar palabras en idioma español.</button>
         <button class="quiz-option" data-correct="false">D) Porque la búsqueda híbrida comprime automáticamente el contexto a 8 bits.</button>
+        <div class="quiz-feedback"></div>
+      </div>
+    </article>
+
+    <!-- TEMA 1.2.8 -->
+    <article class="tema-card" id="tema-1-2-8">
+      <div class="tema-header">
+        <div class="tema-eyebrow">Tema 1.2.8 · Agentes de Razonamiento & Prompting Autónomo</div>
+        <h3 class="tema-title">Patrón ReAct & Auto-Consistencia: De Prompts a Sistemas Autónomos</h3>
+      </div>
+
+      <div class="tema-section-block">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Concepto Formal</span> El Ciclo ReAct: Pensamiento $\to$ Acción $\to$ Observación</h4>
+        <p class="prose-p">
+          El patrón <b>ReAct (Reason + Act)</b> combina la generación de razonamiento interno de Chain-of-Thought con la capacidad de ejecutar llamadas a herramientas externas (APIs, calculadoras o bases de datos vectoriales). En lugar de adivinar, el modelo itera en un bucle interactivo:
+        </p>
+
+        <div class="examples-grid">
+          <div class="example-card">
+            <div class="ex-title">Pensamiento (Thought)</div>
+            <div class="ex-desc">El modelo deduce qué información necesita: <i>"No conozco el tipo de cambio de hoy. Debo invocar la API financiera."</i></div>
+          </div>
+          <div class="example-card" style="border-left-color: var(--meta-blue);">
+            <div class="ex-title">Acción (Action)</div>
+            <div class="ex-desc">El LLM emite un llamado estructurado: <code>get_exchange_rate(currency="USD_MXN")</code>.</div>
+          </div>
+          <div class="example-card" style="border-left-color: var(--accent-success);">
+            <div class="ex-title">Observación (Observation)</div>
+            <div class="ex-desc">El runtime ejecuta la función y devuelve el valor real: <code>{"rate": 18.25}</code>, con el cual Llama 3 finaliza la respuesta.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUIZ 8 -->
+      <div class="quiz-box">
+        <div class="quiz-header">
+          <span class="quiz-tag">Autoevaluación 1.2.8</span>
+        </div>
+        <div class="quiz-question">¿Cuál es el beneficio de la técnica de Self-Consistency aplicada sobre Chain-of-Thought?</div>
+        <button class="quiz-option" data-correct="false">A) Entrena una red neuronal convolucional para clasificar imágenes.</button>
+        <button class="quiz-option" data-correct="true">B) Muestrea múltiples cadenas de razonamiento independientes generadas por el modelo y selecciona por votación mayoritaria la respuesta más consistente.</button>
+        <button class="quiz-option" data-correct="false">C) Reduce el tamaño del archivo de pesos GGUF en un 50%.</button>
+        <button class="quiz-option" data-correct="false">D) Desactiva los embeddings para ahorrar llamadas a la base de datos.</button>
         <div class="quiz-feedback"></div>
       </div>
     </article>
@@ -1551,7 +1594,7 @@ Sentimiento:</code></pre>
     <span class="certificate-badge">Certificado de Finalización</span>
     <h3 class="certificate-title">Evaluación Superada con Éxito</h3>
     <p style="color: var(--text-secondary); max-width: 60ch; margin: 0.5rem auto 1.5rem; font-size: 1.05rem;">
-      Has respondido correctamente las 7 preguntas de autoevaluación del curso <b>Prompt Engineering y RAG con Llama</b>.
+      Has respondido correctamente las 8 preguntas de autoevaluación del curso <b>Prompt Engineering y RAG con Llama</b>.
     </p>
 
     <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); padding: 1.5rem; border-radius: 12px; max-width: 500px; margin: 0 auto 1.5rem;">
