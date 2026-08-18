@@ -531,22 +531,6 @@ body {
   line-height: 1.75;
 }
 
-/* Callout de Ingeniería */
-.engineering-callout {
-  background: rgba(8, 102, 255, 0.04);
-  border-left: 4px solid var(--meta-blue);
-  padding: 1.2rem 1.4rem;
-  border-radius: 0 12px 12px 0;
-  margin: 1.5rem 0;
-}
-
-.engineering-callout b {
-  color: var(--meta-blue);
-  display: block;
-  margin-bottom: 0.4rem;
-  font-size: 0.92rem;
-}
-
 /* ==========================================================================
    BANCO DE PRUEBAS / LABORATORIO INTERACTIVO
    ========================================================================== */
@@ -1019,46 +1003,117 @@ body {
 }
 
 /* ==========================================================================
-   GLOSARIO INTERACTIVO & CERTIFICADO DE FINALIZACIÓN
+   GLOSARIO TÉCNICO INTERACTIVO REDISEÑADO CON BUSCADOR Y FILTROS
    ========================================================================== */
 .glossary-section {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: 20px;
-  padding: 2.5rem;
+  padding: 3rem 2.5rem;
   margin: 5rem 0 3rem;
   box-shadow: var(--shadow-card);
 }
 
-.glossary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.2rem;
-  margin-top: 1.5rem;
+@media (max-width: 768px) {
+  .glossary-section { padding: 1.8rem 1.2rem; }
 }
 
-.glossary-item {
+.glossary-filter-bar {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.glossary-pill-btn {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
-  padding: 1.2rem;
-  border-radius: 10px;
-  border-left: 3px solid var(--meta-blue);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.glossary-item b {
+.glossary-pill-btn.active, .glossary-pill-btn:hover {
+  background: var(--meta-blue);
+  color: #fff;
+  border-color: var(--meta-blue);
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.3rem;
+  margin-top: 1.8rem;
+}
+
+.glossary-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  padding: 1.3rem 1.4rem;
+  border-radius: 14px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.glossary-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--meta-blue);
+  box-shadow: var(--shadow-card);
+}
+
+.glossary-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.glossary-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
   color: var(--meta-blue);
-  display: block;
-  font-size: 1rem;
-  margin-bottom: 0.3rem;
+  background: var(--meta-blue-subtle);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
 }
 
-.glossary-item p {
+.glossary-card b {
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  font-family: var(--font-head);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.glossary-card p {
   color: var(--text-secondary);
   font-size: 0.92rem;
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 0;
 }
 
+.glossary-example-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  margin-top: 0.8rem;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   CERTIFICADO DIGITAL DINÁMICO DE COMPLETADO
+   ========================================================================== */
 .certificate-card {
   background: var(--bg-surface);
   border: 2px solid var(--meta-blue);
@@ -1091,11 +1146,28 @@ body {
   margin-bottom: 0.5rem;
 }
 
+/* ==========================================================================
+   FOOTER CON AUTORÍA OFICIAL
+   ========================================================================== */
 .course-footer {
   border-top: 1px solid var(--border-subtle);
   padding: 5rem 0 3.5rem;
   text-align: center;
   background: var(--bg-surface);
+}
+
+.footer-author-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--meta-blue-subtle);
+  border: 1.5px solid var(--meta-blue-border);
+  color: var(--meta-blue);
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 30px;
+  margin-top: 2rem;
 }
 
 @keyframes fadeIn {
@@ -1123,7 +1195,7 @@ body {
       <a href="#modulo-2" class="nav-link-item">Módulo 2: Vectores</a>
       <a href="#modulo-3" class="nav-link-item">Módulo 3: Transformers</a>
       <a href="#modulo-4" class="nav-link-item">Módulo 4: Inferencia</a>
-      <a href="#glosario" class="nav-link-item">Glosario</a>
+      <a href="#glosario" class="nav-link-item">Glosario Técnico</a>
     </nav>
 
     <div class="header-controls">
@@ -1147,7 +1219,7 @@ body {
       <!-- Botón de Tema con Icono SVG Vectorial -->
       <button class="btn-icon" id="theme-btn" title="Alternar Modo Claro / Oscuro">
         <span id="theme-icon-container">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
         </span>
         <span class="btn-text-label" id="theme-label">Modo Claro</span>
       </button>
@@ -1169,7 +1241,7 @@ body {
 
     <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
       <a href="#modulo-1" class="btn-primary">Empezar el Curso</a>
-      <a href="#glosario" class="btn-secondary">Ver Glosario Técnico</a>
+      <a href="#glosario" class="btn-secondary">Glosario Técnico de 16 Conceptos</a>
     </div>
   </section>
 
@@ -1193,16 +1265,19 @@ body {
       <!-- 1. INTRODUCCIÓN -->
       <div class="tema-section-block">
         <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Introducción</span> ¿Por qué importa el modelado autoregresivo?</h4>
-        <p class="prose-p">Cuando hablas con ChatGPT, Meta AI o Llama 3, la inteligencia artificial no piensa respuestas enteras de golpe. Funciona de manera <b>autoregresiva</b>: genera el texto palabra por palabra (o token por token), donde cada nueva palabra generada se añade a la memoria para decidir cuál será la siguiente.</p>
+        <p class="prose-p">Cuando interactúas con un LLM como Meta Llama 3, el modelo no recupera oraciones prediseñadas ni genera párrafos completos simultáneamente. Opera mediante un bucle de **generación causal autoregresiva**: predice secuencialmente el siguiente elemento léxico (token), concatena el nuevo elemento a la secuencia de entrada previa y reitera el cómputo hasta emitir el delimitador especial de final de turno (<code>&lt;|eot_id|&gt;</code>).</p>
       </div>
 
       <!-- 2. CONCEPTO -->
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Concepto Formal</span> ¿Qué es exactamente el Modelado Autoregresivo?</h4>
-        <p class="prose-p">Matemáticamente, un LLM es un estimador de densidad probabilística. Dada una secuencia de tokens de entrada $(x_1, x_2, \dots, x_t)$, el modelo calcula una puntuación numérica (llamada <i>logit</i> $z_i$) para cada una de las 128,256 palabras de su vocabulario y las convierte en probabilidades mediante la función <b>Softmax</b> escalada por una <b>Temperatura $T$</b>:</p>
-        
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Concepto Formal</span> Distribución de Probabilidad Condicional & Softmax</h4>
+        <p class="prose-p">Matemáticamente, un LLM aproxima la probabilidad conjunta de una secuencia $W = (w_1, w_2, \dots, w_n)$ mediante la regla de la cadena probabilística:</p>
         <div class="formula-block">
-          $$P(x_{t+1} = w_i \mid x_1, \dots, x_t) = \frac{\exp(z_i / T)}{\sum_{j=1}^{V} \exp(z_j / T)}$$
+          $$P(W) = \prod_{t=1}^{n} P(w_t \mid w_1, w_2, \dots, w_{t-1})$$
+        </div>
+        <p class="prose-p">La capa lineal final de la red emite un vector de logits no normalizados $\mathbf{z} \in \mathbb{R}^{|V|}$ (donde $|V| = 128,256$). La distribución sobre el vocabulario se calcula mediante la función <b>Softmax modulada por la Temperatura ($T$)</b>:</p>
+        <div class="formula-block">
+          $$P(x_{t+1} = w_i \mid x_{1:t}) = \frac{\exp(z_i / T)}{\sum_{j=1}^{|V|} \exp(z_j / T)}$$
         </div>
       </div>
 
@@ -1213,22 +1288,22 @@ body {
           <div class="step-flow-item">
             <div class="step-num-badge">1</div>
             <div class="step-flow-content">
-              <b>Recepción del Contexto:</b>
-              <p>El modelo recibe el texto escrito por el usuario (ej. <i>"El modelo Llama..."</i>).</p>
+              <b>Recepción del Contexto (Prompt Prefill):</b>
+              <p>El modelo ingiere la secuencia de entrada completa (ej. <i>"El modelo Llama..."</i>) y genera los tensores de activación iniciales en memoria.</p>
             </div>
           </div>
           <div class="step-flow-item">
             <div class="step-num-badge">2</div>
             <div class="step-flow-content">
-              <b>Cálculo de Logits en la Red:</b>
-              <p>Las capas Transformer procesan la atención y asignan un puntaje a cada palabra del diccionario.</p>
+              <b>Cómputo en Bloques Transformer:</b>
+              <p>Las 32 capas de atención y redes Feed-Forward proyectan las relaciones entre palabras y calculan las puntuaciones numéricas (logits).</p>
             </div>
           </div>
           <div class="step-flow-item">
             <div class="step-num-badge">3</div>
             <div class="step-flow-content">
-              <b>Muestreo Estocástico (Sampling):</b>
-              <p>Según la Temperatura ($T$), se elige un token ganador (ej. <i>"aprende"</i>) y se repite el ciclo.</p>
+              <b>Muestreo Estocástico (Sampling Strategy):</b>
+              <p>Aplicando Top-p (Nucleus) y Temperatura, se selecciona un token (ej. <i>"aprende"</i>). Este se añade a la secuencia y se reanuda el ciclo.</p>
             </div>
           </div>
         </div>
@@ -1240,7 +1315,7 @@ body {
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
           <span>4. ¿No entendiste? Te lo explico fácil (Analogía de la vida real)</span>
         </div>
-        <p class="easy-text">Imagina que estás escribiendo un mensaje en tu celular y el <b>autocorrector del teclado</b> te sugiere 3 palabras arriba para completar tu frase (por ejemplo, si escribes <i>"Voy a tomar un..."</i> te sugiere <i>"café"</i>, <i>"vaso"</i> o <i>"descanso"</i>). Un LLM hace exactamente lo mismo, pero habiendo leído billones de libros, páginas web y conversaciones de internet, por lo que sus predicciones son extremadamente acertadas y coherentes.</p>
+        <p class="easy-text">Imagina que estás escribiendo un mensaje en tu teléfono móvil y el <b>autocorrector predictivo</b> te sugiere 3 palabras en la barra superior para completar tu frase (por ejemplo, si escribes <i>"Voy a tomar un..."</i> te sugiere <i>"café"</i>, <i>"vaso"</i> o <i>"descanso"</i>). Un LLM hace exactamente eso, pero habiendo leído millones de bibliotecas, código y conversaciones, conociendo el contexto global del texto.</p>
       </div>
 
       <!-- 5. LABORATORIO INTERACTIVO -->
@@ -2094,48 +2169,241 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
   </section>
 
   <!-- ==========================================================================
-       SECCIÓN GLOSARIO TÉCNICO COMPLETO
+       SECCIÓN GLOSARIO TÉCNICO COMPLETO REDISEÑADO CON BUSCADOR Y FILTROS
        ========================================================================== -->
   <section class="glossary-section" id="glosario">
-    <div style="text-align: center; margin-bottom: 2rem;">
-      <span class="hero-badge-tag">Referencia Rápida</span>
-      <h2 style="font-size: 2.2rem; font-family: var(--font-disp); font-weight: 800; color: var(--text-primary);">Glosario Técnico de Arquitectura de LLMs</h2>
-      <p style="color: var(--text-secondary); max-width: 70ch; margin: 0.5rem auto 0;">Los 8 términos indispensables que todo desarrollador de IA debe dominar explicados de forma clara y concisa.</p>
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+      <span class="hero-badge-tag">Enciclopedia de Arquitectura</span>
+      <h2 style="font-size: 2.3rem; font-family: var(--font-disp); font-weight: 800; color: var(--text-primary);">Glosario Técnico de Arquitectura de LLMs</h2>
+      <p style="color: var(--text-secondary); max-width: 75ch; margin: 0.5rem auto 0;">
+        Explora los 16 términos y conceptos fundamentales que todo ingeniero de inteligencia artificial debe dominar. Utiliza el buscador o filtra por categorías.
+      </p>
     </div>
 
-    <div class="glossary-grid">
-      <div class="glossary-item">
-        <b>1. Context Window (Ventana de Contexto)</b>
-        <p>La cantidad máxima de tokens (128k en Llama 3) que el modelo puede recordar simultáneamente en una conversación o documento.</p>
+    <!-- Barra de búsqueda instantánea -->
+    <div style="max-width: 550px; margin: 0 auto 1rem;">
+      <input type="text" id="glossary-search" class="input-field" placeholder="🔍 Buscar término o concepto (ej. GQA, LoRA, VRAM, Cache)..." style="font-size: 1rem; border-radius: 30px; padding: 0.85rem 1.4rem;">
+    </div>
+
+    <!-- Filtros de categoría -->
+    <div class="glossary-filter-bar">
+      <button class="glossary-pill-btn active" data-cat="all">Todos (16)</button>
+      <button class="glossary-pill-btn" data-cat="arquitectura">Arquitectura</button>
+      <button class="glossary-pill-btn" data-cat="inferencia">Inferencia & Memoria</button>
+      <button class="glossary-pill-btn" data-cat="entrenamiento">Entrenamiento & Alineación</button>
+      <button class="glossary-pill-btn" data-cat="optimizacion">Optimización</button>
+    </div>
+
+    <div class="glossary-grid" id="glossary-cards-container">
+      
+      <!-- 1 -->
+      <div class="glossary-card" data-category="arquitectura">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Arquitectura</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#01</span>
+          </div>
+          <b>Context Window (Ventana de Contexto)</b>
+          <p>Límite superior de tokens (128,000 en Llama 3) que el modelo puede mantener en su memoria de atención simultáneamente sin truncar datos.</p>
+        </div>
+        <div class="glossary-example-hint">💡 Equivale a procesar un libro de 300 páginas de una sola vez.</div>
       </div>
-      <div class="glossary-item">
-        <b>2. KV Cache (Key-Value Cache)</b>
-        <p>Estructura en memoria VRAM que guarda los vectores Key y Value de tokens previos para no recalcularlos en cada paso de inferencia.</p>
+
+      <!-- 2 -->
+      <div class="glossary-card" data-category="inferencia">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Inferencia</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#02</span>
+          </div>
+          <b>KV Cache (Key-Value Cache)</b>
+          <p>Almacenamiento en VRAM de los tensores Key y Value calculados previamente, evitando recalcular la atención de todo el historial en cada token.</p>
+        </div>
+        <div class="glossary-example-hint">⚡ Acelera la generación de $O(N^2)$ a $O(N)$ operaciones por token.</div>
       </div>
-      <div class="glossary-item">
-        <b>3. Grouped-Query Attention (GQA)</b>
-        <p>Arquitectura donde múltiples cabezales de consulta comparten cabezales de llaves/valores, reduciendo el consumo de VRAM en un 75%.</p>
+
+      <!-- 3 -->
+      <div class="glossary-card" data-category="arquitectura">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Arquitectura</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#03</span>
+          </div>
+          <b>Grouped-Query Attention (GQA)</b>
+          <p>Esquema de atención donde múltiples cabezales de Query comparten un solo cabezal Key/Value, reduciendo la memoria en un 75%.</p>
+        </div>
+        <div class="glossary-example-hint">📐 Llama 3 8B utiliza 32 cabezales Q agrupados en 8 cabezales KV.</div>
       </div>
-      <div class="glossary-item">
-        <b>4. Cuantización (Quantization)</b>
-        <p>Técnica de compresión numérica (de FP16 a INT4) para reducir el peso del modelo en disco y RAM sin perder razonamiento lógico.</p>
+
+      <!-- 4 -->
+      <div class="glossary-card" data-category="optimizacion">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Optimización</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#04</span>
+          </div>
+          <b>Cuantización (Quantization - INT4 / GGUF / AWQ)</b>
+          <p>Conversión de pesos neuronales de punto flotante de 16 bits (FP16) a enteros de 4 u 8 bits (INT4/INT8) para reducir el tamaño en disco y VRAM.</p>
+        </div>
+        <div class="glossary-example-hint">📉 Reduce un modelo de 16 GB a solo 5.5 GB para correr en laptops.</div>
       </div>
-      <div class="glossary-item">
-        <b>5. Alucinación (Hallucination)</b>
-        <p>Fenómeno donde el modelo genera hechos falsos con alta convicción debido a que predice lo que 'suena plausible' y no verdades absolutas.</p>
+
+      <!-- 5 -->
+      <div class="glossary-card" data-category="inferencia">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Inferencia</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#05</span>
+          </div>
+          <b>Alucinación (Hallucination)</b>
+          <p>Generación de afirmaciones factualmente incorrectas con alta confianza gramatical, producto del sesgo probabilístico del modelo.</p>
+        </div>
+        <div class="glossary-example-hint">🛡️ Se mitiga integrando bases de conocimiento con RAG.</div>
       </div>
-      <div class="glossary-item">
-        <b>6. Fine-Tuning LoRA</b>
-        <p>Ajuste fino eficiente mediante matrices de bajo rango que adapta el modelo a tareas específicas sin reentrenar todos los pesos.</p>
+
+      <!-- 6 -->
+      <div class="glossary-card" data-category="entrenamiento">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Entrenamiento</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#06</span>
+          </div>
+          <b>LoRA & QLoRA (Low-Rank Adaptation)</b>
+          <p>Técnica de ajuste fino paramétrico eficiente (PEFT) que congela los pesos base y solo entrena matrices pequeñas de bajo rango.</p>
+        </div>
+        <div class="glossary-example-hint">🎯 Permite entrenar Llama 3 con solo 0.1% de los parámetros activos.</div>
       </div>
-      <div class="glossary-item">
-        <b>7. RoPE (Rotary Position Embeddings)</b>
-        <p>Esquema matemático de codificación posicional que rota los vectores para capturar distancias relativas en secuencias muy largas.</p>
+
+      <!-- 7 -->
+      <div class="glossary-card" data-category="arquitectura">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Arquitectura</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#07</span>
+          </div>
+          <b>RoPE (Rotary Position Embedding)</b>
+          <p>Técnica de codificación posicional que rota los vectores $Q$ y $K$ en el plano complejo para capturar distancias relativas en secuencias largas.</p>
+        </div>
+        <div class="glossary-example-hint">🔄 Base técnica que permite extender el contexto a 128k tokens.</div>
       </div>
-      <div class="glossary-item">
-        <b>8. Time-To-First-Token (TTFT)</b>
-        <p>Tiempo de latencia inicial transcurrido desde que se envía el prompt hasta que aparece el primer carácter de respuesta en pantalla.</p>
+
+      <!-- 8 -->
+      <div class="glossary-card" data-category="inferencia">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Inferencia</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#08</span>
+          </div>
+          <b>Time-To-First-Token (TTFT)</b>
+          <p>Tiempo de latencia inicial transcurrido desde que se despacha el prompt hasta que el primer token es proyectado en la pantalla del usuario.</p>
+        </div>
+        <div class="glossary-example-hint">⏱️ Métrica crítica de experiencia de usuario en tiempo real.</div>
       </div>
+
+      <!-- 9 -->
+      <div class="glossary-card" data-category="entrenamiento">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Entrenamiento</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#09</span>
+          </div>
+          <b>SFT (Supervised Fine-Tuning)</b>
+          <p>Etapa de entrenamiento supervisado donde el modelo aprende a responder en formato de diálogo humano (asistente) usando pares instrucción-respuesta.</p>
+        </div>
+        <div class="glossary-example-hint">📚 Transforma un modelo base de texto en un asistente conversacional (Instruct).</div>
+      </div>
+
+      <!-- 10 -->
+      <div class="glossary-card" data-category="entrenamiento">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Entrenamiento</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#10</span>
+          </div>
+          <b>DPO (Direct Preference Optimization)</b>
+          <p>Algoritmo de alineación que optimiza directamente la política del modelo contra preferencias humanas sin requerir un modelo de recompensa complejo.</p>
+        </div>
+        <div class="glossary-example-hint">✨ Más estable y rápido que el clásico RLHF con PPO.</div>
+      </div>
+
+      <!-- 11 -->
+      <div class="glossary-card" data-category="optimizacion">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Optimización</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#11</span>
+          </div>
+          <b>RAG (Retrieval-Augmented Generation)</b>
+          <p>Patrón de arquitectura que recupera fragmentos de documentos externos relevantes y los inyecta en el prompt antes de generar la respuesta.</p>
+        </div>
+        <div class="glossary-example-hint">🔍 Permite a Llama 3 consultar manuales internos y bases de datos privadas.</div>
+      </div>
+
+      <!-- 12 -->
+      <div class="glossary-card" data-category="optimizacion">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Optimización</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#12</span>
+          </div>
+          <b>Perplejidad (Perplexity - PPL)</b>
+          <p>Métrica matemática intrínseca que evalúa la incertidumbre del modelo al predecir texto. Cuanto menor sea la perplejidad, mejor es el modelo.</p>
+        </div>
+        <div class="glossary-example-hint">📊 Mide qué tan sorprendido queda el modelo ante una palabra real.</div>
+      </div>
+
+      <!-- 13 -->
+      <div class="glossary-card" data-category="arquitectura">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Arquitectura</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#13</span>
+          </div>
+          <b>FlashAttention-2</b>
+          <p>Reimplementación a bajo nivel (CUDA) del cómputo de atención que minimiza las transferencias lentas a la memoria HBM de la GPU.</p>
+        </div>
+        <div class="glossary-example-hint">🚀 Logra aceleraciones de entre 2x y 4x en el entrenamiento de Transformers.</div>
+      </div>
+
+      <!-- 14 -->
+      <div class="glossary-card" data-category="arquitectura">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Arquitectura</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#14</span>
+          </div>
+          <b>MoE (Mixture of Experts)</b>
+          <p>Arquitectura donde solo una fracción de las redes neuronales (expertos) se activan para cada token individual, acelerando la inferencia.</p>
+        </div>
+        <div class="glossary-example-hint">⚡ Permite tener modelos de 50B parámetros que gastan como uno de 10B.</div>
+      </div>
+
+      <!-- 15 -->
+      <div class="glossary-card" data-category="inferencia">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Inferencia</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#15</span>
+          </div>
+          <b>Top-p (Nucleus Sampling) & Top-k</b>
+          <p>Estrategias de filtrado de logits: Top-p selecciona el subconjunto más pequeño de tokens cuya suma de probabilidad alcance $p$ (ej. 0.90).</p>
+        </div>
+        <div class="glossary-example-hint">✂️ Corta la 'cola larga' de palabras absurdas o incoherentes.</div>
+      </div>
+
+      <!-- 16 -->
+      <div class="glossary-card" data-category="optimizacion">
+        <div>
+          <div class="glossary-card-top">
+            <span class="glossary-tag">Optimización</span>
+            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#16</span>
+          </div>
+          <b>Pesos Abiertos (Open Weights)</b>
+          <p>Filosofía de publicación de modelos donde se entregan los parámetros entrenados completos sin costo, permitiendo auditoría y despliegues soberanos.</p>
+        </div>
+        <div class="glossary-example-hint">🔓 Filosofía central de Meta con Llama 3 (8B, 70B y 405B).</div>
+      </div>
+
     </div>
   </section>
 
@@ -2163,18 +2431,27 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
 
 </main>
 
-<!-- Footer -->
+<!-- ==========================================================================
+     FOOTER CON AUTORÍA OFICIAL
+     ========================================================================== -->
 <footer class="course-footer">
   <div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem;">
     <h2 style="font-size: 2rem; font-family: var(--font-disp); margin-bottom: 0.9rem; color: var(--text-primary);">¡Felicidades por completar el curso!</h2>
-    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.08rem;">Ahora comprendes los principios de predicción de palabras, tokenización, espacios de significado vectorial, atención Transformer y soberanía de IA con Meta Llama 3.</p>
+    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 1.08rem;">Ahora comprendes los principios de predicción de palabras, tokenización, espacios de significado vectorial, atención Transformer y soberanía de IA con Meta Llama 3.</p>
     <a href="#overview" class="btn-secondary">Volver al Inicio</a>
-    <p style="font-size: 0.84rem; color: var(--text-muted); margin-top: 3rem;">Meta AI · Ecosistema Abierto de Inteligencia Artificial</p>
+    
+    <div style="margin-top: 2.5rem;">
+      <div class="footer-author-badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+        <span>Página creada por <b>Lic. Ing. Jesús Olvera</b></span>
+      </div>
+      <p style="font-size: 0.84rem; color: var(--text-muted); margin-top: 1rem;">Meta AI · Ecosistema Abierto de Inteligencia Artificial & Aprendizaje Profundo</p>
+    </div>
   </div>
 </footer>
 
 <!-- ==========================================================================
-   JAVASCRIPT INTERACTIVO, MOTOR DE QUIZZES & RENDERIZADO KATEX
+   JAVASCRIPT INTERACTIVO, MOTOR DE QUIZZES, BUSCADOR DE GLOSARIO & KATEX
    ========================================================================== -->
 <script>
 (function(){
@@ -2903,9 +3180,50 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
     }
   })();
 
+  /* 13. FILTRO Y BUSCADOR EN VIVO DE GLOSARIO */
+  (function initGlossary(){
+    var searchInput = document.getElementById("glossary-search");
+    var filterBtns = document.querySelectorAll(".glossary-pill-btn");
+    var cards = document.querySelectorAll(".glossary-card");
+
+    var currentFilter = "all";
+
+    function filterGlossary(){
+      var query = searchInput.value.toLowerCase().trim();
+
+      cards.forEach(function(card){
+        var cat = card.getAttribute("data-category");
+        var text = card.innerText.toLowerCase();
+        
+        var matchesCat = (currentFilter === "all" || cat === currentFilter);
+        var matchesQuery = (query === "" || text.indexOf(query) !== -1);
+
+        if(matchesCat && matchesQuery){
+          card.style.display = "flex";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    if(searchInput){
+      searchInput.addEventListener("input", filterGlossary);
+    }
+
+    filterBtns.forEach(function(btn){
+      btn.addEventListener("click", function(){
+        SOUND.playPop(360);
+        filterBtns.forEach(function(b){ b.classList.remove("active"); });
+        btn.classList.add("active");
+        currentFilter = btn.getAttribute("data-cat");
+        filterGlossary();
+      });
+    });
+  })();
+
 })();
 
-/* 13. FUNCIÓN GLOBAL DE COPIAR CÓDIGO */
+/* 14. FUNCIÓN GLOBAL DE COPIAR CÓDIGO */
 function copyCode(btn){
   var codeBlock = btn.parentElement.nextElementSibling.querySelector("code");
   if(!codeBlock) return;
