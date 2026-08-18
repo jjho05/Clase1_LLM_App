@@ -1007,7 +1007,7 @@ body {
 }
 
 /* ==========================================================================
-   GLOSARIO TÉCNICO INTERACTIVO REDISEÑADO CON BUSCADOR Y FILTROS
+   GLOSARIO TÉCNICO EN FORMATO DE LISTA ESTRUCTURADA (ESTILO DOCUMENTACIÓN)
    ========================================================================== */
 .glossary-section {
   background: var(--bg-surface);
@@ -1027,7 +1027,7 @@ body {
   gap: 0.6rem;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 1.5rem 0;
+  margin: 1.5rem 0 2rem;
 }
 
 .glossary-pill-btn {
@@ -1048,70 +1048,74 @@ body {
   border-color: var(--meta-blue);
 }
 
-.glossary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.3rem;
-  margin-top: 1.8rem;
-}
-
-.glossary-card {
-  background: var(--bg-subtle);
-  border: 1px solid var(--border-subtle);
-  padding: 1.3rem 1.4rem;
-  border-radius: 14px;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+.glossary-list-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
-.glossary-card:hover {
-  transform: translateY(-3px);
+.glossary-row-item {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.2rem 1.6rem;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+}
+
+@media (max-width: 850px) {
+  .glossary-row-item {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+    padding: 1.1rem 1.2rem;
+  }
+}
+
+.glossary-row-item:hover {
   border-color: var(--meta-blue);
-  box-shadow: var(--shadow-card);
+  background: var(--bg-surface);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
 }
 
-.glossary-card-top {
+.glossary-row-left {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-.glossary-tag {
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: var(--meta-blue);
-  background: var(--meta-blue-subtle);
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-}
-
-.glossary-card b {
-  color: var(--text-primary);
-  font-size: 1.05rem;
+.glossary-term-name {
   font-family: var(--font-head);
-  display: block;
-  margin-bottom: 0.4rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
 }
 
-.glossary-card p {
+.glossary-row-right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.glossary-term-desc {
+  font-size: 0.94rem;
   color: var(--text-secondary);
-  font-size: 0.92rem;
   line-height: 1.65;
   margin: 0;
 }
 
-.glossary-example-hint {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  padding: 0.4rem 0.7rem;
-  border-radius: 6px;
-  margin-top: 0.8rem;
+.glossary-term-note {
+  font-size: 0.82rem;
+  color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+  border-left: 3px solid var(--meta-blue);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0 6px 6px 0;
   line-height: 1.5;
 }
 
@@ -2347,214 +2351,246 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
       <button class="glossary-pill-btn" data-cat="optimizacion">Optimización</button>
     </div>
 
-    <div class="glossary-grid" id="glossary-cards-container">
+    <div class="glossary-list-container" id="glossary-cards-container">
       
       <!-- 1 -->
-      <div class="glossary-card" data-category="arquitectura">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="arquitectura">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Arquitectura</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#01</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#01</span>
           </div>
-          <b>Context Window (Ventana de Contexto)</b>
-          <p>Límite superior de tokens (128,000 en Llama 3) que el modelo puede mantener en su memoria de atención simultáneamente sin truncar datos.</p>
+          <span class="glossary-term-name">Context Window</span>
         </div>
-        <div class="glossary-example-hint">Referencia: Equivale a procesar un libro de 300 páginas de una sola vez.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Límite superior de tokens (128,000 en Llama 3) que el modelo puede mantener en su memoria de atención simultáneamente sin truncar datos.</p>
+          <div class="glossary-term-note">Referencia: Equivale a procesar un libro de 300 páginas de una sola vez.</div>
+        </div>
       </div>
 
       <!-- 2 -->
-      <div class="glossary-card" data-category="inferencia">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="inferencia">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Inferencia</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#02</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#02</span>
           </div>
-          <b>KV Cache (Key-Value Cache)</b>
-          <p>Almacenamiento en VRAM de los tensores Key y Value calculados previamente, evitando recalcular la atención de todo el historial en cada token.</p>
+          <span class="glossary-term-name">KV Cache</span>
         </div>
-        <div class="glossary-example-hint">Impacto: Acelera la generación de $O(N^2)$ a $O(N)$ operaciones por token.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Almacenamiento en memoria VRAM de los tensores Key y Value calculados previamente, evitando recalcular la atención de todo el historial en cada token.</p>
+          <div class="glossary-term-note">Impacto: Acelera la generación de $O(N^2)$ a $O(N)$ operaciones por token.</div>
+        </div>
       </div>
 
       <!-- 3 -->
-      <div class="glossary-card" data-category="arquitectura">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="arquitectura">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Arquitectura</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#03</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#03</span>
           </div>
-          <b>Grouped-Query Attention (GQA)</b>
-          <p>Esquema de atención donde múltiples cabezales de Query comparten un solo cabezal Key/Value, reduciendo la memoria en un 75%.</p>
+          <span class="glossary-term-name">Grouped-Query Attention (GQA)</span>
         </div>
-        <div class="glossary-example-hint">Especificación: Llama 3 8B utiliza 32 cabezales Q agrupados en 8 cabezales KV.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Esquema de atención donde múltiples cabezales de Query comparten un solo cabezal Key/Value, reduciendo la memoria en un 75%.</p>
+          <div class="glossary-term-note">Especificación: Llama 3 8B utiliza 32 cabezales Q agrupados en 8 cabezales KV.</div>
+        </div>
       </div>
 
       <!-- 4 -->
-      <div class="glossary-card" data-category="optimizacion">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="optimizacion">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Optimización</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#04</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#04</span>
           </div>
-          <b>Cuantización (Quantization - INT4 / GGUF / AWQ)</b>
-          <p>Conversión de pesos neuronales de punto flotante de 16 bits (FP16) a enteros de 4 u 8 bits (INT4/INT8) para reducir el tamaño en disco y VRAM.</p>
+          <span class="glossary-term-name">Cuantización (INT4 / GGUF / AWQ)</span>
         </div>
-        <div class="glossary-example-hint">Rendimiento: Reduce un modelo de 16 GB a solo 5.5 GB para correr en laptops.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Conversión de pesos neuronales de punto flotante de 16 bits (FP16) a enteros de 4 u 8 bits (INT4/INT8) para reducir el tamaño en disco y VRAM.</p>
+          <div class="glossary-term-note">Rendimiento: Reduce un modelo de 16 GB a solo 5.5 GB para correr en laptops.</div>
+        </div>
       </div>
 
       <!-- 5 -->
-      <div class="glossary-card" data-category="inferencia">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="inferencia">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Inferencia</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#05</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#05</span>
           </div>
-          <b>Alucinación (Hallucination)</b>
-          <p>Generación de afirmaciones factualmente incorrectas con alta confianza gramatical, producto del sesgo probabilístico del modelo.</p>
+          <span class="glossary-term-name">Alucinación (Hallucination)</span>
         </div>
-        <div class="glossary-example-hint">Mitigación: Se corrige integrando bases de conocimiento con RAG.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Generación de afirmaciones factualmente incorrectas con alta confianza gramatical, producto del sesgo probabilístico del modelo.</p>
+          <div class="glossary-term-note">Mitigación: Se corrige integrando bases de conocimiento con RAG.</div>
+        </div>
       </div>
 
       <!-- 6 -->
-      <div class="glossary-card" data-category="entrenamiento">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="entrenamiento">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Entrenamiento</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#06</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#06</span>
           </div>
-          <b>LoRA & QLoRA (Low-Rank Adaptation)</b>
-          <p>Técnica de ajuste fino paramétrico eficiente (PEFT) que congela los pesos base y solo entrena matrices pequeñas de bajo rango.</p>
+          <span class="glossary-term-name">LoRA & QLoRA</span>
         </div>
-        <div class="glossary-example-hint">Eficiencia: Permite entrenar Llama 3 con solo 0.1% de los parámetros activos.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Técnica de ajuste fino paramétrico eficiente (PEFT) que congela los pesos base y solo entrena matrices pequeñas de bajo rango.</p>
+          <div class="glossary-term-note">Eficiencia: Permite entrenar Llama 3 con solo 0.1% de los parámetros activos.</div>
+        </div>
       </div>
 
       <!-- 7 -->
-      <div class="glossary-card" data-category="arquitectura">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="arquitectura">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Arquitectura</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#07</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#07</span>
           </div>
-          <b>RoPE (Rotary Position Embedding)</b>
-          <p>Técnica de codificación posicional que rota los vectores $Q$ y $K$ en el plano complejo para capturar distancias relativas en secuencias largas.</p>
+          <span class="glossary-term-name">RoPE (Rotary Position Embedding)</span>
         </div>
-        <div class="glossary-example-hint">Fundamento: Base técnica que permite extender el contexto a 128k tokens.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Técnica de codificación posicional que rota los vectores $Q$ y $K$ en el plano complejo para capturar distancias relativas en secuencias largas.</p>
+          <div class="glossary-term-note">Fundamento: Base técnica que permite extender el contexto a 128k tokens.</div>
+        </div>
       </div>
 
       <!-- 8 -->
-      <div class="glossary-card" data-category="inferencia">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="inferencia">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Inferencia</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#08</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#08</span>
           </div>
-          <b>Time-To-First-Token (TTFT)</b>
-          <p>Tiempo de latencia inicial transcurrido desde que se despacha el prompt hasta que el primer token es proyectado en la pantalla del usuario.</p>
+          <span class="glossary-term-name">Time-To-First-Token (TTFT)</span>
         </div>
-        <div class="glossary-example-hint">Métrica: Indicador crítico de experiencia de usuario en tiempo real.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Tiempo de latencia inicial transcurrido desde que se despacha el prompt hasta que el primer token es proyectado en la pantalla del usuario.</p>
+          <div class="glossary-term-note">Métrica: Indicador crítico de experiencia de usuario en tiempo real.</div>
+        </div>
       </div>
 
       <!-- 9 -->
-      <div class="glossary-card" data-category="entrenamiento">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="entrenamiento">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Entrenamiento</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#09</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#09</span>
           </div>
-          <b>SFT (Supervised Fine-Tuning)</b>
-          <p>Etapa de entrenamiento supervisado donde el modelo aprende a responder en formato de diálogo humano (asistente) usando pares instrucción-respuesta.</p>
+          <span class="glossary-term-name">SFT (Supervised Fine-Tuning)</span>
         </div>
-        <div class="glossary-example-hint">Objetivo: Transforma un modelo base de texto en un asistente conversacional (Instruct).</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Etapa de entrenamiento supervisado donde el modelo aprende a responder en formato de diálogo humano (asistente) usando pares instrucción-respuesta.</p>
+          <div class="glossary-term-note">Objetivo: Transforma un modelo base de texto en un asistente conversacional (Instruct).</div>
+        </div>
       </div>
 
       <!-- 10 -->
-      <div class="glossary-card" data-category="entrenamiento">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="entrenamiento">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Entrenamiento</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#10</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#10</span>
           </div>
-          <b>DPO (Direct Preference Optimization)</b>
-          <p>Algoritmo de alineación que optimiza directamente la política del modelo contra preferencias humanas sin requerir un modelo de recompensa complejo.</p>
+          <span class="glossary-term-name">DPO (Direct Preference Optimization)</span>
         </div>
-        <div class="glossary-example-hint">Ventaja: Más estable y rápido que el clásico RLHF con PPO.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Algoritmo de alineación que optimiza directamente la política del modelo contra preferencias humanas sin requerir un modelo de recompensa complejo.</p>
+          <div class="glossary-term-note">Ventaja: Más estable y rápido que el clásico RLHF con PPO.</div>
+        </div>
       </div>
 
       <!-- 11 -->
-      <div class="glossary-card" data-category="optimizacion">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="optimizacion">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Optimización</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#11</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#11</span>
           </div>
-          <b>RAG (Retrieval-Augmented Generation)</b>
-          <p>Patrón de arquitectura que recupera fragmentos de documentos externos relevantes y los inyecta en el prompt antes de generar la respuesta.</p>
+          <span class="glossary-term-name">RAG (Retrieval-Augmented Generation)</span>
         </div>
-        <div class="glossary-example-hint">Aplicación: Permite a Llama 3 consultar manuales internos y bases de datos privadas.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Patrón de arquitectura que recupera fragmentos de documentos externos relevantes y los inyecta en el prompt antes de generar la respuesta.</p>
+          <div class="glossary-term-note">Aplicación: Permite a Llama 3 consultar manuales internos y bases de datos privadas.</div>
+        </div>
       </div>
 
       <!-- 12 -->
-      <div class="glossary-card" data-category="optimizacion">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="optimizacion">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Optimización</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#12</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#12</span>
           </div>
-          <b>Perplejidad (Perplexity - PPL)</b>
-          <p>Métrica matemática intrínseca que evalúa la incertidumbre del modelo al predecir texto. Cuanto menor sea la perplejidad, mejor es el modelo.</p>
+          <span class="glossary-term-name">Perplejidad (Perplexity - PPL)</span>
         </div>
-        <div class="glossary-example-hint">Métrica: Mide qué tan sorprendido queda el modelo ante una palabra real.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Métrica matemática intrínseca que evalúa la incertidumbre del modelo al predecir texto. Cuanto menor sea la perplejidad, mejor es el modelo.</p>
+          <div class="glossary-term-note">Métrica: Mide qué tan sorprendido queda el modelo ante una palabra real.</div>
+        </div>
       </div>
 
       <!-- 13 -->
-      <div class="glossary-card" data-category="arquitectura">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="arquitectura">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Arquitectura</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#13</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#13</span>
           </div>
-          <b>FlashAttention-2</b>
-          <p>Reimplementación a bajo nivel (CUDA) del cómputo de atención que minimiza las transferencias lentas a la memoria HBM de la GPU.</p>
+          <span class="glossary-term-name">FlashAttention-2</span>
         </div>
-        <div class="glossary-example-hint">Rendimiento: Logra aceleraciones de entre 2x y 4x en el entrenamiento de Transformers.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Reimplementación a bajo nivel (CUDA) del cómputo de atención que minimiza las transferencias lentas a la memoria HBM de la GPU.</p>
+          <div class="glossary-term-note">Rendimiento: Logra aceleraciones de entre 2x y 4x en el entrenamiento de Transformers.</div>
+        </div>
       </div>
 
       <!-- 14 -->
-      <div class="glossary-card" data-category="arquitectura">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="arquitectura">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Arquitectura</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#14</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#14</span>
           </div>
-          <b>MoE (Mixture of Experts)</b>
-          <p>Arquitectura donde solo una fracción de las redes neuronales (expertos) se activan para cada token individual, acelerando la inferencia.</p>
+          <span class="glossary-term-name">MoE (Mixture of Experts)</span>
         </div>
-        <div class="glossary-example-hint">Eficiencia: Permite tener modelos de 50B parámetros que gastan como uno de 10B.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Arquitectura donde solo una fracción de las redes neuronales (expertos) se activan para cada token individual, acelerando la inferencia.</p>
+          <div class="glossary-term-note">Eficiencia: Permite tener modelos de 50B parámetros que gastan como uno de 10B.</div>
+        </div>
       </div>
 
       <!-- 15 -->
-      <div class="glossary-card" data-category="inferencia">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="inferencia">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Inferencia</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#15</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#15</span>
           </div>
-          <b>Top-p (Nucleus Sampling) & Top-k</b>
-          <p>Estrategias de filtrado de logits: Top-p selecciona el subconjunto más pequeño de tokens cuya suma de probabilidad alcance $p$ (ej. 0.90).</p>
+          <span class="glossary-term-name">Top-p (Nucleus Sampling) & Top-k</span>
         </div>
-        <div class="glossary-example-hint">Control: Corta la cola larga de palabras absurdas o incoherentes.</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Estrategias de filtrado de logits: Top-p selecciona el subconjunto más pequeño de tokens cuya suma de probabilidad alcance $p$ (ej. 0.90).</p>
+          <div class="glossary-term-note">Control: Corta la cola larga de palabras absurdas o incoherentes.</div>
+        </div>
       </div>
 
       <!-- 16 -->
-      <div class="glossary-card" data-category="optimizacion">
-        <div>
-          <div class="glossary-card-top">
+      <div class="glossary-row-item" data-category="optimizacion">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span class="glossary-tag">Optimización</span>
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">#16</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#16</span>
           </div>
-          <b>Pesos Abiertos (Open Weights)</b>
-          <p>Filosofía de publicación de modelos donde se entregan los parámetros entrenados completos sin costo, permitiendo auditoría y despliegues soberanos.</p>
+          <span class="glossary-term-name">Pesos Abiertos (Open Weights)</span>
         </div>
-        <div class="glossary-example-hint">Filosofía: Ecosistema abierto de Meta con Llama 3 (8B, 70B y 405B).</div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Filosofía de publicación de modelos donde se entregan los parámetros entrenados completos sin costo, permitiendo auditoría y despliegues soberanos.</p>
+          <div class="glossary-term-note">Filosofía: Ecosistema abierto de Meta con Llama 3 (8B, 70B y 405B).</div>
+        </div>
       </div>
 
     </div>
@@ -3455,28 +3491,28 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
     }
   })();
 
-  /* 13. FILTRO Y BUSCADOR EN VIVO DE GLOSARIO */
+  /* 13. FILTRO Y BUSCADOR EN VIVO DE GLOSARIO (FORMATO LISTA) */
   (function initGlossary(){
     var searchInput = document.getElementById("glossary-search");
     var filterBtns = document.querySelectorAll(".glossary-pill-btn");
-    var cards = document.querySelectorAll(".glossary-card");
+    var items = document.querySelectorAll(".glossary-row-item");
 
     var currentFilter = "all";
 
     function filterGlossary(){
       var query = searchInput.value.toLowerCase().trim();
 
-      cards.forEach(function(card){
-        var cat = card.getAttribute("data-category");
-        var text = card.innerText.toLowerCase();
+      items.forEach(function(item){
+        var cat = item.getAttribute("data-category");
+        var text = item.innerText.toLowerCase();
         
         var matchesCat = (currentFilter === "all" || cat === currentFilter);
         var matchesQuery = (query === "" || text.indexOf(query) !== -1);
 
         if(matchesCat && matchesQuery){
-          card.style.display = "flex";
+          item.style.display = "grid";
         } else {
-          card.style.display = "none";
+          item.style.display = "none";
         }
       });
     }
