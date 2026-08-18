@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curso Avanzado: Arquitectura de LLMs y Meta Llama 3 | Meta AI</title>
-<meta name="description" content="Curso estructurado e interactivo sobre cómo funcionan los Large Language Models (LLMs), tokenización BPE, embeddings, atención QKV, GQA, leyes de escala e inferencia local con Meta Llama 3.">
+<meta name="description" content="Curso integral, profundo e interactivo sobre la arquitectura de los Large Language Models (LLMs), tokenización BPE, embeddings, atención QKV, Grouped-Query Attention (GQA), leyes de escala e inferencia local con Meta Llama 3.">
 
 <!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, Fira Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,7 @@
 
 <style>
 /* ==========================================================================
-   SISTEMA DE DISEÑO META AI - VARIABLES Y PALETA
+   SISTEMA DE DISEÑO META AI - VARIABLES Y PALETA CORPORATIVA
    ========================================================================== */
 :root {
   /* TEMA CLARO */
@@ -287,43 +287,6 @@ body {
   line-height: 1.75;
   margin-bottom: 2rem;
   max-width: 85ch;
-}
-
-.tech-spec-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.spec-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 1.2rem;
-  box-shadow: var(--shadow-sm);
-}
-
-.spec-card .spec-title {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.3rem;
-}
-
-.spec-card .spec-value {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--meta-blue);
-  font-family: var(--font-disp);
-}
-
-.spec-card .spec-desc {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  margin-top: 0.2rem;
 }
 
 /* Módulos */
@@ -933,7 +896,7 @@ body {
 }
 
 /* ==========================================================================
-   BUTTONS & INPUTS
+   BUTTONS, INPUTS & CODE BOX CON BOTÓN DE COPIAR
    ========================================================================== */
 .btn-primary {
   display: inline-flex;
@@ -1011,28 +974,121 @@ body {
 .code-box {
   background: var(--bg-code);
   border: 1px solid var(--border-strong);
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   font-family: var(--font-mono);
-  margin: 1.5rem 0;
+  margin: 1.8rem 0;
+  box-shadow: var(--shadow-card);
 }
 
 .code-header {
   background: rgba(255, 255, 255, 0.05);
-  padding: 0.5rem 1rem;
-  font-size: 0.78rem;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.btn-copy-code {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-copy-code:hover {
+  background: var(--meta-blue);
+  color: #fff;
+  border-color: var(--meta-blue);
 }
 
 .code-content {
-  padding: 1rem 1.2rem;
+  padding: 1.1rem 1.3rem;
   font-size: 0.88rem;
   color: var(--text-code);
-  line-height: 1.65;
+  line-height: 1.7;
   overflow-x: auto;
+}
+
+/* ==========================================================================
+   GLOSARIO INTERACTIVO & CERTIFICADO DE FINALIZACIÓN
+   ========================================================================== */
+.glossary-section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin: 5rem 0 3rem;
+  box-shadow: var(--shadow-card);
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.glossary-item {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  padding: 1.2rem;
+  border-radius: 10px;
+  border-left: 3px solid var(--meta-blue);
+}
+
+.glossary-item b {
+  color: var(--meta-blue);
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.glossary-item p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.certificate-card {
+  background: var(--bg-surface);
+  border: 2px solid var(--meta-blue);
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: center;
+  margin: 3rem 0;
+  box-shadow: var(--shadow-elevated);
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.certificate-badge {
+  display: inline-block;
+  background: var(--meta-blue-subtle);
+  color: var(--meta-blue);
+  border: 1px solid var(--meta-blue-border);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.certificate-title {
+  font-family: var(--font-disp);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
 }
 
 .course-footer {
@@ -1067,6 +1123,7 @@ body {
       <a href="#modulo-2" class="nav-link-item">Módulo 2: Vectores</a>
       <a href="#modulo-3" class="nav-link-item">Módulo 3: Transformers</a>
       <a href="#modulo-4" class="nav-link-item">Módulo 4: Inferencia</a>
+      <a href="#glosario" class="nav-link-item">Glosario</a>
     </nav>
 
     <div class="header-controls">
@@ -1108,10 +1165,11 @@ body {
   <section class="course-hero" id="overview">
     <span class="hero-badge-tag">Meta AI Research · Formación Técnica Integral</span>
     <h1 class="hero-title">Arquitectura de Modelos de Lenguaje Grande (LLM)</h1>
-    <p class="hero-subtitle">Un curso interactivo, profundo y riguroso estructurado pedagógicamente: cada tema incluye <b>Introducción, Concepto Formal, Cómo Funciona paso a paso, Analogía Sencilla, Laboratorio en Vivo, Ejemplos Reales, Conclusión y Evaluación</b> con Meta Llama 3.</p>
+    <p class="hero-subtitle">Un curso interactivo, profundo y riguroso estructurado pedagógicamente: cada tema incluye <b>Introducción, Concepto Formal, Cómo Funciona paso a paso, Analogía Sencilla, Laboratorio en Vivo, Código Fuente Comentado, Ejemplos Reales, Conclusión y Evaluación</b> con Meta Llama 3.</p>
 
-    <div style="margin-top: 2rem;">
+    <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
       <a href="#modulo-1" class="btn-primary">Empezar el Curso</a>
+      <a href="#glosario" class="btn-secondary">Ver Glosario Técnico</a>
     </div>
   </section>
 
@@ -1221,6 +1279,35 @@ body {
           <span style="font-size: 0.82rem; color: var(--text-muted);">Paso: <b id="p-step-counter" style="color: var(--meta-blue);">1 / 3</b></span>
           <button class="btn-secondary" id="p-replay">Reiniciar Frase</button>
         </div>
+      </div>
+
+      <!-- SNIPPET DE CÓDIGO PYTORCH CON BOTÓN DE COPIAR -->
+      <div class="code-box">
+        <div class="code-header">
+          <span>Python (PyTorch) · Muestreo con Temperatura y Softmax</span>
+          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre class="code-content"><code>import torch
+import torch.nn.functional as F
+
+def sample_next_token(logits: torch.Tensor, temperature: float = 0.7) -> int:
+    """
+    Toma los logits crudos del modelo y selecciona el siguiente token
+    utilizando escalamiento de temperatura y muestreo estocástico.
+    """
+    # 1. Evitar división por cero si temperatura es extremadamente baja
+    temp = max(temperature, 1e-5)
+    
+    # 2. Escalar los logits dividiendo entre la temperatura
+    scaled_logits = logits / temp
+    
+    # 3. Aplicar Softmax para convertir logits en probabilidades que sumen 1.0 (100%)
+    probabilities = F.softmax(scaled_logits, dim=-1)
+    
+    # 4. Muestreo estocástico multinomial (selección según peso probabilístico)
+    next_token_id = torch.multinomial(probabilities, num_samples=1)
+    
+    return next_token_id.item()</code></pre>
       </div>
 
       <!-- 6. EJEMPLOS PRÁCTICOS -->
@@ -1363,6 +1450,25 @@ body {
             <div id="nlp-out-txt" style="font-weight: 700; color: var(--accent-success); margin-top: 0.3rem; font-size: 1.05rem;">Ejecutando streaming de audio</div>
           </div>
         </div>
+      </div>
+
+      <!-- SNIPPET HUGGING FACE TOKENIZER CON COPIAR -->
+      <div class="code-box">
+        <div class="code-header">
+          <span>Python · Inspección de Tensores con Transformers</span>
+          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre class="code-content"><code>from transformers import AutoTokenizer
+
+# Cargar el tokenizador oficial de Meta Llama 3
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B")
+
+texto = "reproducir música en streaming"
+inputs = tokenizer(texto, return_tensors="pt")
+
+print("IDs Numéricos (Tensor):", inputs["input_ids"])
+print("Máscara de Atención:", inputs["attention_mask"])
+# Salida: tensor([[128000, 4120, 892, 104, 15302]])</code></pre>
       </div>
 
       <!-- 6. CONCLUSIÓN -->
@@ -1962,19 +2068,97 @@ body {
         </div>
       </div>
 
-      <!-- 4. COMANDO REAL DE OLLAMA -->
+      <!-- 4. COMANDO REAL DE OLLAMA CON BOTÓN DE COPIAR -->
       <div class="code-box">
         <div class="code-header">
-          <span>Terminal Bash · Ejecución de Llama 3 en tu computadora</span>
-          <span>cURL API</span>
+          <span>Python · Cliente Streaming Asíncrono para Ollama</span>
+          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
         </div>
-        <div class="code-content">curl http://localhost:11434/api/generate -d '{
-  "model": "llama3:8b",
-  "prompt": "¿Cómo funciona la arquitectura Transformer?",
-  "stream": true
-}'</div>
+        <pre class="code-content"><code>import requests
+import json
+
+def stream_llama(prompt: str):
+    url = "http://localhost:11434/api/generate"
+    payload = {"model": "llama3:8b", "prompt": prompt, "stream": True}
+    
+    with requests.post(url, json=payload, stream=True) as response:
+        for line in response.iter_lines():
+            if line:
+                chunk = json.loads(line.decode('utf-8'))
+                print(chunk.get("response", ""), end="", flush=True)
+
+# Ejecución de prueba
+stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
       </div>
     </article>
+  </section>
+
+  <!-- ==========================================================================
+       SECCIÓN GLOSARIO TÉCNICO COMPLETO
+       ========================================================================== -->
+  <section class="glossary-section" id="glosario">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <span class="hero-badge-tag">Referencia Rápida</span>
+      <h2 style="font-size: 2.2rem; font-family: var(--font-disp); font-weight: 800; color: var(--text-primary);">Glosario Técnico de Arquitectura de LLMs</h2>
+      <p style="color: var(--text-secondary); max-width: 70ch; margin: 0.5rem auto 0;">Los 8 términos indispensables que todo desarrollador de IA debe dominar explicados de forma clara y concisa.</p>
+    </div>
+
+    <div class="glossary-grid">
+      <div class="glossary-item">
+        <b>1. Context Window (Ventana de Contexto)</b>
+        <p>La cantidad máxima de tokens (128k en Llama 3) que el modelo puede recordar simultáneamente en una conversación o documento.</p>
+      </div>
+      <div class="glossary-item">
+        <b>2. KV Cache (Key-Value Cache)</b>
+        <p>Estructura en memoria VRAM que guarda los vectores Key y Value de tokens previos para no recalcularlos en cada paso de inferencia.</p>
+      </div>
+      <div class="glossary-item">
+        <b>3. Grouped-Query Attention (GQA)</b>
+        <p>Arquitectura donde múltiples cabezales de consulta comparten cabezales de llaves/valores, reduciendo el consumo de VRAM en un 75%.</p>
+      </div>
+      <div class="glossary-item">
+        <b>4. Cuantización (Quantization)</b>
+        <p>Técnica de compresión numérica (de FP16 a INT4) para reducir el peso del modelo en disco y RAM sin perder razonamiento lógico.</p>
+      </div>
+      <div class="glossary-item">
+        <b>5. Alucinación (Hallucination)</b>
+        <p>Fenómeno donde el modelo genera hechos falsos con alta convicción debido a que predice lo que 'suena plausible' y no verdades absolutas.</p>
+      </div>
+      <div class="glossary-item">
+        <b>6. Fine-Tuning LoRA</b>
+        <p>Ajuste fino eficiente mediante matrices de bajo rango que adapta el modelo a tareas específicas sin reentrenar todos los pesos.</p>
+      </div>
+      <div class="glossary-item">
+        <b>7. RoPE (Rotary Position Embeddings)</b>
+        <p>Esquema matemático de codificación posicional que rota los vectores para capturar distancias relativas en secuencias muy largas.</p>
+      </div>
+      <div class="glossary-item">
+        <b>8. Time-To-First-Token (TTFT)</b>
+        <p>Tiempo de latencia inicial transcurrido desde que se envía el prompt hasta que aparece el primer carácter de respuesta en pantalla.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       CERTIFICADO DIGITAL DINÁMICO DE COMPLETADO
+       ========================================================================== -->
+  <section class="certificate-card" id="certificate-panel">
+    <span class="certificate-badge">Certificado de Finalización</span>
+    <h3 class="certificate-title">¡Evaluación Superada con Éxito!</h3>
+    <p style="color: var(--text-secondary); max-width: 60ch; margin: 0.5rem auto 1.5rem; font-size: 1.05rem;">
+      Has respondido correctamente las 7 preguntas de autoevaluación del curso <b>Arquitectura de LLMs & Meta Llama 3</b>.
+    </p>
+
+    <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); padding: 1.5rem; border-radius: 12px; max-width: 500px; margin: 0 auto 1.5rem;">
+      <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">NOMBRE DEL ESTUDIANTE:</label>
+      <input type="text" id="cert-student-name" class="input-field" value="Estudiante de Inteligencia Artificial" style="text-align: center; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.8rem;">
+      <span style="font-size: 0.82rem; color: var(--text-muted);">Fecha de acreditación: <b id="cert-date" style="color: var(--text-primary);"></b></span>
+    </div>
+
+    <button class="btn-primary" onclick="window.print()">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+      <span>Imprimir / Guardar Certificado</span>
+    </button>
   </section>
 
 </main>
@@ -2059,8 +2243,8 @@ body {
   var themeIconContainer = document.getElementById("theme-icon-container");
   var themeLabel = document.getElementById("theme-label");
 
-  var sunSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>';
-  var moonSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 11.4-11.4A10 10 0 0 0 12.3 2zm-1 17.8A8 8 0 0 1 9.5 4a8.2 8.2 0 0 0 8.7 8.7 8 8 0 0 1-6.9 7.1z"/></svg>';
+  var sunSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>';
+  var moonSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.4-11.4A10 10 0 0 0 12.3 2zm-1 17.8A8 8 0 0 1 9.5 4a8.2 8.2 0 0 0 8.7 8.7 8 8 0 0 1-6.9 7.1z"/></svg>';
 
   var savedTheme = localStorage.getItem("meta_theme") || "light";
   document.documentElement.setAttribute("data-theme", savedTheme);
@@ -2133,7 +2317,7 @@ body {
   /* 4. BARRA DE PROGRESO & NAVEGACIÓN ACTIVA */
   var progressBar = document.getElementById("progress-bar");
   var navLinks = document.querySelectorAll(".nav-link-item");
-  var modules = document.querySelectorAll(".module-block");
+  var modules = document.querySelectorAll(".module-block, .glossary-section");
 
   window.addEventListener("scroll", function(){
     var h = document.documentElement;
@@ -2152,19 +2336,34 @@ body {
     });
   }, { passive: true });
 
-  /* 5. MOTOR DE QUIZZES CON CONTADOR Y BOTÓN DE RESET TOTAL */
+  /* 5. MOTOR DE QUIZZES CON CONTADOR, RESET Y CERTIFICADO */
   var totalQuizzes = document.querySelectorAll(".quiz-box").length;
   var quizCounterText = document.getElementById("quiz-counter-text");
   var btnResetAllQuizzes = document.getElementById("btn-reset-all-quizzes");
+  var certPanel = document.getElementById("certificate-panel");
+  var certDate = document.getElementById("cert-date");
+
+  if(certDate){
+    certDate.textContent = new Date().toLocaleDateString("es-MX", { year: 'numeric', month: 'long', day: 'numeric' });
+  }
 
   function updateQuizScore(){
+    var correctCount = 0;
     var answered = 0;
     document.querySelectorAll(".quiz-box").forEach(function(b){
-      if(b.querySelector(".quiz-option.correct") || b.querySelector(".quiz-option.incorrect")){
+      if(b.querySelector(".quiz-option.correct")){
+        correctCount++;
+        answered++;
+      } else if(b.querySelector(".quiz-option.incorrect")){
         answered++;
       }
     });
     if(quizCounterText) quizCounterText.textContent = answered + " / " + totalQuizzes;
+
+    if(correctCount === totalQuizzes && certPanel){
+      certPanel.style.display = "block";
+      certPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   document.querySelectorAll(".quiz-box").forEach(function(box){
@@ -2206,6 +2405,7 @@ body {
         var fb = box.querySelector(".quiz-feedback");
         if(fb) fb.style.display = "none";
       });
+      if(certPanel) certPanel.style.display = "none";
       updateQuizScore();
     });
   }
@@ -2704,6 +2904,24 @@ body {
   })();
 
 })();
+
+/* 13. FUNCIÓN GLOBAL DE COPIAR CÓDIGO */
+function copyCode(btn){
+  var codeBlock = btn.parentElement.nextElementSibling.querySelector("code");
+  if(!codeBlock) return;
+  var text = codeBlock.innerText;
+  navigator.clipboard.writeText(text).then(function(){
+    var oldText = btn.textContent;
+    btn.textContent = "¡Copiado!";
+    btn.style.background = "#059669";
+    btn.style.color = "#ffffff";
+    setTimeout(function(){
+      btn.textContent = oldText;
+      btn.style.background = "";
+      btn.style.color = "";
+    }, 2000);
+  });
+}
 </script>
 
 </body>
