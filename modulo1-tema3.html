@@ -817,7 +817,7 @@
 
  <div class="formula-card">
  <div class="formula-math-area">
- $$\mathcal{L}_{\text{SFT}}(\theta) = -\sum_{t=1}^{|Y|} \log P_\theta(y_t \mid X, y_{<t}) \quad \text{donde } \text{label}(x_i) = -100 \ \forall \ x_i \in X$$
+ $$\mathcal{L}_{\text{SFT}}(\theta) = -\sum_{t=1}^{|Y|} \log P_\theta\!\left(y_t \mid X,\, y_{1:t-1}\right) \quad \text{donde } \mathrm{label}(x_i) = {-100}\; \forall\; x_i \in X$$
  </div>
  <details class="formula-breakdown-details">
  <summary class="formula-breakdown-summary">
@@ -1535,154 +1535,215 @@
 
  </section>
 
- <!-- ==========================================================================
- EJERCICIOS PRÁCTICOS OFICIALES (1 AL 3) CON SOLUCIONES DESPLEGABLES
- ========================================================================== -->
- <section class="tema-card" id="ejercicios" style="border-left: 5px solid var(--accent-easy);">
- <div class="tema-header">
- <div class="tema-eyebrow">Práctica & Aplicación de Ingeniería</div>
- <h3 class="tema-title">Ejercicios Prácticos Oficiales de la Unidad 1.3</h3>
- </div>
-
- <!-- EJERCICIO 1 -->
- <div class="exercise-item-box">
- <div class="exercise-header">
- <span class="exercise-badge">Ejercicio 1</span>
- <h4 class="exercise-title">Cálculo de Parámetros y VRAM para LoRA en Llama 3 8B</h4>
- </div>
- <p class="exercise-prompt">
- <b>Enunciado:</b> Para un modelo Meta Llama 3 8B ($d_{\text{model}} = 4096$, 32 capas transformer), calcula la cantidad exacta de parámetros entrenables si se aplica LoRA con rango $r=16$ y factor de escala $\alpha=32$ adaptando únicamente las matrices de atención $W_q$ y $W_v$. Compara la memoria VRAM requerida por los pesos entrenables en FP16 frente a un Full Fine-Tuning de 8B parámetros y explica por qué la inferencia no sufre latencia adicional tras la fusión (<i>merge</i>).
- </p>
-
- <details class="exercise-solution-details">
- <summary class="exercise-solution-summary">
- <span>Ver Solución Detallada & Desglose Matemático</span>
- <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
- </summary>
- <div class="exercise-solution-panel">
- <p><b>1. Cálculo de Parámetros Entrenables por Capa:</b></p>
- <ul style="margin: 0.5rem 0 0.8rem 1.4rem; font-size: 0.88rem; color: var(--text-secondary);">
- <li>Matriz $B \in \mathbb{R}^{4096 \times 16} \implies 4096 \times 16 = 65,536$ parámetros.</li>
- <li>Matriz $A \in \mathbb{R}^{16 \times 4096} \implies 16 \times 4096 = 65,536$ parámetros.</li>
- <li>Parámetros LoRA por proyección: $65,536 + 65,536 = 131,072$ parámetros.</li>
- <li>Adaptando $W_q$ y $W_v$: $2 \times 131,072 = 262,144$ parámetros por capa.</li>
- </ul>
- <p><b>2. Parámetros Totales en 32 Capas:</b></p>
- $$\text{Total LoRA} = 32 \times 262,144 = 8,388,608 \text{ parámetros } (\approx 8.39\text{ M})$$
- <p><b>3. Comparativa de Memoria VRAM:</b></p>
- <ul style="margin: 0.5rem 0 0.8rem 1.4rem; font-size: 0.88rem; color: var(--text-secondary);">
- <li><b>Pesos LoRA (FP16):</b> $8,388,608 \times 2\text{ bytes} \approx 16.78\text{ MB}$.</li>
- <li><b>Pesos Full FT (FP16):</b> $8,030,000,000 \times 2\text{ bytes} \approx 16.06\text{ GB}$ (más 64 GB de optimizadores AdamW).</li>
- <li><b>Ahorro:</b> Reducción del 99.89% en parámetros entrenables.</li>
- </ul>
- <p style="margin:0; font-size:0.88rem; color:var(--text-secondary);"><b>Fusión de Matrices (Merge):</b> En despliegue, calculamos $W_{\text{final}} = W_0 + \frac{\alpha}{r}(B \cdot A)$ una sola vez en frío. La matriz resultante tiene exactamente las dimensiones originales $[4096 \times 4096]$, garantizando latencia idéntica a la del modelo base sin adaptadores.</p>
- </div>
- </details>
- </div>
-
- <!-- EJERCICIO 2 -->
- <div class="exercise-item-box">
- <div class="exercise-header">
- <span class="exercise-badge">Ejercicio 2</span>
- <h4 class="exercise-title">Estructuración de Dataset SFT JSONL con Loss Masking</h4>
- </div>
- <p class="exercise-prompt">
- <b>Enunciado:</b> Escribe un registro completo en formato JSONL para un caso de soporte técnico de PostgreSQL en Llama 3. Muestra la conversión a tokens con los delimitadores de Chat Template oficiales (<code>&lt;|start_header_id|&gt;</code>, <code>&lt;|end_header_id|&gt;</code>, <code>&lt;|eot_id|&gt;</code>) y explica formalmente por qué los tokens del sistema y del usuario deben recibir <code>label = -100</code> durante el cálculo de la entropía cruzada en PyTorch.
- </p>
-
- <details class="exercise-solution-details">
- <summary class="exercise-solution-summary">
- <span>Ver Solución Detallada & JSONL Oficial</span>
- <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
- </summary>
- <div class="exercise-solution-panel">
- <div class="code-box">
- <div class="code-header">
- <span>dataset_sft_postgresql.jsonl</span>
- <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
- </div>
- <pre class="code-content"><code>{"messages": [
- {"role": "system", "content": "Eres un DBA senior experto en optimización de PostgreSQL. Proporciona diagnósticos con planes EXPLAIN ANALYZE y sugerencias de índices concisas."},
- {"role": "user", "content": "La consulta SELECT * FROM ordenes WHERE cliente_id = 450 AND estado = 'PAGADO' tarda 4.2 segundos con 10M de filas. ¿Cómo la optimizo?"},
- {"role": "assistant", "content": "Para optimizar esta consulta:\\n1. Crea un índice compuesto B-Tree:\\nCREATE INDEX idx_ordenes_cliente_estado ON ordenes (cliente_id, estado);\\n2. Ejecuta ANALYZE ordenes; para refrescar las estadísticas del optimizador.\\n3. Esto transformará el Seq Scan en un Index Scan, reduciendo el tiempo a menos de 5ms."}
-]}</code></pre>
- </div>
- <p style="margin-top:0.8rem; font-size:0.88rem; color:var(--text-secondary);"><b>Justificación de Loss Masking (<code>label = -100</code>):</b> Durante el Supervised Fine-Tuning (SFT), solo queremos que el modelo aprenda a generar la respuesta experta condicionada en el contexto:</p>
- $$\mathcal{L} = -\sum_{t \in \text{Tokens Assistant}} \log P(y_t \mid x_{\text{system, user}}, y_{<t})$$
- <p style="margin:0; font-size:0.88rem; color:var(--text-secondary);">Si no enmascaramos el prompt del usuario con <code>label = -100</code>, PyTorch calcularía gradientes para predecir la pregunta del usuario, desperdiciando capacidad de adaptación y provocando sobreajuste (*overfitting*) en la formulación de consultas en lugar de en la solución técnica.</p>
- </div>
- </details>
- </div>
-
- <!-- EJERCICIO 3 -->
- <div class="exercise-item-box">
- <div class="exercise-header">
- <span class="exercise-badge">Ejercicio 3</span>
- <h4 class="exercise-title">Diseño de Pipeline con Blindaje Llama Guard 3 & LLM-as-a-Judge</h4>
- </div>
- <p class="exercise-prompt">
- <b>Enunciado:</b> Una institución financiera implementa un asistente de créditos con Llama 3 8B adaptado con QLoRA. Diseña la arquitectura del pipeline de inferencia y evaluación combinando una métrica cuantitativa (ROUGE-L contra un dataset de 300 casos bancarios auditados) y un filtro de seguridad Llama Guard 3. Explica qué categoría de riesgo ($S_1-S_{14}$) debe interceptar intentos de fuga de información y qué función cumple el juez sintético en la prevención de alucinaciones numéricas.
- </p>
-
- <details class="exercise-solution-details">
- <summary class="exercise-solution-summary">
- <span>Ver Solución Detallada & Arquitectura de 3 Capas</span>
- <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
- </summary>
- <div class="exercise-solution-panel">
- <div class="step-flow-list" style="margin: 0.5rem 0 1rem;">
- <div class="step-flow-item">
- <div class="step-num-badge">1</div>
- <div class="step-flow-content">
- <b>Validación Offline Pre-Despliegue:</b> Se evalúa el adaptador LoRA contra 300 pares de referencia calculando ROUGE-L ($\ge 0.70$) y BLEU-4 ($\ge 0.45$) para garantizar adherencia a términos regulatorios y formatos JSON.
- </div>
- </div>
- <div class="step-flow-item">
- <div class="step-num-badge">2</div>
- <div class="step-flow-content">
- <b>Filtro de Entrada / Salida (Llama Guard 3):</b> Cada prompt y respuesta pasa por Llama Guard 3 8B cuantizado. Si detecta $S_{14}$ (Inyección de Prompt / Jailbreak) o $S_2$ (Exfiltración de Datos Financieros Confidenciales), el microservicio bloquea el stream y emite HTTP 403 con mensaje de seguridad institucional.
- </div>
- </div>
- <div class="step-flow-item">
- <div class="step-num-badge">3</div>
- <div class="step-flow-content">
- <b>Auditoría Continua con LLM-as-a-Judge:</b> Un modelo evaluador califica muestras aleatorias del 5% del tráfico en 4 dimensiones (Factualidad, Relevancia, Coherencia, Adherencia), alertando al equipo de MLOps si la consistencia factual cae por debajo de 4.5/5.0.
- </div>
- </div>
- </div>
- <p style="font-size:0.88rem; color:var(--text-secondary); margin:0;"><b>Conclusión de Seguridad:</b> El filtro reactivo de Llama Guard 3 opera en &lt;40ms protegiendo contra ataques externos, mientras el LLM Juez audita la calidad semántica y numérica de las tablas de amortización generadas.</p>
- </div>
- </details>
- </div>
-
-
-  <!-- EJERCICIO 4 -->
-  <div class="exercise-item-box">
-  <div class="exercise-header">
-  <span class="exercise-badge">Ejercicio 4</span>
-  <h4 class="exercise-title">Implementaci&oacute;n de DPO para Alineaci&oacute;n por Preferencias en Llama 3</h4>
+  <!-- ==========================================================================
+  EJERCICIOS PRÁCTICOS OFICIALES (1 AL 4) CON GUÍA Y SOLUCIONES DESPLEGABLES
+  ========================================================================== -->
+  <section class="exercises-section" id="ejercicios">
+  <div style="text-align:center; margin-bottom:2rem;">
+  <div class="tema-eyebrow" style="justify-content:center; margin-bottom:0.6rem;">Práctica &amp; Aplicación de Ingeniería</div>
+  <h2 style="font-size:2rem; font-family:var(--font-disp); font-weight:800; color:var(--text-primary); margin:0 0 0.8rem;">Ejercicios Prácticos de la Unidad 1.3</h2>
+  <p class="module-desc" style="color:var(--text-secondary); max-width:72ch; margin:0 auto; font-size:1rem; line-height:1.65;">Pon a prueba tu comprensión técnica resolviendo casos reales de ingeniería de LLMs. Antes de ver la solución, trabaja con la guía de conceptos clave que precede cada enunciado.</p>
   </div>
+
+  <!-- EJERCICIO 1 -->
+  <article class="exercise-card">
+  <div class="exercise-header">
+  <span class="exercise-num-badge">Ejercicio 1</span>
+  <h4 class="exercise-title">Cálculo de Parámetros y VRAM para LoRA en Llama 3 8B</h4>
+  </div>
+
+  <div class="exercise-context-box">
+  <div class="exercise-context-title">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+  Conceptos necesarios para este ejercicio
+  </div>
+  <ul class="exercise-context-list">
+  <li><b>Arquitectura LoRA:</b> Añade dos matrices de baja dimensión $B \in \mathbb{R}^{d 	imes r}$ y $A \in \mathbb{R}^{r 	imes d}$ por proyección adaptada, donde el rango $r \ll d_{	ext{model}}$. Solo se entrenan estas matrices; los pesos originales $W_0$ se congelan.</li>
+  <li><b>Rango $r$ y escala $lpha$:</b> $r=16$ define el cuello de botella dimensional. La actualización efectiva es $\Delta W = rac{lpha}{r} B \cdot A$. Con $lpha=32$ y $r=16$, el factor de escala es 2.</li>
+  <li><b>VRAM en FP16:</b> Cada parámetro en FP16 (half-precision) ocupa 2 bytes. Total bytes = número de parámetros × 2.</li>
+  <li><b>Fusión (Merge):</b> Antes del despliegue se calcula $W_{	ext{final}} = W_0 + rac{lpha}{r}(B \cdot A)$ una sola vez. El resultado tiene las mismas dimensiones que $W_0$, sin overhead de inferencia.</li>
+  </ul>
+  </div>
+
   <p class="exercise-prompt">
-  <b>Enunciado:</b> Tras un SFT exitoso, el equipo de ML de una empresa de legal-tech aplica <b>Direct Preference Optimization (DPO)</b> para alinear Llama&nbsp;3&nbsp;8B con preferencias de abogados senior (1,200 pares $x, y_w, y_l$). (a)&nbsp;Escribe la funci&oacute;n de p&eacute;rdida DPO formal con $\beta=0.1$; (b)&nbsp;Explica por qu&eacute; DPO es m&aacute;s estable que RLHF-PPO; (c)&nbsp;Muestra el script completo con TRL <code>DPOTrainer</code>.
+  Para un modelo Meta Llama 3 8B ($d_{	ext{model}} = 4096$, 32 capas transformer), calcula la cantidad exacta de parámetros entrenables si se aplica LoRA con $r=16$ y $lpha=32$ adaptando únicamente $W_q$ y $W_v$. Compara la VRAM requerida por los pesos entrenables en FP16 frente a un Full Fine-Tuning de 8B parámetros, y explica por qué la inferencia no sufre latencia adicional tras la fusión.
   </p>
+
   <details class="exercise-solution-details">
   <summary class="exercise-solution-summary">
-  <span>Ver Soluci&oacute;n Detallada &amp; Script DPO Completo</span>
+  <span>Ver Criterio de Solución &amp; Desglose Matemático</span>
   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
   </summary>
   <div class="exercise-solution-panel">
-  <p><b>a) Funci&oacute;n de P&eacute;rdida DPO:</b></p>
-  $$\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)} \right) \right]$$
-  <ul style="margin: 0.6rem 0 0.9rem 1.4rem; font-size: 0.88rem; color: var(--text-secondary);">
-  <li><b>$\pi_\theta$</b>: Pol&iacute;tica del modelo en entrenamiento (Llama&nbsp;3 con adaptador LoRA activo).</li>
-  <li><b>$\pi_{\text{ref}}$</b>: Pol&iacute;tica de referencia congelada &mdash; checkpoint SFT sin gradientes.</li>
-  <li><b>$\beta = 0.1$</b>: Coeficiente KL que controla cu&aacute;nto puede divergir la pol&iacute;tica entrenada de la referencia.</li>
+  <p><b>1. Parámetros entrenables por capa:</b></p>
+  <ul>
+  <li>Matriz $B \in \mathbb{R}^{4096 	imes 16}$: $4096 	imes 16 = 65{,}536$ parámetros.</li>
+  <li>Matriz $A \in \mathbb{R}^{16 	imes 4096}$: $16 	imes 4096 = 65{,}536$ parámetros.</li>
+  <li>Por proyección ($W_q$ o $W_v$): $65{,}536 + 65{,}536 = 131{,}072$ parámetros.</li>
+  <li>Ambas proyecciones por capa: $2 	imes 131{,}072 = 262{,}144$ parámetros.</li>
   </ul>
-  <p><b>b) Ventajas de DPO sobre PPO:</b></p>
-  <ul style="margin: 0.5rem 0 0.8rem 1.4rem; font-size: 0.88rem; color: var(--text-secondary);">
-  <li><b>Sin Modelo de Recompensa:</b> DPO elimina el entrenamiento de un reward model separado, reduciendo a la mitad los recursos de GPU necesarios.</li>
-  <li><b>Sin RL inestable:</b> PPO requiere ajustar 15+ hiperpar&aacute;metros (clip ratio, KL coeff, GAE&nbsp;&lambda;). DPO es una p&eacute;rdida de clasificaci&oacute;n binaria cerrada con gradientes estables.</li>
-  <li><b>Sin reward hacking:</b> DPO optimiza directamente contra el par preferido/rechazado, eliminando el riesgo de explotar el modelo de recompensa.</li>
+  <p><b>2. Total en 32 capas:</b></p>
+  $$	ext{Total LoRA} = 32 	imes 262{,}144 = 8{,}388{,}608 pprox 8.39	ext{ M parámetros}$$
+  <p><b>3. Comparativa VRAM:</b></p>
+  <ul>
+  <li><b>LoRA FP16:</b> $8{,}388{,}608 	imes 2	ext{ B} pprox 16.78	ext{ MB}$ — cabe en cualquier GPU de consumo.</li>
+  <li><b>Full FT FP16:</b> $8 	imes 10^9 	imes 2	ext{ B} pprox 16	ext{ GB}$ de pesos + $\sim$64 GB de estados AdamW.</li>
+  <li><b>Reducción:</b> LoRA entrena el $\mathbf{0.10\%}$ de los parámetros del modelo completo.</li>
+  </ul>
+  <p style="margin:0.5rem 0 0; font-size:0.88rem; color:var(--text-secondary);"><b>Merge sin latencia:</b> $W_{	ext{final}} = W_0 + rac{lpha}{r}(B \cdot A)$ se computa offline una sola vez. El resultado $\in \mathbb{R}^{4096 	imes 4096}$ es idéntico en forma a $W_0$ — el forward pass no ejecuta operaciones adicionales en tiempo de inferencia.</p>
+  </div>
+  </details>
+  </article>
+
+  <!-- EJERCICIO 2 -->
+  <article class="exercise-card">
+  <div class="exercise-header">
+  <span class="exercise-num-badge">Ejercicio 2</span>
+  <h4 class="exercise-title">Estructuración de Dataset SFT en JSONL con Loss Masking</h4>
+  </div>
+
+  <div class="exercise-context-box">
+  <div class="exercise-context-title">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+  Conceptos necesarios para este ejercicio
+  </div>
+  <ul class="exercise-context-list">
+  <li><b>Formato JSONL:</b> Cada línea del dataset es un JSON independiente con la clave <code>"messages"</code> conteniendo una lista de turnos <code>{"role": "...", "content": "..."}</code> — los roles válidos en Llama 3 son <code>system</code>, <code>user</code> y <code>assistant</code>.</li>
+  <li><b>Chat Template de Llama 3:</b> El tokenizador inserta automáticamente tokens especiales: <code>&lt;|begin_of_text|&gt;</code> al inicio, <code>&lt;|start_header_id|&gt;</code> y <code>&lt;|end_header_id|&gt;</code> para delimitar roles, y <code>&lt;|eot_id|&gt;</code> al final de cada turno.</li>
+  <li><b>Loss Masking:</b> PyTorch ignora tokens con etiqueta <code>label = -100</code> en <code>CrossEntropyLoss(ignore_index=-100)</code>. Se asigna a todos los tokens del prompt (system + user) para que el gradiente solo fluya sobre los tokens del asistente.</li>
+  <li><b>Error crítico:</b> Si no enmascaras el prompt, el modelo aprende a predecir las preguntas del usuario en lugar de las respuestas — sobreajuste al formato de consulta, no al conocimiento experto.</li>
+  </ul>
+  </div>
+
+  <p class="exercise-prompt">
+  Escribe un registro completo en formato JSONL para un caso de soporte técnico de PostgreSQL con Llama 3. Muestra los delimitadores de Chat Template oficiales (<code>&lt;|start_header_id|&gt;</code>, <code>&lt;|end_header_id|&gt;</code>, <code>&lt;|eot_id|&gt;</code>) y explica formalmente con la función de pérdida matemática por qué los tokens del sistema y del usuario deben recibir <code>label = -100</code>.
+  </p>
+
+  <details class="exercise-solution-details">
+  <summary class="exercise-solution-summary">
+  <span>Ver Criterio de Solución &amp; JSONL Oficial</span>
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </summary>
+  <div class="exercise-solution-panel">
+  <div class="code-box">
+  <div class="code-header">
+  <span>dataset_sft_postgresql.jsonl</span>
+  <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+  </div>
+  <pre class="code-content"><code>{"messages": [
+  {"role": "system",    "content": "Eres un DBA senior experto en PostgreSQL. Proporciona diagnósticos con EXPLAIN ANALYZE e índices concisos."},
+  {"role": "user",      "content": "SELECT * FROM ordenes WHERE cliente_id=450 AND estado='PAGADO' tarda 4.2s con 10M filas. ¿Cómo la optimizo?"},
+  {"role": "assistant", "content": "1. Crea índice compuesto B-Tree:\nCREATE INDEX idx_ord ON ordenes (cliente_id, estado);\n2. ANALYZE ordenes;\n3. El Seq Scan pasa a Index Scan en &lt;5ms."}
+]}</code></pre>
+  </div>
+  <p style="margin:0.9rem 0 0.4rem; font-size:0.88rem; color:var(--text-secondary);"><b>Justificación matemática del Loss Masking:</b> La función de pérdida SFT correcta es:</p>
+  $$\mathcal{L}_{	ext{SFT}} = -\sum_{t \in \mathcal{A}} \log P_	heta\!\left(y_t \;\middle|\; x_{	ext{sys}},\, x_{	ext{usr}},\, y_{1:t-1}
+ight)$$
+  <p style="margin:0.3rem 0 0; font-size:0.88rem; color:var(--text-secondary);">Donde $\mathcal{A}$ es el conjunto de índices de los tokens del asistente. Asignar <code>label = -100</code> a todos los demás tokens garantiza que <code>torch.nn.CrossEntropyLoss(ignore_index=-100)</code> no calcule gradientes sobre el prompt — el modelo aprende exclusivamente a generar respuestas expertas, no a imitar las preguntas del usuario.</p>
+  </div>
+  </details>
+  </article>
+
+  <!-- EJERCICIO 3 -->
+  <article class="exercise-card">
+  <div class="exercise-header">
+  <span class="exercise-num-badge">Ejercicio 3</span>
+  <h4 class="exercise-title">Diseño de Pipeline con Llama Guard 3 y LLM-as-a-Judge</h4>
+  </div>
+
+  <div class="exercise-context-box">
+  <div class="exercise-context-title">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+  Conceptos necesarios para este ejercicio
+  </div>
+  <ul class="exercise-context-list">
+  <li><b>ROUGE-L:</b> Métrica automática que mide el solapamiento de la subsecuencia común más larga (LCS) entre la respuesta generada y la referencia. Rango 0–1; valores $\geq 0.70$ indican alta fidelidad léxica en dominio específico.</li>
+  <li><b>Llama Guard 3:</b> Modelo de clasificación de seguridad Meta que evalúa prompts y respuestas contra 14 categorías de riesgo ($S_1$–$S_{14}$). Se despliega como microservicio y retorna <code>safe</code> o la categoría de riesgo detectada.</li>
+  <li><b>LLM-as-a-Judge:</b> Un LLM evaluador (distinto al productivo) califica respuestas en múltiples dimensiones con un prompt de evaluación estandarizado. Detecta alucinaciones semánticas que métricas automáticas como ROUGE no capturan.</li>
+  <li><b>Alucinaciones numéricas:</b> En contextos financieros, los LLMs pueden fabricar tasas de interés, montos o fechas. El juez sintético los detecta cruzando la respuesta con fórmulas de referencia o datos conocidos.</li>
+  </ul>
+  </div>
+
+  <p class="exercise-prompt">
+  Una institución financiera implementa un asistente de créditos con Llama 3 8B adaptado con QLoRA. Diseña la arquitectura del pipeline de inferencia y evaluación combinando ROUGE-L (contra 300 casos bancarios auditados) con Llama Guard 3 como filtro de seguridad. Explica qué categoría de riesgo ($S_1$–$S_{14}$) debe interceptar intentos de fuga de información y qué función cumple el juez sintético en la prevención de alucinaciones numéricas.
+  </p>
+
+  <details class="exercise-solution-details">
+  <summary class="exercise-solution-summary">
+  <span>Ver Criterio de Solución &amp; Arquitectura de 3 Capas</span>
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </summary>
+  <div class="exercise-solution-panel">
+  <div class="step-flow-list" style="margin:0.5rem 0 1rem;">
+  <div class="step-flow-item">
+  <div class="step-num-badge">1</div>
+  <div class="step-flow-content">
+  <b>Validación Offline Pre-Despliegue:</b> El adaptador LoRA se evalúa contra 300 pares de referencia bancarios. Se requiere ROUGE-L $\geq 0.70$ y BLEU-4 $\geq 0.45$ para aprobar el despliegue. Un umbral inferior cancela el release automáticamente.
+  </div>
+  </div>
+  <div class="step-flow-item">
+  <div class="step-num-badge">2</div>
+  <div class="step-flow-content">
+  <b>Filtro de Entrada/Salida — Llama Guard 3:</b> Cada prompt y respuesta pasa por Llama Guard 3 8B cuantizado. Si detecta <b>$S_{14}$</b> (Inyección de Prompt / Jailbreak) o <b>$S_2$</b> (Exfiltración de Datos Financieros Confidenciales), el microservicio bloquea el stream y retorna HTTP 403.
+  </div>
+  </div>
+  <div class="step-flow-item">
+  <div class="step-num-badge">3</div>
+  <div class="step-flow-content">
+  <b>Auditoría Continua — LLM-as-a-Judge:</b> Un modelo evaluador califica aleatoriamente el 5% del tráfico en 4 dimensiones: Factualidad, Relevancia, Coherencia, Adherencia Regulatoria (escala 1–5). Si la media cae bajo 4.5/5.0, se genera alerta a MLOps. Los montos y tasas de las tablas de amortización se validan contra las fórmulas financieras de referencia.
+  </div>
+  </div>
+  </div>
+  <p style="font-size:0.88rem; color:var(--text-secondary); margin:0;"><b>Arquitectura complementaria:</b> Llama Guard 3 opera en &lt;40ms protegiendo contra ataques externos, mientras el LLM Juez detecta alucinaciones numéricas que ninguna métrica automática puede capturar — una defensa en profundidad de dos capas.</p>
+  </div>
+  </details>
+  </article>
+
+  <!-- EJERCICIO 4 -->
+  <article class="exercise-card">
+  <div class="exercise-header">
+  <span class="exercise-num-badge">Ejercicio 4</span>
+  <h4 class="exercise-title">Implementación de DPO para Alineación por Preferencias</h4>
+  </div>
+
+  <div class="exercise-context-box">
+  <div class="exercise-context-title">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+  Conceptos necesarios para este ejercicio
+  </div>
+  <ul class="exercise-context-list">
+  <li><b>RLHF con PPO:</b> Proceso de 4 etapas — entrenar reward model, inicializar política, optimizar con PPO (Proximal Policy Optimization), monitorear divergencia KL. Requiere ajustar 15+ hiperparámetros y puede colapsar la política si la KL no se controla.</li>
+  <li><b>DPO (Direct Preference Optimization):</b> Elimina el reward model y el bucle RL. Optimiza directamente la política a partir de pares preferidos/rechazados $(y_w, y_l)$ usando una función de pérdida cerrada derivada de la solución analítica del RLHF.</li>
+  <li><b>Dataset de Preferencias:</b> Formato de tripletas $(x, y_w, y_l)$. TRL espera columnas <code>prompt</code>, <code>chosen</code>, <code>rejected</code>. El 70-80% del dataset debe cubrir casos ambiguos donde la diferencia de calidad es sutil.</li>
+  <li><b>Coeficiente $eta$:</b> Penalización KL entre $\pi_	heta$ (política entrenada) y $\pi_{	ext{ref}}$ (checkpoint SFT congelado). $eta=0.1$ es conservador; valores altos hacen que el modelo no se separe de la referencia.</li>
+  </ul>
+  </div>
+
+  <p class="exercise-prompt">
+  Tras un SFT exitoso, el equipo de ML de una legal-tech aplica DPO para alinear Llama 3 8B con preferencias de abogados senior usando 1,200 pares $(x, y_w, y_l)$. (a)&nbsp;Escribe la función de pérdida DPO formal con $eta=0.1$ identificando cada variable; (b)&nbsp;Explica en tres puntos por qué DPO es más estable que RLHF-PPO; (c)&nbsp;Escribe el script completo con TRL <code>DPOTrainer</code> con los hiperparámetros críticos justificados.
+  </p>
+
+  <details class="exercise-solution-details">
+  <summary class="exercise-solution-summary">
+  <span>Ver Criterio de Solución &amp; Script DPO Completo</span>
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </summary>
+  <div class="exercise-solution-panel">
+  <p><b>a) Función de Pérdida DPO:</b></p>
+  $$\mathcal{L}_{	ext{DPO}}(\pi_	heta;\, \pi_{	ext{ref}}) = -\mathbb{E}_{(x,\, y_w,\, y_l) \sim \mathcal{D}} \left[ \log \sigma \!\left( eta \log rac{\pi_	heta(y_w \mid x)}{\pi_{	ext{ref}}(y_w \mid x)} - eta \log rac{\pi_	heta(y_l \mid x)}{\pi_{	ext{ref}}(y_l \mid x)} 
+ight) 
+ight]$$
+  <ul style="margin:0.6rem 0 0.8rem 1.4rem; font-size:0.88rem; color:var(--text-secondary);">
+  <li><b>$\pi_	heta$</b> — política en entrenamiento (Llama 3 + LoRA activo).</li>
+  <li><b>$\pi_{	ext{ref}}$</b> — política de referencia congelada: el checkpoint SFT sin gradientes.</li>
+  <li><b>$eta = 0.1$</b> — penalización KL; valores pequeños permiten mayor divergencia de la referencia.</li>
+  <li><b>$\sigma$</b> — sigmoide: transforma la diferencia de log-ratios en probabilidad $[0, 1]$.</li>
+  </ul>
+  <p><b>b) DPO vs. RLHF-PPO:</b></p>
+  <ul style="margin:0.5rem 0 0.8rem 1.4rem; font-size:0.88rem; color:var(--text-secondary);">
+  <li><b>Sin reward model:</b> Elimina la etapa de entrenamiento del RM separado — recorta el cómputo a la mitad y elimina el riesgo de reward hacking.</li>
+  <li><b>Sin RL inestable:</b> PPO requiere ajustar clip ratio, KL coeff, GAE $\lambda$, value loss, entropy bonus. DPO es una pérdida de clasificación binaria con gradientes estables en cada paso.</li>
+  <li><b>Eficiencia VRAM:</b> Con <code>ref_model=None</code> TRL desactiva los adaptadores LoRA internamente para computar los log-probs de referencia, sin necesidad de una segunda GPU.</li>
   </ul>
   <p><b>c) Script TRL DPOTrainer:</b></p>
   <div class="code-box">
@@ -1691,48 +1752,51 @@
 from peft import LoraConfig, get_peft_model
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-# 1. Modelo base SFT con QLoRA congelado
+# 1. Modelo SFT como base con QLoRA (congelado)
 model = AutoModelForCausalLM.from_pretrained(
     "meta-llama/Meta-Llama-3-8B-Instruct",
     load_in_4bit=True,
 )
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct")
 
-# 2. Adaptador LoRA para DPO
-lora_config = LoraConfig(
+# 2. Adaptador LoRA — proyecciones de atencion full
+lora_cfg = LoraConfig(
     r=16, lora_alpha=32,
     target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],
     lora_dropout=0.05, bias="none",
 )
-model = get_peft_model(model, lora_config)
+model = get_peft_model(model, lora_cfg)
 
-# 3. Hiperparametros DPO criticos
-dpo_config = DPOConfig(
-    beta=0.1,              # Control KL divergencia
-    learning_rate=5e-7,    # LR muy bajo para alineacion fina
+# 3. Hiperparametros DPO con justificacion
+dpo_cfg = DPOConfig(
+    beta=0.1,                        # KL conservador para dominio legal
+    learning_rate=5e-7,              # LR muy bajo: evita colapso de politica
     num_train_epochs=3,
     per_device_train_batch_size=2,
-    gradient_accumulation_steps=8,
+    gradient_accumulation_steps=8,   # Batch efectivo = 16
     max_length=2048,
     max_prompt_length=512,
     output_dir="./llama3-legal-dpo",
+    logging_steps=10,
 )
 
-# 4. Entrenamiento DPO (ref_model=None usa el modelo actual con LoRA desactivada)
+# 4. Entrenar — ref_model=None: TRL desactiva LoRA para la referencia
 trainer = DPOTrainer(
     model=model, ref_model=None,
-    args=dpo_config,
-    train_dataset=dpo_dataset,  # columnas: prompt, chosen, rejected
+    args=dpo_cfg,
+    train_dataset=dpo_dataset,       # columnas: prompt, chosen, rejected
     tokenizer=tokenizer,
 )
-trainer.train()</code></pre>
+trainer.train()
+# -> Exportar: merge_and_unload() -> GGUF -> Ollama/vLLM (ver Tema 1.3.8)</code></pre>
   </div>
-  <p style="margin:0.8rem 0 0; font-size:0.88rem; color:var(--text-secondary);"><b>Nota:</b> Con <code>ref_model=None</code>, TRL desactiva los adaptadores LoRA internamente para calcular los log-probs de referencia sin necesitar una segunda copia del modelo en VRAM.</p>
   </div>
   </details>
-  </div>
+  </article>
 
   </section>
+
+
 
   <!-- ==========================================================================
   SUBTEMA 1.3.8: DESPLIEGUE EN PRODUCCI&Oacute;N CON vLLM, OLLAMA Y GGUF
