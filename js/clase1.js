@@ -756,99 +756,10 @@
   })();
 
   /* 11. FEEDBACK DE AUDIO PARA ACORDEÓN DE FÓRMULAS */
-  document.querySelectorAll(".formula-breakdown-summary, .exercise-solution-summary").forEach(function(summary){
+  document.querySelectorAll(".formula-breakdown-summary").forEach(function(summary){
     summary.addEventListener("click", function(){
       if(window.SOUND) window.SOUND.playPop(390);
     });
   });
 
-  /* ==========================================================================
-     CONTROLADORES DE LABORATORIOS INTERACTIVOS (TEMA 1.1)
-     ========================================================================== */
-
-  /* A. Álgebra Vectorial 2D */
-  window.simulateVectorMath = function(type){
-    if(window.SOUND) window.SOUND.playChime();
-    var out = document.getElementById("vector-math-output");
-    if(!out) return;
-    if(type === 'king_queen'){
-      out.innerHTML = "<b>Proyección:</b> $\\vec{v}(\\text{Rey}) [0.72, 0.91] - \\vec{v}(\\text{Hombre}) [0.68, 0.45] + \\vec{v}(\\text{Mujer}) [0.65, 0.88] = \\mathbf{[0.69, 1.34]} \\approx \\vec{v}(\\text{Reina})$<br><span style='color: var(--accent-success);'>Similitud Coseno con 'Reina': <b>0.962 (Coincidencia Óptima)</b></span>";
-    } else if(type === 'spain_madrid'){
-      out.innerHTML = "<b>Proyección:</b> $\\vec{v}(\\text{Madrid}) [0.41, 0.85] - \\vec{v}(\\text{España}) [0.38, 0.79] + \\vec{v}(\\text{Francia}) [0.55, 0.81] = \\mathbf{[0.58, 0.87]} \\approx \\vec{v}(\\text{París})$<br><span style='color: var(--accent-success);'>Similitud Coseno con 'París': <b>0.954 (Capital de País)</b></span>";
-    } else if(type === 'walking_walked'){
-      out.innerHTML = "<b>Proyección:</b> $\\vec{v}(\\text{Caminando}) - \\vec{v}(\\text{Gerundio}) + \\vec{v}(\\text{Pasado}) = \\mathbf{\\vec{v}(\\text{Caminó})}$<br><span style='color: var(--accent-success);'>Similitud Coseno con 'Caminó': <b>0.978 (Morfología Gramatical)</b></span>";
-    }
-    if(window.renderMathInElement) window.renderMathInElement(out);
-  };
-
-  /* B. Matriz de Autoatención */
-  window.showAttentionPattern = function(index){
-    if(window.SOUND) window.SOUND.playPop(480 + index * 25);
-    var display = document.getElementById("attention-heatmap-display");
-    if(!display) return;
-
-    var patterns = [
-      "El token <b>'El'</b> presta 65% de atención a 'asistente' y 20% a 'Llama'.",
-      "El token <b>'asistente'</b> distribuye 40% a 'Llama', 35% a 'responde' y 15% a 'WhatsApp'.",
-      "El token <b>'Llama'</b> (núcleo del sujeto) recibe atención dominante (82%) de todos los verbos posteriores.",
-      "El token <b>'responde'</b> busca el complemento directo: 74% de atención dirigida a 'WhatsApp'.",
-      "El token <b>'en'</b> sirve de enlace sintáctico conectando 'responde' con 'WhatsApp' (90% peso).",
-      "El token <b>'WhatsApp'</b> cierra la frase relacionándose fuertemente con 'asistente Llama' (88% peso)."
-    ];
-
-    display.innerHTML = patterns[index] || "Selecciona una palabra para ver su mapa de atención.";
-    display.style.animation = "fadeIn 0.25s ease backwards";
-  };
-
-  /* C. Calculadora de VRAM */
-  window.calculateVRAM = function(){
-    if(window.SOUND) window.SOUND.playPop(340);
-    var model = parseFloat(document.getElementById("calc-model").value) || 8;
-    var quant = parseFloat(document.getElementById("calc-quant").value) || 4;
-    var res = document.getElementById("vram-result-box");
-    if(!res) return;
-
-    var vramGB = (model * (quant / 8) * 1.25).toFixed(1);
-    var hardware = "";
-    if(vramGB <= 6){
-      hardware = "<span style='color: var(--accent-success);'>Compatible con laptops domésticas (RTX 3060/4060) o Google Colab T4 gratuito.</span>";
-    } else if(vramGB <= 24){
-      hardware = "<span style='color: var(--meta-blue);'>Requiere GPU de 24 GB VRAM (RTX 3090 / 4090 o A10G en la nube).</span>";
-    } else {
-      hardware = "<span style='color: #dc2626;'>Requiere servidor multi-GPU (2x u 8x A100/H100 de 80 GB en data center).</span>";
-    }
-
-    res.innerHTML = "VRAM Estimada para Inferencia: <b style='color: var(--meta-blue);'>~" + vramGB + " GB VRAM</b><br>" + hardware;
-  };
-
-  /* D. Simulador de Inferencia en Tiempo Real */
-  window.simulateInference = function(mode){
-    var term = document.getElementById("inference-stream-terminal");
-    if(!term) return;
-
-    if(window.SOUND) window.SOUND.playPop(420);
-    term.innerHTML = "<span style='color: var(--meta-blue);'>[Despachando consulta a la GPU...]</span><br>";
-
-    var responseTokens = [
-      "Meta", " Llama", " 3", " es", " un", " modelo", " de", " pesos", " abiertos", 
-      " optimizado", " con", " Grouped-Query", " Attention", " (GQA)", " y", " contexto", 
-      " de", " 128k", " tokens."
-    ];
-
-    var speed = mode === 'fast' ? 45 : 180;
-    var i = 0;
-    var interval = setInterval(function(){
-      if(i < responseTokens.length){
-        term.innerHTML += responseTokens[i];
-        if(window.SOUND) window.SOUND.playPop(520 + (i % 5) * 15);
-        i++;
-      } else {
-        clearInterval(interval);
-        term.innerHTML += "<br><br><span style='color: var(--accent-success);'>✓ Generación completada con éxito. Latencia: " + (mode === 'fast' ? "18ms (Groq LPU / 48 tok/s)" : "142ms (GPU Estándar / 14 tok/s)") + "</span>";
-        if(window.SOUND) window.SOUND.playChime();
-      }
-    }, speed);
-  };
-
 })();
-
