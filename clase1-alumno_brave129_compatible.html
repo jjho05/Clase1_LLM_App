@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="es-MX" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Masterclass & Mini-Curso: Arquitectura de LLMs y Llama 3 | Meta AI</title>
+<meta name="description" content="Curso interactivo integral y modular sobre Large Language Models (LLMs), tokenización BPE, geometría de embeddings, mecanismo Multi-Head Attention, RoPE, cuantización GGUF e inferencia local de Meta Llama 3.">
+
+<!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, Fira Code -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ==========================================================================
+   SISTEMA DE DISEÑO OFICIAL META AI - PALETA Y VARIABLES
+   ========================================================================== */
+:root {
+  /* TEMA CLARO (Default Meta Standards) */
+  --bg-page: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-subtle: #f1f5f9;
+  --bg-subtle-alt: #eef2f6;
+  --bg-input: #ffffff;
+  --bg-code: #0b1120;
+  
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-focus: #0866ff;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-code: #e2e8f0;
+  
+  /* Colores Corporativos Meta */
+  --meta-blue: #0866ff;
+  --meta-blue-hover: #0052cc;
+  --meta-blue-subtle: rgba(8, 102, 255, 0.08);
+  --meta-blue-border: rgba(8, 102, 255, 0.22);
+  
+  --accent-success: #059669;
+  --accent-warning: #d97706;
+  --accent-info: #0284c7;
+  --accent-purple: #7c3aed;
+  
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+  --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+  --shadow-elevated: 0 20px 40px -8px rgba(15, 23, 42, 0.08), 0 6px 16px -2px rgba(15, 23, 42, 0.04);
+  
+  --font-disp: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-head: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Fira Code', Consolas, Monaco, monospace;
+}
+
+[data-theme="dark"] {
+  --bg-page: #080c14;
+  --bg-surface: #0f172a;
+  --bg-surface-elevated: #162035;
+  --bg-subtle: #162032;
+  --bg-subtle-alt: #1a273e;
+  --bg-input: #0b1220;
+  --bg-code: #060911;
+  
+  --border-subtle: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-focus: #0866ff;
+  
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-code: #e2e8f0;
+  
+  --meta-blue-subtle: rgba(8, 102, 255, 0.15);
+  --meta-blue-border: rgba(8, 102, 255, 0.35);
+  
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-card: 0 10px 30px rgba(0,0,0,0.6);
+  --shadow-elevated: 0 25px 45px rgba(0,0,0,0.8);
+}
+
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+body {
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+  line-height: 1.8;
+}
+
+/* Ambient Particles Canvas */
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* ==========================================================================
+   HEADER PRINCIPAL Y NAVEGACIÓN
+   ========================================================================== */
+.top-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 64px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.header-inner {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.meta-logo-svg {
+  width: 32px;
+  height: 20px;
+  fill: var(--meta-blue);
+}
+
+.brand-text {
+  font-family: var(--font-disp);
+  font-weight: 800;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.brand-badge {
+  background: var(--meta-blue-subtle);
+  color: var(--meta-blue);
+  border: 1px solid var(--meta-blue-border);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.12rem 0.55rem;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.nav-link-item {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.nav-link-item:hover { color: var(--meta-blue); }
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.btn-icon {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-icon:hover {
+  border-color: var(--meta-blue);
+  color: var(--meta-blue);
+}
+
+@media (max-width: 768px) {
+  .header-inner { padding: 0 1rem; }
+  .nav-links { display: none; }
+  .brand-badge { display: none; }
+  .btn-text-label { display: none; }
+  .btn-icon { padding: 0.45rem 0.6rem; }
+}
+
+/* Linear Progress Bar */
+#progress-bar {
+  position: fixed;
+  top: 64px; left: 0;
+  height: 3px;
+  width: 0%;
+  background: var(--meta-blue);
+  z-index: 999;
+  transition: width 0.1s linear;
+}
+
+/* ==========================================================================
+   BARRA SECUNDARIA DE NAVEGACIÓN FLOTANTE (STICKY MODULE BAR)
+   ========================================================================== */
+.module-sticky-bar {
+  position: sticky;
+  top: 64px;
+  z-index: 900;
+  background: rgba(248, 250, 252, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.6rem 0;
+  transition: background-color 0.25s ease;
+}
+
+[data-theme="dark"] .module-sticky-bar {
+  background: rgba(8, 12, 20, 0.85);
+}
+
+.sticky-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow-x: auto;
+  gap: 1rem;
+}
+
+.sticky-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+}
+
+.sticky-pill {
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s ease;
+}
+
+.sticky-pill:hover, .sticky-pill.active {
+  background: var(--meta-blue);
+  color: #ffffff;
+  border-color: var(--meta-blue);
+}
+
+.quiz-score-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+  border: 1px solid var(--meta-blue-border);
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   ESPACIADO Y ESTRUCTURA DE CONTENEDOR PC & MÓVIL
+   ========================================================================== */
+.main-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 3rem 2.5rem 8rem;
+}
+
+@media (max-width: 768px) {
+  .main-container { padding: 2rem 1rem 5rem; }
+  .sticky-inner { padding: 0 1rem; }
+}
+
+/* Module Section Container */
+.module-block {
+  margin-bottom: 8rem;
+  padding-top: 5rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.module-block:first-of-type {
+  border-top: none;
+  padding-top: 2rem;
+}
+
+.module-header {
+  margin-bottom: 4rem;
+}
+
+.module-tag {
+  font-family: var(--font-disp);
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--meta-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+
+.module-title {
+  font-size: clamp(2.2rem, 3.5vw, 3rem);
+  font-family: var(--font-disp);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+
+.module-desc {
+  font-size: 1.18rem;
+  color: var(--text-secondary);
+  max-width: 90ch;
+  line-height: 1.75;
+}
+
+/* Lesson Grid (Tema) with spacious desktop gap */
+.lesson-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1.15fr;
+  gap: 4rem;
+  align-items: start;
+  margin-bottom: 7rem;
+}
+
+@media (max-width: 1080px) {
+  .lesson-grid { grid-template-columns: 1fr; gap: 3rem; margin-bottom: 5rem; }
+}
+
+/* Theory Column */
+.theory-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+.tema-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--meta-blue-subtle);
+  border: 1px solid var(--meta-blue-border);
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--meta-blue);
+  width: fit-content;
+}
+
+.tema-h3 {
+  font-size: 1.85rem;
+  font-family: var(--font-head);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text-primary);
+}
+
+.prose-p {
+  font-size: 1.08rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.callout-box {
+  background: var(--bg-subtle);
+  border-left: 4px solid var(--meta-blue);
+  padding: 1.4rem 1.6rem;
+  border-radius: 0 12px 12px 0;
+  border-top: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.callout-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--meta-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.45rem;
+}
+
+.callout-text {
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+/* Formula Block */
+.formula-block {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  padding: 1.2rem 1.5rem;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 1.02rem;
+  color: var(--meta-blue);
+  text-align: center;
+  overflow-x: auto;
+}
+
+/* Code Snippet Box */
+.code-box {
+  background: var(--bg-code);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+
+.code-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.6rem 1.2rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+}
+
+.code-content {
+  padding: 1.2rem 1.4rem;
+  font-size: 0.88rem;
+  color: var(--text-code);
+  line-height: 1.65;
+  overflow-x: auto;
+}
+
+/* Quiz Box */
+.quiz-box {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.6rem;
+  margin-top: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+}
+
+.quiz-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--meta-blue);
+  letter-spacing: 0.05em;
+}
+
+.quiz-question {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.quiz-option {
+  display: block;
+  padding: 0.8rem 1.1rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-subtle);
+  margin-bottom: 0.6rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.quiz-option:hover {
+  border-color: var(--meta-blue);
+  color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+}
+
+.quiz-option.correct {
+  background: rgba(5, 150, 105, 0.12);
+  border-color: var(--accent-success);
+  color: var(--accent-success);
+  font-weight: 700;
+}
+
+.quiz-option.incorrect {
+  background: rgba(220, 38, 38, 0.12);
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.quiz-feedback {
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-top: 0.6rem;
+  display: none;
+}
+
+.feature-list {
+  list-style: none;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  font-size: 1.04rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.feature-bullet {
+  width: 7px;
+  height: 7px;
+  background: var(--meta-blue);
+  border-radius: 50%;
+  margin-top: 0.7rem;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   WORKBENCH COLUMN (INTERACTIVES)
+   ========================================================================== */
+.workbench-col {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 2.6rem;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .workbench-col { padding: 1.6rem; }
+}
+
+.workbench-col:hover {
+  border-color: rgba(8, 102, 255, 0.35);
+  box-shadow: var(--shadow-elevated);
+}
+
+.workbench-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 1.2rem;
+  margin-bottom: 1.8rem;
+}
+
+.workbench-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: var(--font-head);
+  color: var(--text-primary);
+}
+
+.workbench-status {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-success);
+  background: rgba(5, 150, 105, 0.1);
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   COURSE HERO / OVERVIEW
+   ========================================================================== */
+.course-hero {
+  padding: 3rem 0 5rem;
+  margin-bottom: 3rem;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (max-width: 960px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+}
+
+.hero-title {
+  font-size: clamp(2.6rem, 4.5vw, 4.2rem);
+  font-family: var(--font-disp);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 2.4rem;
+}
+
+.hero-modules-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+.modules-list {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.module-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.4rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.98rem;
+  transition: all 0.2s ease;
+}
+
+.module-nav-item:hover {
+  border-color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+  color: var(--meta-blue);
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   BUTTONS & INPUT CONTROLS
+   ========================================================================== */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: var(--meta-blue);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.9rem 2rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  background: var(--meta-blue-hover);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  font-weight: 600;
+  font-size: 0.94rem;
+  padding: 0.7rem 1.35rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--meta-blue);
+  color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+}
+
+.input-field {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 0.9rem 1.2rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-field:focus {
+  border-color: var(--meta-blue);
+  box-shadow: 0 0 0 3px rgba(8, 102, 255, 0.15);
+}
+
+/* ==========================================================================
+   LABORATORIES / WORKBENCHES (INTERACTIVES)
+   ========================================================================== */
+/* Lab 1.1 */
+.chat-window {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.6rem;
+}
+
+.chat-bubble {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 1.1rem 1.4rem;
+  border-radius: 12px;
+  font-size: 1.12rem;
+  font-weight: 600;
+  min-height: 60px;
+  margin-bottom: 1.4rem;
+  color: var(--text-primary);
+}
+
+.token-prob-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.token-prob-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.token-prob-card:hover {
+  border-color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+  transform: translateY(-1px);
+}
+
+.prob-fill {
+  height: 5px;
+  background: var(--meta-blue);
+  border-radius: 3px;
+  margin-top: 6px;
+}
+
+/* Lab 1.2 */
+.nlp-step-container {
+  display: grid;
+  gap: 1.4rem;
+}
+
+.nlp-step-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  padding: 1.2rem 1.4rem;
+  border-radius: 12px;
+}
+
+/* Lab 2.1: Tokenizer */
+.token-chip-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 1.5rem;
+  background: var(--bg-subtle);
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 12px;
+  min-height: 110px;
+  margin: 1.4rem 0;
+}
+
+.tok-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--meta-blue);
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.tok-badge .txt { font-weight: 700; font-size: 1.08rem; color: var(--text-primary); font-family: var(--font-mono); }
+.tok-badge .id { font-size: 0.72rem; color: var(--meta-blue); font-weight: 700; margin-top: 0.2rem; }
+
+.token-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+  margin-top: 1.4rem;
+}
+
+.metric-pill {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.metric-pill .val { font-size: 1.55rem; font-weight: 800; color: var(--meta-blue); font-family: var(--font-disp); }
+.metric-pill .lbl { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+
+/* Lab 2.2: 2D Vector Canvas */
+.canvas-wrapper {
+  width: 100%;
+  height: 350px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  touch-action: none;
+}
+
+#vec-canvas { width: 100%; height: 100%; }
+
+/* Lab 3.1: Attention Tokens */
+.attention-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 1.4rem 0;
+}
+
+.attention-token {
+  background: var(--bg-subtle);
+  border: 1.5px solid var(--border-subtle);
+  padding: 0.65rem 1.1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.02rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.attention-token.active {
+  background: var(--meta-blue);
+  color: #fff;
+  border-color: var(--meta-blue);
+  transform: translateY(-2px);
+}
+
+/* Lab 3.2: Scale Slider */
+.scale-range {
+  width: 100%;
+  height: 8px;
+  background: var(--border-strong);
+  border-radius: 4px;
+  outline: none;
+  -webkit-appearance: none;
+  margin: 1.8rem 0;
+}
+
+.scale-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--meta-blue);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(8, 102, 255, 0.4);
+}
+
+/* Lab 4.2: Terminal */
+.terminal-shell {
+  background: #0b1120;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+
+.terminal-topbar {
+  background: #1e293b;
+  padding: 0.8rem 1.3rem;
+  font-size: 0.84rem;
+  color: #94a3b8;
+  display: flex;
+  justify-content: space-between;
+}
+
+.terminal-content {
+  padding: 1.5rem;
+  color: #38bdf8;
+  font-size: 0.96rem;
+  line-height: 1.7;
+  min-height: 180px;
+  white-space: pre-wrap;
+}
+
+.telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  margin-top: 1.4rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+/* Footer */
+.course-footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 6rem 0 4rem;
+  text-align: center;
+  background: var(--bg-surface);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Header Navigation -->
+<header class="top-header">
+  <div class="header-inner">
+    <a href="#overview" class="brand-wrapper">
+      <svg class="meta-logo-svg" viewBox="0 0 36 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"/>
+      </svg>
+      <span class="brand-text">Meta AI <span class="brand-badge">Llama 3 Masterclass</span></span>
+    </a>
+
+    <div class="nav-links">
+      <a href="#modulo-1" class="nav-link-item">Módulo 1</a>
+      <a href="#modulo-2" class="nav-link-item">Módulo 2</a>
+      <a href="#modulo-3" class="nav-link-item">Módulo 3</a>
+      <a href="#modulo-4" class="nav-link-item">Módulo 4</a>
+    </div>
+
+    <div class="header-controls">
+      <button class="btn-icon" id="sound-btn" title="Alternar Audio">
+        <span id="sound-icon">🔊</span>
+        <span class="btn-text-label" id="sound-label">Audio ON</span>
+      </button>
+
+      <button class="btn-icon" id="theme-btn" title="Alternar Modo Claro / Oscuro">
+        <span id="theme-icon">☀️</span>
+        <span class="btn-text-label" id="theme-label">Modo Claro</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div id="progress-bar"></div>
+
+<!-- Barra Secundaria Sticky de Módulos y Puntuación -->
+<div class="module-sticky-bar">
+  <div class="sticky-inner">
+    <div class="sticky-pills">
+      <a href="#modulo-1" class="sticky-pill">Módulo 1: NLP</a>
+      <a href="#modulo-2" class="sticky-pill">Módulo 2: Tokens & Vectores</a>
+      <a href="#modulo-3" class="sticky-pill">Módulo 3: Transformers</a>
+      <a href="#modulo-4" class="sticky-pill">Módulo 4: Inferencia Local</a>
+    </div>
+    <div class="quiz-score-badge">
+      <span>Evaluación:</span>
+      <span id="quiz-counter-text" style="font-weight: 800;">0 / 7 Respondidas</span>
+    </div>
+  </div>
+</div>
+
+<main class="main-container">
+
+  <!-- ==========================================================================
+       COURSE OVERVIEW HERO
+       ========================================================================== -->
+  <section class="course-hero" id="overview">
+    <div class="hero-grid">
+      <div>
+        <span class="brand-badge" style="margin-bottom: 1.2rem; display: inline-block;">Meta AI Research · Formación Técnica Avanzada</span>
+        <h1 class="hero-title">Arquitectura de Modelos de Lenguaje Grande (LLM)</h1>
+        <p class="hero-subtitle">Un mini-curso técnico estructurado por Módulos y Temas para dominar los fundamentos matemáticos, de ingeniería de tensores, auto-atención QKV y despliegue local cuantizado con Meta Llama 3.</p>
+        <a href="#modulo-1" class="btn-primary">Comenzar Módulo 1</a>
+      </div>
+
+      <div class="hero-modules-card">
+        <h3 style="font-size: 1.2rem; margin-bottom: 1.5rem; font-family: var(--font-head);">Índice Modular del Mini-Curso</h3>
+        <div class="modules-list">
+          <a href="#modulo-1" class="module-nav-item">
+            <span>Módulo 1: Fundamentos & Intuición NLP</span>
+            <span style="color: var(--meta-blue); font-weight: 800;">➔</span>
+          </a>
+          <a href="#modulo-2" class="module-nav-item">
+            <span>Módulo 2: Tokenización & Espacios Vectoriales</span>
+            <span style="color: var(--meta-blue); font-weight: 800;">➔</span>
+          </a>
+          <a href="#modulo-3" class="module-nav-item">
+            <span>Módulo 3: Transformers & Multi-Head Attention</span>
+            <span style="color: var(--meta-blue); font-weight: 800;">➔</span>
+          </a>
+          <a href="#modulo-4" class="module-nav-item">
+            <span>Módulo 4: Soberanía & Inferencia Local</span>
+            <span style="color: var(--meta-blue); font-weight: 800;">➔</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MÓDULO 1: INTUICIÓN & PROCESAMIENTO DE LENGUAJE NATURAL
+       ========================================================================== -->
+  <section class="module-block" id="modulo-1">
+    <div class="module-header">
+      <span class="module-tag">Módulo 1</span>
+      <h2 class="module-title">Fundamentos & Procesamiento de Lenguaje Natural</h2>
+      <p class="module-desc">Comprende cómo los modelos generativos modelan distribuciones de probabilidad sobre vocabularios finitos para predecir secuencias coherentes de texto paso a paso.</p>
+    </div>
+
+    <!-- Tema 1.1 -->
+    <div class="lesson-grid" id="tema-1-1">
+      <div class="theory-col">
+        <span class="tema-badge">Tema 1.1</span>
+        <h3 class="tema-h3">Modelado de Lenguaje Autoregresivo</h3>
+        <p class="prose-p">A nivel conceptual y matemático, un Large Language Model es una función probabilística paramétrica. Su objetivo es tomar una secuencia de tokens de entrada (el contexto) y calcular la distribución de probabilidad acumulada del siguiente token más plausible.</p>
+        
+        <div class="formula-block">
+          P(w_n | w_1, ..., w_{n-1}) = Softmax(z_n / Temperature)
+        </div>
+
+        <div class="callout-box">
+          <div class="callout-title">El Hiperparámetro de Temperatura</div>
+          <div class="callout-text">La <b>Temperatura (T)</b> escala los logits antes del Softmax. Un valor bajo (T &lt; 0.3) hace al modelo determinista y conservador; un valor alto (T &gt; 0.8) aplana la curva distribucional promoviendo creatividad y variabilidad.</div>
+        </div>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span>pytorch_inference_sample.py</span>
+            <span>PyTorch</span>
+          </div>
+          <div class="code-content">import torch
+import torch.nn.functional as F
+
+# Logits de salida de la última capa lineal
+logits = model(input_ids).logits[:, -1, :] # Forma: [batch_size, vocab_size]
+probs = F.softmax(logits / temperature, dim=-1)
+next_token = torch.multinomial(probs, num_samples=1)</div>
+        </div>
+
+        <!-- Quiz Exprés 1.1 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 1 de 7</span>
+          </div>
+          <div class="quiz-question">¿Qué efecto matemático tiene fijar la Temperatura en 0.0 (Greedy Decoding)?</div>
+          <div class="quiz-option" data-correct="false">A) Genera texto con máxima entropía y alucinación aleatoria.</div>
+          <div class="quiz-option" data-correct="true">B) Selecciona invariablemente el token de mayor probabilidad (argmax).</div>
+          <div class="quiz-option" data-correct="false">C) Borra el contexto previo de la memoria KV Cache.</div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="workbench-col">
+        <div class="workbench-header">
+          <span class="workbench-title">Banco de Pruebas: Distribución del Siguiente Token</span>
+          <span class="workbench-status">Interactivo</span>
+        </div>
+
+        <div class="chat-window">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+            <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 600;">Secuencia de entrada:</span>
+            <span style="font-size: 0.78rem; color: var(--meta-blue); font-weight: 700;">Prompt Llama 3</span>
+          </div>
+          <div class="chat-bubble"><span id="p-text"></span><span style="color: var(--meta-blue); animation: blink 1s infinite;">|</span></div>
+
+          <div style="margin-bottom: 1.2rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem;">
+              <span>Temperatura (Creatividad):</span>
+              <span id="temp-val-indicator" style="color: var(--meta-blue);">0.7</span>
+            </div>
+            <input type="range" id="temp-slider" min="0.1" max="1.5" step="0.1" value="0.7" style="width: 100%; accent-color: var(--meta-blue);">
+          </div>
+
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.6rem; font-weight: 600;">Distribución de probabilidad calculada (Top-3):</p>
+          <div class="token-prob-grid" id="p-preds"></div>
+        </div>
+
+        <div style="margin-top: 1.4rem; display: flex; justify-content: flex-end;">
+          <button class="btn-secondary" id="p-replay">Reiniciar Secuencia</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tema 1.2 -->
+    <div class="lesson-grid" id="tema-1-2">
+      <div class="theory-col">
+        <span class="tema-badge">Tema 1.2</span>
+        <h3 class="tema-h3">El Pipeline de NLP & Transformación a Tensores</h3>
+        <p class="prose-p">Las unidades de procesamiento gráfico (GPUs) y aceleradores como TPU o NPU ejecutan operaciones algebraicas de multiplicación de matrices sobre tensores de punto flotante. El Procesamiento de Lenguaje Natural (NLP) es el puente de ingeniería que traduce texto crudo en tensores densos estructurados.</p>
+
+        <div class="callout-box">
+          <div class="callout-title">Arquitectura del Flujo de Datos</div>
+          <div class="callout-text">1. <b>Tokenización:</b> Mapea sub-palabras a IDs numéricos enteros.<br>2. <b>Embedding Lookup:</b> Recupera vectores densos de dimensión <code>d_model</code>.<br>3. <b>Transformer Layers:</b> Multiplica matrices de pesos de atención y FFN.<br>4. <b>Un-embedding:</b> Proyecta los tensores al espacio del vocabulario.</div>
+        </div>
+
+        <!-- Quiz Exprés 1.2 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 2 de 7</span>
+          </div>
+          <div class="quiz-question">¿Por qué las GPUs procesan tensores numéricos en lugar de strings alfanuméricos?</div>
+          <div class="quiz-option" data-correct="false">A) Porque el estándar Unicode solo funciona en procesadores ARM.</div>
+          <div class="quiz-option" data-correct="true">B) Porque las GPUs aceleran operaciones masivas de álgebra lineal (multiplicación de matrices).</div>
+          <div class="quiz-option" data-correct="false">C) Porque los caracteres consumen ancho de banda de internet adicional.</div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="workbench-col">
+        <div class="workbench-header">
+          <span class="workbench-title">Banco de Pruebas: Pipeline de Tensores NLP</span>
+          <span class="workbench-status">Interactivo</span>
+        </div>
+
+        <div style="display: flex; gap: 0.6rem; margin-bottom: 1.4rem; flex-wrap: wrap;">
+          <button class="btn-secondary nlp-chip" data-ex="voice">Meta Voice</button>
+          <button class="btn-secondary nlp-chip" data-ex="translate">Meta Translate</button>
+          <button class="btn-secondary nlp-chip" data-ex="assistant">Meta Assistant</button>
+        </div>
+
+        <div class="nlp-step-container">
+          <div class="nlp-step-box">
+            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700;">1. ENTRADA HUMANA (STRING UTF-8):</span>
+            <div id="nlp-human-txt" style="font-weight: 700; font-size: 1.15rem; color: var(--text-primary); margin-top: 0.4rem;">reproducir música</div>
+          </div>
+          <div class="nlp-step-box">
+            <span style="font-size: 0.78rem; color: var(--meta-blue); font-weight: 700;">2. REPRESENTACIÓN EN TENSORES (TOKEN IDs INT64):</span>
+            <div id="nlp-tensor-box" style="font-family: var(--font-mono); margin-top: 0.4rem; font-size: 1rem; color: var(--meta-blue);">[4120, 892, 104]</div>
+          </div>
+          <div class="nlp-step-box">
+            <span style="font-size: 0.78rem; color: var(--accent-success); font-weight: 700;">3. VECTOR DE EMBEDDING ASOCIADO (FORMA: [3, 4096]):</span>
+            <div id="nlp-embed-preview" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.4rem;">[-0.042, 0.189, 0.003, ..., 0.512]</div>
+          </div>
+          <div class="nlp-step-box">
+            <span style="font-size: 0.78rem; color: var(--accent-success); font-weight: 700;">4. SALIDA GENERADA POR EL MODELO:</span>
+            <div id="nlp-out-txt" style="font-weight: 700; color: var(--accent-success); margin-top: 0.4rem; font-size: 1.05rem;">Ejecutando streaming de audio</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MÓDULO 2: REPRESENTACIÓN DE DATOS (TOKENS & EMBEDDINGS)
+       ========================================================================== -->
+  <section class="module-block" id="modulo-2">
+    <div class="module-header">
+      <span class="module-tag">Módulo 2</span>
+      <h2 class="module-title">Tokenización & Geometría Semántica</h2>
+      <p class="module-desc">Analiza cómo los algoritmos de segmentación sub-palabra estructuran el vocabulario y cómo los Embeddings proyectan el significado en espacios continuos.</p>
+    </div>
+
+    <!-- Tema 2.1 -->
+    <div class="lesson-grid" id="tema-2-1">
+      <div class="theory-col">
+        <span class="tema-badge">Tema 2.1</span>
+        <h3 class="tema-h3">Segmentación BPE (Byte-Pair Encoding)</h3>
+        <p class="prose-p">Meta Llama 3 adopta un tokenizador BPE optimizado con un vocabulario extendido de <b>128,000 tokens</b> (comparado con 32,000 en Llama 2). Esta ampliación reduce hasta un <b>15% el conteo de tokens en español</b> y código, acelerando la inferencia y reduciendo el consumo de memoria KV Cache.</p>
+        
+        <div class="code-box">
+          <div class="code-header">
+            <span>tokenization_example.py</span>
+            <span>Python / Hugging Face</span>
+          </div>
+          <div class="code-content">from transformers import AutoTokenizer
+
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B")
+tokens = tokenizer.tokenize("¡Meta Llama 3!")
+ids = tokenizer.encode("¡Meta Llama 3!")
+print("Tokens:", tokens) # ['¡', 'Meta', 'ĠLlama', 'Ġ3', '!']
+print("IDs:", ids)       # [14781, 10582, 38125, 220, 0]</div>
+        </div>
+
+        <!-- Quiz Exprés 2.1 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 3 de 7</span>
+          </div>
+          <div class="quiz-question">¿Por qué un vocabulario BPE de 128k en Llama 3 es más eficiente que el de 32k en Llama 2?</div>
+          <div class="quiz-option" data-correct="true">A) Porque fragmenta menos palabras en español y código, disminuyendo el número de llamadas de inferencia.</div>
+          <div class="quiz-option" data-correct="false">B) Porque incrementa el tamaño del modelo de 8B a 405B automáticamente.</div>
+          <div class="quiz-option" data-correct="false">C) Porque elimina el uso de embeddings vectoriales.</div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="workbench-col">
+        <div class="workbench-header">
+          <span class="workbench-title">Banco de Pruebas: Tokenizador Llama 3 en Vivo</span>
+          <span class="workbench-status">Entrada Libre</span>
+        </div>
+
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.8rem;">Escribe cualquier texto en español, inglés o código para segmentar:</p>
+        <input type="text" id="tk-input-box" class="input-field" value="Meta Llama 3 impulsa el desarrollo abierto de Inteligencia Artificial">
+
+        <div class="token-chip-container" id="tk-output-chips"></div>
+
+        <div class="token-metrics-row">
+          <div class="metric-pill">
+            <div class="val" id="tk-val-count">0</div>
+            <div class="lbl">Tokens Generados</div>
+          </div>
+          <div class="metric-pill">
+            <div class="val" id="tk-val-chars">0</div>
+            <div class="lbl">Caracteres</div>
+          </div>
+          <div class="metric-pill">
+            <div class="val" id="tk-val-cost">$0.0000</div>
+            <div class="lbl">Costo Est. ($/1M)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tema 2.2 -->
+    <div class="lesson-grid" id="tema-2-2">
+      <div class="theory-col">
+        <span class="tema-badge">Tema 2.2</span>
+        <h3 class="tema-h3">Embeddings & Álgebra Vectorial</h3>
+        <p class="prose-p">Cada token se mapea a un vector denso de alta dimensionalidad (dimensiones de embedding <code>d_model = 4096</code> en Llama 3 8B, <code>8192</code> en Llama 3 70B). En este espacio métrico continuo, la afinidad semántica se evalúa formalmente con la <b>similitud coseno</b>.</p>
+
+        <div class="formula-block">
+          Cosine Similarity(u, v) = (u · v) / (||u|| ||v||)
+        </div>
+
+        <div class="callout-box">
+          <div class="callout-title">Linealidad Semántica & Propiedades Emergentes</div>
+          <div class="callout-text"><code>Vector("Rey") - Vector("Hombre") + Vector("Mujer") ≈ Vector("Reina")</code>.<br>Las relaciones sintácticas y semánticas se preservan como vectores de traslación espacial.</div>
+        </div>
+
+        <!-- Quiz Exprés 2.2 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 4 de 7</span>
+          </div>
+          <div class="quiz-question">¿Qué valor de Similitud Coseno indica que dos conceptos son idénticos en orientación vectorial?</div>
+          <div class="quiz-option" data-correct="false">A) 0.0 (Ortogonales / Sin relación)</div>
+          <div class="quiz-option" data-correct="true">B) 1.0 (Completamente paralelos y afines)</div>
+          <div class="quiz-option" data-correct="false">C) -1.0 (Completamente opuestos)</div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="workbench-col">
+        <div class="workbench-header">
+          <span class="workbench-title">Banco de Pruebas: Espacio Vectorial 2D Interactivo</span>
+          <span class="workbench-status">Touch & Mouse</span>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="vec-canvas"></canvas>
+        </div>
+
+        <div style="background: var(--bg-subtle); padding: 0.9rem 1.2rem; border-radius: 10px; margin-top: 1.2rem; display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 700;">
+          <span>Similitud Coseno calculada (Rey ↔ Reina):</span>
+          <span id="vec-sim-val" style="color: var(--meta-blue);">0.94</span>
+        </div>
+
+        <div style="display: flex; gap: 0.6rem; margin-top: 1.2rem; flex-wrap: wrap;">
+          <button class="btn-secondary" id="btn-vec-king">Rey - Hombre + Mujer = Reina</button>
+          <button class="btn-secondary" id="btn-vec-capital">París - Francia + España = Madrid</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MÓDULO 3: ARQUITECTURA TRANSFORMER & MULTI-HEAD ATTENTION
+       ========================================================================== -->
+  <section class="module-block" id="modulo-3">
+    <div class="module-header">
+      <span class="module-tag">Módulo 3</span>
+      <h2 class="module-title">Arquitectura Transformer & Atención</h2>
+      <p class="module-desc">Descubre el funcionamiento interno del mecanismo Multi-Head Attention, Grouped-Query Attention (GQA) y las leyes de escalabilidad computacional.</p>
+    </div>
+
+    <!-- Tema 3.1 -->
+    <div class="lesson-grid" id="tema-3-1">
+      <div class="theory-col">
+        <span class="tema-badge">Tema 3.1</span>
+        <h3 class="tema-h3">Mecanismo de Auto-Atención (Self-Attention)</h3>
+        <p class="prose-p">La auto-atención permite que cada token evalúe la relevancia contextual de todos los demás tokens de la secuencia en paralelo. Mediante las proyecciones de <b>Query (Q)</b>, <b>Key (K)</b> y <b>Value (V)</b>, el modelo asigna pesos dinámicos normalizados.</p>
+        
+        <div class="formula-block">
+          Attention(Q, K, V) = Softmax( (Q · K^T) / sqrt(d_k) ) · V
+        </div>
+
+        <div class="callout-box">
+          <div class="callout-title">Grouped-Query Attention (GQA) en Llama 3</div>
+          <div class="callout-text">Llama 3 8B utiliza <b>32 cabezas de Query</b> agrupadas sobre <b>8 cabezas de Key/Value</b>. Esta arquitectura GQA reduce el tamaño de la memoria KV Cache en 4x, permitiendo soportar ventanas de contexto de hasta 128k tokens sin saturar la VRAM.</div>
+        </div>
+
+        <!-- Quiz Exprés 3.1 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 5 de 7</span>
+          </div>
+          <div class="quiz-question">¿Por qué se divide el producto Q·K^T por sqrt(d_k)?</div>
+          <div class="quiz-option" data-correct="true">A) Para estabilizar la varianza del producto punto y evitar que el Softmax sature sus gradientes.</div>
+          <div class="quiz-option" data-correct="false">B) Para convertir números reales en enteros de 8 bits.</div>
+          <div class="quiz-option" data-correct="false">C) Para apagar la GPU cuando no hay tráfico de red.</div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="workbench-col">
+        <div class="workbench-header">
+          <span class="workbench-title">Banco de Pruebas: Matriz de Pesos de Atención</span>
+          <span class="workbench-status">Interactivo</span>
+        </div>
+
+        <p style="font-size: 0.88rem; color: var(--text-muted);">Selecciona una palabra para inspeccionar los pesos de atención calculados por las cabezas:</p>
+        <div class="attention-grid" id="attn-tokens-container"></div>
+
+        <div class="callout-box" style="margin-top: 1.4rem;">
+          <div class="callout-title">Diagnóstico de Atención</div>
+          <div class="callout-text" id="attn-feedback-text">Haz clic en un token para visualizar las dependencias.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tema 3.2 -->
+    <div class="lesson-grid" id="tema-3-2">
+      <div class="theory-col">
+        <span class="tema-badge">Tema 3.2</span>
+        <h3 class="tema-h3">Leyes de Escala & Cálculo de Memoria VRAM</h3>
+        <p class="prose-p">La memoria VRAM necesaria para inferencia se calcula multiplicando el número de parámetros por la precisión de cuantización (ej. 2 bytes por parámetro en FP16, 1 byte en INT8, 0.5 bytes en INT4) más el buffer de KV Cache para el contexto.</p>
+
+        <div class="formula-block">
+          VRAM_Inferencia (GB) ≈ (Parámetros × Bytes_Precisión) × 1.2 + KV_Cache
+        </div>
+
+        <ul class="feature-list">
+          <li class="feature-item"><span class="feature-bullet"></span><span><b>Llama 3 8B (INT4 Cuantizado):</b> Requiere solo ~5.5 GB de VRAM, ejecutable en laptops o GPUs domésticas.</span></li>
+          <li class="feature-item"><span class="feature-bullet"></span><span><b>Llama 3 70B (INT4 Cuantizado):</b> Requiere ~40 GB de VRAM (ejecutable en 2x RTX 3090/4090 o Mac M-Series con 64GB).</span></li>
+          <li class="feature-item"><span class="feature-bullet"></span><span><b>Llama 3 405B (FP16):</b> Requiere ~810 GB de VRAM en un clúster de 8x H100.</span></li>
+        </ul>
+
+        <!-- Quiz Exprés 3.2 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 6 de 7</span>
+          </div>
+          <div class="quiz-question">¿Cuánta VRAM aproximada requiere Llama 3 8B en precisión nativa FP16 (16 bits = 2 bytes)?</div>
+          <div class="quiz-option" data-correct="false">A) 4 GB</div>
+          <div class="quiz-option" data-correct="true">B) ~16 GB (8B × 2 bytes + buffers)</div>
+          <div class="quiz-option" data-correct="false">C) 128 GB</div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="workbench-col">
+        <div class="workbench-header">
+          <span class="workbench-title">Banco de Pruebas: Calculadora de VRAM & Escala</span>
+          <span class="workbench-status">Configurador</span>
+        </div>
+
+        <div style="text-align: center; margin: 1.4rem 0;">
+          <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700;">VARIANTE SELECCIONADA:</span>
+          <div id="scale-model-title" style="font-size: 2.4rem; font-weight: 800; color: var(--meta-blue); font-family: var(--font-disp);">8B Parámetros</div>
+        </div>
+
+        <input type="range" id="scale-range-slider" min="0" max="2" step="1" value="0" class="scale-range">
+
+        <div style="margin-bottom: 1.4rem;">
+          <label style="font-size: 0.88rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">Precisión / Cuantización:</label>
+          <select id="quant-select" class="input-field" style="padding: 0.7rem 1rem;">
+            <option value="16">FP16 (16-bit Nativo - Máxima Calidad)</option>
+            <option value="8">INT8 (8-bit Cuantizado - Balanceado)</option>
+            <option value="4" selected>INT4 (4-bit Q4_K_M - Mínima VRAM / Alta Velocidad)</option>
+          </select>
+        </div>
+
+        <div class="token-metrics-row" style="grid-template-columns: repeat(2, 1fr);">
+          <div class="metric-pill">
+            <div class="val" id="scale-vram-val">5.5 GB</div>
+            <div class="lbl">VRAM Requerida</div>
+          </div>
+          <div class="metric-pill">
+            <div class="val" id="scale-hw-val">1x GPU RTX 3060</div>
+            <div class="lbl">Hardware Mínimo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       MÓDULO 4: SOBERANÍA & LABORATORIO DE INFERENCIA LOCAL
+       ========================================================================== -->
+  <section class="module-block" id="modulo-4">
+    <div class="module-header">
+      <span class="module-tag">Módulo 4</span>
+      <h2 class="module-title">Soberanía Tecnológica & Inferencia Local</h2>
+      <p class="module-desc">Analiza las ventajas estratégicas de los modelos de pesos abiertos y ejecuta una sesión simulada de inferencia streaming en tu servidor local.</p>
+    </div>
+
+    <!-- Tema 4.1 -->
+    <div class="lesson-grid" id="tema-4-1">
+      <div class="theory-col">
+        <span class="tema-badge">Tema 4.1</span>
+        <h3 class="tema-h3">Modelos Abiertos (Open Weights) vs APIs Centralizadas</h3>
+        <p class="prose-p">La disponibilidad de pesos abiertos permite a ingenieros y organizaciones mantener el control total sobre su infraestructura, eliminando riesgos de fuga de datos, caídas de servicio y tarifas variables por llamada a API.</p>
+        
+        <div class="callout-box">
+          <div class="callout-title">Gobernanza y Cumplimiento</div>
+          <div class="callout-text">Los pesos abiertos garantizan privacidad total, cumplimiento de normativas de datos sensibles (GDPR / HIPAA) y personalización profunda mediante fine-tuning (LoRA / QLoRA).</div>
+        </div>
+
+        <!-- Quiz Exprés 4.1 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 7 de 7</span>
+          </div>
+          <div class="quiz-question">¿Cuál es una ventaja clave de desplegar Meta Llama 3 en infraestructura propia?</div>
+          <div class="quiz-option" data-correct="true">A) Soberanía y confidencialidad absoluta de los datos sin cobro variable por token.</div>
+          <div class="quiz-option" data-correct="false">B) No requiere ningún tipo de hardware computacional.</div>
+          <div class="quiz-option" data-correct="false">C) Envía automáticamente copias de tus datos a servidores externos.</div>
+          <div class="quiz-feedback"></div>
+        </div>
+      </div>
+
+      <div class="workbench-col">
+        <div class="workbench-header">
+          <span class="workbench-title">Banco de Pruebas: Matriz de Arquitectura y Control</span>
+          <span class="workbench-status">Arquitectura</span>
+        </div>
+
+        <div style="display: grid; gap: 1.2rem;">
+          <div style="background: var(--bg-subtle); padding: 1.4rem; border-radius: 12px; border-left: 4px solid var(--meta-blue);">
+            <b style="color: var(--meta-blue); font-size: 1.05rem;">Meta Llama 3 (Pesos Abiertos)</b>
+            <p style="font-size: 0.94rem; color: var(--text-secondary); margin-top: 0.4rem;">Soberanía total de infraestructura, ejecución 100% offline, costo fijo de hardware y reproducibilidad absoluta.</p>
+          </div>
+          <div style="background: var(--bg-subtle); padding: 1.4rem; border-radius: 12px; border-left: 4px solid var(--border-strong);">
+            <b style="font-size: 1.05rem;">APIs Centralizadas en la Nube</b>
+            <p style="font-size: 0.94rem; color: var(--text-secondary); margin-top: 0.4rem;">Dependencia de red externa, facturación recurrente por token consumido e imposibilidad de auditar capas internas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tema 4.2 -->
+    <div class="lesson-grid" id="tema-4-2">
+      <div class="theory-col">
+        <span class="tema-badge">Tema 4.2</span>
+        <h3 class="tema-h3">Telemetría de Inferencia: Latencia & Throughput</h3>
+        <p class="prose-p">En entornos de producción, el desempeño de un runtime de inferencia local (como Ollama, vLLM o TGI) se evalúa mediante métricas cuantitativas de latencia al primer token (<b>Time to First Token - TTFT</b>) y tasa de generación sostenida (<b>Tokens per Second - TPS</b>).</p>
+        
+        <div class="code-box">
+          <div class="code-header">
+            <span>local_curl_test.sh</span>
+            <span>cURL / Bash</span>
+          </div>
+          <div class="code-content">curl http://localhost:11434/api/generate -d '{
+  "model": "llama3:8b",
+  "prompt": "¿Por qué es importante la soberanía de IA?",
+  "stream": true,
+  "options": {
+    "temperature": 0.7
+  }
+}'</div>
+        </div>
+      </div>
+
+      <div class="workbench-col">
+        <div class="workbench-header">
+          <span class="workbench-title">Banco de Pruebas: Terminal de Inferencia Streaming Local</span>
+          <span class="workbench-status">Ollama Engine</span>
+        </div>
+
+        <div class="terminal-shell">
+          <div class="terminal-topbar">
+            <span>localhost:11434 — meta-llama-3-8b</span>
+            <span>HTTP 200 OK</span>
+          </div>
+          <div class="terminal-content" id="term-stream-output">> Presiona "Ejecutar Inferencia" para transmitir tokens desde el runtime local...</div>
+        </div>
+
+        <div class="telemetry-row">
+          <span>Velocidad: <b id="term-val-speed" style="color: var(--meta-blue);">0 t/s</b></span>
+          <span>Tokens: <b id="term-val-tokens" style="color: var(--accent-success);">0</b></span>
+          <span>TTFT: <b id="term-val-ttft" style="color: var(--accent-warning);">0 ms</b></span>
+        </div>
+
+        <div style="display: flex; gap: 0.8rem; margin-top: 1.4rem;">
+          <button class="btn-primary" id="btn-run-stream">⚡ Ejecutar Inferencia</button>
+          <button class="btn-secondary" id="btn-stop-stream">Detener</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Course Footer -->
+<footer class="course-footer">
+  <div style="max-width: 850px; margin: 0 auto; padding: 0 1.5rem;">
+    <h2 style="font-size: 2rem; font-family: var(--font-disp); margin-bottom: 0.9rem; color: var(--text-primary);">Has completado el Mini-Curso de LLMs</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.08rem;">Has cubierto los principios de modelado probabilístico, tokenización BPE, geometría de embeddings, auto-atención Transformer y telemetría de inferencia local.</p>
+    <a href="#overview" class="btn-secondary">Volver al Inicio del Mini-Curso</a>
+    <p style="font-size: 0.84rem; color: var(--text-muted); margin-top: 3rem;">Ecosistema Meta Llama 3 · Arquitectura de Modelos Abiertos de Inteligencia Artificial</p>
+  </div>
+</footer>
+
+<!-- ==========================================================================
+   JAVASCRIPT INTERACTIVE LOGIC & QUIZ ENGINE
+   ========================================================================== -->
+<script>
+(function(){
+  "use strict";
+
+  /* 1. AMBIENT PARTICLES CANVAS */
+  (function initCanvas(){
+    var canvas = document.getElementById("bg-canvas");
+    if(!canvas) return;
+    var ctx = canvas.getContext("2d");
+    var w, h;
+    var pts = [];
+
+    function resize(){
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      pts = [];
+      for(var i = 0; i < 35; i++){
+        pts.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          r: Math.random() * 2 + 1
+        });
+      }
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function loop(){
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = document.documentElement.getAttribute("data-theme") === "dark" ? "rgba(8, 102, 255, 0.4)" : "rgba(8, 102, 255, 0.25)";
+      pts.forEach(function(p){
+        p.x += p.vx; p.y += p.vy;
+        if(p.x < 0) p.x = w; if(p.x > w) p.x = 0;
+        if(p.y < 0) p.y = h; if(p.y > h) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+      requestAnimationFrame(loop);
+    }
+    loop();
+  })();
+
+  /* 2. THEME SWITCHER */
+  var themeBtn = document.getElementById("theme-btn");
+  var themeIcon = document.getElementById("theme-icon");
+  var themeLabel = document.getElementById("theme-label");
+
+  var savedTheme = localStorage.getItem("meta_theme") || "light";
+  document.documentElement.setAttribute("data-theme", savedTheme);
+  updateThemeState(savedTheme);
+
+  themeBtn.addEventListener("click", function(){
+    var curr = document.documentElement.getAttribute("data-theme");
+    var next = curr === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("meta_theme", next);
+    updateThemeState(next);
+  });
+
+  function updateThemeState(t){
+    themeIcon.textContent = t === "light" ? "☀️" : "🌙";
+    if(themeLabel) themeLabel.textContent = t === "light" ? "Modo Claro" : "Modo Oscuro";
+  }
+
+  /* 3. AUDIO SYNTH */
+  var SOUND = (function(){
+    var ctx = null;
+    var muted = false;
+    function init(){ if(!ctx && typeof AudioContext !== "undefined"){ ctx = new (window.AudioContext || window.webkitAudioContext)(); } }
+    return {
+      toggle: function(){ muted = !muted; return muted; },
+      playPop: function(f){
+        if(muted) return;
+        init();
+        if(!ctx) return;
+        try {
+          var osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(f || 440, ctx.currentTime);
+          g.gain.setValueAtTime(0.08, ctx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.06);
+        } catch(e){}
+      },
+      playChime: function(){
+        if(muted) return;
+        init();
+        if(!ctx) return;
+        try {
+          var osc = ctx.createOscillator(), g = ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+          g.gain.setValueAtTime(0.06, ctx.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+          osc.connect(g); g.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.2);
+        } catch(e){}
+      }
+    };
+  })();
+
+  var soundBtn = document.getElementById("sound-btn");
+  var soundIcon = document.getElementById("sound-icon");
+  var soundLabel = document.getElementById("sound-label");
+
+  soundBtn.addEventListener("click", function(){
+    var isMuted = SOUND.toggle();
+    soundIcon.textContent = isMuted ? "🔇" : "🔊";
+    if(soundLabel) soundLabel.textContent = isMuted ? "Audio OFF" : "Audio ON";
+  });
+
+  /* 4. PROGRESS BAR & STICKY PILLS ACTIVE TRACKING */
+  var progressBar = document.getElementById("progress-bar");
+  var pills = document.querySelectorAll(".sticky-pill");
+  var modules = document.querySelectorAll(".module-block");
+
+  window.addEventListener("scroll", function(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (h.scrollTop / max * 100) : 0;
+    progressBar.style.width = pct + "%";
+
+    var scrollPos = window.scrollY + 140;
+    modules.forEach(function(mod, idx){
+      var top = mod.offsetTop;
+      var height = mod.offsetHeight;
+      if(scrollPos >= top && scrollPos < top + height){
+        pills.forEach(function(p){ p.classList.remove("active"); });
+        if(pills[idx]) pills[idx].classList.add("active");
+      }
+    });
+  }, { passive: true });
+
+  /* 5. QUIZ ENGINE CON CONTADOR */
+  var answeredCount = 0;
+  var totalQuizzes = document.querySelectorAll(".quiz-box").length;
+  var quizCounterText = document.getElementById("quiz-counter-text");
+
+  document.querySelectorAll(".quiz-box").forEach(function(box){
+    var options = box.querySelectorAll(".quiz-option");
+    var feedback = box.querySelector(".quiz-feedback");
+    var isAnswered = false;
+
+    options.forEach(function(opt){
+      opt.addEventListener("click", function(){
+        var isCorrect = opt.getAttribute("data-correct") === "true";
+        options.forEach(function(o){ o.classList.remove("correct", "incorrect"); });
+        
+        if(isCorrect){
+          opt.classList.add("correct");
+          SOUND.playChime();
+          if(feedback){
+            feedback.style.display = "block";
+            feedback.style.color = "var(--accent-success)";
+            feedback.textContent = "✓ ¡Correcto! Has comprendido el fundamento técnico.";
+          }
+        } else {
+          opt.classList.add("incorrect");
+          SOUND.playPop(220);
+          if(feedback){
+            feedback.style.display = "block";
+            feedback.style.color = "#dc2626";
+            feedback.textContent = "✗ Respuesta incorrecta. Revisa la fundamentación teórica arriba.";
+          }
+        }
+
+        if(!isAnswered){
+          isAnswered = true;
+          answeredCount++;
+          if(quizCounterText) quizCounterText.textContent = answeredCount + " / " + totalQuizzes + " Respondidas";
+        }
+      });
+    });
+  });
+
+  /* 6. LAB 1.1: NEXT TOKEN PREDICTOR WITH TEMPERATURE */
+  (function initLab11(){
+    var pText = document.getElementById("p-text");
+    var pPreds = document.getElementById("p-preds");
+    var pReplay = document.getElementById("p-replay");
+    var tempSlider = document.getElementById("temp-slider");
+    var tempIndicator = document.getElementById("temp-val-indicator");
+
+    var steps = [
+      { text: "El modelo Llama ", candidates: [["aprende", 62], ["procesa", 24], ["genera", 14]] },
+      { text: "información con ", candidates: [["parámetros", 58], ["tensores", 27], ["atención", 15]] },
+      { text: "optimizados para ", candidates: [["inferencia", 70], ["velocidad", 20], ["precisión", 10]] }
+    ];
+    var currentStep = 0;
+
+    tempSlider.addEventListener("input", function(){
+      tempIndicator.textContent = tempSlider.value;
+      renderStep();
+    });
+
+    function renderStep(){
+      if(currentStep >= steps.length){
+        pPreds.innerHTML = "<div style='color:var(--meta-blue); font-weight:700; padding:0.5rem;'>Secuencia completada con éxito.</div>";
+        return;
+      }
+      var s = steps[currentStep];
+      pText.textContent = s.text;
+      pPreds.innerHTML = "";
+      
+      var temp = parseFloat(tempSlider.value);
+
+      s.candidates.forEach(function(cand){
+        var adjustedProb = Math.round(cand[1] * (1.2 - temp * 0.2));
+        if(adjustedProb > 95) adjustedProb = 95;
+        if(adjustedProb < 5) adjustedProb = 5;
+
+        var card = document.createElement("div");
+        card.className = "token-prob-card";
+        card.innerHTML = "<div><b>" + cand[0] + "</b><div class='prob-fill' style='width:" + adjustedProb + "%'></div></div><span style='font-size:0.85rem; font-weight:700; color:var(--text-muted);'>" + adjustedProb + "%</span>";
+        card.addEventListener("click", function(){
+          SOUND.playPop(520);
+          currentStep++;
+          renderStep();
+        });
+        pPreds.appendChild(card);
+      });
+    }
+
+    pReplay.addEventListener("click", function(){
+      SOUND.playPop(400);
+      currentStep = 0;
+      renderStep();
+    });
+
+    renderStep();
+  })();
+
+  /* 7. LAB 1.2: NLP PIPELINE */
+  (function initLab12(){
+    var data = {
+      voice: { txt: "reproducir música", tensors: "[4120, 892, 104]", embed: "[-0.042, 0.189, 0.003, ..., 0.512]", out: "Ejecutando streaming de audio" },
+      translate: { txt: "Good morning", tensors: "[612, 2043]", embed: "[0.120, -0.055, 0.812, ..., -0.041]", out: "Buenos días" },
+      assistant: { txt: "¿cuál es el estado?", tensors: "[71, 900, 355]", embed: "[0.004, 0.431, -0.198, ..., 0.224]", out: "Todos los servicios en línea" }
+    };
+    var chips = document.querySelectorAll(".nlp-chip");
+    chips.forEach(function(btn){
+      btn.addEventListener("click", function(){
+        SOUND.playPop(480);
+        var key = btn.getAttribute("data-ex");
+        var d = data[key] || data.voice;
+        document.getElementById("nlp-human-txt").textContent = d.txt;
+        document.getElementById("nlp-tensor-box").textContent = d.tensors;
+        document.getElementById("nlp-embed-preview").textContent = d.embed;
+        document.getElementById("nlp-out-txt").textContent = d.out;
+      });
+    });
+  })();
+
+  /* 8. LAB 2.1: LIVE TOKENIZER */
+  (function initLab21(){
+    var input = document.getElementById("tk-input-box");
+    var output = document.getElementById("tk-output-chips");
+    var valCount = document.getElementById("tk-val-count");
+    var valChars = document.getElementById("tk-val-chars");
+    var valCost = document.getElementById("tk-val-cost");
+
+    function tokenize(t){
+      if(!t) return [];
+      var parts = t.split(/(\s+|[.,!?:;¡¿])/g).filter(Boolean);
+      var res = [];
+      var hash = 2048;
+      parts.forEach(function(p){
+        if(!p.trim()) return;
+        if(p.length > 7){
+          res.push({ txt: p.slice(0, 5), id: (hash += 31) % 128000 });
+          res.push({ txt: p.slice(5), id: (hash += 47) % 128000 });
+        } else {
+          res.push({ txt: p, id: (hash += 19) % 128000 });
+        }
+      });
+      return res;
+    }
+
+    function update(){
+      var val = input.value;
+      var toks = tokenize(val);
+      output.innerHTML = "";
+      toks.forEach(function(tok){
+        var badge = document.createElement("div");
+        badge.className = "tok-badge";
+        badge.innerHTML = "<span class='txt'>" + tok.txt + "</span><span class='id'>ID " + tok.id + "</span>";
+        output.appendChild(badge);
+      });
+      valCount.textContent = toks.length;
+      valChars.textContent = val.length;
+      valCost.textContent = "$" + (toks.length * 0.00000015).toFixed(6);
+    }
+
+    input.addEventListener("input", function(){
+      SOUND.playPop(340);
+      update();
+    });
+    update();
+  })();
+
+  /* 9. LAB 2.2: 2D VECTOR EMBEDDINGS CANVAS */
+  (function initLab22(){
+    var canvas = document.getElementById("vec-canvas");
+    var ctx = canvas.getContext("2d");
+    var simVal = document.getElementById("vec-sim-val");
+    var width, height;
+
+    var nodes = [
+      { id: "rey", name: "Rey", x: 0.28, y: 0.3 },
+      { id: "hombre", name: "Hombre", x: 0.28, y: 0.7 },
+      { id: "mujer", name: "Mujer", x: 0.72, y: 0.7 },
+      { id: "reina", name: "Reina", x: 0.72, y: 0.3 }
+    ];
+    var dragNode = null;
+
+    function resize(){
+      var rect = canvas.parentElement.getBoundingClientRect();
+      width = canvas.width = rect.width;
+      height = canvas.height = rect.height;
+      draw();
+    }
+    window.addEventListener("resize", resize);
+
+    function calcSim(){
+      var n1 = nodes[0], n2 = nodes[3];
+      var dist = Math.hypot(n1.x - n2.x, n1.y - n2.y);
+      var sim = Math.max(0.1, (1 - dist * 0.8)).toFixed(2);
+      if(simVal) simVal.textContent = sim;
+    }
+
+    function draw(){
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.strokeStyle = "rgba(148, 163, 184, 0.18)";
+      ctx.lineWidth = 1;
+      for(var x = 0; x < width; x += 35){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,height); ctx.stroke(); }
+      for(var y = 0; y < height; y += 35){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(width,y); ctx.stroke(); }
+
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = "#0866ff";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(nodes[0].x * width, nodes[0].y * height);
+      ctx.lineTo(nodes[1].x * width, nodes[1].y * height);
+      ctx.lineTo(nodes[2].x * width, nodes[2].y * height);
+      ctx.lineTo(nodes[3].x * width, nodes[3].y * height);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      nodes.forEach(function(n){
+        var px = n.x * width, py = n.y * height;
+        ctx.fillStyle = "#0866ff";
+        ctx.beginPath(); ctx.arc(px, py, 11, 0, Math.PI*2); ctx.fill();
+
+        ctx.fillStyle = document.documentElement.getAttribute("data-theme") === "dark" ? "#ffffff" : "#0f172a";
+        ctx.font = "bold 13px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillText(n.name, px + 15, py + 4);
+      });
+      calcSim();
+    }
+
+    function handleStart(clientX, clientY){
+      var rect = canvas.getBoundingClientRect();
+      var mx = clientX - rect.left, my = clientY - rect.top;
+      nodes.forEach(function(n){
+        if(Math.hypot(mx - n.x * width, my - n.y * height) < 24){ dragNode = n; }
+      });
+    }
+
+    function handleMove(clientX, clientY){
+      if(!dragNode) return;
+      var rect = canvas.getBoundingClientRect();
+      dragNode.x = Math.max(0.05, Math.min(0.95, (clientX - rect.left) / width));
+      dragNode.y = Math.max(0.05, Math.min(0.95, (clientY - rect.top) / height));
+      draw();
+    }
+
+    canvas.addEventListener("mousedown", function(e){ handleStart(e.clientX, e.clientY); });
+    canvas.addEventListener("mousemove", function(e){ handleMove(e.clientX, e.clientY); });
+    window.addEventListener("mouseup", function(){ dragNode = null; });
+
+    canvas.addEventListener("touchstart", function(e){
+      if(e.touches.length > 0){ handleStart(e.touches[0].clientX, e.touches[0].clientY); }
+    }, { passive: true });
+    canvas.addEventListener("touchmove", function(e){
+      if(e.touches.length > 0){ handleMove(e.touches[0].clientX, e.touches[0].clientY); }
+    }, { passive: true });
+    window.addEventListener("touchend", function(){ dragNode = null; });
+
+    document.getElementById("btn-vec-king").addEventListener("click", function(){
+      SOUND.playChime();
+      nodes[0].name = "Rey"; nodes[0].x = 0.25; nodes[0].y = 0.3;
+      nodes[1].name = "Hombre"; nodes[1].x = 0.25; nodes[1].y = 0.7;
+      nodes[2].name = "Mujer"; nodes[2].x = 0.75; nodes[2].y = 0.7;
+      nodes[3].name = "Reina"; nodes[3].x = 0.75; nodes[3].y = 0.3;
+      draw();
+    });
+
+    document.getElementById("btn-vec-capital").addEventListener("click", function(){
+      SOUND.playChime();
+      nodes[0].name = "París"; nodes[0].x = 0.3; nodes[0].y = 0.35;
+      nodes[1].name = "Francia"; nodes[1].x = 0.3; nodes[1].y = 0.65;
+      nodes[2].name = "España"; nodes[2].x = 0.7; nodes[2].y = 0.65;
+      nodes[3].name = "Madrid"; nodes[3].x = 0.7; nodes[3].y = 0.35;
+      draw();
+    });
+
+    setTimeout(resize, 100);
+  })();
+
+  /* 10. LAB 3.1: TRANSFORMER ATTENTION */
+  (function initLab31(){
+    var container = document.getElementById("attn-tokens-container");
+    var feedback = document.getElementById("attn-feedback-text");
+    var words = ["El", "perro", "no", "cruzó", "la", "calle", "porque", "estaba", "cansado"];
+    var rels = {
+      7: "El token <b>'estaba'</b> proyecta un 85% de peso de atención a <b>'perro'</b> para resolver la correferencia del sujeto.",
+      1: "El token <b>'perro'</b> mantiene dependencias bidireccionales primarias con 'cruzó' y 'cansado'."
+    };
+
+    words.forEach(function(w, idx){
+      var btn = document.createElement("div");
+      btn.className = "attention-token";
+      btn.textContent = w;
+      btn.addEventListener("click", function(){
+        SOUND.playPop(500 + idx * 30);
+        document.querySelectorAll(".attention-token").forEach(function(b, i){
+          b.classList.toggle("active", i === idx);
+        });
+        feedback.innerHTML = rels[idx] || "El bloque Transformer calcula pesos de correlación semántica para el token <b>'" + w + "'</b>.";
+      });
+      container.appendChild(btn);
+    });
+  })();
+
+  /* 11. LAB 3.2: SCALE & QUANTIZATION EXPLORER */
+  (function initLab32(){
+    var slider = document.getElementById("scale-range-slider");
+    var quantSelect = document.getElementById("quant-select");
+    var title = document.getElementById("scale-model-title");
+    var vram = document.getElementById("scale-vram-val");
+    var hw = document.getElementById("scale-hw-val");
+
+    var models = [
+      { name: "8B Parámetros", baseGrams: 8 },
+      { name: "70B Parámetros", baseGrams: 70 },
+      { name: "405B Parámetros", baseGrams: 405 }
+    ];
+
+    function calculateVRAM(){
+      var m = models[slider.value] || models[0];
+      var bits = parseInt(quantSelect.value, 10);
+      var bytesPerParam = bits / 8;
+      var totalVRAM = (m.baseGrams * bytesPerParam * 1.25).toFixed(1);
+      
+      title.textContent = m.name;
+      vram.textContent = totalVRAM + " GB";
+
+      if(totalVRAM <= 8){
+        hw.textContent = "1x GPU RTX 3060 (8GB)";
+      } else if(totalVRAM <= 16){
+        hw.textContent = "1x GPU RTX 4080 (16GB)";
+      } else if(totalVRAM <= 48){
+        hw.textContent = "2x RTX 3090/4090 (48GB)";
+      } else {
+        hw.textContent = "Clúster 8x H100 (80GB)";
+      }
+    }
+
+    slider.addEventListener("input", function(){
+      SOUND.playPop(380 + slider.value * 100);
+      calculateVRAM();
+    });
+    quantSelect.addEventListener("change", function(){
+      SOUND.playPop(450);
+      calculateVRAM();
+    });
+    calculateVRAM();
+  })();
+
+  /* 12. LAB 4.2: INFERENCE STREAMING */
+  (function initLab42(){
+    var output = document.getElementById("term-stream-output");
+    var speedVal = document.getElementById("term-val-speed");
+    var tokVal = document.getElementById("term-val-tokens");
+    var ttftVal = document.getElementById("term-val-ttft");
+    var btnRun = document.getElementById("btn-run-stream");
+    var btnStop = document.getElementById("btn-stop-stream");
+
+    var isRunning = false;
+    var timer = null;
+    var sample = "Meta Llama 3 ejecuta inferencia local con alta eficiencia computacional, garantizando privacidad absoluta de datos, baja latencia y reproducibilidad en producción.";
+
+    btnRun.addEventListener("click", function(){
+      if(isRunning) return;
+      isRunning = true;
+      SOUND.playChime();
+      output.textContent = "> Conectando con runtime local Llama-3-8B...\n> Prompt: '¿Qué ventajas ofrece la inferencia local?'\n\n";
+      ttftVal.textContent = "38 ms";
+
+      var idx = 0, tokCount = 0;
+      var words = sample.split(" ");
+
+      timer = setInterval(function(){
+        if(idx < words.length){
+          output.textContent += words[idx++] + " ";
+          tokCount += 1.3;
+          tokVal.textContent = Math.round(tokCount);
+          speedVal.textContent = (48 + Math.random() * 8).toFixed(1) + " t/s";
+          SOUND.playPop(680);
+        } else {
+          clearInterval(timer);
+          isRunning = false;
+          output.textContent += "\n\n[Inferencia completada con éxito]";
+        }
+      }, 60);
+    });
+
+    btnStop.addEventListener("click", function(){
+      if(timer) clearInterval(timer);
+      isRunning = false;
+      output.textContent += "\n\n[Inferencia cancelada por el usuario]";
+    });
+  })();
+
+})();
+</script>
+
+</body>
+</html>
