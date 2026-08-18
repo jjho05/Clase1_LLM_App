@@ -281,7 +281,7 @@
             <summary class="formula-breakdown-summary">
               <div class="summary-left">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                <span>Desglose de Símbolos y Variables</span>
+                <span>Desglose de la Fórmula de Inferencia en Contexto</span>
                 <span class="breakdown-count-tag">6 elementos</span>
               </div>
               <span class="summary-toggle-icon">
@@ -291,37 +291,37 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">P(Y | X, I)</span>
+                  <span class="breakdown-row-badge">$P(Y \mid X, \mathcal{I})$</span>
                   <div class="breakdown-row-text">
-                    <strong>Probabilidad Condicionada por el Prompt:</strong> La probabilidad de que el modelo genere la respuesta $Y$ condicionada tanto por la consulta del usuario ($X$) como por la instrucción/ejemplos provistos ($\mathcal{I}$).
+                    <strong>Probabilidad Condicionada por el Prompt:</strong> La probabilidad de que el modelo genere la respuesta $Y$ condicionada tanto por la consulta del usuario ($X$) como por la instrucción o ejemplos provistos ($\mathcal{I}$).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\mathcal{I}</span>
+                  <span class="breakdown-row-badge">$\mathcal{I}$ (Instrucción)</span>
                   <div class="breakdown-row-text">
                     <strong>Instrucción / Demostraciones en Contexto:</strong> El conjunto de tokens del prompt de sistema, roles de Few-Shot o la orden explícita de CoT ("Piensa paso a paso").
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">X</span>
+                  <span class="breakdown-row-badge">$X$ (Query)</span>
                   <div class="breakdown-row-text">
                     <strong>Consulta de Entrada (Query):</strong> El problema puntual, texto a clasificar o pregunta formulada por el usuario final.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">y_t</span>
+                  <span class="breakdown-row-badge">$y_t$ (Token)</span>
                   <div class="breakdown-row-text">
-                    <strong>Token Generado en el Paso t:</strong> Cada subpalabra que el modelo predice sucesivamente durante la emisión de la respuesta.
+                    <strong>Token Generado en el Paso $t$:</strong> Cada subpalabra que el modelo predice sucesivamente durante la emisión de la respuesta.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\prod_{t=1}^m</span>
+                  <span class="breakdown-row-badge">$\prod_{t=1}^m$</span>
                   <div class="breakdown-row-text">
                     <strong>Productorio Secuencial:</strong> Multiplicación de las probabilidades calculadas token por token a lo largo de toda la longitud $m$ de la respuesta generada.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">y_1, \dots, y_{t-1}</span>
+                  <span class="breakdown-row-badge">$y_1, \dots, y_{t-1}$</span>
                   <div class="breakdown-row-text">
                     <strong>Historial Autoregresivo Generado:</strong> Los tokens intermedios que el modelo ya emitió (por ejemplo, los pasos 1 y 2 de una deducción CoT) que guían la predicción del paso 3.
                   </div>
@@ -354,18 +354,21 @@
         <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.2rem;">
           <label style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary);">Seleccionar Tarea:</label>
           <select id="prompt-task-select" class="input-field" style="max-width: 320px; font-weight: 600;">
-            <option value="math">Problema Aritmético Multi-Paso</option>
-            <option value="sentiment">Clasificación de Reseñas de Clientes</option>
-            <option value="json">Extracción Estructurada de Datos JSON</option>
+            <option value="math">1. Problema Aritmético Multi-Paso</option>
+            <option value="sentiment">2. Clasificación de Reseñas de Clientes</option>
+            <option value="json">3. Extracción Estructurada de Datos JSON</option>
+            <option value="logic">4. Diagnóstico Lógico & Reglas de Negocio</option>
           </select>
-          <div style="display: flex; gap: 0.4rem;">
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
             <button class="btn-secondary prompt-strategy-btn" data-strategy="zero" style="padding: 0.45rem 0.9rem; font-size: 0.82rem;">Zero-Shot</button>
             <button class="btn-secondary prompt-strategy-btn active" data-strategy="few" style="padding: 0.45rem 0.9rem; font-size: 0.82rem;">Few-Shot</button>
             <button class="btn-secondary prompt-strategy-btn" data-strategy="cot" style="padding: 0.45rem 0.9rem; font-size: 0.82rem;">Chain-of-Thought</button>
+            <button class="btn-secondary prompt-strategy-btn" data-strategy="all" style="padding: 0.45rem 0.9rem; font-size: 0.82rem; background: var(--meta-blue-subtle); color: var(--meta-blue); font-weight: 700; border-color: var(--meta-blue-border);">⚡ Comparar las 3 en Paralelo</button>
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+        <!-- VISTA INDIVIDUAL -->
+        <div id="prompt-single-view" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
           <div>
             <div style="font-size: 0.78rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.4rem;">Prompt Enviado al Modelo:</div>
             <pre id="prompt-input-preview" style="background: var(--bg-code); color: #9cdcfe; padding: 1rem; border-radius: 10px; font-family: var(--font-mono); font-size: 0.84rem; line-height: 1.6; height: 210px; overflow-y: auto; white-space: pre-wrap; border: 1px solid var(--border-subtle);"></pre>
@@ -376,8 +379,11 @@
           </div>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;">
-          <div id="prompt-metrics-pill" style="font-size: 0.84rem; color: var(--text-secondary);"></div>
+        <!-- VISTA COMPARATIVA EN 3 COLUMNAS -->
+        <div id="prompt-comparative-grid" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1rem;"></div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem; border-top: 1px solid var(--border-subtle); padding-top: 0.8rem;">
+          <div id="prompt-metrics-pill" style="font-size: 0.84rem; color: var(--text-secondary); width: 100%; max-width: 650px;"></div>
           <button class="btn-primary" id="btn-run-prompt-sim" style="padding: 0.55rem 1.2rem; font-size: 0.88rem;">
             <span>Reejecutar Inferencia</span>
           </button>
@@ -441,29 +447,36 @@
             Banco de Pruebas 1.2.2: Comparador en Vivo — Memoria Paramétrica (Alucinación) vs RAG (Hecho Real)
           </div>
           <div class="workbench-actions">
-            <span class="workbench-tag">Auditoría Fáctica</span>
+            <span class="workbench-tag">Auditoría Fáctica & Línea de Tiempo</span>
           </div>
+        </div>
+
+        <!-- BANNER DE LÍNEA DE TIEMPO / CORTE DE CONOCIMIENTO -->
+        <div id="hallucination-timeline-tag" style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); padding: 0.6rem 0.9rem; border-radius: 8px; font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.1rem; display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono);">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style="color:var(--meta-blue);"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+          <span>Fecha de Corte Llama 3: Dic 2023 | Cambio de Política: 1 de Enero 2024</span>
         </div>
 
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem;">
           <button class="btn-secondary hallucination-case-btn active" data-case="policy" style="font-size:0.82rem; padding:0.4rem 0.85rem;">Caso 1: Política de Reembolsos</button>
           <button class="btn-secondary hallucination-case-btn" data-case="medical" style="font-size:0.82rem; padding:0.4rem 0.85rem;">Caso 2: Contraindicación Médica</button>
           <button class="btn-secondary hallucination-case-btn" data-case="pricing" style="font-size:0.82rem; padding:0.4rem 0.85rem;">Caso 3: Tarifario Comercial</button>
+          <button class="btn-secondary hallucination-case-btn" data-case="tax" style="font-size:0.82rem; padding:0.4rem 0.85rem;">Caso 4: Reforma Fiscal 2024</button>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem;">
-          <div style="background: var(--bg-surface); border: 1.5px solid rgba(239,68,68,0.3); border-radius: 12px; padding: 1.2rem;">
+          <div style="background: var(--bg-surface); border: 1.5px solid rgba(239,68,68,0.35); border-radius: 12px; padding: 1.2rem;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
               <span style="font-size:0.75rem; font-weight:800; color:#ef4444; text-transform:uppercase;">Solo Modelo (Sin RAG)</span>
-              <span style="font-size:0.7rem; color:var(--text-muted);">Memoria Congelada</span>
+              <span style="font-size:0.7rem; color:var(--text-muted); font-family:var(--font-mono);">Memoria Congelada</span>
             </div>
             <div id="model-direct-response" style="font-size:0.9rem; color:var(--text-primary); line-height:1.6;"></div>
           </div>
 
-          <div style="background: var(--bg-surface); border: 1.5px solid rgba(16,185,129,0.4); border-radius: 12px; padding: 1.2rem;">
+          <div style="background: var(--bg-surface); border: 1.5px solid rgba(16,185,129,0.45); border-radius: 12px; padding: 1.2rem;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
-              <span style="font-size:0.75rem; font-weight:800; color:var(--accent-success); text-transform:uppercase;">Modelo + RAG (Con Documento)</span>
-              <span style="font-size:0.7rem; color:var(--meta-blue); font-weight:700;">Base Vectorial</span>
+              <span style="font-size:0.75rem; font-weight:800; color:var(--accent-success); text-transform:uppercase;">Modelo + RAG (Con Base Vectorial)</span>
+              <span style="font-size:0.7rem; color:var(--meta-blue); font-weight:700; font-family:var(--font-mono);">Base Vectorial ChromaDB</span>
             </div>
             <div id="model-rag-response" style="font-size:0.9rem; color:var(--text-primary); line-height:1.6;"></div>
           </div>
@@ -519,30 +532,29 @@
         <div class="bento-sub-card">
           <div>
             <span class="tema-subheading-tag">Componente #2</span>
-            <h5 class="bento-sub-title">Embeddings</h5>
+            <h5 class="bento-sub-title">Embeddings (Incrustaciones)</h5>
             <p class="bento-sub-desc">
-              <b>Intuición:</b> Es como traducir cada frase a un idioma numérico universal donde “el coche rojo” y “el auto carmesí” suenan casi idéntico, aunque usen palabras distintas.
+              <b>Intuición:</b> Es como traducir cada documento a un idioma numérico universal donde las ideas parecidas quedan cerca unas de otras en un mapa geométrico.
             </p>
             <p class="bento-sub-desc" style="margin-bottom:0;">
-              <b>Técnica:</b> Representación densa de texto en un vector de alta dimensionalidad, generada por un modelo de lenguaje, que codifica significado semántico y permite comparar similitud conceptual más allá de la coincidencia léxica exacta.
+              <b>Técnica:</b> Representaciones vectoriales continuas de alta dimensión (ej. 1,536 dimensiones) que capturan las relaciones semánticas del lenguaje natural.
             </p>
           </div>
         </div>
 
-        <!-- BÚSQUEDA SEMÁNTICA -->
+        <!-- SIMILITUD COSENO -->
         <div class="bento-sub-card">
           <div>
             <span class="tema-subheading-tag">Componente #3</span>
-            <h5 class="bento-sub-title">Búsqueda Semántica</h5>
+            <h5 class="bento-sub-title">Similitud Coseno</h5>
             <p class="bento-sub-desc">
-              <b>Intuición:</b> Es la diferencia entre buscar una palabra exacta en el índice de un libro y buscar el tema que te interesa aunque el autor use sinónimos o expresiones coloquiales.
+              <b>Intuición:</b> Es medir con un transportador el ángulo entre dos flechas: si apuntan en la misma dirección, hablan exactamente de lo mismo.
             </p>
             <p class="bento-sub-desc" style="margin-bottom:0;">
-              <b>Técnica:</b> Método de recuperación que compara la proximidad geométrica entre vectores de embeddings para encontrar contenido relacionado por significado, no por correspondencia literal de términos.
+              <b>Técnica:</b> Métrica matemática que cuantifica la proximidad angular entre dos vectores en el espacio latente, normalizada en el rango $[-1, 1]$.
             </p>
           </div>
         </div>
-
       </div>
 
       <!-- FORMULACIÓN MATEMÁTICA DE RAG -->
@@ -570,31 +582,31 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">P(y | x)</span>
+                  <span class="breakdown-row-badge">$P(y \mid x)$</span>
                   <div class="breakdown-row-text">
                     <strong>Probabilidad de la Respuesta Final:</strong> La verosimilitud de que el texto emitido por el sistema resuelva la consulta del usuario de forma certera y sin alucinaciones.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">P(z | x)</span>
+                  <span class="breakdown-row-badge">$P(z \mid x)$</span>
                   <div class="breakdown-row-text">
                     <strong>Probabilidad del Retriever (Recuperación):</strong> Puntuación de similitud semántica calculada por el modelo de embeddings entre la pregunta $x$ y el fragmento documental $z$.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">P(y | x, z)</span>
+                  <span class="breakdown-row-badge">$P(y \mid x, z)$</span>
                   <div class="breakdown-row-text">
                     <strong>Probabilidad del Generator (Llama 3):</strong> La probabilidad con la que el modelo autorregresivo genera la respuesta $y$ anclada obligatoriamente en el fragmento recuperado $z$.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">z \in \text{Top-}k</span>
+                  <span class="breakdown-row-badge">$z \in \text{Top-}k$</span>
                   <div class="breakdown-row-text">
                     <strong>Conjunto de Fragmentos Seleccionados:</strong> Los $k$ pasajes con mayor puntuación vectorial devueltos por el índice HNSW de la base vectorial.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\sum</span>
+                  <span class="breakdown-row-badge">$\sum_{z}$</span>
                   <div class="breakdown-row-text">
                     <strong>Combinación de Evidencias:</strong> Integración y síntesis de todos los fragmentos relevantes para redactar una respuesta cohesiva y unificada.
                   </div>
@@ -672,31 +684,31 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\mathbf{u} \cdot \mathbf{v}</span>
+                  <span class="breakdown-row-badge">$\mathbf{u} \cdot \mathbf{v}$</span>
                   <div class="breakdown-row-text">
                     <strong>Producto Punto (Escalar):</strong> Suma de las multiplicaciones elemento a elemento ($\sum u_i v_i$). Mide cuánto apuntan ambos vectores en la misma dirección.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\|\mathbf{u}\|_2</span>
+                  <span class="breakdown-row-badge">$\|\mathbf{u}\|_2$</span>
                   <div class="breakdown-row-text">
                     <strong>Norma Euclidiana ($L_2$):</strong> La longitud geométrica del vector ($\sqrt{\sum u_i^2}$). Normaliza la métrica para que textos largos no dominen artificialmente sobre textos cortos.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\cos(\theta) = 1.0</span>
+                  <span class="breakdown-row-badge">$\cos(\theta) = 1.0$</span>
                   <div class="breakdown-row-text">
                     <strong>Significado Idéntico ($\theta = 0^\circ$):</strong> Vectores paralelos; los textos expresan exactamente la misma idea semántica.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\cos(\theta) = 0.0</span>
+                  <span class="breakdown-row-badge">$\cos(\theta) = 0.0$</span>
                   <div class="breakdown-row-text">
                     <strong>Ortogonales / Sin Relación ($\theta = 90^\circ$):</strong> Los textos pertenecen a dominios completamente desconectados (ej. repostería y física de partículas).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\cos(\theta) = -1.0</span>
+                  <span class="breakdown-row-badge">$\cos(\theta) = -1.0$</span>
                   <div class="breakdown-row-text">
                     <strong>Opuestos Diametrales ($\theta = 180^\circ$):</strong> Vectores en direcciones exactamente inversas.
                   </div>

@@ -1,6 +1,6 @@
 /**
  * Meta AI - Módulo 1 Tema 2: Prompt Engineering y RAG con Llama
- * Laboratorios Interactivos, Simuladores y Motor de Evaluación
+ * Laboratorios Interactivos Avanzados, Simuladores y Motor de Evaluación
  */
 
 (function(){
@@ -28,7 +28,7 @@
     });
   }, { passive: true });
 
-  /* 2. MOTOR DE EVALUACIÓN DE QUIZZES (7 PREGUNTAS) CON FEEDBACK AUDITIVO & CERTIFICADO */
+  /* 2. MOTOR DE EVALUACIÓN DE QUIZZES (8 PREGUNTAS) CON FEEDBACK AUDITIVO & CERTIFICADO */
   var totalQuizzes = document.querySelectorAll(".quiz-box").length;
   var quizCounterText = document.getElementById("quiz-counter-text");
   var btnResetAllQuizzes = document.getElementById("btn-reset-all-quizzes");
@@ -105,7 +105,7 @@
     });
   }
 
-  /* 3. SIMULADOR 1.2.1: PLAYGROUND PROMPTING (ZERO-SHOT VS FEW-SHOT VS CHAIN-OF-THOUGHT) */
+  /* 3. SIMULADOR 1.2.1: PLAYGROUND PROMPTING AVANZADO (ZERO-SHOT VS FEW-SHOT VS CHAIN-OF-THOUGHT) */
   (function initPromptingPlayground(){
     var strategyBtns = document.querySelectorAll(".prompt-strategy-btn");
     var taskSelector = document.getElementById("prompt-task-select");
@@ -113,6 +113,8 @@
     var promptOutputView = document.getElementById("prompt-output-preview");
     var promptMetricsPill = document.getElementById("prompt-metrics-pill");
     var btnExecutePrompt = document.getElementById("btn-run-prompt-sim");
+    var comparativeContainer = document.getElementById("prompt-comparative-grid");
+    var singleViewContainer = document.getElementById("prompt-single-view");
 
     if(!promptInputView || !promptOutputView) return;
 
@@ -121,77 +123,158 @@
         title: "Problema Aritmético Multi-Paso",
         zero: {
           input: "Pregunta: En un almacén hay 45 cajas. Cada caja tiene 12 paquetes y cada paquete tiene 5 tornillos. Si se venden 3 cajas completas y 4 paquetes sueltos, ¿cuántos tornillos quedan en el almacén?",
-          output: "Resumen: Quedan 2,490 tornillos.",
-          note: "Zero-Shot: El modelo intenta adivinar el resultado final en un solo salto probabilístico sin razonamiento intermedio. En tareas complejas suele equivocarse o aproximar.",
-          status: "⚠️ Riesgo de error de cálculo (Salto directo sin verificación)"
+          output: "Quedan 2,490 tornillos.",
+          tokens: "Input: 46 | Output: 8 | Latencia: 140ms",
+          status: "⚠️ Riesgo de Error Aritmético: Salto directo sin pasos intermedios (Respuesta real: 2,500).",
+          reasoningSteps: []
         },
         few: {
-          input: "Ejemplo 1:\nEntrada: Hay 10 cajas con 5 botellas. Vendo 2 cajas. ¿Cuántas botellas quedan?\nSalida: Quedan 40 botellas.\n\nEjemplo 2:\nEntrada: Tengo 8 bolsas con 4 manzanas. Regalo 3 bolsas y 2 manzanas. ¿Cuántas quedan?\nSalida: Quedan 18 manzanas.\n\nConsulta:\nEntrada: En un almacén hay 45 cajas. Cada caja tiene 12 paquetes y cada paquete tiene 5 tornillos. Si se venden 3 cajas completas y 4 paquetes sueltos, ¿cuántos tornillos quedan en el almacén?\nSalida: ",
+          input: "Ejemplo 1:\nEntrada: Hay 10 cajas con 5 botellas. Vendo 2 cajas. ¿Cuántas botellas quedan?\nSalida: Quedan 40 botellas.\n\nEjemplo 2:\nEntrada: Tengo 8 bolsas con 4 manzanas. Regalo 3 bolsas y 2 manzanas. ¿Cuántas quedan?\nSalida: Quedan 18 manzanas.\n\nConsulta:\nEntrada: En un almacén hay 45 cajas. Cada caja tiene 12 paquetes y cada paquete tiene 5 tornillos. Si se venden 3 cajas completas y 4 paquetes sueltos, ¿cuántos tornillos quedan en el almacén?\nSalida:",
           output: "Quedan 2,500 tornillos.",
-          note: "Few-Shot: Calibra el formato de salida conciso, pero aún carece de pasos de razonamiento intermedio para operaciones numéricas complejas.",
-          status: "⚡ Formato estandarizado (Alineado por demostraciones)"
+          tokens: "Input: 128 | Output: 9 | Latencia: 195ms",
+          status: "⚡ Formato Estandarizado: Salida limpia y consistente calibrada por demostraciones.",
+          reasoningSteps: []
         },
         cot: {
-          input: "Pregunta: En un almacén hay 45 cajas. Cada caja tiene 12 paquetes y cada paquete tiene 5 tornillos. Si se venden 3 cajas completas y 4 paquetes sueltos, ¿cuántos tornillos quedan en el almacén?\nInstrucción: Piensa paso a paso antes de dar la respuesta final.",
-          output: "Razonamiento paso a paso:\n1. Total inicial:\n   - Tornillos por caja = 12 paquetes × 5 tornillos = 60 tornillos.\n   - Total inicial = 45 cajas × 60 tornillos = 2,700 tornillos.\n2. Cantidad vendida:\n   - 3 cajas = 3 × 60 = 180 tornillos.\n   - 4 paquetes sueltos = 4 × 5 = 20 tornillos.\n   - Total vendido = 180 + 20 = 200 tornillos.\n3. Tornillos restantes:\n   - 2,700 - 200 = 2,500 tornillos.\n\nRespuesta final: Quedan exactamente 2,500 tornillos.",
-          note: "Chain-of-Thought (CoT): El modelo descompone el problema en sub-cálculos secuenciales, garantizando una precisión matemática del 100%.",
-          status: "✅ 100% Preciso & Verificable (Razonamiento deductivo paso a paso)"
+          input: "Pregunta: En un almacén hay 45 cajas. Cada caja tiene 12 paquetes y cada paquete tiene 5 tornillos. Si se venden 3 cajas completas y 4 paquetes sueltos, ¿cuántos tornillos quedan en el almacén?\nInstrucción: Piensa paso a paso y desglosa cada sub-cálculo antes de emitir el resultado final.",
+          output: "Razonamiento paso a paso:\n1. Total inicial de tornillos:\n   - Tornillos por caja = 12 paquetes × 5 tornillos = 60 tornillos.\n   - Total en inventario = 45 cajas × 60 tornillos = 2,700 tornillos.\n2. Cantidad total vendida:\n   - 3 cajas vendidas = 3 × 60 = 180 tornillos.\n   - 4 paquetes sueltos = 4 × 5 = 20 tornillos.\n   - Total vendido = 180 + 20 = 200 tornillos.\n3. Inventario final restante:\n   - 2,700 - 200 = 2,500 tornillos.\n\nRespuesta final: Quedan exactamente 2,500 tornillos.",
+          tokens: "Input: 58 | Output: 142 | Latencia: 380ms",
+          status: "✅ 100% Preciso & Auditable: Deducción matemática secuencial paso a paso.",
+          reasoningSteps: [
+            "Paso 1: Multiplicación de inventario base (45 × 12 × 5 = 2,700)",
+            "Paso 2: Suma de unidades despachadas (180 + 20 = 200)",
+            "Paso 3: Sustracción final (2,700 - 200 = 2,500)"
+          ]
         }
       },
       sentiment: {
         title: "Clasificación de Reseñas de Clientes",
         zero: {
           input: "Clasifica esta reseña: 'El paquete llegó a tiempo, pero el producto venía roto y la atención fue pésima.'",
-          output: "La reseña es de carácter negativo debido a la mala experiencia con el estado del producto y el servicio.",
-          note: "Zero-Shot: Devuelve una respuesta conversacional y verbosa en lugar de una etiqueta estructurada fija.",
-          status: "⚠️ Salida conversacional no normalizada"
+          output: "La reseña expresa una opinión negativa del cliente principalmente por el producto roto y el mal servicio de atención.",
+          tokens: "Input: 28 | Output: 24 | Latencia: 155ms",
+          status: "⚠️ Salida Conversacional: Difícil de parsear en una base de datos.",
+          reasoningSteps: []
         },
         few: {
           input: "Clasifica el sentimiento en una sola etiqueta: [Positiva, Negativa, Neutra]\n\nTexto: 'Excelente servicio, volvería a comprar.'\nSentimiento: Positiva\n\nTexto: 'El producto cumple su función básica.'\nSentimiento: Neutra\n\nTexto: 'No enciende y tardó 3 semanas.'\nSentimiento: Negativa\n\nTexto: 'El paquete llegó a tiempo, pero el producto venía roto y la atención fue pésima.'\nSentimiento:",
           output: "Negativa",
-          note: "Few-Shot: Al mostrarle 3 ejemplos, el modelo responde exactamente con la palabra clave requerida, listo para ingesta en bases de datos.",
-          status: "✅ Salida 100% estructurada para integración en software"
+          tokens: "Input: 94 | Output: 2 | Latencia: 90ms",
+          status: "✅ Formato Estricto: Etiqueta exacta lista para base de datos SQL/NoSQL.",
+          reasoningSteps: []
         },
         cot: {
-          input: "Clasifica esta reseña analizando pros y contras: 'El paquete llegó a tiempo, pero el producto venía roto y la atención fue pésima.'",
-          output: "Análisis de aspectos:\n- Logística de entrega: Positiva ('llegó a tiempo').\n- Calidad del artículo: Negativa crítica ('venía roto').\n- Soporte al cliente: Negativa crítica ('atención pésima').\n\nBalance general: Negativa dominante (el fallo del producto y la mala atención superan la puntualidad del envío).\nClasificación final: Negativa",
-          note: "Chain-of-Thought: Analiza sentimientos mixtos por aspectos antes de emitir la decisión final.",
-          status: "✅ Análisis granular multi-aspecto"
+          input: "Analiza por aspectos y clasifica la reseña: 'El paquete llegó a tiempo, pero el producto venía roto y la atención fue pésima.'",
+          output: "Desglose por aspectos:\n- Logística: Positiva ('llegó a tiempo').\n- Calidad física: Negativa crítica ('venía roto').\n- Servicio al cliente: Negativa crítica ('atención pésima').\n\nPonderación: Los fallos críticos de producto y servicio superan la entrega puntual.\nSentimiento Dominante: Negativa",
+          tokens: "Input: 36 | Output: 72 | Latencia: 240ms",
+          status: "✅ Análisis Granular Multi-Aspecto: Explica el porqué de la decisión.",
+          reasoningSteps: [
+            "Aspecto 1: Logística (+)",
+            "Aspecto 2: Calidad Producto (-)",
+            "Aspecto 3: Soporte (-)",
+            "Conclusión: Negativa Dominante"
+          ]
         }
       },
       json: {
         title: "Extracción Estructurada de Datos JSON",
         zero: {
-          input: "Extrae los datos de esta orden: 'Cliente Juan Pérez compró 2 laptops Dell XPS a 1,200 USD cada una el 15 de marzo de 2024.' en formato JSON.",
-          output: "Aquí tienes el JSON solicitado:\n```json\n{\n  \"comprador\": \"Juan Pérez\",\n  \"articulos\": \"2 laptops Dell XPS\",\n  \"precio_unitario\": \"1,200 USD\"\n}\n```",
-          note: "Zero-Shot: Incluye texto explicativo antes del JSON y nombres de claves arbitrarios no normalizados.",
-          status: "⚠️ Requiere regex o parsing adicional para extraer el bloque"
+          input: "Extrae los datos de esta orden en formato JSON: 'Cliente Juan Pérez compró 2 laptops Dell XPS a 1,200 USD cada una el 15 de marzo de 2024.'",
+          output: "```json\n{\n  \"comprador\": \"Juan Pérez\",\n  \"articulo\": \"2 laptops Dell XPS\",\n  \"precio\": \"1,200 USD\"\n}\n```",
+          tokens: "Input: 42 | Output: 38 | Latencia: 180ms",
+          status: "⚠️ Esquema Inconsistente: Claves no tipadas y valores mezclados con strings.",
+          reasoningSteps: []
         },
         few: {
           input: "Extrae los datos siguiendo exactamente el esquema del ejemplo:\n\nTexto: 'Ana Gómez compró 1 monitor LG por 300 USD.'\nJSON: {\"customer\":\"Ana Gómez\",\"item\":\"Monitor LG\",\"quantity\":1,\"unit_price\":300.0,\"currency\":\"USD\"}\n\nTexto: 'Cliente Juan Pérez compró 2 laptops Dell XPS a 1,200 USD cada una el 15 de marzo de 2024.'\nJSON:",
           output: "{\"customer\":\"Juan Pérez\",\"item\":\"Laptop Dell XPS\",\"quantity\":2,\"unit_price\":1200.0,\"currency\":\"USD\",\"date\":\"2024-03-15\"}",
-          note: "Few-Shot: Respeta fielmente los tipos de datos (float, integer) y los nombres exactos de las claves.",
-          status: "✅ JSON sintácticamente puro y compatible con Pydantic"
+          tokens: "Input: 110 | Output: 44 | Latencia: 190ms",
+          status: "✅ JSON Tipado & Puro: Totalmente compatible con validadores Pydantic.",
+          reasoningSteps: []
         },
         cot: {
-          input: "Extrae los datos en JSON validando coherencia matemática:\nTexto: 'Cliente Juan Pérez compró 2 laptops Dell XPS a 1,200 USD cada una el 15 de marzo de 2024.'",
-          output: "Validación de campos:\n- Nombre detectado: 'Juan Pérez'\n- Producto: 'Dell XPS' (Categoría: Laptop)\n- Cantidad: 2 unidades\n- Precio unitario: 1,200.00 USD\n- Total calculado: 2 × 1,200 = 2,400.00 USD\n\n```json\n{\n  \"customer\": \"Juan Pérez\",\n  \"product\": \"Dell XPS\",\n  \"quantity\": 2,\n  \"unit_price_usd\": 1200.0,\n  \"total_price_usd\": 2400.0,\n  \"transaction_date\": \"2024-03-15\"\n}\n```",
-          note: "Chain-of-Thought: Calcula subtotales y valida la consistencia de los datos antes de emitir el objeto serializado.",
-          status: "✅ Extracción con validación de integridad financiera"
+          input: "Extrae los datos en JSON calculando totales y validando consistencia:\nTexto: 'Cliente Juan Pérez compró 2 laptops Dell XPS a 1,200 USD cada una el 15 de marzo de 2024.'",
+          output: "Validación de campos:\n- Nombre: 'Juan Pérez'\n- Producto: 'Laptop Dell XPS' (Cantidad: 2)\n- Precio unitario: $1,200.00 USD\n- Total acumulado: 2 × $1,200 = $2,400.00 USD\n\n```json\n{\n  \"customer\": \"Juan Pérez\",\n  \"product\": \"Laptop Dell XPS\",\n  \"quantity\": 2,\n  \"unit_price_usd\": 1200.0,\n  \"total_price_usd\": 2400.0,\n  \"transaction_date\": \"2024-03-15\"\n}\n```",
+          tokens: "Input: 48 | Output: 98 | Latencia: 290ms",
+          status: "✅ Validación Contable & JSON Completo: Calcula subtotales verificados.",
+          reasoningSteps: [
+            "Validación 1: Entidades reconocidas",
+            "Validación 2: Cálculo de subtotal $2,400",
+            "Validación 3: Serialización JSON estricta"
+          ]
+        }
+      },
+      logic: {
+        title: "Diagnóstico Lógico & Reglas de Negocio",
+        zero: {
+          input: "Regla: Si un usuario tiene más de 5 años de antigüedad y gasta más de $500, aplica descuento VIP del 20%. Si tiene más de 2 años o gasta más de $1,000, aplica 10%. En otros casos 0%.\n\nUsuario: Carlos tiene 3 años de antigüedad y gastó $600. ¿Qué descuento recibe?",
+          output: "Carlos recibe un 10% de descuento.",
+          tokens: "Input: 84 | Output: 10 | Latencia: 130ms",
+          status: "⚡ Acierto Rápido: El modelo infiere la regla correcta en un paso directo.",
+          reasoningSteps: []
+        },
+        few: {
+          input: "Regla: Antigüedad > 5 y Gasto > 500 => 20% | Antigüedad > 2 o Gasto > 1000 => 10% | Otros => 0%\n\nCaso: María (6 años, $300) => 10% (Antigüedad > 2)\nCaso: Pedro (1 año, $1200) => 10% (Gasto > 1000)\nCaso: Luis (7 años, $800) => 20% (VIP)\nCaso: Carlos (3 años, $600) =>",
+          output: "10% (Cumple condición: Antigüedad > 2 años)",
+          tokens: "Input: 122 | Output: 12 | Latencia: 110ms",
+          status: "✅ Salida Estandarizada con Justificación entre paréntesis.",
+          reasoningSteps: []
+        },
+        cot: {
+          input: "Evalúa las reglas de negocio paso a paso para el cliente:\nRegla VIP (20%): Antigüedad > 5 AND Gasto > $500.\nRegla Preferente (10%): Antigüedad > 2 OR Gasto > $1,000.\nRegla General: 0%.\n\nCliente: Carlos (Antigüedad = 3 años, Gasto = $600).",
+          output: "Evaluación de Reglas:\n1. Regla VIP (20%):\n   - Antigüedad = 3 (¿> 5? NO)\n   - Gasto = $600 (¿> 500? SÍ)\n   - Condición AND: Falso.\n2. Regla Preferente (10%):\n   - Antigüedad = 3 (¿> 2? SÍ)\n   - Condición OR: Verdadera.\n\nResultado Final: Carlos califica para la Regla Preferente con 10% de descuento.",
+          tokens: "Input: 96 | Output: 115 | Latencia: 310ms",
+          status: "✅ Auditoría Lógica Formal: Verificación de condiciones booleanas.",
+          reasoningSteps: [
+            "Paso 1: Evaluación de Regla VIP (Falso)",
+            "Paso 2: Evaluación de Regla Preferente (Verdadero)",
+            "Paso 3: Asignación de 10%"
+          ]
         }
       }
     };
 
     var currentTask = "math";
     var currentStrategy = "few";
+    var isComparingAll = false;
 
     function renderPromptPreview(){
+      if(isComparingAll){
+        if(comparativeContainer) comparativeContainer.style.display = "grid";
+        if(singleViewContainer) singleViewContainer.style.display = "none";
+        renderComparativeView();
+        return;
+      }
+
+      if(comparativeContainer) comparativeContainer.style.display = "none";
+      if(singleViewContainer) singleViewContainer.style.display = "grid";
+
       var data = tasksData[currentTask][currentStrategy];
       promptInputView.textContent = data.input;
       promptOutputView.textContent = data.output;
       if(promptMetricsPill){
-        promptMetricsPill.innerHTML = "<b>Estrategia:</b> " + currentStrategy.toUpperCase() + " · <b>Estado:</b> " + data.status;
+        promptMetricsPill.innerHTML = "<div style='display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;'><span><b>Métricas:</b> " + data.tokens + "</span><span style='font-weight:700; color:var(--meta-blue);'>" + data.status + "</span></div>";
       }
+    }
+
+    function renderComparativeView(){
+      if(!comparativeContainer) return;
+      var task = tasksData[currentTask];
+      comparativeContainer.innerHTML = "";
+
+      var strats = [
+        { key: "zero", label: "Zero-Shot", color: "#f59e0b" },
+        { key: "few", label: "Few-Shot", color: "var(--meta-blue)" },
+        { key: "cot", label: "Chain-of-Thought", color: "var(--accent-success)" }
+      ];
+
+      strats.forEach(function(s){
+        var item = task[s.key];
+        var col = document.createElement("div");
+        col.style.cssText = "background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:12px; padding:1.1rem; display:flex; flex-direction:column; justify-content:space-between;";
+        col.innerHTML = "<div style='margin-bottom:0.8rem;'><div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;'><span style='font-size:0.8rem; font-weight:800; color:" + s.color + "; text-transform:uppercase;'>" + s.label + "</span><span style='font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono);'>" + item.tokens.split("|")[2] + "</span></div><pre style='background:var(--bg-code); color:var(--text-primary); padding:0.75rem; border-radius:8px; font-size:0.8rem; line-height:1.55; height:150px; overflow-y:auto; white-space:pre-wrap; border:1px solid var(--border-subtle); font-family:var(--font-mono);'>" + item.output + "</pre></div><div style='font-size:0.78rem; font-weight:700; color:" + s.color + "; border-top:1px solid var(--border-subtle); padding-top:0.5rem;'>" + item.status + "</div>";
+        comparativeContainer.appendChild(col);
+      });
     }
 
     strategyBtns.forEach(function(btn){
@@ -199,7 +282,13 @@
         if(window.SOUND) window.SOUND.playPop(420);
         strategyBtns.forEach(function(b){ b.classList.remove("active"); });
         btn.classList.add("active");
-        currentStrategy = btn.getAttribute("data-strategy");
+        var strat = btn.getAttribute("data-strategy");
+        if(strat === "all"){
+          isComparingAll = true;
+        } else {
+          isComparingAll = false;
+          currentStrategy = strat;
+        }
         renderPromptPreview();
       });
     });
@@ -226,42 +315,73 @@
     renderPromptPreview();
   })();
 
-  /* 4. SIMULADOR 1.2.2: MEMORIA PARAMÉTRICA VS RAG (DETECTOR DE ALUCINACIONES) */
+  /* 4. SIMULADOR 1.2.2: MEMORIA PARAMÉTRICA VS RAG (DETECTOR DE ALUCINACIONES CON TIMELINE) */
   (function initHallucinationSimulator(){
     var testBtns = document.querySelectorAll(".hallucination-case-btn");
     var modelDirectBox = document.getElementById("model-direct-response");
     var modelRagBox = document.getElementById("model-rag-response");
+    var timelineCutoff = document.getElementById("hallucination-timeline-tag");
 
     if(!modelDirectBox || !modelRagBox) return;
 
     var cases = {
       policy: {
-        direct: "Respuesta de Llama 3 (Solo Memoria Paramétrica):\n'Nuestra política de devolución permite reembolsos dentro de los primeros 30 días posteriores a la compra presentando el ticket original en sucursal.'",
+        title: "Política de Devoluciones (E-Commerce)",
+        cutoffText: "Fecha de Corte Llama 3: Dic 2023 | Cambio de Política: 1 de Enero 2024",
+        direct: "Respuesta de Llama 3 (Solo Memoria Paramétrica):\n'Nuestra política de devolución permite reembolsos dentro de los primeros 30 días posteriores a la compra presentando el ticket original impreso en sucursal.'",
+        directConfidence: "Confianza del Modelo: 99.4% (Alucinación Plausible)",
         directStatus: "❌ ALUCINACIÓN FÁCTICA: La política cambió el 1 de enero a 15 días y trámite 100% digital. El modelo responde con datos viejos de su entrenamiento con total seguridad.",
-        ragContext: "Documento Recuperado de Base Vectorial (Actualizado Q1 2024):\n'A partir del 1 de enero de 2024, el periodo de devolución es de 15 días naturales y debe solicitarse mediante el portal web de autogestión.'",
-        rag: "Respuesta de Llama 3 (Aumentada con RAG):\n'De acuerdo con la política vigente actualizada para 2024, tienes 15 días naturales desde tu compra para solicitar tu reembolso directamente a través de nuestro portal web de autogestión.'",
-        ragStatus: "✅ 100% Fidedigna: Respuesta anclada a los documentos reales de la empresa."
+        ragSource: "📄 doc_politicas_q1_2024.pdf (Chunk #3 · Indexado en ChromaDB)",
+        ragContext: "'A partir del 1 de enero de 2024, el periodo de devolución es de 15 días naturales y debe solicitarse mediante el portal web de autogestión.'",
+        rag: "Respuesta de Llama 3 (Aumentada con RAG):\n'De acuerdo con la política vigente para 2024, tienes 15 días naturales desde tu compra para solicitar tu reembolso directamente a través de nuestro portal web de autogestión.'",
+        ragGrounding: "Fundamentación Fáctica: 100% (Verificado con Cita Directa)",
+        ragStatus: "✅ Cero Alucinación: Respuesta anclada a los documentos reales de la empresa."
       },
       medical: {
+        title: "Alerta Farmacéutica y Contraindicación Clínica",
+        cutoffText: "Fecha de Corte Llama 3: Dic 2023 | Alerta Sanitaria: Febrero 2024",
         direct: "Respuesta de Llama 3 (Solo Memoria Paramétrica):\n'El medicamento Cardiopril no tiene contraindicaciones reportadas con antiácidos comunes.'",
-        directStatus: "❌ ALUCINACIÓN PELIGROSA: La autoridad sanitaria emitió una alerta el mes pasado sobre inhibición de absorción con sales de magnesio.",
-        ragContext: "Alerta Sanitaria Oficial (Boletín Farmacéutico - Mes en Curso):\n'Se restringe el uso simultáneo de Cardiopril con antiácidos a base de hidróxido de magnesio por reducción del 40% en biodisponibilidad.'",
-        rag: "Respuesta de Llama 3 (Aumentada con RAG):\n'Según la alerta sanitaria oficial más reciente, no debes tomar Cardiopril junto con antiácidos a base de hidróxido de magnesio, ya que disminuyen su absorción en un 40%.'",
-        ragStatus: "✅ Cero Alucinación: Seguridad clínica garantizada con fuentes oficiales."
+        directConfidence: "Confianza del Modelo: 98.8% (Peligro Clínico)",
+        directStatus: "❌ ALUCINACIÓN PELIGROSA: La autoridad sanitaria emitió una alerta sobre reducción del 40% en absorción con sales de magnesio.",
+        ragSource: "📄 boletin_sanitario_feb_2024.pdf (Chunk #12 · Indexado en ChromaDB)",
+        ragContext: "'Se restringe el uso simultáneo de Cardiopril con antiácidos a base de hidróxido de magnesio por reducción del 40% en biodisponibilidad plasmática.'",
+        rag: "Respuesta de Llama 3 (Aumentada con RAG):\n'Según el boletín sanitario oficial más reciente, no debes tomar Cardiopril junto con antiácidos a base de hidróxido de magnesio, ya que disminuyen su absorción en un 40%.'",
+        ragGrounding: "Fundamentación Fáctica: 100% (Protección Sanitaria Activa)",
+        ragStatus: "✅ Seguridad Médica Garantizada con Fuentes Oficiales."
       },
       pricing: {
-        direct: "Respuesta de Llama 3 (Solo Memoria Paramétrica):\n'El plan Pro cuesta $29 USD mensuales e incluye 5 usuarios.'",
-        directStatus: "❌ INFORMACIÓN OBSOLETA: Los precios cambiaron a $39 USD hace 2 semanas.",
-        ragContext: "Tarifario Vigente (Base de Datos Comercial):\n'Plan Pro: $39 USD/mes, incluye 10 usuarios y soporte prioritario 24/7.'",
+        title: "Tarifario y Límites de Suscripción Cloud",
+        cutoffText: "Fecha de Corte Llama 3: Dic 2023 | Nueva Tarifa: Marzo 2024",
+        direct: "Respuesta de Llama 3 (Solo Memoria Paramétrica):\n'El plan Pro cuesta $29 USD mensuales e incluye hasta 5 usuarios.'",
+        directConfidence: "Confianza del Modelo: 99.7% (Tarifa Desactualizada)",
+        directStatus: "❌ INFORMACIÓN OBSOLETA: Los precios cambiaron a $39 USD/mes con 10 usuarios.",
+        ragSource: "📄 tarifario_vigente_2024.json (Chunk #1 · Base Vectorial)",
+        ragContext: "'Plan Pro 2024: $39 USD/mes, incluye 10 usuarios concurrentes y soporte prioritario 24/7.'",
         rag: "Respuesta de Llama 3 (Aumentada con RAG):\n'El Plan Pro tiene un costo vigente de $39 USD mensuales e incluye acceso para 10 usuarios con soporte prioritario 24/7.'",
+        ragGrounding: "Fundamentación Fáctica: 100% (Integridad Comercial)",
         ragStatus: "✅ Precisión Financiera: Cotizaciones comerciales exactas al día de hoy."
+      },
+      tax: {
+        title: "Regulación Fiscal y Deducciones Tributarias",
+        cutoffText: "Fecha de Corte Llama 3: Dic 2023 | Reforma Fiscal: Ejercicio 2024",
+        direct: "Respuesta de Llama 3 (Solo Memoria Paramétrica):\n'El tope máximo de deducción para gastos médicos menores es del 15% del ingreso anual total.'",
+        directConfidence: "Confianza del Modelo: 97.5% (Norma Derogada)",
+        directStatus: "❌ ALUCINACIÓN LEGAL: La reforma fiscal redujo el tope a 5 UMAs anualizadas.",
+        ragSource: "📄 codigo_fiscal_reforma_2024.pdf (Chunk #8 · Base Vectorial)",
+        ragContext: "'Para el ejercicio fiscal 2024, el tope máximo de deducciones personales se limita a 5 Unidades de Medida y Actualización (UMA) anuales.'",
+        rag: "Respuesta de Llama 3 (Aumentada con RAG):\n'Para el ejercicio fiscal vigente, el límite máximo para deducciones personales corresponde a 5 UMAs anualizadas, conforme a la reforma tributaria reciente.'",
+        ragGrounding: "Fundamentación Fáctica: 100% (Cumplimiento Legal)",
+        ragStatus: "✅ Certeza Jurídica: Basado estrictamente en la ley vigente."
       }
     };
 
     function renderCase(caseKey){
       var item = cases[caseKey];
-      modelDirectBox.innerHTML = "<p style='margin:0;'>" + item.direct.replace(/\n/g, "<br>") + "</p><div style='margin-top:0.6rem; font-size:0.82rem; font-weight:700; color:#ef4444;'>" + item.directStatus + "</div>";
-      modelRagBox.innerHTML = "<div style='background:rgba(59,130,246,0.08); border-left:3px solid var(--meta-blue); padding:0.6rem 0.8rem; border-radius:6px; font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.6rem;'><b>Contexto Inyectado:</b> " + item.ragContext + "</div><p style='margin:0;'>" + item.rag.replace(/\n/g, "<br>") + "</p><div style='margin-top:0.6rem; font-size:0.82rem; font-weight:700; color:var(--accent-success);'>" + item.ragStatus + "</div>";
+      if(timelineCutoff) timelineCutoff.textContent = item.cutoffText;
+
+      modelDirectBox.innerHTML = "<p style='margin:0; font-family:var(--font-mono); font-size:0.86rem;'>" + item.direct.replace(/\n/g, "<br>") + "</p><div style='margin-top:0.75rem; padding-top:0.6rem; border-top:1px solid rgba(239,68,68,0.2);'><div style='font-size:0.75rem; font-weight:800; color:#ef4444; margin-bottom:0.25rem;'>" + item.directConfidence + "</div><div style='font-size:0.8rem; font-weight:700; color:#dc2626;'>" + item.directStatus + "</div></div>";
+
+      modelRagBox.innerHTML = "<div style='background:rgba(59,130,246,0.08); border:1px solid var(--meta-blue-border); padding:0.65rem 0.85rem; border-radius:8px; font-size:0.78rem; color:var(--text-secondary); margin-bottom:0.75rem;'><div style='font-weight:800; color:var(--meta-blue); margin-bottom:0.2rem;'>" + item.ragSource + "</div><div><b>Contexto Recuperado:</b> " + item.ragContext + "</div></div><p style='margin:0; font-family:var(--font-mono); font-size:0.86rem;'>" + item.rag.replace(/\n/g, "<br>") + "</p><div style='margin-top:0.75rem; padding-top:0.6rem; border-top:1px solid rgba(16,185,129,0.2);'><div style='font-size:0.75rem; font-weight:800; color:var(--accent-success); margin-bottom:0.25rem;'>" + item.ragGrounding + "</div><div style='font-size:0.8rem; font-weight:700; color:var(--accent-success);'>" + item.ragStatus + "</div></div>";
     }
 
     testBtns.forEach(function(btn){
@@ -328,7 +448,7 @@
     setPipelineStep(1);
   })();
 
-  /* 6. SIMULADOR 1.2.4: CALCULADORA GEOMÉTRICA DE SIMILITUD COSENO & EMBEDDINGS 2D */
+  /* 6. SIMULADOR 1.2.4: CALCULADORA GEOMÉTRICA DE SIMILITUD COSENO RETINA SIN EMPALMES */
   (function initCosineSimilarityVisualizer(){
     var sentencePairSelect = document.getElementById("sim-sentence-pair-select");
     var canvas = document.getElementById("vector-cosine-canvas");
@@ -368,7 +488,7 @@
       var pair = pairs[pairKey];
       var dpr = window.devicePixelRatio || 1;
       var cssWidth = canvas.parentElement.clientWidth || 380;
-      var cssHeight = 270;
+      var cssHeight = 310;
 
       canvas.width = Math.round(cssWidth * dpr);
       canvas.height = Math.round(cssHeight * dpr);
@@ -380,17 +500,17 @@
       ctx.clearRect(0, 0, cssWidth, cssHeight);
 
       var isDark = document.documentElement.getAttribute("data-theme") === "dark";
-      var ox = 45, oy = cssHeight - 38;
-      var scale = Math.min(cssWidth - 85, cssHeight - 65);
+      var ox = 50, oy = cssHeight - 45;
+      var scale = Math.min(cssWidth - 95, cssHeight - 75);
 
-      // Cuadrícula sutil
+      // Cuadrícula y líneas de guía
       ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)";
       ctx.lineWidth = 1;
-      for(var x = ox; x < cssWidth - 20; x += 40){ ctx.beginPath(); ctx.moveTo(x, 20); ctx.lineTo(x, oy); ctx.stroke(); }
-      for(var y = 20; y <= oy; y += 40){ ctx.beginPath(); ctx.moveTo(ox, y); ctx.lineTo(cssWidth - 20, y); ctx.stroke(); }
+      for(var x = ox; x < cssWidth - 20; x += 40){ ctx.beginPath(); ctx.moveTo(x, 25); ctx.lineTo(x, oy); ctx.stroke(); }
+      for(var y = 25; y <= oy; y += 40){ ctx.beginPath(); ctx.moveTo(ox, y); ctx.lineTo(cssWidth - 20, y); ctx.stroke(); }
 
       // Ejes coordenados principales
-      ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.3)" : "rgba(15, 23, 42, 0.25)";
+      ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.35)" : "rgba(15, 23, 42, 0.35)";
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(ox, oy); ctx.lineTo(cssWidth - 15, oy);
@@ -412,15 +532,10 @@
       ctx.moveTo(ox, oy); ctx.lineTo(ax, ay);
       ctx.stroke();
 
-      // Cabeza de flecha Vector A
-      var angA = Math.atan2(pair.vecA[1], pair.vecA[0]);
+      // Halo Vector A
       ctx.beginPath(); ctx.arc(ax, ay, 6, 0, Math.PI*2); ctx.fill();
       ctx.fillStyle = "rgba(59, 130, 246, 0.25)";
-      ctx.beginPath(); ctx.arc(ax, ay, 12, 0, Math.PI*2); ctx.fill();
-
-      ctx.fillStyle = isDark ? "#ffffff" : "#0f172a";
-      ctx.font = "bold 12px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText("Vector u (Frase A)", ax + 12, ay - 6);
+      ctx.beginPath(); ctx.arc(ax, ay, 13, 0, Math.PI*2); ctx.fill();
 
       // Vector B
       var bx = ox + pair.vecB[0] * scale;
@@ -432,16 +547,12 @@
       ctx.moveTo(ox, oy); ctx.lineTo(bx, by);
       ctx.stroke();
 
-      // Cabeza de flecha Vector B
-      var angB = Math.atan2(pair.vecB[1], pair.vecB[0]);
+      // Halo Vector B
       ctx.beginPath(); ctx.arc(bx, by, 6, 0, Math.PI*2); ctx.fill();
       ctx.fillStyle = "rgba(16, 185, 129, 0.25)";
-      ctx.beginPath(); ctx.arc(bx, by, 12, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(bx, by, 13, 0, Math.PI*2); ctx.fill();
 
-      ctx.fillStyle = isDark ? "#ffffff" : "#0f172a";
-      ctx.fillText("Vector v (Frase B)", bx + 12, by + 14);
-
-      // Cálculo matemático real
+      // Cálculo matemático
       var dot = pair.vecA[0] * pair.vecB[0] + pair.vecA[1] * pair.vecB[1];
       var normA = Math.sqrt(pair.vecA[0]*pair.vecA[0] + pair.vecA[1]*pair.vecA[1]);
       var normB = Math.sqrt(pair.vecB[0]*pair.vecB[0] + pair.vecB[1]*pair.vecB[1]);
@@ -449,16 +560,38 @@
       var angleDeg = (Math.acos(Math.min(1, Math.max(-1, cosSim))) * 180 / Math.PI);
 
       // Arco del ángulo theta
+      var angA = Math.atan2(pair.vecA[1], pair.vecA[0]);
+      var angB = Math.atan2(pair.vecB[1], pair.vecB[0]);
       ctx.strokeStyle = "#f59e0b";
       ctx.lineWidth = 2;
       ctx.setLineDash([3, 3]);
       ctx.beginPath();
-      ctx.arc(ox, oy, 42, -Math.max(angA, angB), -Math.min(angA, angB));
+      ctx.arc(ox, oy, 45, -Math.max(angA, angB), -Math.min(angA, angB));
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.fillStyle = "#f59e0b";
       ctx.font = "bold 12px 'Fira Code', monospace";
-      ctx.fillText("θ = " + angleDeg.toFixed(1) + "°", ox + 48, oy - 24);
+      ctx.fillText("θ = " + angleDeg.toFixed(1) + "°", ox + 50, oy - 26);
+
+      // SISTEMA ANTI-EMPALME INTELIGENTE DE ETIQUETAS
+      var distTips = Math.hypot(ax - bx, ay - by);
+      var labelAy = ay - 12;
+      var labelBy = by + 22;
+
+      if(distTips < 45){
+        // Si las puntas están muy cerca, separar verticalmente
+        labelAy = Math.min(ay, by) - 18;
+        labelBy = Math.max(ay, by) + 26;
+      }
+
+      // Etiqueta Vector A
+      ctx.fillStyle = "#3b82f6";
+      ctx.font = "bold 12px 'Plus Jakarta Sans', sans-serif";
+      ctx.fillText("u: Frase A", ax + 14, labelAy);
+
+      // Etiqueta Vector B
+      ctx.fillStyle = "#10b981";
+      ctx.fillText("v: Frase B", bx + 14, labelBy);
 
       if(simScoreDisplay) simScoreDisplay.textContent = cosSim.toFixed(4);
       if(angleDisplay) angleDisplay.textContent = angleDeg.toFixed(1) + "°";

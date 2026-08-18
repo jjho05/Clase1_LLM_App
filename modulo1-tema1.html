@@ -208,37 +208,37 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">P(W)</span>
+                  <span class="breakdown-row-badge">$P(W)$</span>
                   <div class="breakdown-row-text">
                     <strong>Probabilidad de la Frase Completa:</strong> La probabilidad matemática de que toda la secuencia de texto generada $W = (w_1, \dots, w_n)$ tenga sentido gramatical y coherencia natural.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">&prod;_{t=1}^n</span>
+                  <span class="breakdown-row-badge">$\prod_{t=1}^n$</span>
                   <div class="breakdown-row-text">
                     <strong>Productorio (Multiplicación Acumulada):</strong> Símbolo matemático que indica multiplicar sucesivamente las probabilidades individuales calculadas para cada palabra, desde el primer token ($t=1$) hasta el último ($t=n$).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">t</span>
+                  <span class="breakdown-row-badge">$t$ (Paso)</span>
                   <div class="breakdown-row-text">
                     <strong>Paso de Inferencia (Tiempo):</strong> Índice numérico que marca la posición cronológica exacta que el modelo está procesando en ese instante.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">w_t</span>
+                  <span class="breakdown-row-badge">$w_t$ (Token)</span>
                   <div class="breakdown-row-text">
                     <strong>Token Actual:</strong> La palabra o fragmento específico que la red neuronal está evaluando para emitir en el paso $t$.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">&mid; (Dado que)</span>
+                  <span class="breakdown-row-badge">$\mid$ (Dado que)</span>
                   <div class="breakdown-row-text">
                     <strong>Condición Probabilística:</strong> Establece que la probabilidad de la palabra actual depende obligatoriamente de todas las palabras anteriores.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">w_1, &hellip;, w_{t-1}</span>
+                  <span class="breakdown-row-badge">$w_1, \dots, w_{t-1}$</span>
                   <div class="breakdown-row-text">
                     <strong>Contexto Previo Acumulado:</strong> Todo el historial de palabras (prompt del usuario + respuestas previas) que la red ya conoce antes de generar el nuevo token.
                   </div>
@@ -268,19 +268,19 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">P(x_{t+1} = w_i &mid; &hellip;)</span>
+                  <span class="breakdown-row-badge">$P(x_{t+1} = w_i \mid x_{1:t})$</span>
                   <div class="breakdown-row-text">
                     <strong>Probabilidad de la Palabra Siguiente:</strong> El porcentaje exacto (entre 0% y 100%) asignado a la palabra candidata $w_i$ para aparecer en la siguiente posición $t+1$.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">z_i (Logit)</span>
+                  <span class="breakdown-row-badge">$z_i$ (Logit)</span>
                   <div class="breakdown-row-text">
                     <strong>Puntuación Cruda de la Palabra:</strong> Número real (positivo o negativo) emitido directamente por la última capa de la red antes de transformarse en porcentaje.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">T (Temperatura)</span>
+                  <span class="breakdown-row-badge">$T$ (Temperatura)</span>
                   <div class="breakdown-row-text">
                     <strong>Modulador de Creatividad:</strong> Parámetro divisor que controla la entropía de la distribución:
                     <ul style="margin: 0.3rem 0 0 1.2rem; padding: 0; font-size: 0.85rem;">
@@ -291,25 +291,25 @@
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">exp(...)</span>
+                  <span class="breakdown-row-badge">$\exp(z_i / T)$</span>
                   <div class="breakdown-row-text">
-                    <strong>Función Exponencial Natural (e^x):</strong> Convierte puntuaciones arbitrarias en valores estrictamente positivos crecientes, evitando que existan probabilidades negativas.
+                    <strong>Función Exponencial Natural:</strong> Convierte puntuaciones arbitrarias en valores estrictamente positivos crecientes, evitando que existan probabilidades negativas.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">&sum;_{j=1}^{|V|}</span>
+                  <span class="breakdown-row-badge">$\sum_{j=1}^{|V|}$</span>
                   <div class="breakdown-row-text">
                     <strong>Sumatoria sobre el Vocabulario:</strong> Suma las puntuaciones exponenciales de cada una de las 128,256 palabras del catálogo del modelo.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">&verbar;V&verbar; = 128,256</span>
+                  <span class="breakdown-row-badge">$|V| = 128,256$</span>
                   <div class="breakdown-row-text">
                     <strong>Tamaño del Vocabulario:</strong> La cantidad total de tokens que Meta Llama 3 sabe reconocer y utilizar.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">División (Normalización)</span>
+                  <span class="breakdown-row-badge">Normalización</span>
                   <div class="breakdown-row-text">
                     <strong>Suma al 100%:</strong> Al dividir el puntaje individual entre la suma total de todas las palabras, se garantiza que la suma de todos los porcentajes sea exactamente igual a 1.0 (100%).
                   </div>
@@ -887,25 +887,25 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">u, v &isin; R^{4096}</span>
+                  <span class="breakdown-row-badge">$\mathbf{u}, \mathbf{v} \in \mathbb{R}^{4096}$</span>
                   <div class="breakdown-row-text">
                     <strong>Vectores de Embeddings:</strong> Las dos listas de 4,096 coordenadas continuas que sitúan a cada concepto en el mapa geométrico del modelo.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">u &middot; v (Producto Punto)</span>
+                  <span class="breakdown-row-badge">$\mathbf{u} \cdot \mathbf{v}$</span>
                   <div class="breakdown-row-text">
-                    <strong>Alineación Direccional:</strong> Multiplica las 4,096 coordenadas correspondientes ($\sum u_i v_i$). Si ambas flechas conceptuales apuntan en la misma dirección, el valor es alto y positivo.
+                    <strong>Alineación Direccional (Producto Punto):</strong> Multiplica las 4,096 coordenadas correspondientes ($\sum u_i v_i$). Si ambas flechas conceptuales apuntan en la misma dirección, el valor es alto y positivo.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">&DoubleVerticalBar;u&DoubleVerticalBar;_2 (Norma L2)</span>
+                  <span class="breakdown-row-badge">$\|\mathbf{u}\|_2$ (Norma L2)</span>
                   <div class="breakdown-row-text">
                     <strong>Magnitud o Longitud:</strong> Calculada con la raíz cuadrada de la suma de cuadrados ($\sqrt{\sum u_i^2}$). Representa el tamaño euclidiano del vector en 4,096 dimensiones.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Rango [-1, +1]</span>
+                  <span class="breakdown-row-badge">$[-1.0, +1.0]$</span>
                   <div class="breakdown-row-text">
                     <strong>Escala de Similitud Normalizada:</strong> 
                     <ul style="margin: 0.3rem 0 0 1.2rem; padding: 0; font-size: 0.85rem;">
@@ -916,7 +916,7 @@
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Rey - Hombre + Mujer &approx; Reina</span>
+                  <span class="breakdown-row-badge">$\text{Rey} - \text{Hombre} + \text{Mujer} \approx \text{Reina}$</span>
                   <div class="breakdown-row-text">
                     <strong>Aritmética de Conceptos:</strong> Prueba matemática de que el espacio latente captura relaciones de género y realeza de forma lineal: al sustraer el vector "masculinidad" y añadir el vector "feminidad" a "Rey", la coordenada resultante apunta con 94% de precisión a "Reina".
                   </div>
@@ -1037,43 +1037,43 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Q (Query)</span>
+                  <span class="breakdown-row-badge">$\mathbf{Q}$ (Query)</span>
                   <div class="breakdown-row-text">
                     <strong>Matriz de Búsqueda (Pregunta):</strong> Lo que cada palabra en la oración necesita averiguar sobre las demás palabras (ej. el pronombre <i>"lo"</i> busca a qué objeto o persona se refiere).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">K (Key)</span>
+                  <span class="breakdown-row-badge">$\mathbf{K}$ (Key)</span>
                   <div class="breakdown-row-text">
                     <strong>Matriz de Identidad (Clave / Etiqueta):</strong> La tarjeta de presentación que cada token expone a los demás para anunciar su rol gramatical y contenido (ej. el sustantivo <i>"documento"</i> se identifica como objeto directo).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">V (Value)</span>
+                  <span class="breakdown-row-badge">$\mathbf{V}$ (Value)</span>
                   <div class="breakdown-row-text">
                     <strong>Matriz de Contenido Real (Significado):</strong> La información semántica pura que se transferirá a la palabra actual una vez que su búsqueda ($Q$) coincida con la etiqueta ($K$).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Q K^T</span>
+                  <span class="breakdown-row-badge">$\mathbf{Q}\mathbf{K}^T$</span>
                   <div class="breakdown-row-text">
                     <strong>Producto Matricial de Relevancia:</strong> Multiplica cada pregunta por todas las claves, calculando qué tan conectadas están todas las palabras entre sí en una matriz de afinidad cuadrada.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">&radic;d_k (Escala)</span>
+                  <span class="breakdown-row-badge">$\sqrt{d_k}$ (Escala)</span>
                   <div class="breakdown-row-text">
                     <strong>Factor de Estabilidad Numérica:</strong> Donde $d_k = 128$ (dimensión de cada cabezal de atención en Llama 3). Dividir entre $\sqrt{128} \approx 11.31$ evita que los números crezcan demasiado, lo que provocaría que la función Softmax colapse y los gradientes se desvanezcan a cero.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Softmax(...)</span>
+                  <span class="breakdown-row-badge">$\text{Softmax}(\dots)$</span>
                   <div class="breakdown-row-text">
                     <strong>Normalización de Pesos de Atención:</strong> Convierte las puntuaciones de afinidad en porcentajes positivos que suman exactamente 100% de atención distribuida.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Multiplicación por V</span>
+                  <span class="breakdown-row-badge">$\times \mathbf{V}$</span>
                   <div class="breakdown-row-text">
                     <strong>Suma Ponderada Final:</strong> Mezcla la información de todas las palabras según su porcentaje de atención, generando la representación contextualizada final de cada palabra.
                   </div>
