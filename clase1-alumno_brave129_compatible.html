@@ -826,6 +826,10 @@ body {
   border-radius: 14px;
   padding: 1.5rem;
   margin-top: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .quiz-header {
@@ -833,6 +837,7 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.8rem;
+  width: 100%;
 }
 
 .quiz-tag {
@@ -848,19 +853,25 @@ body {
   font-size: 1.02rem;
   color: var(--text-primary);
   margin-bottom: 0.9rem;
+  line-height: 1.45;
+  width: 100%;
 }
 
 .quiz-option {
   display: block;
-  padding: 0.75rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem 1rem;
   border-radius: 8px;
   border: 1px solid var(--border-subtle);
   background: var(--bg-surface);
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.6rem;
   cursor: pointer;
   font-size: 0.92rem;
+  line-height: 1.5;
   color: var(--text-secondary);
   transition: all 0.2s ease;
+  text-align: left;
 }
 
 .quiz-option:hover {
@@ -2040,6 +2051,9 @@ print("Máscara de Atención:", inputs["attention_mask"])
       <!-- 7. QUIZ -->
       <div class="quiz-box">
         <div class="quiz-header">
+          <span class="quiz-tag">7. Autoevaluación</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 5 de 7</span>
+        </div>
         <div class="quiz-question">¿Por qué Grouped-Query Attention (GQA) es fundamental para contextos largos de 128k en Llama 3?</div>
         <div class="quiz-option" data-correct="true">A) Porque reduce drásticamente el tamaño del KV Cache en memoria VRAM al compartir cabezales de llaves y valores.</div>
         <div class="quiz-option" data-correct="false">B) Porque apaga los procesadores de la tarjeta gráfica cuando no se usan.</div>
