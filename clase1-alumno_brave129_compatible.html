@@ -2336,7 +2336,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
 
     <!-- Filtros de categoría -->
     <div class="glossary-filter-bar">
-      <button class="glossary-pill-btn active" data-cat="all">Todos (16)</button>
+      <button class="glossary-pill-btn active" data-cat="all">Todos (24)</button>
       <button class="glossary-pill-btn" data-cat="arquitectura">Arquitectura</button>
       <button class="glossary-pill-btn" data-cat="inferencia">Inferencia & Memoria</button>
       <button class="glossary-pill-btn" data-cat="entrenamiento">Entrenamiento & Alineación</button>
@@ -2446,7 +2446,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
         </div>
         <div class="glossary-row-right">
           <p class="glossary-term-desc">Técnica de codificación posicional que rota los vectores $Q$ y $K$ en el plano complejo para capturar distancias relativas en secuencias largas.</p>
-          <div class="glossary-term-note">Fundamento: Base técnica que permite extender el contexto a 128k tokens.</div>
+          <div class="glossary-term-note">Fundamento: Base técnica que permite extender el contexto a 128k tokens con frecuencia $\theta = 500,000$.</div>
         </div>
       </div>
 
@@ -2585,6 +2585,126 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
         </div>
       </div>
 
+      <!-- 17 -->
+      <div class="glossary-row-item" data-category="inferencia">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="glossary-tag">Inferencia</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#17</span>
+          </div>
+          <span class="glossary-term-name">Speculative Decoding</span>
+        </div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Técnica de inferencia acelerada donde un modelo pequeño (draft) genera rápidamente una ráfaga de tokens y el modelo grande los valida en paralelo en una sola pasada de GPU.</p>
+          <div class="glossary-term-note">Velocidad: Incrementa la tasa de generación entre 2x y 3x sin pérdida de precisión.</div>
+        </div>
+      </div>
+
+      <!-- 18 -->
+      <div class="glossary-row-item" data-category="inferencia">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="glossary-tag">Inferencia</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#18</span>
+          </div>
+          <span class="glossary-term-name">Prompt Caching</span>
+        </div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Mecanismo de reutilización que almacena en caché las claves y valores calculados para el prompt de sistema y documentos fijos, reduciendo la latencia de prefijo a cero.</p>
+          <div class="glossary-term-note">Ahorro: Reduce el tiempo de Time-To-First-Token (TTFT) hasta en un 90% en chats recurrentes.</div>
+        </div>
+      </div>
+
+      <!-- 19 -->
+      <div class="glossary-row-item" data-category="arquitectura">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="glossary-tag">Arquitectura</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#19</span>
+          </div>
+          <span class="glossary-term-name">SwiGLU (Swish Gated Linear Unit)</span>
+        </div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Función de activación no lineal adoptada en las capas Feed-Forward de Llama 3, basada en compuertas multiplicativas $\text{Swish}(xW) \otimes (xV)$ que superan a ReLU y GELU.</p>
+          <div class="glossary-term-note">Calidad: Mejora la convergencia del modelo y la calidad del razonamiento matemático.</div>
+        </div>
+      </div>
+
+      <!-- 20 -->
+      <div class="glossary-row-item" data-category="arquitectura">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="glossary-tag">Arquitectura</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#20</span>
+          </div>
+          <span class="glossary-term-name">RMSNorm (Root Mean Square Normalization)</span>
+        </div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Variante simplificada de LayerNorm que prescinde de la media y solo normaliza mediante la raíz del promedio cuadrático de las activaciones, ahorrando ciclos de GPU.</p>
+          <div class="glossary-term-note">Estabilidad: Mantiene los gradientes estables en redes de 405 mil millones de parámetros.</div>
+        </div>
+      </div>
+
+      <!-- 21 -->
+      <div class="glossary-row-item" data-category="entrenamiento">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="glossary-tag">Entrenamiento</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#21</span>
+          </div>
+          <span class="glossary-term-name">In-Context Learning (Few-Shot)</span>
+        </div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Habilidad emergente de los LLMs para comprender patrones de tareas nuevas proporcionando unos pocos ejemplos de entrada-salida en el prompt sin modificar ningún peso neuronal.</p>
+          <div class="glossary-term-note">Flexibilidad: Permite resolver tareas personalizadas al vuelo sin reentrenar.</div>
+        </div>
+      </div>
+
+      <!-- 22 -->
+      <div class="glossary-row-item" data-category="entrenamiento">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="glossary-tag">Entrenamiento</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#22</span>
+          </div>
+          <span class="glossary-term-name">Cross-Entropy Loss</span>
+        </div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Función de pérdida que penaliza logarítmicamente la discrepancia entre la distribución de probabilidades predicha por el modelo y el token real objetivo durante el preentrenamiento.</p>
+          <div class="glossary-term-note">Fórmula: $\mathcal{L} = -\sum_{i} y_i \log(\hat{y}_i)$. Minimizarla equivale a maximizar la verosimilitud del lenguaje.</div>
+        </div>
+      </div>
+
+      <!-- 23 -->
+      <div class="glossary-row-item" data-category="optimizacion">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="glossary-tag">Optimización</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#23</span>
+          </div>
+          <span class="glossary-term-name">Chain-of-Thought (CoT)</span>
+        </div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Estrategia de prompting y entrenamiento que instruye al modelo a descomponer problemas complejos en pasos intermedios de razonamiento antes de emitir el resultado final.</p>
+          <div class="glossary-term-note">Efecto: Reduce drásticamente los errores en lógica matemática, código y deducción formal.</div>
+        </div>
+      </div>
+
+      <!-- 24 -->
+      <div class="glossary-row-item" data-category="arquitectura">
+        <div class="glossary-row-left">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="glossary-tag">Arquitectura</span>
+            <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#24</span>
+          </div>
+          <span class="glossary-term-name">Long Context Scaling (YaRN)</span>
+        </div>
+        <div class="glossary-row-right">
+          <p class="glossary-term-desc">Método de interpolación de frecuencias de RoPE que permite extender la ventana de contexto de modelos ya entrenados hacia longitudes masivas con mínima degradación de atención.</p>
+          <div class="glossary-term-note">Escalabilidad: Habilita el análisis de repositorios de código completos y libros de texto extensos.</div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -2683,6 +2803,70 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
       </div>
 
       <!-- Card 6 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Zhuravskiy & Su et al. · 2021</span>
+          <span class="source-type-pill">Codificación Posicional</span>
+        </div>
+        <h4 class="source-title">RoFormer: Enhanced Transformer with RoPE</h4>
+        <p class="source-desc">
+          Introduce Rotary Position Embeddings (RoPE), el método vectorial que permite a Llama 3 generalizar la atención a 128,000 tokens rotando tensores en el espacio euclidiano.
+        </p>
+        <a href="https://arxiv.org/abs/2104.09864" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2104.09864</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Microsoft Research · 2021</span>
+          <span class="source-type-pill">Ajuste Fino Eficiente (PEFT)</span>
+        </div>
+        <h4 class="source-title">LoRA: Low-Rank Adaptation of LLMs</h4>
+        <p class="source-desc">
+          Demuestra cómo adaptar modelos gigantes entrenando únicamente matrices de bajo rango en las capas de atención, reduciendo la memoria en un 99%.
+        </p>
+        <a href="https://arxiv.org/abs/2106.09685" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2106.09685</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Google Research · 2022</span>
+          <span class="source-type-pill">Inferencia Acelerada</span>
+        </div>
+        <h4 class="source-title">Fast Inference via Speculative Decoding</h4>
+        <p class="source-desc">
+          Estrategia que duplica la velocidad de emisión de tokens al generar borradores con un modelo liviano y validarlos en paralelo con el LLM principal.
+        </p>
+        <a href="https://arxiv.org/abs/2211.17192" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2211.17192</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 9 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Meta AI (FAIR) · 2020</span>
+          <span class="source-type-pill">Generación Aumentada</span>
+        </div>
+        <h4 class="source-title">Retrieval-Augmented Generation for NLP Tasks</h4>
+        <p class="source-desc">
+          Paper pionero de Meta que combinó modelos de lenguaje paramétricos con índices de memoria no paramétricos densos (embeddings vectoriales).
+        </p>
+        <a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2005.11401</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 10 -->
       <div class="source-card">
         <div class="source-card-header">
           <span class="source-tag">Ecosistema Abierto · 2024</span>
