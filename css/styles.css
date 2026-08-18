@@ -2000,9 +2000,30 @@ a.step-flow-item:hover {
 
 .sources-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.3rem;
-  margin-top: 1.5rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.8rem;
+}
+
+@media (max-width: 1200px) {
+  .sources-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.1rem;
+  }
+}
+
+@media (max-width: 850px) {
+  .sources-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 550px) {
+  .sources-grid {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
 }
 
 .source-card {
