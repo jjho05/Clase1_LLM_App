@@ -606,13 +606,23 @@ body {
   margin: 1.6rem 0;
 }
 
-.step-flow-item {
+.step-flow-item,
+a.step-flow-item {
   display: flex;
   gap: 1.15rem;
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   padding: 1.25rem 1.5rem;
   border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+a.step-flow-item:hover {
+  transform: translateY(-2px);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .step-num-badge {
@@ -1996,7 +2006,8 @@ body {
 }
 
 /* Unit Item Cards */
-.unit-item-row {
+.unit-item-row,
+a.unit-item-row {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
@@ -2006,9 +2017,13 @@ body {
   align-items: start;
   transition: all 0.2s ease;
   margin-bottom: 0.3rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
-.unit-item-row:hover {
+.unit-item-row:hover,
+a.unit-item-row:hover {
   border-color: var(--meta-blue);
   background: var(--bg-surface);
   transform: translateX(4px);
