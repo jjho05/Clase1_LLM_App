@@ -4082,3 +4082,279 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
     color: #0866ff !important;
   }
 }
+
+/* ==========================================================================
+   COMPONENTES FALTANTES — PARCHE COMPLETO v1.0
+   Clases identificadas en auditoría CSS↔HTML que no estaban definidas
+   ========================================================================== */
+
+/* ── 1. EXERCISE CONTEXT BOX (Guía pedagógica pre-ejercicio) ─────────────── */
+.exercises-section {
+  max-width: 900px;
+  margin: 0 auto 3.5rem;
+}
+
+.exercise-context-box {
+  background: var(--meta-blue-subtle, #eff6ff);
+  border: 1px solid var(--meta-blue-border, #bfdbfe);
+  border-left: 4px solid var(--meta-blue, #2563eb);
+  border-radius: 10px;
+  padding: 0.9rem 1.15rem 0.85rem;
+  margin: 0 0 1rem;
+  transition: background 0.2s ease;
+}
+
+.exercise-context-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--meta-blue, #2563eb);
+  margin-bottom: 0.6rem;
+}
+
+.exercise-context-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+  font-size: 0.855rem;
+  color: var(--text-secondary);
+  line-height: 1.57;
+}
+
+.exercise-context-list li {
+  margin: 0;
+}
+
+[data-theme="dark"] .exercise-context-box {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.35);
+  border-left-color: var(--meta-blue, #2563eb);
+}
+
+/* ── 2. STEP-FLOW-CONTENT (base del elemento — sub-reglas ya existían) ───── */
+.step-flow-content {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* ── 3. WORKBENCH CONTENT (área principal del sandbox interactivo) ────────── */
+.workbench-content {
+  padding: 1.5rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* ── 4. FOOTER PERSONALIZADO DEL MÓDULO ─────────────────────────────────── */
+.footer-custom {
+  background: var(--bg-subtle, #f8fafc);
+  border-top: 1px solid var(--border-subtle, #e2e8f0);
+  padding: 2.5rem 0 1.25rem;
+  margin-top: 4rem;
+}
+
+.footer-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+}
+
+@media (max-width: 640px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.footer-col-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-tertiary, #94a3b8);
+  margin-bottom: 0.65rem;
+}
+
+.footer-links-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.footer-link {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.footer-link:hover {
+  color: var(--meta-blue, #2563eb);
+}
+
+.footer-bottom {
+  max-width: 1100px;
+  margin: 1.75rem auto 0;
+  padding: 1.1rem 2rem 0;
+  border-top: 1px solid var(--border-subtle, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-tertiary, #94a3b8);
+}
+
+[data-theme="dark"] .footer-custom {
+  background: var(--bg-surface);
+  border-top-color: rgba(255, 255, 255, 0.07);
+}
+
+[data-theme="dark"] .footer-bottom {
+  border-top-color: rgba(255, 255, 255, 0.07);
+}
+
+/* ── 5. GLOSSARY SEARCH & FILTERS ───────────────────────────────────────── */
+.glossary-top {
+  margin-bottom: 1.5rem;
+}
+
+.glossary-search-wrap {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.glossary-search-input {
+  width: 100%;
+  padding: 0.7rem 1rem 0.7rem 2.6rem;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 0.75rem center;
+}
+
+.glossary-search-input:focus {
+  border-color: var(--meta-blue, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.glossary-search-input::placeholder {
+  color: var(--text-tertiary, #94a3b8);
+}
+
+.glossary-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1.25rem;
+}
+
+.glossary-filter-pill {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.28rem 0.7rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.glossary-filter-pill:hover,
+.glossary-filter-pill.active {
+  background: var(--meta-blue-subtle, #eff6ff);
+  border-color: var(--meta-blue-border, #bfdbfe);
+  color: var(--meta-blue, #2563eb);
+}
+
+.glossary-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.glossary-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.18rem 0.55rem;
+  border-radius: 20px;
+  background: var(--meta-blue-subtle, #eff6ff);
+  color: var(--meta-blue, #2563eb);
+  border: 1px solid var(--meta-blue-border, #bfdbfe);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .glossary-search-input {
+  background-color: var(--bg-subtle);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .glossary-filter-pill {
+  background: var(--bg-subtle);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+/* ── 6. CERTIFICATE META GRID (cuadrícula de datos del diploma) ──────────── */
+.cert-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-subtle, #f8fafc);
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: 12px;
+}
+
+.cert-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cert-meta-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-tertiary, #94a3b8);
+}
+
+.cert-meta-val {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: var(--font-head);
+}
