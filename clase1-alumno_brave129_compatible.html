@@ -335,14 +335,14 @@ body {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: 20px;
-  padding: 2.5rem;
+  padding: 2.8rem;
   margin-bottom: 4.5rem;
   box-shadow: var(--shadow-card);
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 @media (max-width: 768px) {
-  .tema-card { padding: 1.5rem; border-radius: 16px; margin-bottom: 3.5rem; }
+  .tema-card { padding: 1.5rem 1.2rem; border-radius: 16px; margin-bottom: 3.5rem; }
 }
 
 .tema-card:hover {
@@ -352,25 +352,26 @@ body {
 
 .tema-header {
   display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 1.2rem;
 }
 
-.tema-badge {
-  background: var(--meta-blue-subtle);
-  border: 1px solid var(--meta-blue-border);
-  padding: 0.25rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: 700;
+.tema-eyebrow {
+  font-family: var(--font-disp);
+  font-size: 0.82rem;
+  font-weight: 800;
   color: var(--meta-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .tema-title {
-  font-size: 1.7rem;
+  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
   font-family: var(--font-head);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.3;
   color: var(--text-primary);
 }
@@ -1293,6 +1294,32 @@ body {
   margin-top: 2rem;
 }
 
+/* ==========================================================================
+   OPTIMIZACIONES ESPECÍFICAS PARA DISPOSITIVOS MÓVILES
+   ========================================================================== */
+@media (max-width: 640px) {
+  .top-header { padding: 0 0.8rem; }
+  .header-inner { gap: 0.5rem; }
+  .brand-text { font-size: 0.95rem; }
+  .btn-icon { padding: 0.35rem 0.6rem; font-size: 0.78rem; gap: 0.35rem; }
+  .hero-section { padding: 3rem 1rem 2rem; }
+  .hero-title { font-size: 1.95rem; }
+  .hero-badge-tag { font-size: 0.72rem; padding: 0.25rem 0.6rem; }
+  .main-container { padding: 75px 0.8rem 3rem; }
+  .module-block { margin-bottom: 3.5rem; }
+  .module-title { font-size: 1.6rem; }
+  .tema-card { padding: 1.3rem 1rem; }
+  .interactive-box { padding: 1.1rem 0.9rem; }
+  .formula-block { padding: 0.9rem; font-size: 0.88rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .code-content { font-size: 0.76rem; padding: 1rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .slider-group { gap: 0.3rem; }
+  .slider-header { font-size: 0.85rem; }
+  .interactive-canvas-2d { max-width: 100%; height: auto; touch-action: none; }
+  .glossary-row-item { padding: 1rem 0.9rem; }
+  .source-card { padding: 1.1rem 0.9rem; }
+  .course-footer { padding: 3.5rem 1rem 2.5rem; }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1372,7 +1399,7 @@ body {
     <!-- TEMA 1.1 -->
     <article class="tema-card" id="tema-1-1">
       <div class="tema-header">
-        <span class="tema-badge">Tema 1.1</span>
+        <div class="tema-eyebrow">Tema 1.1 · Modelos Probabilísticos</div>
         <h3 class="tema-title">Modelado de Lenguaje Autoregresivo & Muestreo (Sampling)</h3>
       </div>
 
@@ -1548,7 +1575,7 @@ def sample_next_token(logits: torch.Tensor, temperature: float = 0.7) -> int:
     <!-- TEMA 1.2 -->
     <article class="tema-card" id="tema-1-2">
       <div class="tema-header">
-        <span class="tema-badge">Tema 1.2</span>
+        <div class="tema-eyebrow">Tema 1.2 · Álgebra y Representación</div>
         <h3 class="tema-title">El Pipeline de NLP & Tensores Numéricos</h3>
       </div>
 
@@ -1710,7 +1737,7 @@ print("Máscara de Atención:", inputs["attention_mask"])
     <!-- TEMA 2.1 -->
     <article class="tema-card" id="tema-2-1">
       <div class="tema-header">
-        <span class="tema-badge">Tema 2.1</span>
+        <div class="tema-eyebrow">Tema 2.1 · Vocabulario y Segmentación</div>
         <h3 class="tema-title">Segmentación BPE (Byte-Pair Encoding) en Llama 3</h3>
       </div>
 
@@ -1825,7 +1852,7 @@ print("Máscara de Atención:", inputs["attention_mask"])
     <!-- TEMA 2.2 -->
     <article class="tema-card" id="tema-2-2">
       <div class="tema-header">
-        <span class="tema-badge">Tema 2.2</span>
+        <div class="tema-eyebrow">Tema 2.2 · Espacios Semánticos</div>
         <h3 class="tema-title">Embeddings, Espacios Latentes & Álgebra Vectorial</h3>
       </div>
 
@@ -1922,7 +1949,7 @@ print("Máscara de Atención:", inputs["attention_mask"])
     <!-- TEMA 3.1 -->
     <article class="tema-card" id="tema-3-1">
       <div class="tema-header">
-        <span class="tema-badge">Tema 3.1</span>
+        <div class="tema-eyebrow">Tema 3.1 · Mecanismo de Atención</div>
         <h3 class="tema-title">Mecanismo de Auto-Atención (Q, K, V) & Grouped-Query Attention (GQA)</h3>
       </div>
 
@@ -2009,9 +2036,6 @@ print("Máscara de Atención:", inputs["attention_mask"])
       <!-- 7. QUIZ -->
       <div class="quiz-box">
         <div class="quiz-header">
-          <span class="quiz-tag">7. Autoevaluación</span>
-          <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 5 de 7</span>
-        </div>
         <div class="quiz-question">¿Por qué Grouped-Query Attention (GQA) es fundamental para contextos largos de 128k en Llama 3?</div>
         <div class="quiz-option" data-correct="true">A) Porque reduce drásticamente el tamaño del KV Cache en memoria VRAM al compartir cabezales de llaves y valores.</div>
         <div class="quiz-option" data-correct="false">B) Porque apaga los procesadores de la tarjeta gráfica cuando no se usan.</div>
@@ -2023,8 +2047,8 @@ print("Máscara de Atención:", inputs["attention_mask"])
     <!-- TEMA 3.2 -->
     <article class="tema-card" id="tema-3-2">
       <div class="tema-header">
-        <span class="tema-badge">Tema 3.2</span>
-        <h3 class="tema-title">Leyes de Escala de Chinchilla & Dimensionamiento de VRAM</h3>
+        <div class="tema-eyebrow">Tema 3.2 · Dimensionamiento y Hardware</div>
+        <h3 class="tema-title">Leyes de Escala de Chinchilla & Cálculo de Memoria VRAM</h3>
       </div>
 
       <!-- 1. INTRODUCCIÓN -->
@@ -2145,7 +2169,7 @@ print("Máscara de Atención:", inputs["attention_mask"])
     <!-- TEMA 4.1 -->
     <article class="tema-card" id="tema-4-1">
       <div class="tema-header">
-        <span class="tema-badge">Tema 4.1</span>
+        <div class="tema-eyebrow">Tema 4.1 · Despliegue y Soberanía</div>
         <h3 class="tema-title">Modelos de Pesos Abiertos (Open Weights) vs APIs en la Nube</h3>
       </div>
 
@@ -2212,7 +2236,7 @@ print("Máscara de Atención:", inputs["attention_mask"])
     <!-- TEMA 4.2 -->
     <article class="tema-card" id="tema-4-2">
       <div class="tema-header">
-        <span class="tema-badge">Tema 4.2</span>
+        <div class="tema-eyebrow">Tema 4.2 · Inferencia en Vivo</div>
         <h3 class="tema-title">Laboratorio: Generación en Tiempo Real (Streaming) & Telemetría</h3>
       </div>
 
