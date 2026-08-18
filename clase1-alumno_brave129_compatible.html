@@ -388,18 +388,22 @@ body {
   color: var(--text-primary);
   margin-bottom: 0.6rem;
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  line-height: 1.35;
 }
 
 .tema-subheading-tag {
+  font-family: var(--font-disp);
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 850;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--meta-blue);
-  background: var(--meta-blue-subtle);
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
+  background: transparent;
+  padding: 0;
+  border: none;
 }
 
 .prose-p {
