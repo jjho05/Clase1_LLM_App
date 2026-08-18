@@ -40,28 +40,35 @@
 }
 
 [data-theme="dark"] {
-  --bg-page: #080c14;
-  --bg-surface: #0f172a;
-  --bg-subtle: #162032;
-  --bg-subtle-alt: #1a273e;
-  --bg-input: #0b1220;
-  --bg-code: #060911;
+  --bg-page: #060913;
+  --bg-surface: #0c1222;
+  --bg-subtle: #111a2f;
+  --bg-subtle-alt: #16223d;
+  --bg-input: #090e1a;
+  --bg-code: #050811;
 
-  --border-subtle: rgba(255, 255, 255, 0.09);
+  --border-subtle: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.16);
-  --border-focus: #0866ff;
+  --border-focus: #3b82f6;
 
   --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
   --text-code: #e2e8f0;
 
-  --meta-blue-subtle: rgba(8, 102, 255, 0.15);
-  --meta-blue-border: rgba(8, 102, 255, 0.35);
+  --meta-blue: #3b82f6;
+  --meta-blue-hover: #60a5fa;
+  --meta-blue-subtle: rgba(59, 130, 246, 0.14);
+  --meta-blue-border: rgba(96, 165, 250, 0.32);
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.6);
-  --shadow-elevated: 0 25px 45px rgba(0, 0, 0, 0.8);
+  --accent-success: #10b981;
+  --accent-warning: #f59e0b;
+  --accent-info: #38bdf8;
+  --accent-easy: #a855f7;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 16px 40px -8px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.06) inset;
+  --shadow-elevated: 0 24px 55px -10px rgba(0, 0, 0, 0.9), 0 0 30px rgba(59, 130, 246, 0.15);
 }
 
 /* ==========================================================================
@@ -3157,4 +3164,294 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
 .btn-secondary:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   SISTEMA DE MODO OSCURO PREMIUM (ATMÓSFERA, GLASSMORPHISM & NEON GLOW)
+   ========================================================================== */
+[data-theme="dark"] body {
+  background-color: var(--bg-page);
+  background-image: 
+    radial-gradient(ellipse 900px 500px at 50% -50px, rgba(37, 99, 235, 0.16), transparent 75%),
+    radial-gradient(circle 700px at 5% 700px, rgba(124, 58, 237, 0.06), transparent 70%),
+    radial-gradient(circle 800px at 95% 1500px, rgba(6, 182, 212, 0.05), transparent 70%);
+  background-attachment: fixed;
+}
+
+[data-theme="dark"] .top-header {
+  background: rgba(6, 9, 19, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .brand-text {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .meta-logo-svg {
+  fill: #3b82f6;
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+}
+
+[data-theme="dark"] .nav-link-item {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .nav-link-item:hover,
+[data-theme="dark"] .nav-link-item.active {
+  color: #ffffff;
+  background: rgba(59, 130, 246, 0.18);
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .btn-icon,
+[data-theme="dark"] .btn-menu-toggle {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .btn-icon:hover,
+[data-theme="dark"] .btn-menu-toggle:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: rgba(96, 165, 250, 0.45);
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.3);
+}
+
+[data-theme="dark"] .quiz-pill-badge {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(96, 165, 250, 0.35);
+  color: #93c5fd;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+}
+
+/* Hero en Modo Oscuro */
+[data-theme="dark"] .hero-badge-pill {
+  background: rgba(37, 99, 235, 0.14);
+  border-color: rgba(96, 165, 250, 0.35);
+  color: #93c5fd;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.25);
+}
+
+[data-theme="dark"] .hero-badge-dot {
+  background: #60a5fa;
+  box-shadow: 0 0 10px #60a5fa;
+}
+
+[data-theme="dark"] .hero-title {
+  background: linear-gradient(135deg, #ffffff 30%, #bfdbfe 75%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 24px rgba(59, 130, 246, 0.25));
+}
+
+[data-theme="dark"] .hero-subtitle {
+  color: #94a3b8;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .hero-actions-row a,
+[data-theme="dark"] .btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .hero-actions-row a:hover,
+[data-theme="dark"] .btn-secondary:hover {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(96, 165, 250, 0.5);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(37, 99, 235, 0.35), 0 0 16px rgba(59, 130, 246, 0.2);
+}
+
+/* Tarjetas Principales y Secciones */
+[data-theme="dark"] .tema-card {
+  background: linear-gradient(180deg, rgba(14, 21, 38, 0.9) 0%, rgba(10, 15, 28, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.75), 0 0 1px 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+[data-theme="dark"] .tema-card:hover {
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 20px 50px -8px rgba(0, 0, 0, 0.9), 0 0 25px rgba(59, 130, 246, 0.12);
+}
+
+[data-theme="dark"] .tema-card[style*="border-left"] {
+  border-left-color: #3b82f6 !important;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), -6px 0 28px -2px rgba(59, 130, 246, 0.35);
+}
+
+[data-theme="dark"] .tema-eyebrow,
+[data-theme="dark"] .module-tag,
+[data-theme="dark"] .tema-subheading-tag {
+  color: #60a5fa;
+  text-shadow: 0 0 14px rgba(96, 165, 250, 0.35);
+}
+
+/* Bento, Workbench, Quizzes, FAQ, Roadmap */
+[data-theme="dark"] .bento-sub-card,
+[data-theme="dark"] .workbench-section,
+[data-theme="dark"] .quiz-box,
+[data-theme="dark"] .source-card,
+[data-theme="dark"] .roadmap-step-card,
+[data-theme="dark"] .faq-item,
+[data-theme="dark"] .step-flow-item,
+[data-theme="dark"] a.step-flow-item,
+[data-theme="dark"] .example-card,
+[data-theme="dark"] .glossary-row-item {
+  background: rgba(16, 24, 43, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .bento-sub-card:hover,
+[data-theme="dark"] .source-card:hover,
+[data-theme="dark"] .roadmap-step-card:hover,
+[data-theme="dark"] .faq-item:hover,
+[data-theme="dark"] a.step-flow-item:hover,
+[data-theme="dark"] .glossary-row-item:hover {
+  background: rgba(23, 34, 58, 0.9);
+  border-color: rgba(96, 165, 250, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(59, 130, 246, 0.14);
+}
+
+/* Quiz Opciones en Dark Mode */
+[data-theme="dark"] .quiz-option {
+  background: rgba(14, 20, 36, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .quiz-option:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(96, 165, 250, 0.4);
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="dark"] .quiz-option.correct {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
+  color: #34d399;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.25);
+}
+
+[data-theme="dark"] .quiz-option.incorrect {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+  color: #f87171;
+  box-shadow: 0 0 18px rgba(239, 68, 68, 0.25);
+}
+
+/* Token chips en Dark Mode */
+[data-theme="dark"] .tok-badge {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(30, 58, 138, 0.3) 100%);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  color: #bfdbfe;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .tok-badge .id {
+  background: rgba(0, 0, 0, 0.35);
+  color: #93c5fd;
+}
+
+/* Code box en Dark Mode */
+[data-theme="dark"] .code-box {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(37, 99, 235, 0.08);
+}
+
+[data-theme="dark"] .code-header {
+  background: #0f1524;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .code-content {
+  background: #090d16;
+}
+
+/* Fórmulas y Accordions */
+[data-theme="dark"] .formula-card {
+  background: #0b1120;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .formula-math-area {
+  background: rgba(14, 21, 38, 0.85);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .formula-breakdown-summary {
+  background: #0c1324;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .formula-breakdown-summary:hover {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .breakdown-list-row {
+  background: rgba(15, 22, 38, 0.7);
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+[data-theme="dark"] .breakdown-list-row:hover {
+  background: rgba(24, 35, 60, 0.9);
+  border-color: rgba(96, 165, 250, 0.35);
+}
+
+/* Desplegables de Soluciones */
+[data-theme="dark"] .exercise-solution-details {
+  background: rgba(15, 22, 38, 0.8);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .exercise-solution-panel {
+  background: #0b1120;
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Certificado Digital */
+[data-theme="dark"] .certificate-card {
+  background: linear-gradient(135deg, rgba(14, 21, 38, 0.95) 0%, rgba(9, 13, 24, 0.98) 100%);
+  border-color: rgba(96, 165, 250, 0.3);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 30px rgba(59, 130, 246, 0.15);
+}
+
+/* Mobile Drawer */
+[data-theme="dark"] .mobile-drawer {
+  background: rgba(8, 12, 22, 0.94);
+  border-left-color: rgba(255, 255, 255, 0.1);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="dark"] .mobile-drawer-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .mobile-drawer-nav-item {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .mobile-drawer-nav-item:hover,
+[data-theme="dark"] .mobile-drawer-nav-item.active {
+  background: rgba(59, 130, 246, 0.18);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .mobile-drawer-footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
 }

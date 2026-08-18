@@ -38,13 +38,14 @@
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
       pts = [];
-      for(var i = 0; i < 30; i++){
+      var count = Math.min(45, Math.floor((w * h) / 35000));
+      for(var i = 0; i < count; i++){
         pts.push({
           x: Math.random() * w,
           y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.25,
-          vy: (Math.random() - 0.5) * 0.25,
-          r: Math.random() * 2 + 1
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          r: Math.random() * 1.8 + 1
         });
       }
     }
@@ -53,15 +54,37 @@
 
     function loop(){
       ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = document.documentElement.getAttribute("data-theme") === "dark" ? "rgba(8, 102, 255, 0.35)" : "rgba(8, 102, 255, 0.2)";
-      pts.forEach(function(p){
+      var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      
+      // Partículas
+      ctx.fillStyle = isDark ? "rgba(96, 165, 250, 0.4)" : "rgba(8, 102, 255, 0.2)";
+      for(var i = 0; i < pts.length; i++){
+        var p = pts[i];
         p.x += p.vx; p.y += p.vy;
         if(p.x < 0) p.x = w; if(p.x > w) p.x = 0;
         if(p.y < 0) p.y = h; if(p.y > h) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
         ctx.fill();
-      });
+
+        // Conexiones de red neuronal en modo oscuro
+        if(isDark){
+          for(var j = i + 1; j < pts.length; j++){
+            var p2 = pts[j];
+            var dx = p.x - p2.x;
+            var dy = p.y - p2.y;
+            var dist = Math.sqrt(dx*dx + dy*dy);
+            if(dist < 125){
+              ctx.beginPath();
+              ctx.strokeStyle = "rgba(59, 130, 246, " + (0.15 * (1 - dist / 125)) + ")";
+              ctx.lineWidth = 0.75;
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
       requestAnimationFrame(loop);
     }
     loop();
