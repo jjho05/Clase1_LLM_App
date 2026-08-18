@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<title>Unidad 1.1: Fundamentos de LLMs y Arquitectura de Llama | IA Aplicada con Modelos Abiertos</title>
+<title>Unidad 1.1: Fundamentos de LLMs y Arquitectura de Llama | IA Aplicada con Modelos Abiertos</title>
 <meta name="description" content="Curso integral, profundo e interactivo sobre la arquitectura de los Large Language Models (LLMs), tokenización BPE, embeddings, atención QKV, Grouped-Query Attention (GQA), leyes de escala e inferencia local con Meta Llama 3.">
 
-<!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, Fira Code -->
+<!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, JetBrains Mono, Fira Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 
 <!-- KaTeX para renderizado matemático perfecto de fórmulas LaTeX -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
@@ -67,9 +67,41 @@
         </span>
         <span class="btn-text-label" id="theme-label">Modo Claro</span>
       </button>
+
+      <!-- Botón Menú Hamburguesa Móvil -->
+      <button class="btn-menu-toggle" id="menu-toggle-btn" aria-label="Abrir menú de navegación" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
     </div>
   </div>
 </header>
+
+<!-- Backdrop & Drawer de Navegación Móvil -->
+<div class="mobile-backdrop" id="mobile-backdrop" aria-hidden="true"></div>
+<div class="mobile-drawer" id="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menú de Navegación">
+  <div class="mobile-drawer-header">
+    <div class="mobile-drawer-title">
+      <svg class="meta-logo-svg" viewBox="0 0 36 24" style="width:24px;height:16px;">
+        <path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"/>
+      </svg>
+      <span>Navegación Tema 1.1</span>
+    </div>
+    <button class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Cerrar menú">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <nav class="mobile-drawer-nav" id="mobile-drawer-nav">
+    <!-- Poblado automáticamente por js/app.js -->
+  </nav>
+
+  <div class="mobile-drawer-footer">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Unidad 1.1 &middot; Meta Llama 3</span>
+      <a href="modulo1-tema2.html" style="font-size:0.75rem; color:var(--meta-blue); font-weight:700; text-decoration:none;">Tema 1.2 &rarr;</a>
+    </div>
+  </div>
+</div>
 
 <div id="progress-bar"></div>
 

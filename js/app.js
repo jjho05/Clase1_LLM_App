@@ -350,14 +350,77 @@
     });
   }
 
+  /* 8. GESTOR DE MENÚ HAMBURGUESA MÓVIL Y DRAWER FLUIDO */
+  function initMobileDrawer(){
+    var toggleBtn = document.getElementById("menu-toggle-btn");
+    var drawer = document.getElementById("mobile-drawer");
+    var backdrop = document.getElementById("mobile-backdrop");
+    var closeBtn = document.getElementById("mobile-drawer-close");
+    var drawerNav = document.getElementById("mobile-drawer-nav");
+    var headerNav = document.querySelector(".nav-links");
+
+    if(!toggleBtn || !drawer) return;
+
+    // Si el contenedor del drawer está vacío, clonar dinámicamente los enlaces del header
+    if(drawerNav && headerNav && drawerNav.children.length === 0){
+      var links = headerNav.querySelectorAll(".nav-link-item");
+      links.forEach(function(link){
+        var a = document.createElement("a");
+        a.className = "mobile-drawer-link";
+        a.href = link.getAttribute("href");
+        if(link.classList.contains("active")) a.classList.add("active");
+        a.innerHTML = "<span>" + link.textContent + "</span><span class='link-badge'>&rarr;</span>";
+        a.addEventListener("click", function(){
+          closeDrawer();
+        });
+        drawerNav.appendChild(a);
+      });
+    }
+
+    function openDrawer(){
+      if(window.SOUND) window.SOUND.playPop(480);
+      drawer.classList.add("is-open");
+      if(backdrop) backdrop.classList.add("is-open");
+      document.body.style.overflow = "hidden";
+      toggleBtn.setAttribute("aria-expanded", "true");
+    }
+
+    function closeDrawer(){
+      if(window.SOUND) window.SOUND.playPop(320);
+      drawer.classList.remove("is-open");
+      if(backdrop) backdrop.classList.remove("is-open");
+      document.body.style.overflow = "";
+      toggleBtn.setAttribute("aria-expanded", "false");
+    }
+
+    toggleBtn.addEventListener("click", function(){
+      if(drawer.classList.contains("is-open")){
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+
+    if(closeBtn) closeBtn.addEventListener("click", closeDrawer);
+    if(backdrop) backdrop.addEventListener("click", closeDrawer);
+
+    window.addEventListener("keydown", function(e){
+      if(e.key === "Escape" && drawer.classList.contains("is-open")){
+        closeDrawer();
+      }
+    });
+  }
+
   if(document.readyState === "loading"){
     document.addEventListener("DOMContentLoaded", function(){
       initSmoothAccordions();
       initPageTransitions();
+      initMobileDrawer();
     });
   } else {
     initSmoothAccordions();
     initPageTransitions();
+    initMobileDrawer();
   }
 
 })();
