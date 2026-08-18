@@ -26,7 +26,6 @@
 
 <body>
 
-<canvas id="bg-canvas"></canvas>
 
 <!-- Header Principal Limpio & Unificado con Iconos Vectoriales SVG -->
 <header class="top-header">
@@ -1656,7 +1655,216 @@
  </details>
  </div>
 
- </section>
+
+  <!-- EJERCICIO 4 -->
+  <div class="exercise-item-box">
+  <div class="exercise-header">
+  <span class="exercise-badge">Ejercicio 4</span>
+  <h4 class="exercise-title">Implementaci&oacute;n de DPO para Alineaci&oacute;n por Preferencias en Llama 3</h4>
+  </div>
+  <p class="exercise-prompt">
+  <b>Enunciado:</b> Tras un SFT exitoso, el equipo de ML de una empresa de legal-tech aplica <b>Direct Preference Optimization (DPO)</b> para alinear Llama&nbsp;3&nbsp;8B con preferencias de abogados senior (1,200 pares $x, y_w, y_l$). (a)&nbsp;Escribe la funci&oacute;n de p&eacute;rdida DPO formal con $\beta=0.1$; (b)&nbsp;Explica por qu&eacute; DPO es m&aacute;s estable que RLHF-PPO; (c)&nbsp;Muestra el script completo con TRL <code>DPOTrainer</code>.
+  </p>
+  <details class="exercise-solution-details">
+  <summary class="exercise-solution-summary">
+  <span>Ver Soluci&oacute;n Detallada &amp; Script DPO Completo</span>
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </summary>
+  <div class="exercise-solution-panel">
+  <p><b>a) Funci&oacute;n de P&eacute;rdida DPO:</b></p>
+  $$\mathcal{L}_{\text{DPO}}(\pi_\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)} \right) \right]$$
+  <ul style="margin: 0.6rem 0 0.9rem 1.4rem; font-size: 0.88rem; color: var(--text-secondary);">
+  <li><b>$\pi_\theta$</b>: Pol&iacute;tica del modelo en entrenamiento (Llama&nbsp;3 con adaptador LoRA activo).</li>
+  <li><b>$\pi_{\text{ref}}$</b>: Pol&iacute;tica de referencia congelada &mdash; checkpoint SFT sin gradientes.</li>
+  <li><b>$\beta = 0.1$</b>: Coeficiente KL que controla cu&aacute;nto puede divergir la pol&iacute;tica entrenada de la referencia.</li>
+  </ul>
+  <p><b>b) Ventajas de DPO sobre PPO:</b></p>
+  <ul style="margin: 0.5rem 0 0.8rem 1.4rem; font-size: 0.88rem; color: var(--text-secondary);">
+  <li><b>Sin Modelo de Recompensa:</b> DPO elimina el entrenamiento de un reward model separado, reduciendo a la mitad los recursos de GPU necesarios.</li>
+  <li><b>Sin RL inestable:</b> PPO requiere ajustar 15+ hiperpar&aacute;metros (clip ratio, KL coeff, GAE&nbsp;&lambda;). DPO es una p&eacute;rdida de clasificaci&oacute;n binaria cerrada con gradientes estables.</li>
+  <li><b>Sin reward hacking:</b> DPO optimiza directamente contra el par preferido/rechazado, eliminando el riesgo de explotar el modelo de recompensa.</li>
+  </ul>
+  <p><b>c) Script TRL DPOTrainer:</b></p>
+  <div class="code-box">
+  <div class="code-header"><span>dpo_legal_llama3.py</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
+  <pre class="code-content"><code>from trl import DPOTrainer, DPOConfig
+from peft import LoraConfig, get_peft_model
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+# 1. Modelo base SFT con QLoRA congelado
+model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Meta-Llama-3-8B-Instruct",
+    load_in_4bit=True,
+)
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct")
+
+# 2. Adaptador LoRA para DPO
+lora_config = LoraConfig(
+    r=16, lora_alpha=32,
+    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],
+    lora_dropout=0.05, bias="none",
+)
+model = get_peft_model(model, lora_config)
+
+# 3. Hiperparametros DPO criticos
+dpo_config = DPOConfig(
+    beta=0.1,              # Control KL divergencia
+    learning_rate=5e-7,    # LR muy bajo para alineacion fina
+    num_train_epochs=3,
+    per_device_train_batch_size=2,
+    gradient_accumulation_steps=8,
+    max_length=2048,
+    max_prompt_length=512,
+    output_dir="./llama3-legal-dpo",
+)
+
+# 4. Entrenamiento DPO (ref_model=None usa el modelo actual con LoRA desactivada)
+trainer = DPOTrainer(
+    model=model, ref_model=None,
+    args=dpo_config,
+    train_dataset=dpo_dataset,  # columnas: prompt, chosen, rejected
+    tokenizer=tokenizer,
+)
+trainer.train()</code></pre>
+  </div>
+  <p style="margin:0.8rem 0 0; font-size:0.88rem; color:var(--text-secondary);"><b>Nota:</b> Con <code>ref_model=None</code>, TRL desactiva los adaptadores LoRA internamente para calcular los log-probs de referencia sin necesitar una segunda copia del modelo en VRAM.</p>
+  </div>
+  </details>
+  </div>
+
+  </section>
+
+  <!-- ==========================================================================
+  SUBTEMA 1.3.8: DESPLIEGUE EN PRODUCCI&Oacute;N CON vLLM, OLLAMA Y GGUF
+  ========================================================================== -->
+  <article class="tema-card" id="tema-1-3-8">
+  <div class="tema-header">
+  <div class="tema-eyebrow">Tema 1.3.8 &middot; Exportaci&oacute;n y Despliegue Industrial</div>
+  <h3 class="tema-title">Del Adaptador Entrenado a Producci&oacute;n: vLLM, Ollama y GGUF</h3>
+  </div>
+
+  <div class="tema-section-block">
+  <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Concepto Formal</span> Pipeline de Exportaci&oacute;n Post-Fine-Tuning</h4>
+  <p class="prose-p">
+  Una vez completado el entrenamiento con QLoRA, el modelo no est&aacute; listo para producci&oacute;n en su forma de adaptadores separados. El flujo de exportaci&oacute;n sigue tres etapas obligatorias: <b>Merge</b> (fusi&oacute;n de pesos LoRA en el modelo base), <b>Cuantizaci&oacute;n de Inferencia</b> (GGUF con llama.cpp o AWQ con AutoAWQ) y <b>Servicio</b> (Ollama, vLLM o TensorRT-LLM). Omitir el merge e intentar servir directamente adaptadores PEFT a&ntilde;ade latencia adicional por bifurcaciones de c&aacute;lculo en cada forward pass.
+  </p>
+  <p class="prose-p">
+  <b>vLLM</b> maximiza el throughput en GPU con <i>PagedAttention</i> y <i>Continuous Batching</i>, ideal para APIs de alto tr&aacute;fico. <b>Ollama</b> prioriza la facilidad de despliegue local con cuantizaci&oacute;n GGUF integrada, opci&oacute;n est&aacute;ndar para equipos peque&ntilde;os y edge. <b>TensorRT-LLM</b> ofrece latencia m&iacute;nima absoluta en hardware NVIDIA de producci&oacute;n a costa de una compilaci&oacute;n previa espec&iacute;fica por modelo y GPU.
+  </p>
+  </div>
+
+  <div class="tema-section-block">
+  <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Pipeline Paso a Paso</span> Merge, GGUF y Servicio</h4>
+  <div class="step-flow-list">
+  <div class="step-flow-item">
+  <div class="step-num-badge">1</div>
+  <div class="step-flow-content">
+  <b>Merge: Fusi&oacute;n de Adaptadores LoRA</b> &mdash; <code>model.merge_and_unload()</code> produce un checkpoint en <code>.safetensors</code> con las dimensiones originales y cero overhead de inferencia.
+  <div class="code-box" style="margin-top:0.75rem;">
+  <div class="code-header"><span>merge_lora.py</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
+  <pre class="code-content"><code>from peft import PeftModel
+from transformers import AutoModelForCausalLM
+
+base = AutoModelForCausalLM.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct")
+model = PeftModel.from_pretrained(base, "./mi-adaptador-lora")
+# W_final = W0 + (alpha/r) * B*A  (calculado una sola vez en frio)
+merged = model.merge_and_unload()
+merged.save_pretrained("./llama3-merged", safe_serialization=True)</code></pre>
+  </div>
+  </div>
+  </div>
+  <div class="step-flow-item">
+  <div class="step-num-badge">2</div>
+  <div class="step-flow-content">
+  <b>Cuantizaci&oacute;n GGUF para Ollama</b> &mdash; <code>llama.cpp</code> convierte a GGUF con <code>Q4_K_M</code>, reduciendo Llama&nbsp;3&nbsp;8B de 16&nbsp;GB (FP16) a ~4.8&nbsp;GB.
+  <div class="code-box" style="margin-top:0.75rem;">
+  <div class="code-header"><span>convert_gguf.sh</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
+  <pre class="code-content"><code># Paso 1: HuggingFace -> GGUF F16
+python llama.cpp/convert_hf_to_gguf.py ./llama3-merged --outtype f16 --outfile llama3-f16.gguf
+
+# Paso 2: cuantizar a Q4_K_M (~4.8 GB, calidad optima 4-bit)
+./llama.cpp/llama-quantize llama3-f16.gguf llama3-q4km.gguf Q4_K_M</code></pre>
+  </div>
+  </div>
+  </div>
+  <div class="step-flow-item">
+  <div class="step-num-badge">3</div>
+  <div class="step-flow-content">
+  <b>Servicio con Ollama y vLLM</b> &mdash; Ollama usa un <code>Modelfile</code> declarativo; vLLM sirve API compatible con OpenAI con throughput 3&ndash;5x superior.
+  <div class="code-box" style="margin-top:0.75rem;">
+  <div class="code-header"><span>Modelfile (Ollama)</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
+  <pre class="code-content"><code>FROM ./llama3-q4km.gguf
+SYSTEM "Eres un asistente legal experto en derecho corporativo mexicano."
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER num_ctx 4096
+# ollama create llama3-legal -f Modelfile && ollama run llama3-legal</code></pre>
+  </div>
+  <div class="code-box" style="margin-top:0.6rem;">
+  <div class="code-header"><span>vLLM OpenAI Server</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
+  <pre class="code-content"><code>vllm serve ./llama3-merged --host 0.0.0.0 --port 8000 --dtype bfloat16 --max-model-len 4096</code></pre>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+
+  <div class="tema-section-block">
+  <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Tabla Comparativa</span> Motores de Servicio</h4>
+  <div style="overflow-x:auto; margin-top:1rem;">
+  <table style="width:100%; border-collapse:collapse; font-size:0.88rem; font-family:var(--font-body);">
+  <thead>
+  <tr style="background:var(--meta-blue-subtle); border-bottom:2px solid var(--meta-blue-border);">
+  <th style="padding:0.7rem 1rem; text-align:left; font-weight:800; color:var(--text-primary);">Criterio</th>
+  <th style="padding:0.7rem 1rem; text-align:center; font-weight:800; color:var(--meta-blue);">vLLM</th>
+  <th style="padding:0.7rem 1rem; text-align:center; font-weight:800; color:var(--accent-easy);">Ollama</th>
+  <th style="padding:0.7rem 1rem; text-align:center; font-weight:800; color:var(--text-primary);">TensorRT-LLM</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr style="border-bottom:1px solid var(--border-light);">
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Throughput (tokens/s)</td>
+  <td style="padding:0.65rem 1rem; text-align:center; color:var(--meta-blue); font-weight:700;">3,000&ndash;8,000</td>
+  <td style="padding:0.65rem 1rem; text-align:center; color:var(--accent-easy); font-weight:700;">400&ndash;800</td>
+  <td style="padding:0.65rem 1rem; text-align:center; font-weight:700;">5,000&ndash;12,000</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--border-light); background:var(--bg-subtle);">
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Hardware Requerido</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">GPU NVIDIA (CUDA)</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">CPU, GPU, Apple Silicon</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">NVIDIA H100 / A100</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--border-light);">
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">API Compatible</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">OpenAI v1</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">Ollama REST + OpenAI</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">Triton Inference Server</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--border-light); background:var(--bg-subtle);">
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Formato de Modelo</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">HuggingFace / AWQ</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">GGUF (llama.cpp)</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">TRT Engine (.trt)</td>
+  </tr>
+  <tr>
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Caso de Uso Ideal</td>
+  <td style="padding:0.65rem 1rem; text-align:center; color:var(--meta-blue); font-weight:700;">API producci&oacute;n multi-usuario</td>
+  <td style="padding:0.65rem 1rem; text-align:center; color:var(--accent-easy); font-weight:700;">Dev local / Edge</td>
+  <td style="padding:0.65rem 1rem; text-align:center; font-weight:700;">Latencia cr&iacute;tica empresarial</td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+  </div>
+
+  <div class="easy-explainer-box" style="margin-top:1.5rem;">
+  <div class="easy-header">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+  <span>Regla Pr&aacute;ctica de Selecci&oacute;n</span>
+  </div>
+  <p class="easy-text">Para desarrollo y demos usa <b>Ollama + GGUF Q4_K_M</b>: cero configuraci&oacute;n, cualquier hardware, Modelfile declarativo. Para APIs de producci&oacute;n con m&aacute;s de 50 usuarios concurrentes, despliega <b>vLLM</b> con PagedAttention en GPU NVIDIA &mdash; elimina la fragmentaci&oacute;n del KV-Cache y multiplica el throughput por 3&ndash;5x frente a HuggingFace Inference nativo.</p>
+  </div>
+  </article>
 
  <!-- ==========================================================================
  GLOSARIO TÉCNICO OFICIAL (FILTRABLE Y CON BUSCADOR)

@@ -3432,7 +3432,8 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
   margin-bottom: 0.75rem;
 }
 
-.exercise-num-badge {
+.exercise-num-badge,
+.exercise-badge {
   font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
