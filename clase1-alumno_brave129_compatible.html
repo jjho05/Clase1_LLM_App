@@ -1116,18 +1116,130 @@ body {
 }
 
 /* ==========================================================================
+   SECCIÓN DE FUENTES OFICIALES & PAPERS CIENTÍFICOS
+   ========================================================================== */
+.sources-section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  margin: 5rem 0 3rem;
+  box-shadow: var(--shadow-card);
+}
+
+@media (max-width: 768px) {
+  .sources-section { padding: 1.8rem 1.2rem; }
+}
+
+.sources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.3rem;
+  margin-top: 1.5rem;
+}
+
+.source-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  padding: 1.4rem;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.source-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--meta-blue);
+  box-shadow: var(--shadow-card);
+}
+
+.source-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.source-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.source-type-pill {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+  border: 1px solid var(--meta-blue-border);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.source-title {
+  font-size: 1.12rem;
+  font-family: var(--font-head);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.45rem;
+}
+
+.source-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 1rem;
+}
+
+.source-link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--meta-blue);
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.source-link-btn:hover {
+  border-color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+}
+
+/* ==========================================================================
    CERTIFICADO DIGITAL DINÁMICO DE COMPLETADO
    ========================================================================== */
 .certificate-card {
   background: var(--bg-surface);
   border: 2px solid var(--meta-blue);
-  border-radius: 16px;
-  padding: 2.5rem;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
   text-align: center;
-  margin: 3rem 0;
+  margin: 4rem 0 2rem;
   box-shadow: var(--shadow-elevated);
   display: none;
   animation: fadeIn 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.certificate-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #0866ff, #0052cc, #7c3aed);
 }
 
 .certificate-badge {
@@ -1135,19 +1247,21 @@ body {
   background: var(--meta-blue-subtle);
   color: var(--meta-blue);
   border: 1px solid var(--meta-blue-border);
-  padding: 0.3rem 0.8rem;
+  padding: 0.35rem 0.9rem;
   border-radius: 20px;
   font-weight: 800;
   font-size: 0.8rem;
-  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
 }
 
 .certificate-title {
   font-family: var(--font-disp);
-  font-size: 2.2rem;
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
   font-weight: 800;
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 /* ==========================================================================
@@ -2447,74 +2561,122 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
   </section>
 
   <!-- ==========================================================================
-       SECCIÓN: FUENTES DE INFORMACIÓN REALES & DOCUMENTACIÓN OFICIAL
+       SECCIÓN: FUENTES DE INFORMACIÓN REALES & DOCUMENTACIÓN OFICIAL (REDISEÑADA)
        ========================================================================== -->
-  <section class="tema-card" id="fuentes-oficiales" style="margin-top: 4rem;">
-    <div class="tema-header">
-      <span class="tema-badge">Bibliografía & Recursos</span>
-      <h3 class="tema-title">Fuentes de Información Reales & Referencias Académicas</h3>
+  <section class="sources-section" id="fuentes-oficiales">
+    <div style="text-align: center; margin-bottom: 2.2rem;">
+      <span class="hero-badge-tag">Evidencia Científica & Recursos Oficiales</span>
+      <h2 style="font-size: 2.2rem; font-family: var(--font-disp); font-weight: 800; color: var(--text-primary);">Fuentes de Información Reales & Referencias Académicas</h2>
+      <p style="color: var(--text-secondary); max-width: 75ch; margin: 0.5rem auto 0; font-size: 1.05rem;">
+        Todo el contenido técnico, fórmulas matemáticas y parámetros presentados en este curso están fundamentados en investigaciones científicas publicadas y repositorios oficiales de código abierto.
+      </p>
     </div>
 
-    <p class="prose-p">
-      Todo el contenido técnico, fórmulas matemáticas y parámetros presentados en este curso están respaldados por investigaciones científicas publicadas y repositorios oficiales de código abierto:
-    </p>
-
-    <div class="examples-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-top: 1.5rem;">
+    <div class="sources-grid">
       
-      <div class="example-card">
-        <div class="ex-title">Paper Oficial de Meta Llama 3</div>
-        <div class="ex-desc">
-          <b>"The Llama 3 Herd of Models"</b> (Meta AI Research, 2024).<br>
-          Detalla el entrenamiento en 15+ billones de tokens, la arquitectura GQA, el vocabulario BPE de 128k y los procesos de alineación DPO.
-          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/2407.21783" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 2407.21783 →</a></div>
+      <!-- Card 1 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Meta AI Research · 2024</span>
+          <span class="source-type-pill">Paper Fundacional</span>
         </div>
+        <h4 class="source-title">The Llama 3 Herd of Models</h4>
+        <p class="source-desc">
+          Documento técnico exhaustivo que detalla el preentrenamiento en más de 15 billones de tokens, la arquitectura GQA, el vocabulario de 128k y los procesos de alineación mediante DPO.
+        </p>
+        <a href="https://arxiv.org/abs/2407.21783" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2407.21783</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
       </div>
 
-      <div class="example-card">
-        <div class="ex-title">Paper Fundacional del Transformer</div>
-        <div class="ex-desc">
-          <b>"Attention Is All You Need"</b> (Vaswani et al., Google Brain, 2017).<br>
-          Introduce por primera vez la auto-atención por producto punto escalado ($Q, K, V$) y elimina la necesidad de capas recurrentes.
-          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 1706.03762 →</a></div>
+      <!-- Card 2 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Google Brain · 2017</span>
+          <span class="source-type-pill">Arquitectura Transformer</span>
         </div>
+        <h4 class="source-title">Attention Is All You Need</h4>
+        <p class="source-desc">
+          El artículo científico que revolucionó la inteligencia artificial introduciendo la auto-atención por producto punto escalado ($Q, K, V$) y eliminando la necesidad de recurrencia secuencial.
+        </p>
+        <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 1706.03762</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
       </div>
 
-      <div class="example-card">
-        <div class="ex-title">Leyes de Escala de Chinchilla</div>
-        <div class="ex-desc">
-          <b>"Training Compute-Optimal Large Language Models"</b> (Hoffmann et al., DeepMind, 2022).<br>
-          Demuestra la relación matemática óptima entre el número de parámetros y la cantidad de tokens de entrenamiento.
-          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 2203.15556 →</a></div>
+      <!-- Card 3 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Google DeepMind · 2022</span>
+          <span class="source-type-pill">Leyes de Escala</span>
         </div>
+        <h4 class="source-title">Training Compute-Optimal LLMs (Chinchilla)</h4>
+        <p class="source-desc">
+          Investigación que formula las proporciones matemáticas exactas entre el número de parámetros del modelo y la cantidad óptima de tokens requeridos durante el entrenamiento.
+        </p>
+        <a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2203.15556</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
       </div>
 
-      <div class="example-card">
-        <div class="ex-title">Grouped-Query Attention (GQA)</div>
-        <div class="ex-desc">
-          <b>"GQA: Training Generalized Multi-Query Transformer Models"</b> (Ainslie et al., 2023).<br>
-          Fundamento de la reducción de memoria KV Cache en un 75% implementado en Llama 3 8B y 70B.
-          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/2305.13245" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 2305.13245 →</a></div>
+      <!-- Card 4 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Google Research · 2023</span>
+          <span class="source-type-pill">Optimización KV Cache</span>
         </div>
+        <h4 class="source-title">Grouped-Query Attention (GQA)</h4>
+        <p class="source-desc">
+          Propuesta técnica adoptada por Meta en Llama 3 para compartir cabezales de llaves y valores, reduciendo el consumo de memoria VRAM en un 75% durante la inferencia.
+        </p>
+        <a href="https://arxiv.org/abs/2305.13245" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2305.13245</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
       </div>
 
-      <div class="example-card">
-        <div class="ex-title">Direct Preference Optimization (DPO)</div>
-        <div class="ex-desc">
-          <b>"Direct Preference Optimization: Your Language Model is Secretly a Reward Model"</b> (Rafailov et al., Stanford, 2023).<br>
-          Algoritmo matemático que reemplazó al RLHF tradicional en el ajuste fino de Llama 3 Instruct.
-          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 2305.18290 →</a></div>
+      <!-- Card 5 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Stanford University · 2023</span>
+          <span class="source-type-pill">Alineación de Modelos</span>
         </div>
+        <h4 class="source-title">Direct Preference Optimization (DPO)</h4>
+        <p class="source-desc">
+          Método matemático que permite alinear modelos a partir de retroalimentación humana de forma estable y directa, sustituyendo el complejo pipeline clásico de RLHF con PPO.
+        </p>
+        <a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2305.18290</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
       </div>
 
-      <div class="example-card">
-        <div class="ex-title">Herramientas & Repositorios de Código</div>
-        <div class="ex-desc">
-          Enlaces oficiales para experimentar e implementar:
-          <ul style="margin-top: 0.4rem; padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6;">
-            <li><a href="https://github.com/meta-llama/llama3" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 600;">GitHub Oficial de Meta Llama 3</a></li>
-            <li><a href="https://huggingface.co/meta-llama" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 600;">Hugging Face Model Hub</a></li>
-            <li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 600;">Ollama Local Engine Runtime</a></li>
-          </ul>
+      <!-- Card 6 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Ecosistema Abierto · 2024</span>
+          <span class="source-type-pill">Herramientas & Código</span>
+        </div>
+        <h4 class="source-title">Repositorios Oficiales & Runtimes</h4>
+        <p class="source-desc">
+          Herramientas indispensables para descarga de pesos, tokenización y ejecución en local:
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.5rem;">
+          <a href="https://github.com/meta-llama/llama3" target="_blank" rel="noopener noreferrer" class="source-link-btn" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
+            <span>GitHub Oficial de Meta Llama 3</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+          <a href="https://huggingface.co/meta-llama" target="_blank" rel="noopener noreferrer" class="source-link-btn" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
+            <span>Hugging Face Model Hub</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+          <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" class="source-link-btn" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
+            <span>Ollama Local Runtime</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
         </div>
       </div>
 
