@@ -1553,18 +1553,18 @@ Sentimiento:</code></pre>
       </p>
     </div>
 
-    <!-- CUADRÍCULA EXACTA DE 3 COLUMNAS X 4 FILAS (12 TARJETAS) -->
+    <!-- CUADRÍCULA EXACTA DE 3 COLUMNAS X 4 FILAS (12 TARJETAS EXCLUSIVAS DE LA UNIDAD 1.2) -->
     <div class="sources-grid">
       
       <!-- Card 1 -->
       <div class="source-card">
         <div class="source-card-header">
           <span class="source-tag">Meta AI (FAIR) · 2020</span>
-          <span class="source-type-pill">Paper Fundacional</span>
+          <span class="source-type-pill">Paper Fundacional RAG</span>
         </div>
         <h4 class="source-title">Retrieval-Augmented Generation for NLP Tasks</h4>
         <p class="source-desc">
-          El artículo pionero que propuso combinar modelos de lenguaje paramétricos con índices vectoriales no paramétricos densos para responder preguntas con cero alucinaciones.
+          El artículo pionero que propuso la formulación matemática bimodal de RAG, combinando modelos generativos autorregresivos con un índice no paramétrico para responder con cero alucinaciones.
         </p>
         <a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noopener noreferrer" class="source-link-btn">
           <span>Consultar en arXiv: 2005.11401</span>
@@ -1575,12 +1575,12 @@ Sentimiento:</code></pre>
       <!-- Card 2 -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">Google Research · 2022</span>
-          <span class="source-type-pill">Chain-of-Thought</span>
+          <span class="source-tag">Google Brain · 2022</span>
+          <span class="source-type-pill">Chain-of-Thought (CoT)</span>
         </div>
         <h4 class="source-title">Chain-of-Thought Prompting Elicits Reasoning</h4>
         <p class="source-desc">
-          Demuestra cómo la instrucción paso a paso desencadena capacidades emergentes de razonamiento deductivo y resolución aritmética en modelos grandes de lenguaje.
+          Investigación seminal de Jason Wei et al. que demostró que instruir al modelo a generar deducciones paso a paso desencadena razonamiento aritmético y simbólico emergente.
         </p>
         <a href="https://arxiv.org/abs/2201.11903" target="_blank" rel="noopener noreferrer" class="source-link-btn">
           <span>Consultar en arXiv: 2201.11903</span>
@@ -1596,7 +1596,7 @@ Sentimiento:</code></pre>
         </div>
         <h4 class="source-title">Language Models are Few-Shot Learners</h4>
         <p class="source-desc">
-          Investigación formal que fundamentó el aprendizaje en contexto y el prompting Few-Shot sin necesidad de alterar ningún gradiente ni peso del modelo base.
+          Estudio formal que fundamentó el aprendizaje en contexto (Few-Shot), probando cómo $K$ ejemplos demostrativos calibran el formato y las etiquetas sin alterar gradientes ni parámetros.
         </p>
         <a href="https://arxiv.org/abs/2005.14165" target="_blank" rel="noopener noreferrer" class="source-link-btn">
           <span>Consultar en arXiv: 2005.14165</span>
@@ -1607,15 +1607,15 @@ Sentimiento:</code></pre>
       <!-- Card 4 -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">Meta AI (FAIR) · 2020</span>
-          <span class="source-type-pill">Dense Retrieval</span>
+          <span class="source-tag">Princeton & Google · 2022</span>
+          <span class="source-type-pill">Patrón ReAct</span>
         </div>
-        <h4 class="source-title">Dense Passage Retrieval (DPR) for Open-QA</h4>
+        <h4 class="source-title">ReAct: Synergizing Reasoning and Acting</h4>
         <p class="source-desc">
-          Introduce la recuperación densa mediante encoders duales siameses, superando a los sistemas léxicos BM25 en tareas de búsqueda conceptual compleja.
+          Introduce el bucle interactivo de razonamiento y acción (Thought &rarr; Action &rarr; Observation), permitiendo a los LLMs invocar APIs, herramientas y bases de datos vectoriales en tiempo real.
         </p>
-        <a href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-          <span>Consultar en arXiv: 2004.04906</span>
+        <a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2210.03629</span>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
         </a>
       </div>
@@ -1623,15 +1623,15 @@ Sentimiento:</code></pre>
       <!-- Card 5 -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">Gao et al. · 2022</span>
-          <span class="source-type-pill">Búsqueda Avanzada</span>
+          <span class="source-tag">Google Research · 2022</span>
+          <span class="source-type-pill">Auto-Consistencia</span>
         </div>
-        <h4 class="source-title">Precise Zero-Shot Dense Retrieval (HyDE)</h4>
+        <h4 class="source-title">Self-Consistency in Chain-of-Thought</h4>
         <p class="source-desc">
-          Propone Hypothetical Document Embeddings (HyDE), una técnica donde el LLM genera un borrador hipotético de respuesta para buscar pasajes análogos en la base vectorial.
+          Propone muestrear $N$ rutas estocásticas de razonamiento CoT y seleccionar la conclusión final por votación mayoritaria ($\arg\max$), incrementando notablemente la precisión matemática.
         </p>
-        <a href="https://arxiv.org/abs/2212.10496" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-          <span>Consultar en arXiv: 2212.10496</span>
+        <a href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2203.11171</span>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
         </a>
       </div>
@@ -1639,24 +1639,8 @@ Sentimiento:</code></pre>
       <!-- Card 6 -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">BAAI · 2023</span>
-          <span class="source-type-pill">Embeddings SOTA</span>
-        </div>
-        <h4 class="source-title">BGE: General Purpose Text Embeddings</h4>
-        <p class="source-desc">
-          Arquitectura de embeddings de código abierto optimizada para tareas de recuperación densa en inglés y español, evaluada en el benchmark unificado MTEB.
-        </p>
-        <a href="https://arxiv.org/abs/2309.07597" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-          <span>Consultar en arXiv: 2309.07597</span>
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-        </a>
-      </div>
-
-      <!-- Card 7 -->
-      <div class="source-card">
-        <div class="source-card-header">
           <span class="source-tag">Malkov & Yashunin · 2018</span>
-          <span class="source-type-pill">Índices Vectoriales</span>
+          <span class="source-type-pill">Algoritmo HNSW</span>
         </div>
         <h4 class="source-title">Efficient ANN Search Using HNSW Graphs</h4>
         <p class="source-desc">
@@ -1668,18 +1652,34 @@ Sentimiento:</code></pre>
         </a>
       </div>
 
+      <!-- Card 7 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Meta AI (FAIR) · 2020</span>
+          <span class="source-type-pill">Dense Passage Retrieval</span>
+        </div>
+        <h4 class="source-title">Dense Passage Retrieval (DPR) for Open-QA</h4>
+        <p class="source-desc">
+          Demuestra cómo los bi-encoders siameses entrenados con pérdida contrastiva superan a los métodos léxicos BM25 comparando vectores de embeddings continuos en espacio latente.
+        </p>
+        <a href="https://arxiv.org/abs/2004.04906" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2004.04906</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
       <!-- Card 8 -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">Stanford University · 2023</span>
-          <span class="source-type-pill">Atención en Contexto</span>
+          <span class="source-tag">Univ. of Waterloo · 2009</span>
+          <span class="source-type-pill">Fusión Híbrida RRF</span>
         </div>
-        <h4 class="source-title">Lost in the Middle: LLMs in Long Contexts</h4>
+        <h4 class="source-title">Reciprocal Rank Fusion in Information Retrieval</h4>
         <p class="source-desc">
-          Evidencia cómo la posición de los pasajes dentro del prompt influye en la capacidad de recuperación del modelo, fundamentando técnicas de ordenamiento estratégico.
+          Formulación matemática estándar de la industria (Cormack et al.) que fusiona listas de ranking de búsqueda léxica (BM25) y búsqueda vectorial mediante la suma de inversos de rangos normalizados.
         </p>
-        <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-          <span>Consultar en arXiv: 2307.03172</span>
+        <a href="https://dl.acm.org/doi/10.1145/1571941.1572114" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en ACM SIGIR: 1572114</span>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
         </a>
       </div>
@@ -1687,15 +1687,15 @@ Sentimiento:</code></pre>
       <!-- Card 9 -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">Google Research · 2022</span>
-          <span class="source-type-pill">Auto-Consistencia</span>
+          <span class="source-tag">Stanford & Berkeley · 2023</span>
+          <span class="source-type-pill">Atención en Contexto</span>
         </div>
-        <h4 class="source-title">Self-Consistency in Chain-of-Thought</h4>
+        <h4 class="source-title">Lost in the Middle: LLMs in Long Contexts</h4>
         <p class="source-desc">
-          Muestra cómo muestrear múltiples rutas de razonamiento CoT y seleccionar la respuesta mayoritaria incrementa en más de un 20% la precisión matemática.
+          Evidencia empírica fundamental que demuestra cómo la posición de los pasajes dentro del prompt influye en la capacidad de recuperación, motivando el ordenamiento en extremos y el reranking.
         </p>
-        <a href="https://arxiv.org/abs/2203.11171" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-          <span>Consultar en arXiv: 2203.11171</span>
+        <a href="https://arxiv.org/abs/2307.03172" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2307.03172</span>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
         </a>
       </div>
@@ -1703,41 +1703,31 @@ Sentimiento:</code></pre>
       <!-- Card 10 -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">Ecosistema Abierto · 2024</span>
-          <span class="source-type-pill">Herramientas & Código</span>
+          <span class="source-tag">BAAI · 2023</span>
+          <span class="source-type-pill">Embeddings & Reranker</span>
         </div>
-        <h4 class="source-title">Repositorios Oficiales & Runtimes</h4>
+        <h4 class="source-title">BGE: General Multilingual Embeddings & Reranker</h4>
         <p class="source-desc">
-          Herramientas indispensables para RAG, bases vectoriales y ejecución local de Llama 3:
+          Arquitectura de modelos de embeddings y cross-encoder rerankers de alta precisión multilingüe (inglés/español), evaluados en el benchmark estandarizado MTEB.
         </p>
-        <div style="display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.5rem;">
-          <a href="https://github.com/meta-llama/llama3" target="_blank" rel="noopener noreferrer" class="source-link-btn" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
-            <span>GitHub Oficial de Meta Llama 3</span>
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-          </a>
-          <a href="https://github.com/chroma-core/chroma" target="_blank" rel="noopener noreferrer" class="source-link-btn" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
-            <span>ChromaDB Vector Database</span>
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-          </a>
-          <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" class="source-link-btn" style="padding: 0.35rem 0.6rem; font-size: 0.8rem;">
-            <span>Ollama Local Runtime</span>
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
-          </a>
-        </div>
+        <a href="https://arxiv.org/abs/2309.07597" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2309.07597</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
       </div>
 
       <!-- Card 11 -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">LlamaIndex · 2024</span>
-          <span class="source-type-pill">Framework RAG</span>
+          <span class="source-tag">Carnegie Mellon (CMU) · 2022</span>
+          <span class="source-type-pill">Búsqueda HyDE</span>
         </div>
-        <h4 class="source-title">LlamaIndex & LangChain Data Frameworks</h4>
+        <h4 class="source-title">Precise Zero-Shot Dense Retrieval (HyDE)</h4>
         <p class="source-desc">
-          Documentación técnica y bibliotecas de código abierto para orquestación de flujos RAG avanzados, conectores de datos y re-ranking.
+          Propone Hypothetical Document Embeddings (HyDE), técnica donde el LLM genera una respuesta preliminar hipotética para consultar el espacio vectorial con mayor alineación semántica.
         </p>
-        <a href="https://docs.llamaindex.ai" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-          <span>Consultar Documentación Oficial</span>
+        <a href="https://arxiv.org/abs/2212.10496" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2212.10496</span>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
         </a>
       </div>
@@ -1745,15 +1735,15 @@ Sentimiento:</code></pre>
       <!-- Card 12 -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">Meta AI Research · 2024</span>
-          <span class="source-type-pill">Paper Oficial</span>
+          <span class="source-tag">Univ. of Washington & Allen AI · 2023</span>
+          <span class="source-type-pill">RAG con Auto-Reflexión</span>
         </div>
-        <h4 class="source-title">The Llama 3 Herd of Models: Long Context</h4>
+        <h4 class="source-title">Self-RAG: Learning to Retrieve, Generate & Critique</h4>
         <p class="source-desc">
-          Documento técnico exhaustivo que detalla la arquitectura de Llama 3, su ventana de contexto extendida a 128k tokens y su desempeño en tareas de RAG.
+          Framework avanzado que entrena tokens especiales de autorreflexión para que el LLM decida autónomamente cuándo recuperar documentos y verifique la veracidad de sus citas.
         </p>
-        <a href="https://arxiv.org/abs/2407.21783" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-          <span>Consultar en arXiv: 2407.21783</span>
+        <a href="https://arxiv.org/abs/2310.11511" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en arXiv: 2310.11511</span>
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
         </a>
       </div>
