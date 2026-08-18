@@ -789,6 +789,58 @@
         <p class="prose-p">
           Para que un libro o manual empresarial pueda indexarse con precisión, se divide en <b>fragmentos (chunks)</b> con un margen de <b>solapamiento (overlap)</b> para evitar que oraciones importantes queden partidas a la mitad:
         </p>
+
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{Paso (Stride)} = S - O, \quad N_{\text{chunks}} = \left\lceil \frac{|D| - O}{S - O} \right\rceil$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Fragmentación (Chunking)</span>
+                <span class="breakdown-count-tag">5 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$|D|$ (Doc Size)</span>
+                  <div class="breakdown-row-text">
+                    <strong>Longitud Total del Documento:</strong> Cantidad neta de tokens o palabras que componen el archivo original antes de fragmentar.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$S$ (Chunk Size)</span>
+                  <div class="breakdown-row-text">
+                    <strong>Tamaño del Fragmento:</strong> Longitud máxima de cada bloque (ej. 512 tokens), diseñada para preservar la coherencia contextual sin saturar la ventana de atención.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$O$ (Overlap)</span>
+                  <div class="breakdown-row-text">
+                    <strong>Margen de Solapamiento ($O < S$):</strong> Cantidad de tokens compartidos entre bloques continuos (ej. 64 tokens) para evitar cortes abruptos de oraciones clave.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Paso} = S - O$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Desplazamiento de Ventana:</strong> Intervalo de avance tras el cual comienza a indexarse el siguiente fragmento del documento.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$N_{\text{chunks}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Total de Pasajes Indexados:</strong> Número exacto de vectores que se almacenarán en la base de datos vectorial (ChromaDB / FAISS).
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
       </div>
 
       <!-- LABORATORIO 5: CHUNKING & BÚSQUEDA SEMÁNTICA -->
@@ -971,6 +1023,58 @@ collection.add(
           En entornos de producción masiva con Llama 3 (ventana de contexto de 128k tokens), tres optimizaciones marcan la diferencia entre un prototipo básico y un motor de búsqueda empresarial:
         </p>
 
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{RRF\_Score}(d) = \sum_{m \in \{\text{BM25}, \text{Dense}\}} \frac{1}{k + r_m(d)}$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Reciprocal Rank Fusion (RRF)</span>
+                <span class="breakdown-count-tag">5 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{RRF\_Score}(d)$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Puntuación Fusionada del Documento:</strong> Métrica unificada no paramétrica que combina los ordenamientos de múltiples recuperadores sin sesgos de escala.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$m \in \{\text{BM25}, \text{Dense}\}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Métodos de Búsqueda Híbrida:</strong> Combina búsqueda léxica exacta (BM25 para códigos/nombres) con búsqueda semántica vectorial (Embeddings para significado).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$r_m(d)$ (Rango)</span>
+                  <div class="breakdown-row-text">
+                    <strong>Posición Ordinal:</strong> El lugar en el ranking ($1, 2, 3, \dots$) asignado al documento $d$ por el método de recuperación $m$.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$k = 60$ (Constante)</span>
+                  <div class="breakdown-row-text">
+                    <strong>Factor de Regularización:</strong> Constante estándar (propuesta por Cormack et al.) que suaviza la caída de puntuación y evita que el Top-1 domine desproporcionadamente.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\sum_{m}$ (Fusión)</span>
+                  <div class="breakdown-row-text">
+                    <strong>Suma de Inversos de Rangos:</strong> Integra las evidencias de todos los motores de búsqueda para construir el ranking final antes del modelo Reranker.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
         <div class="examples-grid">
           <div class="example-card">
             <div class="ex-title">1. Búsqueda Híbrida (Hybrid Search)</div>
@@ -1011,8 +1115,66 @@ collection.add(
       <div class="tema-section-block">
         <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Concepto Formal</span> El Ciclo ReAct: Pensamiento $\to$ Acción $\to$ Observación</h4>
         <p class="prose-p">
-          El patrón <b>ReAct (Reason + Act)</b> combina la generación de razonamiento interno de Chain-of-Thought con la capacidad de ejecutar llamadas a herramientas externas (APIs, calculadoras o bases de datos vectoriales). En lugar de adivinar, el modelo itera en un bucle interactivo:
+          El patrón <b>ReAct (Reason + Act)</b> combina la generación de razonamiento interno de Chain-of-Thought con la capacidad de ejecutar llamadas a herramientas externas (APIs, calculadoras o bases de datos vectoriales). Para problemas de alta incertidumbre, la técnica de <b>Auto-Consistencia (Self-Consistency)</b> muestrea múltiples rutas de deducción y selecciona la respuesta por consenso mayoritario:
         </p>
+
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\hat{y} = \arg\max_{y} \sum_{i=1}^{N} \mathbb{I}\left( \text{ExtractAnswer}(c_i) = y \right) \quad \text{donde } c_i \sim P_{\text{CoT}}(C \mid X, \mathcal{I})$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Auto-Consistencia (Self-Consistency)</span>
+                <span class="breakdown-count-tag">6 elementos</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\hat{y}$ (Respuesta Final)</span>
+                  <div class="breakdown-row-text">
+                    <strong>Resultado por Consenso:</strong> La respuesta final seleccionada como la más verosímil y robusta tras evaluar múltiples cadenas de razonamiento.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$N \in [5, 20]$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Número de Muestreos en Paralelo:</strong> Cantidad de rutas CoT independientes generadas por el modelo configurando temperatura $T > 0$ (ej. $T = 0.7$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$c_i \sim P_{\text{CoT}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Cadena de Pensamiento $i$-ésima:</strong> Secuencia de pasos deductivos generada estocásticamente para resolver el problema $X$.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{ExtractAnswer}(c_i)$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Extractor de Conclusión:</strong> Función de parsing o formateo que aísla el valor numérico, opción o etiqueta final emitida al término de la cadena $c_i$.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathbb{I}(\dots)$ (Indicatriz)</span>
+                  <div class="breakdown-row-text">
+                    <strong>Conteo de Votos:</strong> Devuelve $1$ si la cadena $c_i$ llegó a la respuesta $y$, y $0$ si concluyó un resultado diferente.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\arg\max_y$ (Moda)</span>
+                  <div class="breakdown-row-text">
+                    <strong>Votación Mayoritaria:</strong> Selecciona el valor de $y$ que obtuvo la mayor frecuencia acumulada entre todas las $N$ rutas exploradas.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
 
         <div class="examples-grid">
           <div class="example-card">

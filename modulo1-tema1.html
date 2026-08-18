@@ -512,31 +512,31 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Tensor 3D</span>
+                  <span class="breakdown-row-badge">$[B, S, D]$ (Tensor 3D)</span>
                   <div class="breakdown-row-text">
                     <strong>Estructura Matricial Multidimensional:</strong> Bloque de números flotantes organizado en 3 ejes que viaja a través de las 32 capas Transformer de la tarjeta gráfica (GPU).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">1 (Batch Size)</span>
+                  <span class="breakdown-row-badge">$B = 1$ (Batch Size)</span>
                   <div class="breakdown-row-text">
                     <strong>Lote de Consultas Simultáneas:</strong> Cantidad de peticiones, preguntas o usuarios independientes que el modelo procesa en paralelo al mismo tiempo (en este ejemplo, 1 usuario individual).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">2048 (Seq Length)</span>
+                  <span class="breakdown-row-badge">$S = 2,048$ (Seq Length)</span>
                   <div class="breakdown-row-text">
                     <strong>Longitud de la Secuencia (Tokens):</strong> Cantidad total de palabras o fragmentos que componen el documento o mensaje actual que el modelo está leyendo en ese instante.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">4096 (d_model)</span>
+                  <span class="breakdown-row-badge">$D = 4,096$ ($d_{\text{model}}$)</span>
                   <div class="breakdown-row-text">
                     <strong>Dimensión del Espacio Oculto (Embeddings):</strong> Cantidad de números continuos que describen las propiedades y el significado de cada palabra en Llama 3 8B (en Llama 3 70B este valor es de 8,192).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Total: 8,388,608</span>
+                  <span class="breakdown-row-badge">$N = 8,388,608$ (Floats)</span>
                   <div class="breakdown-row-text">
                     <strong>Valores Numéricos Activos:</strong> Resultado de multiplicar $1 \times 2048 \times 4096$. Son más de 8.3 millones de números que la GPU multiplica en cada pasada hacia adelante (forward pass).
                   </div>
@@ -728,25 +728,25 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">128,256 tokens</span>
+                  <span class="breakdown-row-badge">$|V| = 128,256$ (Vocabulario)</span>
                   <div class="breakdown-row-text">
                     <strong>Tamaño del Vocabulario Tiktoken (BPE):</strong> Catálogo de subpalabras, caracteres y palabras pre-memorizadas por Meta. Es un 300% más grande que el de Llama 2 (32k tokens), permitiendo entender mucho mejor el español, el código y múltiples idiomas.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">BPE (Byte-Pair)</span>
+                  <span class="breakdown-row-badge">$\text{BPE}$ (Byte-Pair)</span>
                   <div class="breakdown-row-text">
                     <strong>Algoritmo de Fusión Recursiva:</strong> Empieza con bytes UTF-8 individuales y une progresivamente los pares de letras más comunes (ej. <code>d</code> + <code>e</code> $\to$ <code>de</code>, <code>c</code> + <code>i</code> + <code>ó</code> + <code>n</code> $\to$ <code>ción</code>) hasta formar bloques eficientes.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">&asymp; 3.8 caracteres / token</span>
+                  <span class="breakdown-row-badge">$\approx 3.8\text{ chars/token}$</span>
                   <div class="breakdown-row-text">
                     <strong>Tasa de Compresión en Español:</strong> En promedio, cada token agrupa casi 4 letras normales. Por ejemplo, una palabra de 8 letras como <i>"aprender"</i> consume solo 2 tokens en lugar de 8 pasos computacionales.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Ganancia de Velocidad</span>
+                  <span class="breakdown-row-badge">$-30\%\text{ Latencia}$</span>
                   <div class="breakdown-row-text">
                     <strong>Inferencia Acelerada:</strong> Al necesitar menos tokens para expresar el mismo mensaje, el modelo responde un 25% a 30% más rápido y reduce drásticamente el consumo de memoria de la GPU.
                   </div>
@@ -1201,13 +1201,13 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Parámetros (P)</span>
+                  <span class="breakdown-row-badge">$P$ (Parámetros)</span>
                   <div class="breakdown-row-text">
                     <strong>Cantidad de Pesos Neuronales:</strong> Multiplica por 8 en Llama 3 8B (8 mil millones), por 70 en Llama 3 70B, o por 405 en Llama 3 405B.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Bits de Precisión (b)</span>
+                  <span class="breakdown-row-badge">$b$ (Bits/Parámetro)</span>
                   <div class="breakdown-row-text">
                     <strong>Nivel de Cuantización / Resolución:</strong> 
                     <ul style="margin: 0.3rem 0 0 1.2rem; padding: 0; font-size: 0.85rem;">
@@ -1218,25 +1218,25 @@
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">División entre 8</span>
+                  <span class="breakdown-row-badge">$b / 8$ (Bytes/Parámetro)</span>
                   <div class="breakdown-row-text">
                     <strong>Conversión de Bits a Bytes:</strong> Como 1 Byte = 8 bits, 16 bits equivalen a 2 Bytes por parámetro, y 4 bits equivalen a 0.5 Bytes por parámetro.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">P &times; (b / 8)</span>
+                  <span class="breakdown-row-badge">$P \times \frac{b}{8}$ (Memoria Base)</span>
                   <div class="breakdown-row-text">
                     <strong>Memoria Base del Modelo:</strong> En Llama 3 8B en 4 bits: $8 \times 0.5 = 4.0\text{ GB}$ de peso puro en almacenamiento y VRAM.
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">&times; 1.25 (+25%)</span>
+                  <span class="breakdown-row-badge">$\times 1.25$ (+25% KV Cache)</span>
                   <div class="breakdown-row-text">
                     <strong>Margen Obligatorio para KV Cache:</strong> Añade un 25% extra de memoria para almacenar las matrices de atención de las conversaciones previas (hasta 8k o 128k tokens) y evitar que la GPU sufra un error de Out-Of-Memory (OOM).
                   </div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">Total Estimado</span>
+                  <span class="breakdown-row-badge">$\text{VRAM}_{\text{mínima}}$</span>
                   <div class="breakdown-row-text">
                     <strong>Requisito Final:</strong> Para Llama 3 8B en INT4: $(8 \times 0.5) \times 1.25 \approx 5.0 - 5.5\text{ GB}$ de VRAM mínima (ideal para RTX 3060/4060 o Mac M1/M2/M3 con 8GB/16GB de memoria unificada).
                   </div>
