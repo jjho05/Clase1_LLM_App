@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Masterclass & Mini-Curso: Arquitectura de LLMs y Llama 3 | Meta AI</title>
-<meta name="description" content="Curso interactivo integral y modular sobre Large Language Models (LLMs), tokenización BPE, geometría de embeddings, mecanismo Multi-Head Attention, RoPE, cuantización GGUF e inferencia local de Meta Llama 3.">
+<title>Arquitectura de LLMs y Meta Llama 3 | Meta AI</title>
+<meta name="description" content="Curso interactivo sobre Large Language Models (LLMs), tokenización BPE, geometría de embeddings, auto-atención QKV, leyes de escala e inferencia local con Meta Llama 3.">
 
 <!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, Fira Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,15 +13,13 @@
 
 <style>
 /* ==========================================================================
-   SISTEMA DE DISEÑO OFICIAL META AI - PALETA Y VARIABLES
+   SISTEMA DE DISEÑO META AI - VARIABLES Y PALETA
    ========================================================================== */
 :root {
-  /* TEMA CLARO (Default Meta Standards) */
+  /* TEMA CLARO (Default) */
   --bg-page: #f8fafc;
   --bg-surface: #ffffff;
-  --bg-surface-elevated: #ffffff;
   --bg-subtle: #f1f5f9;
-  --bg-subtle-alt: #eef2f6;
   --bg-input: #ffffff;
   --bg-code: #0b1120;
   
@@ -34,7 +32,6 @@
   --text-muted: #64748b;
   --text-code: #e2e8f0;
   
-  /* Colores Corporativos Meta */
   --meta-blue: #0866ff;
   --meta-blue-hover: #0052cc;
   --meta-blue-subtle: rgba(8, 102, 255, 0.08);
@@ -43,7 +40,6 @@
   --accent-success: #059669;
   --accent-warning: #d97706;
   --accent-info: #0284c7;
-  --accent-purple: #7c3aed;
   
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
   --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
@@ -58,9 +54,7 @@
 [data-theme="dark"] {
   --bg-page: #080c14;
   --bg-surface: #0f172a;
-  --bg-surface-elevated: #162035;
   --bg-subtle: #162032;
-  --bg-subtle-alt: #1a273e;
   --bg-input: #0b1220;
   --bg-code: #060911;
   
@@ -103,7 +97,7 @@ body {
   line-height: 1.8;
 }
 
-/* Ambient Particles Canvas */
+/* Ambient Particles */
 #bg-canvas {
   position: fixed;
   top: 0; left: 0;
@@ -114,7 +108,7 @@ body {
 }
 
 /* ==========================================================================
-   HEADER PRINCIPAL Y NAVEGACIÓN
+   HEADER UNIFICADO (SIN DUPLICACIONES)
    ========================================================================== */
 .top-header {
   position: fixed;
@@ -132,7 +126,7 @@ body {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 2.5rem;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -141,7 +135,7 @@ body {
 .brand-wrapper {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
   text-decoration: none;
   color: var(--text-primary);
   flex-shrink: 0;
@@ -156,57 +150,64 @@ body {
 .brand-text {
   font-family: var(--font-disp);
   font-weight: 800;
-  font-size: 1.05rem;
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
 }
 
-.brand-badge {
-  background: var(--meta-blue-subtle);
-  color: var(--meta-blue);
-  border: 1px solid var(--meta-blue-border);
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 0.12rem 0.55rem;
-  border-radius: 6px;
-  letter-spacing: 0.02em;
-}
-
+/* Navegación Principal Limpia en PC */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 1.6rem;
+  gap: 1.2rem;
 }
 
 .nav-link-item {
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
-  transition: color 0.2s ease;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
-.nav-link-item:hover { color: var(--meta-blue); }
+.nav-link-item:hover, .nav-link-item.active {
+  color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+}
 
 .header-controls {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.6rem;
+}
+
+.quiz-pill-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+  border: 1px solid var(--meta-blue-border);
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  white-space: nowrap;
 }
 
 .btn-icon {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
-  padding: 0.45rem 0.85rem;
+  padding: 0.45rem 0.8rem;
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
   transition: all 0.2s ease;
   flex-shrink: 0;
 }
@@ -216,12 +217,12 @@ body {
   color: var(--meta-blue);
 }
 
-@media (max-width: 768px) {
-  .header-inner { padding: 0 1rem; }
+@media (max-width: 900px) {
   .nav-links { display: none; }
-  .brand-badge { display: none; }
+  .header-inner { padding: 0 1rem; }
   .btn-text-label { display: none; }
-  .btn-icon { padding: 0.45rem 0.6rem; }
+  .btn-icon { padding: 0.45rem 0.65rem; }
+  .quiz-pill-badge { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
 }
 
 /* Linear Progress Bar */
@@ -236,150 +237,178 @@ body {
 }
 
 /* ==========================================================================
-   BARRA SECUNDARIA DE NAVEGACIÓN FLOTANTE (STICKY MODULE BAR)
-   ========================================================================== */
-.module-sticky-bar {
-  position: sticky;
-  top: 64px;
-  z-index: 900;
-  background: rgba(248, 250, 252, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 0.6rem 0;
-  transition: background-color 0.25s ease;
-}
-
-[data-theme="dark"] .module-sticky-bar {
-  background: rgba(8, 12, 20, 0.85);
-}
-
-.sticky-inner {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  overflow-x: auto;
-  gap: 1rem;
-}
-
-.sticky-pills {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  white-space: nowrap;
-}
-
-.sticky-pill {
-  padding: 0.35rem 0.85rem;
-  border-radius: 20px;
-  font-size: 0.82rem;
-  font-weight: 700;
-  text-decoration: none;
-  color: var(--text-secondary);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  transition: all 0.2s ease;
-}
-
-.sticky-pill:hover, .sticky-pill.active {
-  background: var(--meta-blue);
-  color: #ffffff;
-  border-color: var(--meta-blue);
-}
-
-.quiz-score-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--meta-blue);
-  background: var(--meta-blue-subtle);
-  border: 1px solid var(--meta-blue-border);
-  padding: 0.35rem 0.85rem;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-
-/* ==========================================================================
-   ESPACIADO Y ESTRUCTURA DE CONTENEDOR PC & MÓVIL
+   CONTENEDOR PRINCIPAL Y ESPACIADO
    ========================================================================== */
 .main-container {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 3rem 2.5rem 8rem;
+  padding: 95px 2rem 7rem;
 }
 
 @media (max-width: 768px) {
-  .main-container { padding: 2rem 1rem 5rem; }
-  .sticky-inner { padding: 0 1rem; }
+  .main-container { padding: 85px 1.2rem 5rem; }
 }
 
-/* Module Section Container */
+/* ==========================================================================
+   HERO / RESUMEN ARQUITECTÓNICO (SIN ENLACES REPETIDOS)
+   ========================================================================== */
+.course-hero {
+  padding: 2.5rem 0 4.5rem;
+  margin-bottom: 3.5rem;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+@media (max-width: 980px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+
+.hero-badge-tag {
+  display: inline-block;
+  background: var(--meta-blue-subtle);
+  color: var(--meta-blue);
+  border: 1px solid var(--meta-blue-border);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  letter-spacing: 0.03em;
+  margin-bottom: 1.2rem;
+}
+
+.hero-title {
+  font-size: clamp(2.4rem, 4.2vw, 3.8rem);
+  font-family: var(--font-disp);
+  font-weight: 800;
+  line-height: 1.12;
+  color: var(--text-primary);
+  margin-bottom: 1.3rem;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+/* Tarjeta de Especificaciones Técnicas (Reemplaza la lista repetitiva de módulos) */
+.hero-specs-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 2rem;
+  box-shadow: var(--shadow-card);
+}
+
+.specs-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: var(--font-head);
+  color: var(--text-primary);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.specs-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.spec-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+}
+
+.spec-name {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.spec-val {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--meta-blue);
+}
+
+/* ==========================================================================
+   MÓDULOS Y TEMAS CON ESPACIADO ELEGANTE
+   ========================================================================== */
 .module-block {
-  margin-bottom: 8rem;
-  padding-top: 5rem;
+  margin-bottom: 6.5rem;
+  padding-top: 4rem;
   border-top: 1px solid var(--border-subtle);
 }
 
 .module-block:first-of-type {
   border-top: none;
-  padding-top: 2rem;
+  padding-top: 1rem;
 }
 
 .module-header {
-  margin-bottom: 4rem;
+  margin-bottom: 3.5rem;
 }
 
 .module-tag {
   font-family: var(--font-disp);
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 800;
   color: var(--meta-blue);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   display: inline-block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .module-title {
-  font-size: clamp(2.2rem, 3.5vw, 3rem);
+  font-size: clamp(2rem, 3.2vw, 2.7rem);
   font-family: var(--font-disp);
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1.15;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
 }
 
 .module-desc {
-  font-size: 1.18rem;
+  font-size: 1.12rem;
   color: var(--text-secondary);
   max-width: 90ch;
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
-/* Lesson Grid (Tema) with spacious desktop gap */
+/* Lesson Grid (Tema) */
 .lesson-grid {
   display: grid;
   grid-template-columns: 1.05fr 1.15fr;
-  gap: 4rem;
+  gap: 3.5rem;
   align-items: start;
-  margin-bottom: 7rem;
+  margin-bottom: 5.5rem;
 }
 
 @media (max-width: 1080px) {
-  .lesson-grid { grid-template-columns: 1fr; gap: 3rem; margin-bottom: 5rem; }
+  .lesson-grid { grid-template-columns: 1fr; gap: 2.5rem; margin-bottom: 4rem; }
 }
 
 /* Theory Column */
 .theory-col {
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
+  gap: 1.6rem;
 }
 
 .tema-badge {
@@ -388,7 +417,7 @@ body {
   gap: 0.4rem;
   background: var(--meta-blue-subtle);
   border: 1px solid var(--meta-blue-border);
-  padding: 0.35rem 0.85rem;
+  padding: 0.3rem 0.8rem;
   border-radius: 6px;
   font-size: 0.82rem;
   font-weight: 700;
@@ -397,7 +426,7 @@ body {
 }
 
 .tema-h3 {
-  font-size: 1.85rem;
+  font-size: 1.75rem;
   font-family: var(--font-head);
   font-weight: 700;
   line-height: 1.25;
@@ -405,44 +434,44 @@ body {
 }
 
 .prose-p {
-  font-size: 1.08rem;
+  font-size: 1.05rem;
   color: var(--text-secondary);
-  line-height: 1.8;
+  line-height: 1.75;
 }
 
 .callout-box {
   background: var(--bg-subtle);
   border-left: 4px solid var(--meta-blue);
-  padding: 1.4rem 1.6rem;
-  border-radius: 0 12px 12px 0;
+  padding: 1.2rem 1.5rem;
+  border-radius: 0 10px 10px 0;
   border-top: 1px solid var(--border-subtle);
   border-right: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .callout-title {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 800;
   color: var(--meta-blue);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.4rem;
 }
 
 .callout-text {
-  font-size: 1rem;
+  font-size: 0.98rem;
   color: var(--text-primary);
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 /* Formula Block */
 .formula-block {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
-  padding: 1.2rem 1.5rem;
+  padding: 1.1rem 1.4rem;
   border-radius: 10px;
   font-family: var(--font-mono);
-  font-size: 1.02rem;
+  font-size: 0.98rem;
   color: var(--meta-blue);
   text-align: center;
   overflow-x: auto;
@@ -452,15 +481,15 @@ body {
 .code-box {
   background: var(--bg-code);
   border: 1px solid var(--border-strong);
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   font-family: var(--font-mono);
 }
 
 .code-header {
   background: rgba(255, 255, 255, 0.05);
-  padding: 0.6rem 1.2rem;
-  font-size: 0.8rem;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
@@ -468,7 +497,7 @@ body {
 }
 
 .code-content {
-  padding: 1.2rem 1.4rem;
+  padding: 1.1rem 1.3rem;
   font-size: 0.88rem;
   color: var(--text-code);
   line-height: 1.65;
@@ -480,8 +509,8 @@ body {
   background: var(--bg-surface);
   border: 1.5px solid var(--border-subtle);
   border-radius: 14px;
-  padding: 1.6rem;
-  margin-top: 1rem;
+  padding: 1.5rem;
+  margin-top: 0.8rem;
   box-shadow: var(--shadow-sm);
 }
 
@@ -489,7 +518,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.8rem;
 }
 
 .quiz-tag {
@@ -502,21 +531,21 @@ body {
 
 .quiz-question {
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   color: var(--text-primary);
-  margin-bottom: 1rem;
+  margin-bottom: 0.9rem;
   line-height: 1.5;
 }
 
 .quiz-option {
   display: block;
-  padding: 0.8rem 1.1rem;
-  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
   border: 1px solid var(--border-subtle);
   background: var(--bg-subtle);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.55rem;
   cursor: pointer;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: var(--text-secondary);
   transition: all 0.2s ease;
 }
@@ -547,45 +576,21 @@ body {
   display: none;
 }
 
-.feature-list {
-  list-style: none;
-  display: grid;
-  gap: 1.1rem;
-}
-
-.feature-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.9rem;
-  font-size: 1.04rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-}
-
-.feature-bullet {
-  width: 7px;
-  height: 7px;
-  background: var(--meta-blue);
-  border-radius: 50%;
-  margin-top: 0.7rem;
-  flex-shrink: 0;
-}
-
 /* ==========================================================================
    WORKBENCH COLUMN (INTERACTIVES)
    ========================================================================== */
 .workbench-col {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  padding: 2.6rem;
+  border-radius: 18px;
+  padding: 2.2rem;
   box-shadow: var(--shadow-card);
   position: relative;
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 @media (max-width: 768px) {
-  .workbench-col { padding: 1.6rem; }
+  .workbench-col { padding: 1.5rem; }
 }
 
 .workbench-col:hover {
@@ -598,100 +603,28 @@ body {
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 1.2rem;
-  margin-bottom: 1.8rem;
+  padding-bottom: 1.1rem;
+  margin-bottom: 1.6rem;
 }
 
 .workbench-title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   font-family: var(--font-head);
   color: var(--text-primary);
 }
 
 .workbench-status {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--accent-success);
   background: rgba(5, 150, 105, 0.1);
-  padding: 0.25rem 0.65rem;
+  padding: 0.2rem 0.6rem;
   border-radius: 4px;
   letter-spacing: 0.02em;
 }
 
-/* ==========================================================================
-   COURSE HERO / OVERVIEW
-   ========================================================================== */
-.course-hero {
-  padding: 3rem 0 5rem;
-  margin-bottom: 3rem;
-}
-
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  gap: 4rem;
-  align-items: center;
-}
-
-@media (max-width: 960px) {
-  .hero-grid { grid-template-columns: 1fr; gap: 3rem; }
-}
-
-.hero-title {
-  font-size: clamp(2.6rem, 4.5vw, 4.2rem);
-  font-family: var(--font-disp);
-  font-weight: 800;
-  line-height: 1.1;
-  color: var(--text-primary);
-  margin-bottom: 1.5rem;
-}
-
-.hero-subtitle {
-  font-size: 1.25rem;
-  color: var(--text-secondary);
-  line-height: 1.75;
-  margin-bottom: 2.4rem;
-}
-
-.hero-modules-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  padding: 2.5rem;
-  box-shadow: var(--shadow-card);
-}
-
-.modules-list {
-  display: grid;
-  gap: 1.1rem;
-}
-
-.module-nav-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.1rem 1.4rem;
-  background: var(--bg-subtle);
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  text-decoration: none;
-  color: var(--text-primary);
-  font-weight: 600;
-  font-size: 0.98rem;
-  transition: all 0.2s ease;
-}
-
-.module-nav-item:hover {
-  border-color: var(--meta-blue);
-  background: var(--meta-blue-subtle);
-  color: var(--meta-blue);
-  transform: translateX(4px);
-}
-
-/* ==========================================================================
-   BUTTONS & INPUT CONTROLS
-   ========================================================================== */
+/* Buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -700,9 +633,9 @@ body {
   background: var(--meta-blue);
   color: #ffffff;
   font-weight: 700;
-  font-size: 1rem;
-  padding: 0.9rem 2rem;
-  border-radius: 12px;
+  font-size: 0.98rem;
+  padding: 0.85rem 1.8rem;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
   text-decoration: none;
@@ -724,9 +657,9 @@ body {
   color: var(--text-primary);
   border: 1px solid var(--border-strong);
   font-weight: 600;
-  font-size: 0.94rem;
-  padding: 0.7rem 1.35rem;
-  border-radius: 10px;
+  font-size: 0.92rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -742,7 +675,7 @@ body {
   background: var(--bg-input);
   border: 1.5px solid var(--border-subtle);
   border-radius: 10px;
-  padding: 0.9rem 1.2rem;
+  padding: 0.85rem 1.1rem;
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 1rem;
@@ -755,32 +688,29 @@ body {
   box-shadow: 0 0 0 3px rgba(8, 102, 255, 0.15);
 }
 
-/* ==========================================================================
-   LABORATORIES / WORKBENCHES (INTERACTIVES)
-   ========================================================================== */
-/* Lab 1.1 */
+/* Lab Specific Styling */
 .chat-window {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 1.6rem;
+  border-radius: 12px;
+  padding: 1.4rem;
 }
 
 .chat-bubble {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  padding: 1.1rem 1.4rem;
+  padding: 1rem 1.3rem;
   border-radius: 12px;
-  font-size: 1.12rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  min-height: 60px;
-  margin-bottom: 1.4rem;
+  min-height: 56px;
+  margin-bottom: 1.2rem;
   color: var(--text-primary);
 }
 
 .token-prob-grid {
   display: grid;
-  gap: 0.85rem;
+  gap: 0.75rem;
 }
 
 .token-prob-card {
@@ -789,7 +719,7 @@ body {
   justify-content: space-between;
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
-  padding: 0.9rem 1.2rem;
+  padding: 0.8rem 1.1rem;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -808,30 +738,28 @@ body {
   margin-top: 6px;
 }
 
-/* Lab 1.2 */
 .nlp-step-container {
   display: grid;
-  gap: 1.4rem;
+  gap: 1.2rem;
 }
 
 .nlp-step-box {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
-  padding: 1.2rem 1.4rem;
-  border-radius: 12px;
+  padding: 1.1rem 1.3rem;
+  border-radius: 10px;
 }
 
-/* Lab 2.1: Tokenizer */
 .token-chip-container {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding: 1.5rem;
+  padding: 1.4rem;
   background: var(--bg-subtle);
   border: 1.5px dashed var(--border-strong);
   border-radius: 12px;
-  min-height: 110px;
-  margin: 1.4rem 0;
+  min-height: 100px;
+  margin: 1.2rem 0;
 }
 
 .tok-badge {
@@ -840,39 +768,38 @@ body {
   align-items: center;
   background: var(--bg-surface);
   border: 1.5px solid var(--meta-blue);
-  padding: 0.55rem 0.9rem;
+  padding: 0.5rem 0.85rem;
   border-radius: 8px;
   box-shadow: var(--shadow-sm);
 }
 
-.tok-badge .txt { font-weight: 700; font-size: 1.08rem; color: var(--text-primary); font-family: var(--font-mono); }
-.tok-badge .id { font-size: 0.72rem; color: var(--meta-blue); font-weight: 700; margin-top: 0.2rem; }
+.tok-badge .txt { font-weight: 700; font-size: 1.05rem; color: var(--text-primary); font-family: var(--font-mono); }
+.tok-badge .id { font-size: 0.7rem; color: var(--meta-blue); font-weight: 700; margin-top: 0.2rem; }
 
 .token-metrics-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.1rem;
-  margin-top: 1.4rem;
+  gap: 1rem;
+  margin-top: 1.2rem;
 }
 
 .metric-pill {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
-  padding: 1rem;
-  border-radius: 12px;
+  padding: 0.9rem;
+  border-radius: 10px;
   text-align: center;
 }
 
-.metric-pill .val { font-size: 1.55rem; font-weight: 800; color: var(--meta-blue); font-family: var(--font-disp); }
-.metric-pill .lbl { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+.metric-pill .val { font-size: 1.5rem; font-weight: 800; color: var(--meta-blue); font-family: var(--font-disp); }
+.metric-pill .lbl { font-size: 0.78rem; color: var(--text-muted); font-weight: 600; }
 
-/* Lab 2.2: 2D Vector Canvas */
 .canvas-wrapper {
   width: 100%;
-  height: 350px;
+  height: 330px;
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   position: relative;
   touch-action: none;
@@ -880,21 +807,20 @@ body {
 
 #vec-canvas { width: 100%; height: 100%; }
 
-/* Lab 3.1: Attention Tokens */
 .attention-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
-  margin: 1.4rem 0;
+  gap: 0.75rem;
+  margin: 1.2rem 0;
 }
 
 .attention-token {
   background: var(--bg-subtle);
   border: 1.5px solid var(--border-subtle);
-  padding: 0.65rem 1.1rem;
+  padding: 0.6rem 1rem;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 1.02rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -906,7 +832,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Lab 3.2: Scale Slider */
 .scale-range {
   width: 100%;
   height: 8px;
@@ -914,7 +839,7 @@ body {
   border-radius: 4px;
   outline: none;
   -webkit-appearance: none;
-  margin: 1.8rem 0;
+  margin: 1.6rem 0;
 }
 
 .scale-range::-webkit-slider-thumb {
@@ -926,30 +851,29 @@ body {
   box-shadow: 0 0 10px rgba(8, 102, 255, 0.4);
 }
 
-/* Lab 4.2: Terminal */
 .terminal-shell {
   background: #0b1120;
   border: 1px solid #1e293b;
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   font-family: var(--font-mono);
 }
 
 .terminal-topbar {
   background: #1e293b;
-  padding: 0.8rem 1.3rem;
-  font-size: 0.84rem;
+  padding: 0.75rem 1.2rem;
+  font-size: 0.82rem;
   color: #94a3b8;
   display: flex;
   justify-content: space-between;
 }
 
 .terminal-content {
-  padding: 1.5rem;
+  padding: 1.4rem;
   color: #38bdf8;
-  font-size: 0.96rem;
+  font-size: 0.95rem;
   line-height: 1.7;
-  min-height: 180px;
+  min-height: 170px;
   white-space: pre-wrap;
 }
 
@@ -958,17 +882,16 @@ body {
   justify-content: space-between;
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  margin-top: 1.4rem;
-  font-size: 0.98rem;
+  padding: 0.9rem 1.4rem;
+  border-radius: 10px;
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
-/* Footer */
 .course-footer {
   border-top: 1px solid var(--border-subtle);
-  padding: 6rem 0 4rem;
+  padding: 5rem 0 3.5rem;
   text-align: center;
   background: var(--bg-surface);
 }
@@ -978,24 +901,30 @@ body {
 
 <body>
 
-<!-- Header Navigation -->
+<!-- Header Principal Limpio & Unificado -->
 <header class="top-header">
   <div class="header-inner">
     <a href="#overview" class="brand-wrapper">
       <svg class="meta-logo-svg" viewBox="0 0 36 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"/>
       </svg>
-      <span class="brand-text">Meta AI <span class="brand-badge">Llama 3 Masterclass</span></span>
+      <span class="brand-text">Meta AI</span>
     </a>
 
-    <div class="nav-links">
-      <a href="#modulo-1" class="nav-link-item">Módulo 1</a>
-      <a href="#modulo-2" class="nav-link-item">Módulo 2</a>
-      <a href="#modulo-3" class="nav-link-item">Módulo 3</a>
-      <a href="#modulo-4" class="nav-link-item">Módulo 4</a>
-    </div>
+    <!-- Navegación sin redundancias -->
+    <nav class="nav-links">
+      <a href="#modulo-1" class="nav-link-item">Módulo 1: NLP</a>
+      <a href="#modulo-2" class="nav-link-item">Módulo 2: Vectores</a>
+      <a href="#modulo-3" class="nav-link-item">Módulo 3: Transformers</a>
+      <a href="#modulo-4" class="nav-link-item">Módulo 4: Inferencia</a>
+    </nav>
 
     <div class="header-controls">
+      <div class="quiz-pill-badge" title="Progreso de Autoevaluación">
+        <span>Evaluación:</span>
+        <span id="quiz-counter-text">0 / 7</span>
+      </div>
+
       <button class="btn-icon" id="sound-btn" title="Alternar Audio">
         <span id="sound-icon">🔊</span>
         <span class="btn-text-label" id="sound-label">Audio ON</span>
@@ -1011,55 +940,47 @@ body {
 
 <div id="progress-bar"></div>
 
-<!-- Barra Secundaria Sticky de Módulos y Puntuación -->
-<div class="module-sticky-bar">
-  <div class="sticky-inner">
-    <div class="sticky-pills">
-      <a href="#modulo-1" class="sticky-pill">Módulo 1: NLP</a>
-      <a href="#modulo-2" class="sticky-pill">Módulo 2: Tokens & Vectores</a>
-      <a href="#modulo-3" class="sticky-pill">Módulo 3: Transformers</a>
-      <a href="#modulo-4" class="sticky-pill">Módulo 4: Inferencia Local</a>
-    </div>
-    <div class="quiz-score-badge">
-      <span>Evaluación:</span>
-      <span id="quiz-counter-text" style="font-weight: 800;">0 / 7 Respondidas</span>
-    </div>
-  </div>
-</div>
-
 <main class="main-container">
 
   <!-- ==========================================================================
-       COURSE OVERVIEW HERO
+       HERO: ESPECIFICACIONES TÉCNICAS (SIN ENLACES REPETITIVOS)
        ========================================================================== -->
   <section class="course-hero" id="overview">
     <div class="hero-grid">
       <div>
-        <span class="brand-badge" style="margin-bottom: 1.2rem; display: inline-block;">Meta AI Research · Formación Técnica Avanzada</span>
+        <span class="hero-badge-tag">Meta AI Research · Formación Técnica</span>
         <h1 class="hero-title">Arquitectura de Modelos de Lenguaje Grande (LLM)</h1>
-        <p class="hero-subtitle">Un mini-curso técnico estructurado por Módulos y Temas para dominar los fundamentos matemáticos, de ingeniería de tensores, auto-atención QKV y despliegue local cuantizado con Meta Llama 3.</p>
+        <p class="hero-subtitle">Un curso técnico interactivo estructurado en 4 módulos y 7 temas para dominar los fundamentos matemáticos, de ingeniería de tensores, auto-atención QKV y despliegue local cuantizado con Meta Llama 3.</p>
         <a href="#modulo-1" class="btn-primary">Comenzar Módulo 1</a>
       </div>
 
-      <div class="hero-modules-card">
-        <h3 style="font-size: 1.2rem; margin-bottom: 1.5rem; font-family: var(--font-head);">Índice Modular del Mini-Curso</h3>
-        <div class="modules-list">
-          <a href="#modulo-1" class="module-nav-item">
-            <span>Módulo 1: Fundamentos & Intuición NLP</span>
-            <span style="color: var(--meta-blue); font-weight: 800;">➔</span>
-          </a>
-          <a href="#modulo-2" class="module-nav-item">
-            <span>Módulo 2: Tokenización & Espacios Vectoriales</span>
-            <span style="color: var(--meta-blue); font-weight: 800;">➔</span>
-          </a>
-          <a href="#modulo-3" class="module-nav-item">
-            <span>Módulo 3: Transformers & Multi-Head Attention</span>
-            <span style="color: var(--meta-blue); font-weight: 800;">➔</span>
-          </a>
-          <a href="#modulo-4" class="module-nav-item">
-            <span>Módulo 4: Soberanía & Inferencia Local</span>
-            <span style="color: var(--meta-blue); font-weight: 800;">➔</span>
-          </a>
+      <!-- Tarjeta de Especificaciones Técnicas Oficiales de Llama 3 -->
+      <div class="hero-specs-card">
+        <div class="specs-title">
+          <span>Especificaciones Llama 3</span>
+          <span style="font-size: 0.78rem; color: var(--accent-success); background: rgba(5, 150, 105, 0.1); padding: 0.2rem 0.55rem; border-radius: 4px;">Open Weights</span>
+        </div>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-name">Vocabulario Tokenizer:</span>
+            <span class="spec-val">128,000 Tokens (BPE)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-name">Mecanismo de Atención:</span>
+            <span class="spec-val">Grouped-Query (GQA)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-name">Ventana de Contexto:</span>
+            <span class="spec-val">8k ➔ 128k Tokens</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-name">Variantes de Escala:</span>
+            <span class="spec-val">8B · 70B · 405B</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-name">Inferencia Local:</span>
+            <span class="spec-val">INT4 / GGUF (Desde ~5.5 GB)</span>
+          </div>
         </div>
       </div>
     </div>
@@ -1099,7 +1020,6 @@ body {
           <div class="code-content">import torch
 import torch.nn.functional as F
 
-# Logits de salida de la última capa lineal
 logits = model(input_ids).logits[:, -1, :] # Forma: [batch_size, vocab_size]
 probs = F.softmax(logits / temperature, dim=-1)
 next_token = torch.multinomial(probs, num_samples=1)</div>
@@ -1403,10 +1323,10 @@ print("IDs:", ids)       # [14781, 10582, 38125, 220, 0]</div>
           VRAM_Inferencia (GB) ≈ (Parámetros × Bytes_Precisión) × 1.2 + KV_Cache
         </div>
 
-        <ul class="feature-list">
-          <li class="feature-item"><span class="feature-bullet"></span><span><b>Llama 3 8B (INT4 Cuantizado):</b> Requiere solo ~5.5 GB de VRAM, ejecutable en laptops o GPUs domésticas.</span></li>
-          <li class="feature-item"><span class="feature-bullet"></span><span><b>Llama 3 70B (INT4 Cuantizado):</b> Requiere ~40 GB de VRAM (ejecutable en 2x RTX 3090/4090 o Mac M-Series con 64GB).</span></li>
-          <li class="feature-item"><span class="feature-bullet"></span><span><b>Llama 3 405B (FP16):</b> Requiere ~810 GB de VRAM en un clúster de 8x H100.</span></li>
+        <ul class="feature-list" style="list-style: none; display: grid; gap: 0.8rem;">
+          <li style="display: flex; align-items: flex-start; gap: 0.8rem; font-size: 1rem; color: var(--text-secondary);"><span style="width: 7px; height: 7px; background: var(--meta-blue); border-radius: 50%; margin-top: 0.7rem; flex-shrink: 0;"></span><span><b>Llama 3 8B (INT4 Cuantizado):</b> Requiere solo ~5.5 GB de VRAM, ejecutable en laptops o GPUs domésticas.</span></li>
+          <li style="display: flex; align-items: flex-start; gap: 0.8rem; font-size: 1rem; color: var(--text-secondary);"><span style="width: 7px; height: 7px; background: var(--meta-blue); border-radius: 50%; margin-top: 0.7rem; flex-shrink: 0;"></span><span><b>Llama 3 70B (INT4 Cuantizado):</b> Requiere ~40 GB de VRAM (ejecutable en 2x RTX 3090/4090 o Mac M-Series con 64GB).</span></li>
+          <li style="display: flex; align-items: flex-start; gap: 0.8rem; font-size: 1rem; color: var(--text-secondary);"><span style="width: 7px; height: 7px; background: var(--meta-blue); border-radius: 50%; margin-top: 0.7rem; flex-shrink: 0;"></span><span><b>Llama 3 405B (FP16):</b> Requiere ~810 GB de VRAM en un clúster de 8x H100.</span></li>
         </ul>
 
         <!-- Quiz Exprés 3.2 -->
@@ -1570,9 +1490,9 @@ print("IDs:", ids)       # [14781, 10582, 38125, 220, 0]</div>
 <!-- Course Footer -->
 <footer class="course-footer">
   <div style="max-width: 850px; margin: 0 auto; padding: 0 1.5rem;">
-    <h2 style="font-size: 2rem; font-family: var(--font-disp); margin-bottom: 0.9rem; color: var(--text-primary);">Has completado el Mini-Curso de LLMs</h2>
+    <h2 style="font-size: 2rem; font-family: var(--font-disp); margin-bottom: 0.9rem; color: var(--text-primary);">Has completado el Curso de Arquitectura de LLMs</h2>
     <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1.08rem;">Has cubierto los principios de modelado probabilístico, tokenización BPE, geometría de embeddings, auto-atención Transformer y telemetría de inferencia local.</p>
-    <a href="#overview" class="btn-secondary">Volver al Inicio del Mini-Curso</a>
+    <a href="#overview" class="btn-secondary">Volver al Inicio</a>
     <p style="font-size: 0.84rem; color: var(--text-muted); margin-top: 3rem;">Ecosistema Meta Llama 3 · Arquitectura de Modelos Abiertos de Inteligencia Artificial</p>
   </div>
 </footer>
@@ -1695,9 +1615,9 @@ print("IDs:", ids)       # [14781, 10582, 38125, 220, 0]</div>
     if(soundLabel) soundLabel.textContent = isMuted ? "Audio OFF" : "Audio ON";
   });
 
-  /* 4. PROGRESS BAR & STICKY PILLS ACTIVE TRACKING */
+  /* 4. PROGRESS BAR & ACTIVE NAV LINKS */
   var progressBar = document.getElementById("progress-bar");
-  var pills = document.querySelectorAll(".sticky-pill");
+  var navLinks = document.querySelectorAll(".nav-link-item");
   var modules = document.querySelectorAll(".module-block");
 
   window.addEventListener("scroll", function(){
@@ -1711,8 +1631,8 @@ print("IDs:", ids)       # [14781, 10582, 38125, 220, 0]</div>
       var top = mod.offsetTop;
       var height = mod.offsetHeight;
       if(scrollPos >= top && scrollPos < top + height){
-        pills.forEach(function(p){ p.classList.remove("active"); });
-        if(pills[idx]) pills[idx].classList.add("active");
+        navLinks.forEach(function(n){ n.classList.remove("active"); });
+        if(navLinks[idx]) navLinks[idx].classList.add("active");
       }
     });
   }, { passive: true });
@@ -1753,7 +1673,7 @@ print("IDs:", ids)       # [14781, 10582, 38125, 220, 0]</div>
         if(!isAnswered){
           isAnswered = true;
           answeredCount++;
-          if(quizCounterText) quizCounterText.textContent = answeredCount + " / " + totalQuizzes + " Respondidas";
+          if(quizCounterText) quizCounterText.textContent = answeredCount + " / " + totalQuizzes;
         }
       });
     });
