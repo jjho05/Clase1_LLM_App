@@ -457,6 +457,7 @@ function copyCode(btn){
   if(!codeBlock) return;
   var text = codeBlock.innerText;
   navigator.clipboard.writeText(text).then(function(){
+    if(window.SOUND) window.SOUND.playPop(580);
     var oldText = btn.textContent;
     btn.textContent = "¡Copiado!";
     btn.style.background = "#059669";

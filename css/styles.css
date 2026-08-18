@@ -3455,3 +3455,65 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
 [data-theme="dark"] .mobile-drawer-footer {
   border-top-color: rgba(255, 255, 255, 0.08);
 }
+
+/* Unit item rows en dark mode */
+[data-theme="dark"] .unit-item-row,
+[data-theme="dark"] a.unit-item-row {
+  background: rgba(16, 24, 43, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .unit-item-row:hover,
+[data-theme="dark"] a.unit-item-row:hover {
+  background: rgba(23, 34, 58, 0.9);
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px rgba(59, 130, 246, 0.14);
+}
+
+/* ==========================================================================
+   ESTILOS DE IMPRESIÓN OFICIAL PARA CERTIFICADOS
+   ========================================================================== */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .top-header,
+  #progress-bar,
+  #bg-canvas,
+  .mobile-drawer,
+  .mobile-backdrop,
+  .course-pagination-nav,
+  .course-footer,
+  .course-hero,
+  .tema-card,
+  .glossary-section,
+  .sources-section,
+  .btn-primary,
+  .quiz-pill-badge,
+  .header-controls {
+    display: none !important;
+  }
+
+  .certificate-card {
+    display: block !important;
+    border: 3px solid #0866ff !important;
+    box-shadow: none !important;
+    padding: 3rem 2rem !important;
+    margin: 2rem auto !important;
+    max-width: 800px !important;
+    page-break-inside: avoid;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .certificate-card input {
+    border: none !important;
+    background: transparent !important;
+    font-size: 1.5rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    color: #0866ff !important;
+  }
+}
