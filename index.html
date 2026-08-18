@@ -382,19 +382,17 @@ body {
 }
 
 .tema-subheading {
-  font-size: 1.15rem;
+  display: block;
+  font-size: 1.18rem;
   font-family: var(--font-head);
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 0.6rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.2rem;
-  line-height: 1.35;
+  margin-bottom: 0.65rem;
+  line-height: 1.45;
 }
 
 .tema-subheading-tag {
+  display: block;
   font-family: var(--font-disp);
   font-size: 0.72rem;
   font-weight: 850;
@@ -404,6 +402,7 @@ body {
   background: transparent;
   padding: 0;
   border: none;
+  margin-bottom: 0.25rem;
 }
 
 .prose-p {
@@ -1331,7 +1330,8 @@ body {
   .slider-header { font-size: 0.85rem; }
   .interactive-canvas-2d { max-width: 100%; height: auto; touch-action: none; }
   .glossary-row-item { padding: 1rem 0.9rem; }
-  .source-card { padding: 1.1rem 0.9rem; }
+  .course-hero div { flex-direction: column; width: 100%; }
+  .btn-primary, .btn-secondary { width: 100%; box-sizing: border-box; text-align: center; justify-content: center; }
   .course-footer { padding: 3.5rem 1rem 2.5rem; }
 }
 
@@ -1397,7 +1397,7 @@ body {
 
     <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
       <a href="#modulo-1" class="btn-primary">Empezar el Curso</a>
-      <a href="#glosario" class="btn-secondary">Glosario Técnico de 16 Conceptos</a>
+      <a href="#glosario" class="btn-secondary">Glosario Técnico (24 Conceptos)</a>
     </div>
   </section>
 
