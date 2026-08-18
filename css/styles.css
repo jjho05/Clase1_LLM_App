@@ -1231,6 +1231,141 @@ a.step-flow-item:hover {
   margin-top: 1.2rem;
 }
 
+/* Tarjetas de Parámetros Interactivas */
+.param-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.param-card:focus-within,
+.param-card:hover {
+  border-color: var(--meta-blue);
+  box-shadow: 0 4px 14px rgba(8, 102, 255, 0.08);
+}
+
+.param-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.param-badge {
+  background: rgba(8, 102, 255, 0.12);
+  color: var(--meta-blue);
+  border: 1px solid rgba(8, 102, 255, 0.25);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+[data-theme="dark"] .param-badge {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border-color: rgba(59, 130, 246, 0.35);
+}
+
+/* Botones de Presets / Casos Preconfigurados */
+.preset-pills-row {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
+}
+
+.preset-pill-btn {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-strong);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.45rem 0.95rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.preset-pill-btn:hover {
+  border-color: var(--meta-blue);
+  color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+}
+
+.preset-pill-btn.active {
+  background: var(--meta-blue);
+  color: #ffffff;
+  border-color: var(--meta-blue);
+  box-shadow: 0 3px 10px rgba(8, 102, 255, 0.3);
+}
+
+/* Medidores de Afinidad / Barras de Rendimiento */
+.affinity-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.8rem;
+}
+
+.affinity-meter-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.affinity-meter-header b {
+  font-weight: 700;
+}
+
+.affinity-track {
+  height: 10px;
+  background: var(--border-subtle);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.affinity-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Marco de Canvas de Workbench */
+.workbench-canvas-frame {
+  background: #0b1120;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+}
+
+.workbench-canvas-header {
+  background: #1e293b;
+  padding: 0.65rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #94a3b8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono, monospace);
+}
+
+
 /* Interactive Components */
 .chat-window {
   background: var(--bg-surface);
@@ -3680,6 +3815,8 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
 [data-theme="dark"] a.unit-item-row:hover {
   background: rgba(23, 34, 58, 0.9);
   border-color: rgba(96, 165, 250, 0.4);
+}
+
 /* ==========================================================================
    ESTILOS ESPECÍFICOS DE LA UNIDAD 1.3: FINE-TUNING, STATUS PILLS Y CHAT TEMPLATES
    ========================================================================== */
