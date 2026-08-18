@@ -2184,9 +2184,9 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
       </p>
     </div>
 
-    <!-- Barra de búsqueda instantánea -->
+    <!-- Barra de búsqueda instantánea sin emojis -->
     <div style="max-width: 550px; margin: 0 auto 1rem;">
-      <input type="text" id="glossary-search" class="input-field" placeholder="🔍 Buscar término o concepto (ej. GQA, LoRA, VRAM, Cache)..." style="font-size: 1rem; border-radius: 30px; padding: 0.85rem 1.4rem;">
+      <input type="text" id="glossary-search" class="input-field" placeholder="Buscar término o concepto (ej. GQA, LoRA, VRAM, Cache)..." style="font-size: 1rem; border-radius: 30px; padding: 0.85rem 1.4rem;">
     </div>
 
     <!-- Filtros de categoría -->
@@ -2210,7 +2210,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>Context Window (Ventana de Contexto)</b>
           <p>Límite superior de tokens (128,000 en Llama 3) que el modelo puede mantener en su memoria de atención simultáneamente sin truncar datos.</p>
         </div>
-        <div class="glossary-example-hint">💡 Equivale a procesar un libro de 300 páginas de una sola vez.</div>
+        <div class="glossary-example-hint">Referencia: Equivale a procesar un libro de 300 páginas de una sola vez.</div>
       </div>
 
       <!-- 2 -->
@@ -2223,7 +2223,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>KV Cache (Key-Value Cache)</b>
           <p>Almacenamiento en VRAM de los tensores Key y Value calculados previamente, evitando recalcular la atención de todo el historial en cada token.</p>
         </div>
-        <div class="glossary-example-hint">⚡ Acelera la generación de $O(N^2)$ a $O(N)$ operaciones por token.</div>
+        <div class="glossary-example-hint">Impacto: Acelera la generación de $O(N^2)$ a $O(N)$ operaciones por token.</div>
       </div>
 
       <!-- 3 -->
@@ -2236,7 +2236,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>Grouped-Query Attention (GQA)</b>
           <p>Esquema de atención donde múltiples cabezales de Query comparten un solo cabezal Key/Value, reduciendo la memoria en un 75%.</p>
         </div>
-        <div class="glossary-example-hint">📐 Llama 3 8B utiliza 32 cabezales Q agrupados en 8 cabezales KV.</div>
+        <div class="glossary-example-hint">Especificación: Llama 3 8B utiliza 32 cabezales Q agrupados en 8 cabezales KV.</div>
       </div>
 
       <!-- 4 -->
@@ -2249,7 +2249,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>Cuantización (Quantization - INT4 / GGUF / AWQ)</b>
           <p>Conversión de pesos neuronales de punto flotante de 16 bits (FP16) a enteros de 4 u 8 bits (INT4/INT8) para reducir el tamaño en disco y VRAM.</p>
         </div>
-        <div class="glossary-example-hint">📉 Reduce un modelo de 16 GB a solo 5.5 GB para correr en laptops.</div>
+        <div class="glossary-example-hint">Rendimiento: Reduce un modelo de 16 GB a solo 5.5 GB para correr en laptops.</div>
       </div>
 
       <!-- 5 -->
@@ -2262,7 +2262,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>Alucinación (Hallucination)</b>
           <p>Generación de afirmaciones factualmente incorrectas con alta confianza gramatical, producto del sesgo probabilístico del modelo.</p>
         </div>
-        <div class="glossary-example-hint">🛡️ Se mitiga integrando bases de conocimiento con RAG.</div>
+        <div class="glossary-example-hint">Mitigación: Se corrige integrando bases de conocimiento con RAG.</div>
       </div>
 
       <!-- 6 -->
@@ -2275,7 +2275,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>LoRA & QLoRA (Low-Rank Adaptation)</b>
           <p>Técnica de ajuste fino paramétrico eficiente (PEFT) que congela los pesos base y solo entrena matrices pequeñas de bajo rango.</p>
         </div>
-        <div class="glossary-example-hint">🎯 Permite entrenar Llama 3 con solo 0.1% de los parámetros activos.</div>
+        <div class="glossary-example-hint">Eficiencia: Permite entrenar Llama 3 con solo 0.1% de los parámetros activos.</div>
       </div>
 
       <!-- 7 -->
@@ -2288,7 +2288,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>RoPE (Rotary Position Embedding)</b>
           <p>Técnica de codificación posicional que rota los vectores $Q$ y $K$ en el plano complejo para capturar distancias relativas en secuencias largas.</p>
         </div>
-        <div class="glossary-example-hint">🔄 Base técnica que permite extender el contexto a 128k tokens.</div>
+        <div class="glossary-example-hint">Fundamento: Base técnica que permite extender el contexto a 128k tokens.</div>
       </div>
 
       <!-- 8 -->
@@ -2301,7 +2301,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>Time-To-First-Token (TTFT)</b>
           <p>Tiempo de latencia inicial transcurrido desde que se despacha el prompt hasta que el primer token es proyectado en la pantalla del usuario.</p>
         </div>
-        <div class="glossary-example-hint">⏱️ Métrica crítica de experiencia de usuario en tiempo real.</div>
+        <div class="glossary-example-hint">Métrica: Indicador crítico de experiencia de usuario en tiempo real.</div>
       </div>
 
       <!-- 9 -->
@@ -2314,7 +2314,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>SFT (Supervised Fine-Tuning)</b>
           <p>Etapa de entrenamiento supervisado donde el modelo aprende a responder en formato de diálogo humano (asistente) usando pares instrucción-respuesta.</p>
         </div>
-        <div class="glossary-example-hint">📚 Transforma un modelo base de texto en un asistente conversacional (Instruct).</div>
+        <div class="glossary-example-hint">Objetivo: Transforma un modelo base de texto en un asistente conversacional (Instruct).</div>
       </div>
 
       <!-- 10 -->
@@ -2327,7 +2327,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>DPO (Direct Preference Optimization)</b>
           <p>Algoritmo de alineación que optimiza directamente la política del modelo contra preferencias humanas sin requerir un modelo de recompensa complejo.</p>
         </div>
-        <div class="glossary-example-hint">✨ Más estable y rápido que el clásico RLHF con PPO.</div>
+        <div class="glossary-example-hint">Ventaja: Más estable y rápido que el clásico RLHF con PPO.</div>
       </div>
 
       <!-- 11 -->
@@ -2340,7 +2340,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>RAG (Retrieval-Augmented Generation)</b>
           <p>Patrón de arquitectura que recupera fragmentos de documentos externos relevantes y los inyecta en el prompt antes de generar la respuesta.</p>
         </div>
-        <div class="glossary-example-hint">🔍 Permite a Llama 3 consultar manuales internos y bases de datos privadas.</div>
+        <div class="glossary-example-hint">Aplicación: Permite a Llama 3 consultar manuales internos y bases de datos privadas.</div>
       </div>
 
       <!-- 12 -->
@@ -2353,7 +2353,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>Perplejidad (Perplexity - PPL)</b>
           <p>Métrica matemática intrínseca que evalúa la incertidumbre del modelo al predecir texto. Cuanto menor sea la perplejidad, mejor es el modelo.</p>
         </div>
-        <div class="glossary-example-hint">📊 Mide qué tan sorprendido queda el modelo ante una palabra real.</div>
+        <div class="glossary-example-hint">Métrica: Mide qué tan sorprendido queda el modelo ante una palabra real.</div>
       </div>
 
       <!-- 13 -->
@@ -2366,7 +2366,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>FlashAttention-2</b>
           <p>Reimplementación a bajo nivel (CUDA) del cómputo de atención que minimiza las transferencias lentas a la memoria HBM de la GPU.</p>
         </div>
-        <div class="glossary-example-hint">🚀 Logra aceleraciones de entre 2x y 4x en el entrenamiento de Transformers.</div>
+        <div class="glossary-example-hint">Rendimiento: Logra aceleraciones de entre 2x y 4x en el entrenamiento de Transformers.</div>
       </div>
 
       <!-- 14 -->
@@ -2379,7 +2379,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>MoE (Mixture of Experts)</b>
           <p>Arquitectura donde solo una fracción de las redes neuronales (expertos) se activan para cada token individual, acelerando la inferencia.</p>
         </div>
-        <div class="glossary-example-hint">⚡ Permite tener modelos de 50B parámetros que gastan como uno de 10B.</div>
+        <div class="glossary-example-hint">Eficiencia: Permite tener modelos de 50B parámetros que gastan como uno de 10B.</div>
       </div>
 
       <!-- 15 -->
@@ -2392,7 +2392,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>Top-p (Nucleus Sampling) & Top-k</b>
           <p>Estrategias de filtrado de logits: Top-p selecciona el subconjunto más pequeño de tokens cuya suma de probabilidad alcance $p$ (ej. 0.90).</p>
         </div>
-        <div class="glossary-example-hint">✂️ Corta la 'cola larga' de palabras absurdas o incoherentes.</div>
+        <div class="glossary-example-hint">Control: Corta la cola larga de palabras absurdas o incoherentes.</div>
       </div>
 
       <!-- 16 -->
@@ -2405,7 +2405,82 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           <b>Pesos Abiertos (Open Weights)</b>
           <p>Filosofía de publicación de modelos donde se entregan los parámetros entrenados completos sin costo, permitiendo auditoría y despliegues soberanos.</p>
         </div>
-        <div class="glossary-example-hint">🔓 Filosofía central de Meta con Llama 3 (8B, 70B y 405B).</div>
+        <div class="glossary-example-hint">Filosofía: Ecosistema abierto de Meta con Llama 3 (8B, 70B y 405B).</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SECCIÓN: FUENTES DE INFORMACIÓN REALES & DOCUMENTACIÓN OFICIAL
+       ========================================================================== -->
+  <section class="tema-card" id="fuentes-oficiales" style="margin-top: 4rem;">
+    <div class="tema-header">
+      <span class="tema-badge">Bibliografía & Recursos</span>
+      <h3 class="tema-title">Fuentes de Información Reales & Referencias Académicas</h3>
+    </div>
+
+    <p class="prose-p">
+      Todo el contenido técnico, fórmulas matemáticas y parámetros presentados en este curso están respaldados por investigaciones científicas publicadas y repositorios oficiales de código abierto:
+    </p>
+
+    <div class="examples-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin-top: 1.5rem;">
+      
+      <div class="example-card">
+        <div class="ex-title">Paper Oficial de Meta Llama 3</div>
+        <div class="ex-desc">
+          <b>"The Llama 3 Herd of Models"</b> (Meta AI Research, 2024).<br>
+          Detalla el entrenamiento en 15+ billones de tokens, la arquitectura GQA, el vocabulario BPE de 128k y los procesos de alineación DPO.
+          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/2407.21783" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 2407.21783 →</a></div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="ex-title">Paper Fundacional del Transformer</div>
+        <div class="ex-desc">
+          <b>"Attention Is All You Need"</b> (Vaswani et al., Google Brain, 2017).<br>
+          Introduce por primera vez la auto-atención por producto punto escalado ($Q, K, V$) y elimina la necesidad de capas recurrentes.
+          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 1706.03762 →</a></div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="ex-title">Leyes de Escala de Chinchilla</div>
+        <div class="ex-desc">
+          <b>"Training Compute-Optimal Large Language Models"</b> (Hoffmann et al., DeepMind, 2022).<br>
+          Demuestra la relación matemática óptima entre el número de parámetros y la cantidad de tokens de entrenamiento.
+          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/2203.15556" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 2203.15556 →</a></div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="ex-title">Grouped-Query Attention (GQA)</div>
+        <div class="ex-desc">
+          <b>"GQA: Training Generalized Multi-Query Transformer Models"</b> (Ainslie et al., 2023).<br>
+          Fundamento de la reducción de memoria KV Cache en un 75% implementado en Llama 3 8B y 70B.
+          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/2305.13245" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 2305.13245 →</a></div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="ex-title">Direct Preference Optimization (DPO)</div>
+        <div class="ex-desc">
+          <b>"Direct Preference Optimization: Your Language Model is Secretly a Reward Model"</b> (Rafailov et al., Stanford, 2023).<br>
+          Algoritmo matemático que reemplazó al RLHF tradicional en el ajuste fino de Llama 3 Instruct.
+          <div style="margin-top: 0.5rem;"><a href="https://arxiv.org/abs/2305.18290" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 700; text-decoration: none; font-size: 0.82rem;">Ver en arXiv: 2305.18290 →</a></div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="ex-title">Herramientas & Repositorios de Código</div>
+        <div class="ex-desc">
+          Enlaces oficiales para experimentar e implementar:
+          <ul style="margin-top: 0.4rem; padding-left: 1.2rem; font-size: 0.85rem; line-height: 1.6;">
+            <li><a href="https://github.com/meta-llama/llama3" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 600;">GitHub Oficial de Meta Llama 3</a></li>
+            <li><a href="https://huggingface.co/meta-llama" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 600;">Hugging Face Model Hub</a></li>
+            <li><a href="https://ollama.com" target="_blank" rel="noopener noreferrer" style="color: var(--meta-blue); font-weight: 600;">Ollama Local Engine Runtime</a></li>
+          </ul>
+        </div>
       </div>
 
     </div>
@@ -2416,7 +2491,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
        ========================================================================== -->
   <section class="certificate-card" id="certificate-panel">
     <span class="certificate-badge">Certificado de Finalización</span>
-    <h3 class="certificate-title">¡Evaluación Superada con Éxito!</h3>
+    <h3 class="certificate-title">Evaluación Superada con Éxito</h3>
     <p style="color: var(--text-secondary); max-width: 60ch; margin: 0.5rem auto 1.5rem; font-size: 1.05rem;">
       Has respondido correctamente las 7 preguntas de autoevaluación del curso <b>Arquitectura de LLMs & Meta Llama 3</b>.
     </p>
@@ -2661,7 +2736,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           if(feedback){
             feedback.style.display = "block";
             feedback.style.color = "var(--accent-success)";
-            feedback.textContent = "✓ ¡Correcto! Has comprendido la idea.";
+            feedback.textContent = "Correcto: Has comprendido la idea central.";
           }
         } else {
           opt.classList.add("incorrect");
@@ -2669,7 +2744,7 @@ stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
           if(feedback){
             feedback.style.display = "block";
             feedback.style.color = "#dc2626";
-            feedback.textContent = "✗ Respuesta incorrecta. Revisa la explicación arriba.";
+            feedback.textContent = "Incorrecto: Revisa la explicación del concepto arriba.";
           }
         }
         updateQuizScore();
