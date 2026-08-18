@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Curso Interactivo: Arquitectura de LLMs y Meta Llama 3 | Meta AI</title>
-<meta name="description" content="Curso interactivo, visual y sencillo sobre cómo funcionan los Large Language Models (LLMs), tokenización, embeddings, transformers e inferencia local con Meta Llama 3.">
+<title>Curso Avanzado: Arquitectura de LLMs y Meta Llama 3 | Meta AI</title>
+<meta name="description" content="Curso interactivo, profundo y visual sobre cómo funcionan los Large Language Models (LLMs), tokenización BPE, embeddings, atención QKV, GQA, leyes de escala e inferencia local con Meta Llama 3.">
 
 <!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, Fira Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -291,6 +291,44 @@ body {
   max-width: 85ch;
 }
 
+/* Ficha Técnica de Llama 3 */
+.tech-spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.spec-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.spec-card .spec-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+.spec-card .spec-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--meta-blue);
+  font-family: var(--font-disp);
+}
+
+.spec-card .spec-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
 /* Módulos */
 .module-block {
   margin-bottom: 6rem;
@@ -412,6 +450,22 @@ body {
   line-height: 1.75;
 }
 
+/* Callout de Ingeniería */
+.engineering-callout {
+  background: rgba(8, 102, 255, 0.04);
+  border-left: 4px solid var(--meta-blue);
+  padding: 1.2rem 1.4rem;
+  border-radius: 0 12px 12px 0;
+  margin: 1.5rem 0;
+}
+
+.engineering-callout b {
+  color: var(--meta-blue);
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.92rem;
+}
+
 /* ==========================================================================
    BANCO DE PRUEBAS / LABORATORIO INTERACTIVO (CON BOTONES DE LIMPIAR)
    ========================================================================== */
@@ -490,13 +544,14 @@ body {
 .chat-bubble {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
-  padding: 0.9rem 1.2rem;
+  padding: 1.1rem 1.4rem;
   border-radius: 10px;
-  font-size: 1.08rem;
+  font-size: 1.15rem;
   font-weight: 600;
-  min-height: 52px;
+  min-height: 58px;
   margin-bottom: 1.2rem;
   color: var(--text-primary);
+  line-height: 1.6;
 }
 
 .token-prob-grid {
@@ -526,6 +581,26 @@ body {
   background: var(--meta-blue);
   border-radius: 3px;
   margin-top: 5px;
+}
+
+/* Resultado Final de Frase */
+.final-result-card {
+  background: rgba(5, 150, 105, 0.08);
+  border: 1.5px solid var(--accent-success);
+  border-radius: 12px;
+  padding: 1.4rem;
+  margin-top: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.final-result-card .title {
+  color: var(--accent-success);
+  font-weight: 800;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .token-chip-container {
@@ -817,11 +892,43 @@ body {
   margin: 1.2rem 0;
 }
 
+.code-box {
+  background: var(--bg-code);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  margin: 1.5rem 0;
+}
+
+.code-header {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 1rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+}
+
+.code-content {
+  padding: 1rem 1.2rem;
+  font-size: 0.88rem;
+  color: var(--text-code);
+  line-height: 1.65;
+  overflow-x: auto;
+}
+
 .course-footer {
   border-top: 1px solid var(--border-subtle);
   padding: 5rem 0 3.5rem;
   text-align: center;
   background: var(--bg-surface);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 </style>
@@ -880,13 +987,39 @@ body {
 <main class="main-container">
 
   <!-- ==========================================================================
-       HERO PRINCIPAL
+       HERO PRINCIPAL CON FICHA TÉCNICA OFICIAL
        ========================================================================== -->
   <section class="course-hero" id="overview">
-    <span class="hero-badge-tag">Meta AI Research · Formación Técnica</span>
+    <span class="hero-badge-tag">Meta AI Research · Formación Técnica Integral</span>
     <h1 class="hero-title">Arquitectura de Modelos de Lenguaje Grande (LLM)</h1>
-    <p class="hero-subtitle">Una guía interactiva diseñada para que cualquier persona comprenda con claridad cómo la Inteligencia Artificial procesa ideas humanas, fragmenta el texto en números y genera respuestas inteligentes con Meta Llama 3.</p>
-    <a href="#modulo-1" class="btn-primary">Empezar el Curso</a>
+    <p class="hero-subtitle">Un curso interactivo, profundo y riguroso diseñado para que cualquier persona entienda desde las bases matemáticas hasta la ingeniería de producción: cómo la Inteligencia Artificial tokeniza ideas, computa vectores en espacios latentes, ejecuta auto-atención QKV y corre de manera autónoma en hardware local con Meta Llama 3.</p>
+    
+    <div class="tech-spec-grid">
+      <div class="spec-card">
+        <div class="spec-title">Vocabulario BPE</div>
+        <div class="spec-value">128,256 Tokens</div>
+        <div class="spec-desc">4x mayor que Llama 2, optimizado para español y código.</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-title">Ventana de Contexto</div>
+        <div class="spec-value">128,000 Tokens</div>
+        <div class="spec-desc">Capacidad para procesar libros enteros y repositorios.</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-title">Atención Eficiente</div>
+        <div class="spec-value">Grouped-Query (GQA)</div>
+        <div class="spec-desc">Reduce el uso de memoria KV Cache a alta velocidad.</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-title">Pesos Abiertos</div>
+        <div class="spec-value">8B · 70B · 405B</div>
+        <div class="spec-desc">Soberanía total para despliegues locales sin costos por token.</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <a href="#modulo-1" class="btn-primary">Empezar el Curso</a>
+    </div>
   </section>
 
   <!-- ==========================================================================
@@ -896,17 +1029,17 @@ body {
     <div class="module-header">
       <span class="module-tag">Módulo 1</span>
       <h2 class="module-title">Fundamentos & Procesamiento de Lenguaje Natural</h2>
-      <p class="module-desc">Descubre el corazón de la IA Generativa: cómo las máquinas predicen el lenguaje palabra por palabra mediante cálculos matemáticos de probabilidad.</p>
+      <p class="module-desc">Descubre el corazón de la IA Generativa: cómo las máquinas predicen el lenguaje palabra por palabra mediante cálculos matemáticos de probabilidad y muestreo estocástico.</p>
     </div>
 
     <!-- TEMA 1.1 -->
     <article class="tema-card" id="tema-1-1">
       <div class="tema-header">
         <span class="tema-badge">Tema 1.1</span>
-        <h3 class="tema-title">Modelado de Lenguaje Autoregresivo</h3>
+        <h3 class="tema-title">Modelado de Lenguaje Autoregresivo & Muestreo (Sampling)</h3>
       </div>
 
-      <p class="prose-p">A nivel técnico, un LLM como Llama 3 es una función matemática que analiza las palabras anteriores y calcula cuál es la palabra más probable que debería venir a continuación.</p>
+      <p class="prose-p">A nivel técnico, un LLM como Llama 3 es una <b>red neuronal autoregresiva</b>. Su único objetivo fundamental es calcular una distribución de probabilidad sobre todo su vocabulario de 128,256 tokens para responder a la pregunta: <i>"Dada la secuencia de palabras anteriores $x_1, x_2, \dots, x_t$, ¿cuál es el token $x_{t+1}$ más probable?"</i></p>
 
       <!-- SECCIÓN: ¿NO ENTENDISTE? TE LO EXPLICO FÁCIL -->
       <div class="easy-explainer-box">
@@ -918,41 +1051,74 @@ body {
       </div>
 
       <div class="formula-block">
-        Probabilidad(Siguiente Palabra) = Softmax(Puntuación / Temperatura)
+        $P(w_i | w_{<i}) = \frac{\exp(z_i / T)}{\sum_j \exp(z_j / T)}$ (Función Softmax con Temperatura $T$)
+      </div>
+
+      <div class="engineering-callout">
+        <b>Parámetros de Muestreo (Sampling):</b>
+        <p style="font-size: 0.95rem; color: var(--text-secondary);">
+          • <b>Temperatura ($T$):</b> Controla la uniformidad de las probabilidades. Con $T \to 0$ (Greedy), el modelo siempre elige el token con mayor puntaje (ideal para código y matemáticas). Con $T = 0.8$ o superior, distribuye la probabilidad, permitiendo respuestas creativas y variadas.<br>
+          • <b>Top-p (Nucleus Sampling):</b> Limita la elección al conjunto mínimo de tokens cuya probabilidad acumulada alcanza el umbral $p$ (típicamente 0.9), evitando palabras absurdas.
+        </p>
       </div>
 
       <!-- BANCO INTERACTIVO 1.1 -->
       <div class="workbench-section">
         <div class="workbench-top">
-          <span class="workbench-label">Prueba en Vivo: Simulador de Predicción de Palabras</span>
+          <span class="workbench-label">Laboratorio Interactivo: Simulador de Predicción y Construcción de Frases</span>
           <div class="workbench-actions">
-            <span class="workbench-tag">Interactivo</span>
+            <span class="workbench-tag">Simulador en Vivo</span>
             <button class="btn-reset-sm" id="p-replay-top">
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
-              <span>Reiniciar</span>
+              <span>Reiniciar Frase</span>
             </button>
           </div>
         </div>
 
         <div class="chat-window">
-          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600;">Frase actual construida:</p>
-          <div class="chat-bubble"><span id="p-text"></span><span style="color: var(--meta-blue); animation: blink 1s infinite;">|</span></div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 700;">PROMPT & TEXTO ACUMULADO:</p>
+          <div class="chat-bubble"><span id="p-text">El modelo Llama</span><span style="color: var(--meta-blue); animation: blink 1s infinite; font-weight: 800;"> |</span></div>
 
-          <div style="margin-bottom: 1rem;">
-            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.4rem;">
-              <span>Temperatura (Creatividad vs Precisión):</span>
-              <span id="temp-val-indicator" style="color: var(--meta-blue);">0.7</span>
+          <div style="margin-bottom: 1.2rem; background: var(--bg-subtle); padding: 0.9rem 1.1rem; border-radius: 10px; border: 1px solid var(--border-subtle);">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.4rem;">
+              <span>Temperatura ($T$ = Creatividad vs Determinismo):</span>
+              <span id="temp-val-indicator" style="color: var(--meta-blue); font-family: var(--font-mono);">0.7</span>
             </div>
             <input type="range" id="temp-slider" min="0.1" max="1.5" step="0.1" value="0.7" style="width: 100%; accent-color: var(--meta-blue);">
           </div>
 
-          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.6rem; font-weight: 600;">Haz clic en la opción más probable para continuar la frase:</p>
+          <p style="font-size: 0.85rem; color: var(--text-primary); margin-bottom: 0.6rem; font-weight: 700;">Haz clic en una de las predicciones calculadas por el modelo:</p>
           <div class="token-prob-grid" id="p-preds"></div>
+
+          <!-- RESULTADO FINAL DETALLADO -->
+          <div id="p-final-container" style="display: none;"></div>
         </div>
 
-        <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+        <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem;">
+          <span style="font-size: 0.82rem; color: var(--text-muted);">Paso: <b id="p-step-counter" style="color: var(--meta-blue);">1 / 3</b></span>
           <button class="btn-secondary" id="p-replay">Reiniciar Frase</button>
         </div>
+      </div>
+
+      <!-- SNIPPET DE CÓDIGO REAL EN PYTORCH -->
+      <div class="code-box">
+        <div class="code-header">
+          <span>PyTorch · Muestreo con Temperatura y Softmax</span>
+          <span>inference_step.py</span>
+        </div>
+        <div class="code-content">import torch
+import torch.nn.functional as F
+
+def sample_next_token(logits: torch.Tensor, temperature: float = 0.7) -> int:
+    # 1. Escalamiento de logits con temperatura
+    scaled_logits = logits / max(temperature, 1e-5)
+    
+    # 2. Conversión a distribución de probabilidades (Softmax)
+    probabilities = F.softmax(scaled_logits, dim=-1)
+    
+    # 3. Muestreo estocástico categórico
+    next_token_id = torch.multinomial(probabilities, num_samples=1)
+    return next_token_id.item()</div>
       </div>
 
       <!-- QUIZ 1.1 -->
@@ -961,10 +1127,10 @@ body {
           <span class="quiz-tag">Autoevaluación</span>
           <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 1 de 7</span>
         </div>
-        <div class="quiz-question">¿Qué pasa si ponemos la Temperatura en 0.0 (Greedy Decoding)?</div>
-        <div class="quiz-option" data-correct="false">A) La IA inventa palabras aleatorias sin sentido.</div>
-        <div class="quiz-option" data-correct="true">B) La IA escoge siempre la opción más segura y probable (100% predecible).</div>
-        <div class="quiz-option" data-correct="false">C) Se apaga la memoria de la computadora.</div>
+        <div class="quiz-question">¿Qué efecto matemático tiene fijar la Temperatura en $T = 0.0$ (Greedy Decoding)?</div>
+        <div class="quiz-option" data-correct="false">A) Genera palabras completamente aleatorias sin importar el contexto.</div>
+        <div class="quiz-option" data-correct="true">B) Colapsa la distribución y selecciona siempre el token con mayor logit (100% determinista).</div>
+        <div class="quiz-option" data-correct="false">C) Borra el historial de contexto en la memoria RAM.</div>
         <div class="quiz-feedback"></div>
       </div>
     </article>
@@ -976,7 +1142,7 @@ body {
         <h3 class="tema-title">El Pipeline de NLP & Tensores Numéricos</h3>
       </div>
 
-      <p class="prose-p">Las computadoras y tarjetas gráficas no entienden el abecedario ni el significado de las palabras; solo saben sumar y multiplicar números. El Procesamiento de Lenguaje Natural (NLP) es el puente que convierte las letras humanas en listas de números llamadas <b>tensores</b>.</p>
+      <p class="prose-p">Las unidades de procesamiento gráfico (GPUs) y aceleradores tensoriales (TPUs) son incapaces de entender letras, palabras o conceptos abstractos. Toda la magia del Procesamiento de Lenguaje Natural (NLP) consiste en transformar caracteres humanos en <b>tensores multidimensionales</b> (matrices de números flotantes de 16 bits).</p>
 
       <!-- SECCIÓN: ¿NO ENTENDISTE? -->
       <div class="easy-explainer-box">
@@ -990,7 +1156,7 @@ body {
       <!-- BANCO INTERACTIVO 1.2 -->
       <div class="workbench-section">
         <div class="workbench-top">
-          <span class="workbench-label">Prueba en Vivo: Cómo ve la IA tus palabras</span>
+          <span class="workbench-label">Prueba en Vivo: Cómo ve la IA tus palabras a través del Pipeline Tensorial</span>
           <div class="workbench-actions">
             <span class="workbench-tag">Selector</span>
             <button class="btn-reset-sm" id="nlp-reset-btn">
@@ -1004,19 +1170,20 @@ body {
           <button class="btn-secondary nlp-chip" data-ex="voice">Meta Voice</button>
           <button class="btn-secondary nlp-chip" data-ex="translate">Meta Translate</button>
           <button class="btn-secondary nlp-chip" data-ex="assistant">Meta Assistant</button>
+          <button class="btn-secondary nlp-chip" data-ex="code">Meta Code Llama</button>
         </div>
 
         <div class="nlp-step-container" style="display: grid; gap: 1rem;">
-          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: 10px;">
-            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700;">1. LO QUE ESCRIBE EL HUMANO:</span>
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1.1rem; border-radius: 10px;">
+            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 700;">1. ENTRADA HUMANA (CADENA DE TEXTO):</span>
             <div id="nlp-human-txt" style="font-weight: 700; font-size: 1.15rem; color: var(--text-primary); margin-top: 0.3rem;">reproducir música</div>
           </div>
-          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: 10px;">
-            <span style="font-size: 0.78rem; color: var(--meta-blue); font-weight: 700;">2. CÓMO LO LEE LA IA (CÓDIGOS ID NUMÉRICOS):</span>
-            <div id="nlp-tensor-box" style="font-family: var(--font-mono); margin-top: 0.3rem; font-size: 1rem; color: var(--meta-blue);">[4120, 892, 104]</div>
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1.1rem; border-radius: 10px;">
+            <span style="font-size: 0.78rem; color: var(--meta-blue); font-weight: 700;">2. VECTOR DE TOKENS (TENSORES NUMÉRICOS 1D):</span>
+            <div id="nlp-tensor-box" style="font-family: var(--font-mono); margin-top: 0.3rem; font-size: 1rem; color: var(--meta-blue); font-weight: 700;">[4120, 892, 104]</div>
           </div>
-          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: 10px;">
-            <span style="font-size: 0.78rem; color: var(--accent-success); font-weight: 700;">3. ACCIÓN O TEXTO QUE RESPONDE LA IA:</span>
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1.1rem; border-radius: 10px;">
+            <span style="font-size: 0.78rem; color: var(--accent-success); font-weight: 700;">3. SALIDA / ACCIÓN INFERIDA:</span>
             <div id="nlp-out-txt" style="font-weight: 700; color: var(--accent-success); margin-top: 0.3rem; font-size: 1.05rem;">Ejecutando streaming de audio</div>
           </div>
         </div>
@@ -1028,9 +1195,9 @@ body {
           <span class="quiz-tag">Autoevaluación</span>
           <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 2 de 7</span>
         </div>
-        <div class="quiz-question">¿Por qué es obligatorio convertir el texto en números para la IA?</div>
+        <div class="quiz-question">¿Por qué es obligatorio convertir el texto en tensores numéricos para la IA?</div>
         <div class="quiz-option" data-correct="false">A) Porque el idioma español no se puede escribir en computadoras.</div>
-        <div class="quiz-option" data-correct="true">B) Porque los procesadores de IA son calculadoras de alta velocidad que solo ejecutan operaciones con números.</div>
+        <div class="quiz-option" data-correct="true">B) Porque las GPUs son calculadoras masivas diseñadas para ejecutar álgebra lineal y multiplicación de matrices.</div>
         <div class="quiz-option" data-correct="false">C) Porque el teclado de la computadora se apagaría.</div>
         <div class="quiz-feedback"></div>
       </div>
@@ -1044,17 +1211,17 @@ body {
     <div class="module-header">
       <span class="module-tag">Módulo 2</span>
       <h2 class="module-title">Tokenización & Geometría Semántica</h2>
-      <p class="module-desc">Aprende cómo las palabras se parten en bloques eficientes (Tokens) y cómo se ubican en un mapa espacial de significados (Embeddings).</p>
+      <p class="module-desc">Aprende cómo las palabras se parten en bloques eficientes (Tokens) mediante Byte-Pair Encoding y cómo se ubican en un hiperespacio de significados continuos (Embeddings).</p>
     </div>
 
     <!-- TEMA 2.1 -->
     <article class="tema-card" id="tema-2-1">
       <div class="tema-header">
         <span class="tema-badge">Tema 2.1</span>
-        <h3 class="tema-title">Segmentación BPE (Byte-Pair Encoding)</h3>
+        <h3 class="tema-title">Segmentación BPE (Byte-Pair Encoding) en Llama 3</h3>
       </div>
 
-      <p class="prose-p">En lugar de memorizar cada palabra del diccionario, Llama 3 utiliza un vocabulario inteligente de <b>128,000 tokens</b> (piezas de palabras). Las palabras frecuentes son 1 solo token, y las palabras raras se parten en trozos más pequeños.</p>
+      <p class="prose-p">Llama 3 implementa un tokenizador <b>tiktoken BPE con un vocabulario de 128,256 tokens</b> (frente a los 32,000 de Llama 2). Esto reduce drásticamente el número de fragmentos necesarios para representar el español en un <b>15% a 20%</b>, lo que se traduce directamente en menor latencia y menor costo de computación.</p>
 
       <!-- SECCIÓN: ¿NO ENTENDISTE? -->
       <div class="easy-explainer-box">
@@ -1068,7 +1235,7 @@ body {
       <!-- BANCO INTERACTIVO 2.1 -->
       <div class="workbench-section">
         <div class="workbench-top">
-          <span class="workbench-label">Prueba en Vivo: Escribe lo que quieras para ver sus Tokens</span>
+          <span class="workbench-label">Laboratorio: Tokenizador BPE Interactivo en Tiempo Real</span>
           <div class="workbench-actions">
             <button class="btn-reset-sm" id="btn-clear-tokens" title="Borrar todo el texto del input">
               <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -1096,7 +1263,7 @@ body {
           </div>
           <div class="metric-pill">
             <div class="val" id="tk-val-cost">$0.0000</div>
-            <div class="lbl">Costo Est. en Servidor</div>
+            <div class="lbl">Costo Est. en Servidor ($0.20/1M)</div>
           </div>
         </div>
       </div>
@@ -1107,10 +1274,10 @@ body {
           <span class="quiz-tag">Autoevaluación</span>
           <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 3 de 7</span>
         </div>
-        <div class="quiz-question">¿Por qué Llama 3 es más rápido en español que versiones anteriores?</div>
-        <div class="quiz-option" data-correct="true">A) Porque su vocabulario de 128k parte menos las palabras en español, generando menos tokens.</div>
-        <div class="quiz-option" data-correct="false">B) Porque eliminó el uso de tarjetas de video.</div>
-        <div class="quiz-option" data-correct="false">C) Porque solo funciona en inglés.</div>
+        <div class="quiz-question">¿Cuál es la principal ventaja técnica de expandir el vocabulario BPE a 128k tokens en Llama 3?</div>
+        <div class="quiz-option" data-correct="true">A) Reduce el número de fragmentos por palabra en español y código, aumentando la velocidad de inferencia.</div>
+        <div class="quiz-option" data-correct="false">B) Permite que el modelo funcione sin necesidad de usar electricidad.</div>
+        <div class="quiz-option" data-correct="false">C) Traduce automáticamente todo el texto al idioma inglés.</div>
         <div class="quiz-feedback"></div>
       </div>
     </article>
@@ -1119,10 +1286,10 @@ body {
     <article class="tema-card" id="tema-2-2">
       <div class="tema-header">
         <span class="tema-badge">Tema 2.2</span>
-        <h3 class="tema-title">Embeddings & Álgebra Vectorial</h3>
+        <h3 class="tema-title">Embeddings, Espacios Latentes & Álgebra Vectorial</h3>
       </div>
 
-      <p class="prose-p">Un <b>Embedding</b> es la dirección matemática de una palabra en un espacio multidimensional. Las palabras con significados similares quedan ubicadas muy cerca unas de otras.</p>
+      <p class="prose-p">Un <b>Embedding</b> es la proyección de un token en un espacio vectorial de alta dimensión ($d_{model} = 4096$ en Llama 3 8B, y $d_{model} = 8192$ en 70B). Las relaciones semánticas se convierten en distancias geométricas: palabras con significados similares tienen vectores casi paralelos cuya <b>Similitud Coseno</b> se acerca a 1.0.</p>
 
       <!-- SECCIÓN: ¿NO ENTENDISTE? -->
       <div class="easy-explainer-box">
@@ -1134,13 +1301,13 @@ body {
       </div>
 
       <div class="formula-block">
-        Vector("Rey") - Vector("Hombre") + Vector("Mujer") ≈ Vector("Reina")
+        $\text{Similitud Coseno}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|}$ &nbsp;|&nbsp; $\vec{v}(\text{"Rey"}) - \vec{v}(\text{"Hombre"}) + \vec{v}(\text{"Mujer"}) \approx \vec{v}(\text{"Reina"})$
       </div>
 
       <!-- BANCO INTERACTIVO 2.2 -->
       <div class="workbench-section">
         <div class="workbench-top">
-          <span class="workbench-label">Prueba en Vivo: Mueve los puntos del mapa semántico</span>
+          <span class="workbench-label">Laboratorio: Espacio Vectorial 2D Interactivo</span>
           <div class="workbench-actions">
             <span class="workbench-tag">Arrastrable</span>
             <button class="btn-reset-sm" id="btn-reset-canvas" title="Restablecer puntos a su posición original">
@@ -1154,9 +1321,9 @@ body {
           <canvas id="vec-canvas"></canvas>
         </div>
 
-        <div style="background: var(--bg-surface); padding: 0.8rem 1rem; border-radius: 8px; margin-top: 1rem; display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 700; border: 1px solid var(--border-subtle);">
+        <div style="background: var(--bg-surface); padding: 0.9rem 1.2rem; border-radius: 8px; margin-top: 1rem; display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 700; border: 1px solid var(--border-subtle);">
           <span>Similitud Coseno calculada (Rey ↔ Reina):</span>
-          <span id="vec-sim-val" style="color: var(--meta-blue);">0.94</span>
+          <span id="vec-sim-val" style="color: var(--meta-blue); font-family: var(--font-mono);">0.94</span>
         </div>
 
         <div style="display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap;">
@@ -1171,10 +1338,10 @@ body {
           <span class="quiz-tag">Autoevaluación</span>
           <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 4 de 7</span>
         </div>
-        <div class="quiz-question">¿Qué significa que dos palabras tengan una Similitud Coseno cercana a 1.0?</div>
-        <div class="quiz-option" data-correct="false">A) Que son completamente opuestas en significado.</div>
-        <div class="quiz-option" data-correct="true">B) Que están muy relacionadas y comparten contexto semántico.</div>
-        <div class="quiz-option" data-correct="false">C) Que tienen exactamente el mismo número de letras.</div>
+        <div class="quiz-question">¿Qué propiedad geométrica permite la suma y resta de conceptos en un espacio de Embeddings?</div>
+        <div class="quiz-option" data-correct="false">A) Que todos los vectores tienen longitud cero.</div>
+        <div class="quiz-option" data-correct="true">B) Que las relaciones semánticas (como género o capitales) se codifican como vectores direccionales consistentes.</div>
+        <div class="quiz-option" data-correct="false">C) Que la memoria RAM se reordena alfabéticamente.</div>
         <div class="quiz-feedback"></div>
       </div>
     </article>
@@ -1187,17 +1354,17 @@ body {
     <div class="module-header">
       <span class="module-tag">Módulo 3</span>
       <h2 class="module-title">Arquitectura Transformer & Atención</h2>
-      <p class="module-desc">Comprende cómo la IA conecta ideas a larga distancia y cómo se calculan los recursos de hardware para ejecutarla.</p>
+      <p class="module-desc">Comprende la maquinaria interna del Transformer: cómo interactúan las matrices Query, Key y Value, cómo Grouped-Query Attention optimiza la memoria y cómo calcular la VRAM necesaria.</p>
     </div>
 
     <!-- TEMA 3.1 -->
     <article class="tema-card" id="tema-3-1">
       <div class="tema-header">
         <span class="tema-badge">Tema 3.1</span>
-        <h3 class="tema-title">Mecanismo de Auto-Atención (Self-Attention)</h3>
+        <h3 class="tema-title">Mecanismo de Auto-Atención (Q, K, V) & Grouped-Query Attention (GQA)</h3>
       </div>
 
-      <p class="prose-p">La <b>Auto-Atención</b> permite que la IA lea una frase completa y conecte cada palabra con las otras palabras que le dan sentido, resolviendo quién hace qué en la oración.</p>
+      <p class="prose-p">El mecanismo de <b>Scaled Dot-Product Attention</b> permite que cada token pregunte (Query $Q$) a todos los demás tokens qué información relevante poseen (Key $K$), y extraiga su contenido (Value $V$). En Llama 3, para evitar que la memoria de atención (KV Cache) explote con 128k de contexto, se utiliza <b>Grouped-Query Attention (GQA)</b>, donde múltiples cabezales de Query comparten un mismo cabezal de Key/Value.</p>
 
       <!-- SECCIÓN: ¿NO ENTENDISTE? -->
       <div class="easy-explainer-box">
@@ -1208,10 +1375,14 @@ body {
         <p class="easy-text">Si lees la frase: <i>"El perro no cruzó la calle porque <b>estaba</b> cansado"</i>, tu cerebro sabe al instante que el que estaba cansado era el <b>perro</b>, no la calle. El mecanismo de Auto-Atención es la lupa con la que la IA mira hacia atrás para saber a qué sujeto se refiere cada verbo.</p>
       </div>
 
+      <div class="formula-block">
+        $\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right) V$
+      </div>
+
       <!-- BANCO INTERACTIVO 3.1 -->
       <div class="workbench-section">
         <div class="workbench-top">
-          <span class="workbench-label">Prueba en Vivo: Haz clic en una palabra para ver a cuál presta atención</span>
+          <span class="workbench-label">Laboratorio: Matriz de Atención Inter-Token</span>
           <div class="workbench-actions">
             <span class="workbench-tag">Interactivo</span>
             <button class="btn-reset-sm" id="btn-reset-attn" title="Desmarcar selección de atención">
@@ -1223,9 +1394,9 @@ body {
 
         <div class="attention-grid" id="attn-tokens-container"></div>
 
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1rem; border-radius: 10px; margin-top: 1rem;">
-          <b style="color: var(--meta-blue); font-size: 0.85rem; text-transform: uppercase;">Conexión Detectada:</b>
-          <p id="attn-feedback-text" style="font-size: 0.95rem; color: var(--text-primary); margin-top: 0.2rem;">Haz clic en una palabra arriba para inspeccionar.</p>
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1.2rem; border-radius: 10px; margin-top: 1rem;">
+          <b style="color: var(--meta-blue); font-size: 0.85rem; text-transform: uppercase;">Conexión Semántica Detectada:</b>
+          <p id="attn-feedback-text" style="font-size: 0.98rem; color: var(--text-primary); margin-top: 0.3rem;">Haz clic en una palabra arriba para inspeccionar a cuáles presta mayor atención matemática.</p>
         </div>
       </div>
 
@@ -1235,10 +1406,10 @@ body {
           <span class="quiz-tag">Autoevaluación</span>
           <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 5 de 7</span>
         </div>
-        <div class="quiz-question">¿Cuál es la función principal del mecanismo de Auto-Atención?</div>
-        <div class="quiz-option" data-correct="true">A) Conectar palabras relacionadas dentro de la frase para entender el contexto global.</div>
-        <div class="quiz-option" data-correct="false">B) Cambiar el color de la pantalla del usuario.</div>
-        <div class="quiz-option" data-correct="false">C) Borrar los signos de puntuación del texto.</div>
+        <div class="quiz-question">¿Por qué Grouped-Query Attention (GQA) es fundamental para contextos largos de 128k en Llama 3?</div>
+        <div class="quiz-option" data-correct="true">A) Porque reduce drásticamente el tamaño del KV Cache en memoria VRAM al compartir cabezales de llaves y valores.</div>
+        <div class="quiz-option" data-correct="false">B) Porque apaga los procesadores de la tarjeta gráfica cuando no se usan.</div>
+        <div class="quiz-option" data-correct="false">C) Porque traduce el texto a números enteros de 8 bits sin usar multiplicación.</div>
         <div class="quiz-feedback"></div>
       </div>
     </article>
@@ -1247,10 +1418,10 @@ body {
     <article class="tema-card" id="tema-3-2">
       <div class="tema-header">
         <span class="tema-badge">Tema 3.2</span>
-        <h3 class="tema-title">Tamaño de Modelos & Memoria VRAM</h3>
+        <h3 class="tema-title">Leyes de Escala de Chinchilla & Dimensionamiento de VRAM</h3>
       </div>
 
-      <p class="prose-p">Los modelos vienen en diferentes tamaños medidos en <b>parámetros</b> (ej. 8B, 70B, 405B). Entre más grande es el modelo, más inteligente es, pero más memoria de tarjeta gráfica (VRAM) necesita.</p>
+      <p class="prose-p">Las <b>Leyes de Escala</b> dictan cuántos datos de entrenamiento necesita un modelo para alcanzar su máximo potencial. Meta entrenó Llama 3 8B con más de <b>15 billones (trillions) de tokens</b>. Para calcular cuánta memoria de video (VRAM) requiere un modelo para ejecutarse, usamos la fórmula de precisión:</p>
 
       <!-- SECCIÓN: ¿NO ENTENDISTE? -->
       <div class="easy-explainer-box">
@@ -1261,10 +1432,14 @@ body {
         <p class="easy-text">Un modelo <b>8B (8 mil millones de datos)</b> es como una guía de bolsillo: muy rápida y cabe en la memoria de una laptop normal. Un modelo <b>70B</b> es como una enciclopedia completa: mucho más sabia, pero necesitas una computadora de trabajo potente con varias tarjetas gráficas.</p>
       </div>
 
+      <div class="formula-block">
+        $\text{VRAM Estimada (GB)} \approx \left(\text{Parámetros en Billones} \times \frac{\text{Bits de Precisión}}{8}\right) \times 1.25$
+      </div>
+
       <!-- BANCO INTERACTIVO 3.2 -->
       <div class="workbench-section">
         <div class="workbench-top">
-          <span class="workbench-label">Calculadora: ¿Qué computadora necesitas para ejecutar Llama 3?</span>
+          <span class="workbench-label">Calculadora de Arquitectura & Hardware GPU</span>
           <div class="workbench-actions">
             <span class="workbench-tag">Calculadora</span>
             <button class="btn-reset-sm" id="btn-reset-scale" title="Restablecer configuración predeterminada">
@@ -1275,18 +1450,18 @@ body {
         </div>
 
         <div style="text-align: center; margin: 1rem 0;">
-          <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 700;">MODELO SELECCIONADO:</span>
+          <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 700;">TAMAÑO DEL MODELO:</span>
           <div id="scale-model-title" style="font-size: 2.2rem; font-weight: 800; color: var(--meta-blue); font-family: var(--font-disp);">8B Parámetros</div>
         </div>
 
         <input type="range" id="scale-range-slider" min="0" max="2" step="1" value="0" class="scale-range">
 
         <div style="margin-bottom: 1.2rem;">
-          <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Calidad de Compresión (Cuantización):</label>
+          <label style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">Precisión de Cuantización:</label>
           <select id="quant-select" class="input-field" style="padding: 0.6rem 0.9rem;">
-            <option value="16">FP16 (Calidad Original - Máxima memoria)</option>
-            <option value="8">INT8 (Balanceado)</option>
-            <option value="4" selected>INT4 / GGUF (Optimizado para laptops y PCs normales)</option>
+            <option value="16">FP16 / BF16 (16 bits - Precisión Original Completa)</option>
+            <option value="8">INT8 (8 bits - Balanceado con mínima degradación)</option>
+            <option value="4" selected>INT4 / GGUF (4 bits - Máxima compresión para PCs y Laptops)</option>
           </select>
         </div>
 
@@ -1296,7 +1471,7 @@ body {
             <div class="lbl">Memoria VRAM Necesaria</div>
           </div>
           <div class="metric-pill">
-            <div class="val" id="scale-hw-val">1x GPU RTX 3060</div>
+            <div class="val" id="scale-hw-val">1x GPU RTX 3060 (8GB) o Laptop</div>
             <div class="lbl">Equipo Recomendado</div>
           </div>
         </div>
@@ -1308,10 +1483,10 @@ body {
           <span class="quiz-tag">Autoevaluación</span>
           <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 6 de 7</span>
         </div>
-        <div class="quiz-question">¿Para qué sirve la cuantización (ej. comprimir a INT4)?</div>
-        <div class="quiz-option" data-correct="true">A) Para reducir drásticamente la memoria RAM necesaria y poder correr la IA en computadoras personales.</div>
-        <div class="quiz-option" data-correct="false">B) Para que el modelo hable en otros idiomas.</div>
-        <div class="quiz-option" data-correct="false">C) Para eliminar la conexión a internet.</div>
+        <div class="quiz-question">¿Para qué sirve la cuantización a 4 bits (INT4 / GGUF)?</div>
+        <div class="quiz-option" data-correct="true">A) Para reducir drásticamente los requerimientos de memoria VRAM y permitir ejecutar LLMs en laptops y GPUs comerciales.</div>
+        <div class="quiz-option" data-correct="false">B) Para que el modelo pueda aprender nuevos idiomas en tiempo real.</div>
+        <div class="quiz-option" data-correct="false">C) Para eliminar la necesidad de usar procesadores de computadora.</div>
         <div class="quiz-feedback"></div>
       </div>
     </article>
@@ -1324,17 +1499,17 @@ body {
     <div class="module-header">
       <span class="module-tag">Módulo 4</span>
       <h2 class="module-title">Soberanía Tecnológica & Inferencia Local</h2>
-      <p class="module-desc">Descubre por qué ejecutar modelos en tu propio equipo te da privacidad total, cero costos por mensaje y control absoluto.</p>
+      <p class="module-desc">Descubre por qué ejecutar modelos de pesos abiertos en tu propia infraestructura garantiza privacidad absoluta, costos fijos y control sobre tus datos y sistemas.</p>
     </div>
 
     <!-- TEMA 4.1 -->
     <article class="tema-card" id="tema-4-1">
       <div class="tema-header">
         <span class="tema-badge">Tema 4.1</span>
-        <h3 class="tema-title">Modelos Abiertos vs Nube Centralizada</h3>
+        <h3 class="tema-title">Modelos de Pesos Abiertos (Open Weights) vs APIs en la Nube</h3>
       </div>
 
-      <p class="prose-p">Meta publica Llama 3 con <b>Pesos Abiertos (Open Weights)</b>. Esto significa que puedes descargar el modelo a tu disco duro y usarlo para siempre sin depender de internet ni pagar suscripciones mensuales.</p>
+      <p class="prose-p">Meta publica Llama 3 con <b>Pesos Abiertos</b>. A diferencia de las plataformas cerradas donde pagas por cada llamada y tus prompts viajan a centros de datos remotos, con Llama 3 posees el artefacto matemático del modelo, permitiéndote auditar la seguridad, hacer Fine-Tuning (SFT / LoRA) y operar sin conexión a internet.</p>
 
       <!-- SECCIÓN: ¿NO ENTENDISTE? -->
       <div class="easy-explainer-box">
@@ -1348,18 +1523,18 @@ body {
       <!-- BANCO INTERACTIVO 4.1 -->
       <div class="workbench-section">
         <div class="workbench-top">
-          <span class="workbench-label">Comparativa Directa</span>
-          <span class="workbench-tag">Privacidad</span>
+          <span class="workbench-label">Matriz Comparativa de Arquitectura</span>
+          <span class="workbench-tag">Soberanía</span>
         </div>
 
         <div style="display: grid; gap: 1rem;">
           <div style="background: var(--bg-surface); padding: 1.2rem; border-radius: 10px; border-left: 4px solid var(--meta-blue); border: 1px solid var(--border-subtle); border-left-width: 4px; border-left-color: var(--meta-blue);">
-            <b style="color: var(--meta-blue); font-size: 1rem;">Meta Llama 3 Local:</b>
-            <p style="font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.3rem;">Tus datos nunca salen de tu empresa ni de tu computadora. 100% privado y costo fijo de luz/hardware.</p>
+            <b style="color: var(--meta-blue); font-size: 1rem;">Meta Llama 3 Local (On-Premise / Edge):</b>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.3rem;">Tus datos confidenciales nunca salen de tu red. Cumplimiento total de regulaciones (HIPAA, GDPR), costo predecible y cero riesgo de censura o corte de servicio.</p>
           </div>
           <div style="background: var(--bg-surface); padding: 1.2rem; border-radius: 10px; border-left: 4px solid var(--border-strong); border: 1px solid var(--border-subtle); border-left-width: 4px; border-left-color: var(--border-strong);">
-            <b style="font-size: 1rem;">Servicios Cerrados en la Nube:</b>
-            <p style="font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.3rem;">Tus mensajes viajan por internet a servidores ajenos y te cobran una tarifa por cada palabra generada.</p>
+            <b style="font-size: 1rem;">APIs Propietarias en la Nube:</b>
+            <p style="font-size: 0.92rem; color: var(--text-secondary); margin-top: 0.3rem;">Costos variables que escalan con el volumen de usuarios, dependencia absoluta del proveedor y potenciales riesgos de filtración de información empresarial.</p>
           </div>
         </div>
       </div>
@@ -1370,10 +1545,10 @@ body {
           <span class="quiz-tag">Autoevaluación</span>
           <span style="font-size: 0.8rem; color: var(--text-muted);">Pregunta 7 de 7</span>
         </div>
-        <div class="quiz-question">¿Cuál es el beneficio más importante de ejecutar Llama 3 de forma local?</div>
-        <div class="quiz-option" data-correct="true">A) Privacidad absoluta de la información y no pagar facturas variables por mensaje.</div>
-        <div class="quiz-option" data-correct="false">B) No necesitas ninguna computadora ni energía eléctrica.</div>
-        <div class="quiz-option" data-correct="false">C) Envía automáticamente tus contraseñas a la nube.</div>
+        <div class="quiz-question">¿Cuál es la principal ventaja de seguridad al desplegar Meta Llama 3 localmente?</div>
+        <div class="quiz-option" data-correct="true">A) Que la información privada jamás sale de la infraestructura local del usuario o empresa.</div>
+        <div class="quiz-option" data-correct="false">B) Que no se requiere ningún sistema operativo instalado.</div>
+        <div class="quiz-option" data-correct="false">C) Que el modelo reemplaza automáticamente todas las contraseñas del sistema.</div>
         <div class="quiz-feedback"></div>
       </div>
     </article>
@@ -1382,10 +1557,10 @@ body {
     <article class="tema-card" id="tema-4-2">
       <div class="tema-header">
         <span class="tema-badge">Tema 4.2</span>
-        <h3 class="tema-title">Laboratorio: Generación en Tiempo Real (Streaming)</h3>
+        <h3 class="tema-title">Laboratorio: Generación en Tiempo Real (Streaming) & Telemetría</h3>
       </div>
 
-      <p class="prose-p">Cuando le preguntas algo a la IA, no esperas a que termine toda la respuesta para leerla; las palabras fluyen inmediatamente en tiempo real. Esto se mide en <b>Tokens por Segundo (TPS)</b> y <b>Latencia al primer token (TTFT)</b>.</p>
+      <p class="prose-p">Los motores de inferencia modernos (como <b>Ollama, vLLM y llama.cpp</b>) transmiten los tokens conforme se van calculando mediante Server-Sent Events (SSE). Los dos indicadores de rendimiento más importantes son el <b>Time-To-First-Token (TTFT)</b> (latencia inicial) y los <b>Tokens Por Segundo (TPS)</b> (velocidad de lectura continua).</p>
 
       <!-- SECCIÓN: ¿NO ENTENDISTE? -->
       <div class="easy-explainer-box">
@@ -1399,7 +1574,7 @@ body {
       <!-- BANCO INTERACTIVO 4.2 -->
       <div class="workbench-section">
         <div class="workbench-top">
-          <span class="workbench-label">Simulador de Terminal de Inferencia Streaming</span>
+          <span class="workbench-label">Simulador de Terminal de Inferencia Streaming Local</span>
           <div class="workbench-actions">
             <span class="workbench-tag">Ollama Engine</span>
             <button class="btn-reset-sm" id="btn-clear-terminal" title="Limpiar salida de la consola">
@@ -1411,16 +1586,16 @@ body {
 
         <div class="terminal-shell">
           <div class="terminal-topbar">
-            <span>localhost:11434 — meta-llama-3-8b</span>
-            <span>HTTP 200 OK</span>
+            <span>localhost:11434 — meta-llama-3-8b-instruct</span>
+            <span>HTTP 200 Streaming</span>
           </div>
           <div class="terminal-content" id="term-stream-output">> Presiona "Ejecutar Inferencia" para transmitir tokens desde el runtime local...</div>
         </div>
 
         <div class="telemetry-row">
-          <span>Velocidad: <b id="term-val-speed" style="color: var(--meta-blue);">0 t/s</b></span>
-          <span>Tokens: <b id="term-val-tokens" style="color: var(--accent-success);">0</b></span>
-          <span>Respuesta Inicial: <b id="term-val-ttft" style="color: var(--accent-warning);">0 ms</b></span>
+          <span>Velocidad: <b id="term-val-speed" style="color: var(--meta-blue); font-family: var(--font-mono);">0 t/s</b></span>
+          <span>Tokens Generados: <b id="term-val-tokens" style="color: var(--accent-success); font-family: var(--font-mono);">0</b></span>
+          <span>Latencia Inicial (TTFT): <b id="term-val-ttft" style="color: var(--accent-warning); font-family: var(--font-mono);">0 ms</b></span>
         </div>
 
         <div style="display: flex; gap: 0.8rem; margin-top: 1.2rem; flex-wrap: wrap;">
@@ -1430,6 +1605,19 @@ body {
           </button>
           <button class="btn-secondary" id="btn-stop-stream">Detener</button>
         </div>
+      </div>
+
+      <!-- COMANDO REAL DE OLLAMA -->
+      <div class="code-box">
+        <div class="code-header">
+          <span>Terminal Bash · Ejecución de Llama 3 en tu computadora</span>
+          <span>cURL API</span>
+        </div>
+        <div class="code-content">curl http://localhost:11434/api/generate -d '{
+  "model": "llama3:8b",
+  "prompt": "¿Cómo funciona la arquitectura Transformer?",
+  "stream": true
+}'</div>
       </div>
     </article>
   </section>
@@ -1500,7 +1688,7 @@ body {
   var themeLabel = document.getElementById("theme-label");
 
   var sunSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>';
-  var moonSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 0 11.4-11.4A10 10 0 0 0 12.3 2zm-1 17.8A8 8 0 0 1 9.5 4a8.2 8.2 0 0 0 8.7 8.7 8 8 0 0 1-6.9 7.1z"/></svg>';
+  var moonSvg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12.3 2a10 10 0 0 0-1.9 19.8 10 10 0 0 11.4-11.4A10 10 0 0 0 12.3 2zm-1 17.8A8 8 0 0 1 9.5 4a8.2 8.2 0 0 0 8.7 8.7 8 8 0 0 1-6.9 7.1z"/></svg>';
 
   var savedTheme = localStorage.getItem("meta_theme") || "light";
   document.documentElement.setAttribute("data-theme", savedTheme);
@@ -1650,21 +1838,46 @@ body {
     });
   }
 
-  /* 6. BANCO 1.1: PREDICCIÓN DE PALABRAS */
+  /* 6. BANCO 1.1: PREDICCIÓN DE PALABRAS Y RESULTADO FINAL EXPANDIDO */
   (function initLab11(){
     var pText = document.getElementById("p-text");
     var pPreds = document.getElementById("p-preds");
+    var pFinalContainer = document.getElementById("p-final-container");
+    var pStepCounter = document.getElementById("p-step-counter");
     var pReplay = document.getElementById("p-replay");
     var pReplayTop = document.getElementById("p-replay-top");
     var tempSlider = document.getElementById("temp-slider");
     var tempIndicator = document.getElementById("temp-val-indicator");
 
+    var basePrompt = "El modelo Llama";
+    var currentSentence = basePrompt;
+
     var steps = [
-      { text: "El modelo Llama ", candidates: [["aprende", 62], ["procesa", 24], ["genera", 14]] },
-      { text: "información con ", candidates: [["parámetros", 58], ["tensores", 27], ["atención", 15]] },
-      { text: "optimizados para ", candidates: [["inferencia", 70], ["velocidad", 20], ["precisión", 10]] }
+      {
+        candidates: [
+          { word: "aprende", prob: 62, tag: "Verbo (Frecuente)", rationale: "El modelo asocia 'aprender' con optimización de gradiente descendente." },
+          { word: "procesa", prob: 24, tag: "Verbo (Técnico)", rationale: "Describe el flujo de datos de tensores en capas de atención." },
+          { word: "genera", prob: 14, tag: "Verbo (Generativo)", rationale: "Enfocado en la salida de tokens de texto." }
+        ]
+      },
+      {
+        candidates: [
+          { word: "información con", prob: 58, tag: "Complemento Directo", rationale: "Conecta la acción con la estructura de datos." },
+          { word: "parámetros de", prob: 27, tag: "Término de Redes", rationale: "Alude a los pesos sinápticos de la red." },
+          { word: "respuestas mediante", prob: 15, tag: "Inferencia", rationale: "Describe la interacción con el usuario." }
+        ]
+      },
+      {
+        candidates: [
+          { word: "alta precisión y velocidad.", prob: 70, tag: "Cierre Óptimo", rationale: "Secuencia de alta probabilidad estadística en el corpus de Meta." },
+          { word: "inferencia local autónoma.", prob: 20, tag: "Soberanía", rationale: "Destaca la ejecución sin conexión en hardware local." },
+          { word: "atención agrupada GQA.", prob: 10, tag: "Arquitectura", rationale: "Enfoque en la eficiencia de memoria KV Cache." }
+        ]
+      }
     ];
+
     var currentStep = 0;
+    var chosenWords = [];
 
     tempSlider.addEventListener("input", function(){
       tempIndicator.textContent = tempSlider.value;
@@ -1673,25 +1886,58 @@ body {
 
     function renderStep(){
       if(currentStep >= steps.length){
-        pPreds.innerHTML = "<div style='color:var(--meta-blue); font-weight:700; padding:0.5rem;'>¡Frase completada con éxito!</div>";
+        pPreds.innerHTML = "";
+        pFinalContainer.style.display = "block";
+        pStepCounter.textContent = "3 / 3 (Completado)";
+        
+        var tempUsed = parseFloat(tempSlider.value);
+        pFinalContainer.innerHTML = `
+          <div class="final-result-card">
+            <div class="title">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span>¡Frase Completada por la IA!</span>
+            </div>
+            <p style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.8rem;">
+              "${currentSentence}"
+            </p>
+            <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.7; background: var(--bg-surface); padding: 0.9rem 1.1rem; border-radius: 8px; border: 1px solid var(--border-subtle);">
+              <b>Análisis de la Inferencia:</b> El modelo construyó la frase token por token usando una <b>Temperatura de ${tempUsed}</b>. Cada palabra seleccionada aportó contexto que alteró los logits de las palabras subsiguientes en la matriz de atención.
+            </div>
+          </div>
+        `;
         return;
       }
-      var s = steps[currentStep];
-      pText.textContent = s.text;
+
+      pFinalContainer.style.display = "none";
+      pText.textContent = currentSentence;
+      pStepCounter.textContent = (currentStep + 1) + " / " + steps.length;
       pPreds.innerHTML = "";
       
       var temp = parseFloat(tempSlider.value);
+      var s = steps[currentStep];
 
       s.candidates.forEach(function(cand){
-        var adjustedProb = Math.round(cand[1] * (1.2 - temp * 0.2));
+        var adjustedProb = Math.round(cand.prob * (1.2 - temp * 0.2));
         if(adjustedProb > 95) adjustedProb = 95;
         if(adjustedProb < 5) adjustedProb = 5;
 
         var card = document.createElement("div");
         card.className = "token-prob-card";
-        card.innerHTML = "<div><b>" + cand[0] + "</b><div class='prob-fill' style='width:" + adjustedProb + "%'></div></div><span style='font-size:0.85rem; font-weight:700; color:var(--text-muted);'>" + adjustedProb + "%</span>";
+        card.innerHTML = `
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <b style="font-size: 1.05rem; color: var(--text-primary);">${cand.word}</b>
+              <span style="font-size: 0.72rem; color: var(--meta-blue); background: var(--meta-blue-subtle); padding: 0.1rem 0.4rem; border-radius: 4px; font-weight: 700;">${cand.tag}</span>
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.15rem;">${cand.rationale}</div>
+            <div class='prob-fill' style='width:${adjustedProb}%'></div>
+          </div>
+          <span style='font-size: 0.95rem; font-weight: 800; color: var(--meta-blue); font-family: var(--font-mono); margin-left: 1rem;'>${adjustedProb}%</span>
+        `;
         card.addEventListener("click", function(){
-          SOUND.playPop(520);
+          SOUND.playPop(520 + currentStep * 80);
+          chosenWords.push(cand.word);
+          currentSentence += " " + cand.word;
           currentStep++;
           renderStep();
         });
@@ -1702,6 +1948,8 @@ body {
     function resetSteps(){
       SOUND.playPop(400);
       currentStep = 0;
+      chosenWords = [];
+      currentSentence = basePrompt;
       renderStep();
     }
 
@@ -1716,7 +1964,8 @@ body {
     var data = {
       voice: { txt: "reproducir música", tensors: "[4120, 892, 104]", out: "Ejecutando streaming de audio" },
       translate: { txt: "Good morning", tensors: "[612, 2043]", out: "Buenos días" },
-      assistant: { txt: "¿cuál es el estado?", tensors: "[71, 900, 355]", out: "Todos los servicios en línea" }
+      assistant: { txt: "¿cuál es el estado?", tensors: "[71, 900, 355]", out: "Todos los servicios en línea" },
+      code: { txt: "def fibonacci(n):", tensors: "[944, 45192, 7, 89, 29]", out: "Función recursiva en Python" }
     };
     var chips = document.querySelectorAll(".nlp-chip");
     chips.forEach(function(btn){
@@ -1786,7 +2035,7 @@ body {
       }
       valCount.textContent = toks.length;
       valChars.textContent = val.length;
-      valCost.textContent = "$" + (toks.length * 0.00000015).toFixed(6);
+      valCost.textContent = "$" + (toks.length * 0.0000002).toFixed(6);
     }
 
     input.addEventListener("input", function(){
@@ -2042,7 +2291,7 @@ body {
       if(isRunning) return;
       isRunning = true;
       SOUND.playChime();
-      output.textContent = "> Conectando con servidor local Llama-3-8B...\n> Pregunta: '¿Qué ventajas tiene ejecutar la IA en mi computadora?'\n\n";
+      output.textContent = "> Conectando con servidor local Llama-3-8B-Instruct...\n> Prompt: '¿Cómo funciona la arquitectura Transformer?'\n\n";
       ttftVal.textContent = "38 ms";
 
       var idx = 0, tokCount = 0;
@@ -2058,7 +2307,7 @@ body {
         } else {
           clearInterval(timer);
           isRunning = false;
-          output.textContent += "\n\n[Respuesta completada]";
+          output.textContent += "\n\n[Respuesta completada en 1.8 segundos · 100% en local]";
         }
       }, 60);
     });
