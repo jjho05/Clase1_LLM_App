@@ -38,10 +38,8 @@
 
     <nav class="nav-links">
       <a href="index.html" class="nav-link-item" style="color: var(--meta-blue); font-weight: 700;">&larr; Inicio</a>
-      <a href="#unidad-1-1" class="nav-link-item">1.1 NLP</a>
-      <a href="#unidad-1-2" class="nav-link-item">1.2 Vectores</a>
-      <a href="#unidad-1-3" class="nav-link-item">1.3 Transformers</a>
-      <a href="#unidad-1-4" class="nav-link-item">1.4 Inferencia</a>
+      <a href="#intro-modulo" class="nav-link-item">Visión</a>
+      <a href="#unidad-principal" class="nav-link-item">2.2 Contenido</a>
       <a href="#glosario" class="nav-link-item">Glosario</a>
     </nav>
 
@@ -83,71 +81,34 @@
   </section>
 
   <!-- INTRODUCCIÓN GENERAL Y GUÍA DEL MÓDULO 1 -->
-  <article class="tema-card" id="intro-modulo-1" style="border-left: 5px solid var(--meta-blue); margin-bottom: 3.5rem;">
+  <article class="tema-card" id="intro-modulo" style="border-left: 5px solid var(--meta-blue); margin-bottom: 3.5rem;">
     <div class="tema-header">
-      <div class="tema-eyebrow">Guía de Inicio · Visión del Módulo 1</div>
-      <h3 class="tema-title">Bienvenida al Módulo 1: Fundamentos, Arquitectura & Despliegue de Llama 3</h3>
+      <div class="tema-eyebrow">Guía de Inicio · Visión de la Unidad 2.2</div>
+      <h3 class="tema-title">Resumen Ejecutivo & Visión: Diseño de Agentes Conversacionales</h3>
     </div>
 
     <div class="tema-section-block">
-      <h4 class="tema-subheading"><span class="tema-subheading-tag">1. ¿Qué es este Módulo?</span> La base técnica de los Grandes Modelos de Lenguaje</h4>
-      <p class="prose-p">
-        Bienvenido al primer bloque de especialización técnica. En este módulo dejarás de ver a los modelos de lenguaje como una "caja negra mágica" y aprenderás a <b>deconstruir su funcionamiento matemático y computacional desde cero</b>: desde cómo una palabra se fragmenta en números (tokens), cómo viaja a través de capas de atención Transformer, hasta cómo inyectarle conocimientos propios con RAG, reentrenar sus parámetros con LoRA en una sola GPU y exponerlo como una API web lista para producción.
-      </p>
+      <h4 class="tema-subheading"><span class="tema-subheading-tag">1. TL;DR</span> Resumen del Tema Oficial</h4>
+      <p class="prose-p">Un agente conversacional debe gestionar el estado de la conversación fuera del modelo, ya que Llama no retiene memoria entre llamadas a la API. Este estado se guarda asociado a un identificador de usuario —típicamente su número de teléfono— y se reenvía como contexto dentro de la ventana de contexto en cada nueva llamada. Llama Stack estandariza los componentes comunes de construcción —memoria, herramientas y seguridad— para evitar reinventar la arquitectura en cada proyecto.</p>
     </div>
 
     <div class="easy-explainer-box">
       <div class="easy-header">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
-        <span>¿Cómo está organizado cada tema? (La metodología del curso)</span>
+        <span>¿Qué vas a aprender en este tema?</span>
       </div>
-      <p class="easy-text">
-        Cada unidad está diseñada con una estructura pedagógica paso a paso: primero una <b>introducción intuitiva</b>, luego el <b>concepto formal</b> con fórmulas matemáticas, seguido de una <b>analogía de la vida cotidiana</b>, un <b>laboratorio interactivo en vivo</b> donde podrás experimentar en tiempo real sin salir del navegador, y finalmente una <b>evaluación de conocimientos</b> que desbloquea tu certificado digital.
-      </p>
-    </div>
-
-    <div class="tema-section-block" style="margin-top: 1.5rem;">
-      <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Hoja de Ruta del Módulo</span> Las 4 unidades y sus 8 temas</h4>
-      <div class="step-flow-list">
-        <div class="step-flow-item">
-          <div class="step-flow-content">
-            <b>Unidad 1.1: Fundamentos de LLMs & Modelado Autoregresivo</b>
-            <p>Temas 1.1.1 (Modelado Autoregresivo & Sampling) y 1.1.2 (Pipeline de NLP & Tensores Numéricos).</p>
-          </div>
-        </div>
-
-        <div class="step-flow-item">
-          <div class="step-flow-content">
-            <b>Unidad 1.2: Tokenización & Geometría Semántica</b>
-            <p>Temas 1.2.1 (Algoritmo BPE & Vocabulario 128k) y 1.2.2 (Espacios Semánticos & Embeddings $\mathbb{R}^{4096}$).</p>
-          </div>
-        </div>
-
-        <div class="step-flow-item">
-          <div class="step-flow-content">
-            <b>Unidad 1.3: Arquitectura Transformer & Mecanismos de Atención</b>
-            <p>Temas 1.3.1 (Atención QKV & Scaled Dot-Product) y 1.3.2 (Grouped-Query Attention & Dimensionamiento de VRAM).</p>
-          </div>
-        </div>
-
-        <div class="step-flow-item">
-          <div class="step-flow-content">
-            <b>Unidad 1.4: Soberanía Tecnológica & Inferencia en Vivo</b>
-            <p>Temas 1.4.1 (Pesos Abiertos vs. APIs de Nube) y 1.4.2 (Pipeline de Inferencia en Vivo & Banco de Pruebas).</p>
-          </div>
-        </div>
-      </div>
+      <p class="easy-text">Estructura la memoria de tu agente fuera del modelo: persiste el estado conversacional por identificador de usuario, administra la ventana de contexto sin saturarla, diseña flujos híbridos basados en reglas inquebrantables e inteligencia natural y aprovecha los componentes estándar de Llama Stack.</p>
     </div>
   </article>
 
   <!-- ==========================================================================
        UNIDAD 1.1: FUNDAMENTOS & PROCESAMIENTO DE LENGUAJE NATURAL
        ========================================================================== -->
-  <section class="module-block" id="unidad-1-1">
+  <section class="module-block" id="unidad-principal">
     <div class="module-header">
-      <span class="module-tag">Unidad 1.1</span>
-      <h2 class="module-title">Fundamentos de LLMs & Modelado Autoregresivo</h2>
-      <p class="module-desc">Descubre el corazón de la IA Generativa: cómo las máquinas predicen el lenguaje palabra por palabra mediante cálculos matemáticos de probabilidad y muestreo estocástico.</p>
+      <span class="module-tag">Unidad 2.2</span>
+      <h2 class="module-title">Diseño de Agentes Conversacionales</h2>
+      <p class="module-desc">Cómo darle memoria y estructura a una conversación con Llama: persistencia de estado, flujos híbridos y orquestación con Llama Stack.</p>
     </div>
 
     <!-- TEMA 1.1.1 -->
