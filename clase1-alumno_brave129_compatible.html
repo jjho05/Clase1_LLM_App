@@ -1360,32 +1360,39 @@ body {
         </div>
       </div>
 
-      <!-- SNIPPET DE CÓDIGO PYTORCH CON BOTÓN DE COPIAR -->
+      <!-- SNIPPET DE CÓDIGO PYTORCH CON BOTÓN DE COPIAR Y COMENTARIOS LÍNEA POR LÍNEA -->
       <div class="code-box">
         <div class="code-header">
-          <span>Python (PyTorch) · Muestreo con Temperatura y Softmax</span>
+          <span>Python (PyTorch) · Muestreo con Temperatura y Softmax (Explicado paso a paso)</span>
           <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
         </div>
-        <pre class="code-content"><code>import torch
+        <pre class="code-content"><code># 1. Importamos la librería PyTorch para cálculo matricial y tensores en GPU
+import torch
+
+# 2. Importamos el submódulo de funciones de redes neuronales (como Softmax)
 import torch.nn.functional as F
 
 def sample_next_token(logits: torch.Tensor, temperature: float = 0.7) -> int:
     """
-    Toma los logits crudos del modelo y selecciona el siguiente token
-    utilizando escalamiento de temperatura y muestreo estocástico.
+    Función que recibe las puntuaciones crudas del modelo (logits)
+    y selecciona el siguiente token aplicando temperatura.
     """
-    # 1. Evitar división por cero si temperatura es extremadamente baja
+    # 3. Evitamos dividir entre cero si el usuario envía una temperatura de 0
     temp = max(temperature, 1e-5)
     
-    # 2. Escalar los logits dividiendo entre la temperatura
+    # 4. Dividimos cada puntuación entre la temperatura para modular la distribución
+    #    (Una temperatura baja agranda la diferencia entre el primer y segundo lugar)
     scaled_logits = logits / temp
     
-    # 3. Aplicar Softmax para convertir logits en probabilidades que sumen 1.0 (100%)
+    # 5. La función Softmax convierte los números reales en porcentajes (suman 100%)
+    #    dim=-1 indica que la operación se aplica sobre el eje del vocabulario
     probabilities = F.softmax(scaled_logits, dim=-1)
     
-    # 4. Muestreo estocástico multinomial (selección según peso probabilístico)
+    # 6. 'multinomial' hace un sorteo probabilístico (ruleta) según el porcentaje de cada palabra
+    #    num_samples=1 indica que solo queremos extraer un único token ganador
     next_token_id = torch.multinomial(probabilities, num_samples=1)
     
+    # 7. .item() extrae el número entero de Python desde la memoria del tensor
     return next_token_id.item()</code></pre>
       </div>
 
@@ -1531,23 +1538,32 @@ def sample_next_token(logits: torch.Tensor, temperature: float = 0.7) -> int:
         </div>
       </div>
 
-      <!-- SNIPPET HUGGING FACE TOKENIZER CON COPIAR -->
+      <!-- SNIPPET HUGGING FACE TOKENIZER CON COMENTARIOS LÍNEA POR LÍNEA -->
       <div class="code-box">
         <div class="code-header">
-          <span>Python · Inspección de Tensores con Transformers</span>
+          <span>Python · Inspección de Tensores con Transformers (Paso a paso)</span>
           <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
         </div>
-        <pre class="code-content"><code>from transformers import AutoTokenizer
+        <pre class="code-content"><code># 1. Importamos la clase AutoTokenizer de la librería 'transformers' de Hugging Face
+from transformers import AutoTokenizer
 
-# Cargar el tokenizador oficial de Meta Llama 3
+# 2. Descargamos el vocabulario y reglas de segmentación del modelo Meta Llama 3
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B")
 
+# 3. Definimos un texto en lenguaje natural escrito por un usuario
 texto = "reproducir música en streaming"
+
+# 4. Convertimos el texto a tensores numéricos compatibles con PyTorch ('pt')
 inputs = tokenizer(texto, return_tensors="pt")
 
-print("IDs Numéricos (Tensor):", inputs["input_ids"])
+# 5. Imprimimos el tensor con los IDs numéricos asignados a cada subpalabra
+print("IDs Numéricos (Tensor 2D):", inputs["input_ids"])
+
+# 6. Imprimimos la máscara que le dice a la GPU qué tokens debe atender (1 = atender, 0 = ignorar)
 print("Máscara de Atención:", inputs["attention_mask"])
-# Salida: tensor([[128000, 4120, 892, 104, 15302]])</code></pre>
+
+# Salida en consola:
+# tensor([[128000, 4120, 892, 104, 15302]])  <-- 128000 es el token de inicio <|begin_of_text|></code></pre>
       </div>
 
       <!-- 6. CONCLUSIÓN -->
@@ -2147,26 +2163,45 @@ print("Máscara de Atención:", inputs["attention_mask"])
         </div>
       </div>
 
-      <!-- 4. COMANDO REAL DE OLLAMA CON BOTÓN DE COPIAR -->
+      <!-- COMANDO REAL DE OLLAMA CON COMENTARIOS LÍNEA POR LÍNEA -->
       <div class="code-box">
         <div class="code-header">
-          <span>Python · Cliente Streaming Asíncrono para Ollama</span>
+          <span>Python · Cliente Streaming Asíncrono para Ollama (Paso a paso)</span>
           <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
         </div>
-        <pre class="code-content"><code>import requests
+        <pre class="code-content"><code># 1. Importamos 'requests' para enviar peticiones HTTP a servidores locales o APIs
+import requests
+
+# 2. Importamos 'json' para convertir cadenas de texto en objetos y diccionarios de Python
 import json
 
 def stream_llama(prompt: str):
+    """
+    Se conecta al servidor local de Ollama (puerto 11434) y transmite
+    la respuesta generada palabra por palabra en tiempo real.
+    """
+    # 3. Endpoint de la API REST local de Ollama
     url = "http://localhost:11434/api/generate"
-    payload = {"model": "llama3:8b", "prompt": prompt, "stream": True}
     
+    # 4. Datos de la consulta: modelo a invocar, pregunta del usuario y streaming activado
+    payload = {
+        "model": "llama3:8b",     # Nombre del modelo descargado en tu máquina
+        "prompt": prompt,          # Instrucción que le enviamos a la IA
+        "stream": True             # 'True' activa el envío token por token vía Server-Sent Events
+    }
+    
+    # 5. Enviamos la petición POST con stream=True para mantener el flujo de red abierto
     with requests.post(url, json=payload, stream=True) as response:
+        # 6. Leemos cada línea conforme es emitida por la GPU del procesador local
         for line in response.iter_lines():
             if line:
+                # 7. Decodificamos el paquete de bytes a UTF-8 y lo transformamos a diccionario JSON
                 chunk = json.loads(line.decode('utf-8'))
+                
+                # 8. Extraemos el fragmento de texto ('response') y lo imprimimos sin salto de línea
                 print(chunk.get("response", ""), end="", flush=True)
 
-# Ejecución de prueba
+# 9. Ejemplo de ejecución práctica:
 stream_llama("¿Cuáles son los 3 pilares de Meta Llama 3?")</code></pre>
       </div>
     </article>
