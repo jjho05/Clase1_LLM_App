@@ -1,3 +1,20 @@
+
+function colorizeJsonHtml(rawJsonStr) {
+  const s = rawJsonStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const pattern = /(?:"(?:\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")\s*:|(?:"(?:\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")|\b(?:true|false|null|-?\d+(?:\.\d+)?)\b/g;
+  return s.replace(pattern, match => {
+    if (/:$/.test(match)) {
+      return `<span class="code-var">${match.slice(0, -1)}</span>:`;
+    } else if (/^"/.test(match)) {
+      return `<span class="code-str">${match}</span>`;
+    } else if (/^(true|false|null)$/.test(match)) {
+      return `<span class="code-kw">${match}</span>`;
+    } else {
+      return `<span class="code-num">${match}</span>`;
+    }
+  });
+}
+
 /**
  * CLASE 4: Pipeline Completo — De Notebook a Producción con FastAPI
  * Lógica interactiva para simuladores, Swagger Playground, inyector de fallos y calculadora de latencia.
@@ -151,22 +168,22 @@ function initPipelineFlowSimulator() {
 
   if (!stageTitle) return;
 
-  const STAGES = {
+    const STAGES = {
     '1': {
       title: 'Etapa 1: Ingesta, Limpieza y Formateo de Datos SFT',
       desc: 'Los datos crudos de clientes y bases de datos se filtran, anonimizan (PII) y transforman a registros JSONL con delimitadores oficiales de Meta Llama 3.',
       tool: 'Pandas / HuggingFace Datasets',
       artifact: 'train_sft_clean.jsonl (10,000 pares)',
       metric: '99.8% Integridad de Esquema Pydantic',
-      code: `# 1. Validación de esquema JSONL con Pydantic
-from pydantic import BaseModel, Field
+      codeHtml: `<span class="code-cm"># 1. Validación de esquema JSONL con Pydantic</span>
+<span class="code-kw">from</span> <span class="code-var">pydantic</span> <span class="code-kw">import</span> <span class="code-fn">BaseModel</span>, <span class="code-fn">Field</span>
 
-class Turn(BaseModel):
-    role: str
-    content: str
+<span class="code-kw">class</span> <span class="code-fn">Turn</span>(<span class="code-fn">BaseModel</span>):
+    <span class="code-var">role</span>: <span class="code-var">str</span> = <span class="code-fn">Field</span>(..., <span class="code-var">pattern</span>=<span class="code-str">"^(system|user|assistant)$"</span>)
+    <span class="code-var">content</span>: <span class="code-var">str</span>
 
-class SFTRecord(BaseModel):
-    messages: list[Turn] = Field(min_items=2)`
+<span class="code-kw">class</span> <span class="code-fn">SFTRecord</span>(<span class="code-fn">BaseModel</span>):
+    <span class="code-var">messages</span>: <span class="code-var">list</span>[<span class="code-fn">Turn</span>] = <span class="code-fn">Field</span>(<span class="code-var">min_items</span>=<span class="code-num">2</span>)`
     },
     '2': {
       title: 'Etapa 2: Fine-Tuning PEFT con Adaptadores LoRA / QLoRA',
@@ -174,12 +191,12 @@ class SFTRecord(BaseModel):
       tool: 'TRL / PEFT / SFTTrainer',
       artifact: 'adapter_model.safetensors (16 MB)',
       metric: 'Perplexity: 2.14 | Train Loss: 0.82',
-      code: `# 2. Entrenamiento con SFTTrainer y LoRA
-from trl import SFTTrainer
-from peft import LoraConfig
+      codeHtml: `<span class="code-cm"># 2. Entrenamiento con SFTTrainer y LoRA</span>
+<span class="code-kw">from</span> <span class="code-var">trl</span> <span class="code-kw">import</span> <span class="code-fn">SFTTrainer</span>
+<span class="code-kw">from</span> <span class="code-var">peft</span> <span class="code-kw">import</span> <span class="code-fn">LoraConfig</span>
 
-lora_cfg = LoraConfig(r=16, lora_alpha=32, target_modules=["q_proj", "v_proj"])
-trainer = SFTTrainer(model=base, peft_config=lora_cfg, train_dataset=ds)`
+<span class="code-var">lora_cfg</span> = <span class="code-fn">LoraConfig</span>(<span class="code-var">r</span>=<span class="code-num">16</span>, <span class="code-var">lora_alpha</span>=<span class="code-num">32</span>, <span class="code-var">target_modules</span>=[<span class="code-str">"q_proj"</span>, <span class="code-str">"v_proj"</span>])
+<span class="code-var">trainer</span> = <span class="code-fn">SFTTrainer</span>(<span class="code-var">model</span>=<span class="code-var">base</span>, <span class="code-var">peft_config</span>=<span class="code-var">lora_cfg</span>, <span class="code-var">train_dataset</span>=<span class="code-var">ds</span>)`
     },
     '3': {
       title: 'Etapa 3: Evaluación Sistemática y Benchmarks Cuantitativos',
@@ -187,11 +204,12 @@ trainer = SFTTrainer(model=base, peft_config=lora_cfg, train_dataset=ds)`
       tool: 'Evaluate / Llama Guard 3 / PyTest',
       artifact: 'eval_report_v1.json (Métricas SOTA)',
       metric: 'ROUGE-L: 0.89 | Llama Guard: 0% Violaciones',
-      code: `# 3. Evaluación de exactitud y seguridad
-from evaluate import load
-rouge = load('rouge')
-results = rouge.compute(predictions=preds, references=refs)
-assert results['rougeL'] > 0.85, "Fallo de regresión en evaluación"`
+      codeHtml: `<span class="code-cm"># 3. Evaluación de exactitud y seguridad</span>
+<span class="code-kw">from</span> <span class="code-var">evaluate</span> <span class="code-kw">import</span> <span class="code-fn">load</span>
+
+<span class="code-var">rouge</span> = <span class="code-fn">load</span>(<span class="code-str">"rouge"</span>)
+<span class="code-var">results</span> = <span class="code-var">rouge</span>.<span class="code-fn">compute</span>(<span class="code-var">predictions</span>=<span class="code-var">preds</span>, <span class="code-var">references</span>=<span class="code-var">refs</span>)
+<span class="code-kw">assert</span> <span class="code-var">results</span>[<span class="code-str">"rougeL"</span>] > <span class="code-num">0.85</span>, <span class="code-str">"Fallo de regresión en evaluación"</span>`
     },
     '4': {
       title: 'Etapa 4: Empaquetado y Despliegue en Producción con FastAPI',
@@ -199,13 +217,14 @@ assert results['rougeL'] > 0.85, "Fallo de regresión en evaluación"`
       tool: 'FastAPI / Uvicorn / Docker',
       artifact: 'docker.io/enterprise/llama3-service:v1.0',
       metric: 'TTFT: 82ms | Throughput: 145 tok/s',
-      code: `# 4. Microservicio FastAPI listo para WhatsApp y Web
-from fastapi import FastAPI
-app = FastAPI(title="Llama 3 SFT Microservice", version="1.0.0")
+      codeHtml: `<span class="code-cm"># 4. Microservicio FastAPI listo para WhatsApp y Web</span>
+<span class="code-kw">from</span> <span class="code-var">fastapi</span> <span class="code-kw">import</span> <span class="code-fn">FastAPI</span>
 
-@app.post("/v1/chat/completions")
-async def chat(req: ChatRequest):
-    return await inference_engine.generate(req)`
+<span class="code-var">app</span> = <span class="code-fn">FastAPI</span>(<span class="code-var">title</span>=<span class="code-str">"Llama 3 SFT Microservice"</span>, <span class="code-var">version</span>=<span class="code-str">"1.0.0"</span>)
+
+<span class="code-kw">@app.post</span>(<span class="code-str">"/v1/chat/completions"</span>)
+<span class="code-kw">async def</span> <span class="code-fn">chat</span>(<span class="code-var">req</span>: <span class="code-fn">ChatRequest</span>):
+    <span class="code-kw">return await</span> <span class="code-var">inference_engine</span>.<span class="code-fn">generate</span>(<span class="code-var">req</span>)`
     }
   };
 
@@ -221,7 +240,7 @@ async def chat(req: ChatRequest):
         if (stageToolBadge) stageToolBadge.textContent = data.tool;
         if (stageArtifact) stageArtifact.textContent = data.artifact;
         if (stageMetric) stageMetric.textContent = data.metric;
-        if (stageCode) stageCode.textContent = data.code;
+        if (stageCode) stageCode.innerHTML = data.codeHtml;
       }
     });
   });
@@ -345,7 +364,7 @@ function initFastApiSwaggerPlayground() {
       }
     };
 
-    if (responseBody) responseBody.textContent = JSON.stringify(mockResponse, null, 2);
+    if (responseBody) responseBody.innerHTML = colorizeJsonHtml(JSON.stringify(mockResponse, null, 2));
     if (headerDetails) {
       headerDetails.innerHTML = `
 content-type: application/json; charset=utf-8
@@ -373,7 +392,7 @@ x-llama-engine: vLLM PagedAttention
         }
       ]
     };
-    if (responseBody) responseBody.textContent = JSON.stringify(errorResp, null, 2);
+    if (responseBody) responseBody.innerHTML = colorizeJsonHtml(JSON.stringify(errorResp, null, 2));
     if (headerDetails) {
       headerDetails.innerHTML = `
 content-type: application/json
@@ -390,7 +409,7 @@ x-validation-error: pydantic_v2
       statusCodeBadge.className = 'status-pill-danger';
     }
     if (responseTimeBadge) responseTimeBadge.textContent = `${elapsed} ms`;
-    if (responseBody) responseBody.textContent = JSON.stringify({ "error": detail }, null, 2);
+    if (responseBody) responseBody.innerHTML = colorizeJsonHtml(JSON.stringify({ "error": detail }, null, 2));
   }
 }
 
