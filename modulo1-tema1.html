@@ -1696,7 +1696,67 @@
  </div>
  </details>
  </article>
- </section>
+
+  <!-- EJERCICIO 4 -->
+  <article class="exercise-card">
+    <div class="exercise-header">
+      <span class="exercise-num-badge">Ejercicio 4</span>
+      <h4 class="exercise-title">Análisis de Trade-Offs de Tamaño de Modelo: Llama 3 8B vs 70B</h4>
+    </div>
+    <div class="exercise-context-box">
+      <div class="exercise-context-title">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+        Enunciado de Dimensionamiento
+      </div>
+      <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+        Un equipo de ingeniería debe decidir entre desplegar Meta Llama 3 8B o Llama 3 70B para clasificar 50,000 correos diarios. Evalúa el consumo de VRAM, el costo mensual de infraestructura GPU y el tiempo de respuesta (TTFT), justificando la elección óptima.
+      </p>
+    </div>
+    <details class="exercise-solution-details">
+      <summary class="exercise-solution-summary">
+        <span>Ver Solución de Ingeniería Paso a Paso &amp; Matriz de Costo-Beneficio</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="exercise-solution-panel">
+        <div class="step-flow-list">
+          <div class="step-flow-item">
+            <div class="step-num-badge">1</div>
+            <div class="step-flow-content" style="flex:1; min-width:0;">
+              <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Evaluación de Llama 3 8B (Cuantizado INT4 / AWQ)</h5>
+              <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                • <b>VRAM Requerida:</b> ~5.5 GB (cabe en 1x GPU comercial RTX 4090 o T4 económica).<br>
+                • <b>Throughput:</b> > 120 tokens/segundo con latencia sub-100ms.<br>
+                • <b>Precisión en Clasificación:</b> 98.2% de exactitud con prompting estructurado.<br>
+                • <b>Costo Mensual Estimado:</b> ~$150 USD en instancia cloud básica.
+              </p>
+            </div>
+          </div>
+          <div class="step-flow-item">
+            <div class="step-num-badge">2</div>
+            <div class="step-flow-content" style="flex:1; min-width:0;">
+              <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Evaluación de Llama 3 70B (Cuantizado INT4)</h5>
+              <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                • <b>VRAM Requerida:</b> ~42 GB (requiere al menos 2x A10G o 1x A100 de 80GB).<br>
+                • <b>Throughput:</b> ~25-35 tokens/segundo con mayor latencia.<br>
+                • <b>Precisión en Clasificación:</b> 98.9% (+0.7% de ganancia marginal).<br>
+                • <b>Costo Mensual Estimado:</b> ~$1,800 USD en instancia multi-GPU.
+              </p>
+            </div>
+          </div>
+          <div class="step-flow-item" style="border-left-color:#059669; background:rgba(5,150,105,0.04);">
+            <div class="step-num-badge" style="background:#059669;">✓</div>
+            <div class="step-flow-content" style="flex:1; min-width:0;">
+              <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:#059669;">Decisión de Arquitectura Óptima</h5>
+              <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                La elección de ingeniería es <b>Meta Llama 3 8B</b>: resuelve el 98.2% de los casos con una reducción de costo del <b>91.6%</b> y latencia 4x menor. La arquitectura correcta es aquella que satisface el SLA con la mínima huella computacional.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </article>
+</section>
 
  <!-- ==========================================================================
  SECCIÓN GLOSARIO TÉCNICO COMPLETO REDISEÑADO CON BUSCADOR Y FILTROS

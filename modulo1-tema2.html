@@ -1532,13 +1532,292 @@ Sentimiento:</code></pre>
  </div>
  </div>
 
- </div>
+        <!-- 13 -->
+        <div class="glossary-row-item" data-category="rag">
+          <div class="glossary-row-left">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="glossary-tag">RAG</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#13</span>
+            </div>
+            <span class="glossary-term-name">Reciprocal Rank Fusion (RRF)</span>
+          </div>
+          <div class="glossary-row-right">
+            <p class="glossary-term-desc">Algoritmo no paramétrico para combinar listas clasificadas de diferentes motores de búsqueda sumando las inversas de sus posiciones: $	ext{RRF}(d) = \sum rac{1}{60 + r(d)}$.</p>
+            <div class="glossary-term-note">Aplicación: Fusión óptima de BM25 y búsqueda vectorial sin requerir calibración de pesos.</div>
+          </div>
+        </div>
+
+        <!-- 14 -->
+        <div class="glossary-row-item" data-category="rag">
+          <div class="glossary-row-left">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="glossary-tag">Chunking</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#14</span>
+            </div>
+            <span class="glossary-term-name">Solapamiento de Chunks (Overlap)</span>
+          </div>
+          <div class="glossary-row-right">
+            <p class="glossary-term-desc">Cantidad de tokens compartidos entre fragmentos de texto adyacentes durante la partición documental para evitar la pérdida de información semántica en los bordes de corte.</p>
+            <div class="glossary-term-note">Regla de oro: Configurar entre 10% y 20% del tamaño total del chunk (ej. 50-100 tokens).</div>
+          </div>
+        </div>
+
+        <!-- 15 -->
+        <div class="glossary-row-item" data-category="prompting">
+          <div class="glossary-row-left">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <span class="glossary-tag">Prompting</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">#15</span>
+            </div>
+            <span class="glossary-term-name">Auto-Consistencia (Self-Consistency)</span>
+          </div>
+          <div class="glossary-row-right">
+            <p class="glossary-term-desc">Estrategia de inferencia que genera múltiples rutas de razonamiento Chain-of-Thought con temperatura $T > 0$ y selecciona la respuesta con mayor consenso mediante votación mayoritaria.</p>
+            <div class="glossary-term-note">Impacto: Incrementa la precisión en tareas de lógica y matemáticas en más de un 15%.</div>
+          </div>
+        </div>
+
+</div>
  </section>
 
  <!-- ==========================================================================
  FUENTES DE INFORMACIÓN REALES & REFERENCIAS ACADÉMICAS (CUADRÍCULA 3x4)
  ========================================================================== -->
- <section class="sources-section" id="fuentes-oficiales">
+   <!-- ==========================================================================
+  EJERCICIOS PRÁCTICOS OFICIALES (1 AL 4)
+  ========================================================================== -->
+  <section class="exercises-section" id="ejercicios">
+    <div style="text-align:center; margin-bottom:2.2rem;">
+      <div class="tema-eyebrow" style="justify-content:center; margin-bottom:0.6rem;">Práctica &amp; Aplicación de Ingeniería</div>
+      <h2 style="font-size:2rem; font-family:var(--font-disp); font-weight:800; color:var(--text-primary); margin:0 0 0.8rem;">Ejercicios Prácticos de la Unidad 1.2</h2>
+      <p class="module-desc" style="color:var(--text-secondary); max-width:72ch; margin:0 auto; font-size:1rem; line-height:1.65;">Consolida tus competencias en Prompt Engineering y RAG resolviendo los 4 ejercicios del temario oficial con soluciones paso a paso.</p>
+    </div>
+
+    <!-- EJERCICIO 1 -->
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 1</span>
+        <h4 class="exercise-title">Diseño de Prompt Few-Shot para Clasificación de Reseñas</h4>
+      </div>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado Oficial
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Escribe un prompt few-shot para que un modelo clasifique reseñas de productos como Positiva, Negativa o Neutra. Incluye tres ejemplos con su formato de entrada-salida, y termina con una reseña nueva para que clasifique.
+        </p>
+      </div>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Template Oficial</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Estructura del Prompt Few-Shot con Delimitadores</h5>
+                <div class="code-box" style="margin:0.4rem 0;">
+                  <pre class="code-content"><code><span class="code-cm"># Instrucción del Sistema</span>
+Eres un clasificador de sentimiento estricto para comercio electrónico.
+Tu tarea es clasificar la reseña del cliente en exactamente una de estas tres categorías: [Positiva, Negativa, Neutra].
+Responde únicamente con el formato JSON: {"sentimiento": "&lt;categoría&gt;", "confianza": &lt;0.0-1.0&gt;}
+
+<span class="code-cm"># Ejemplos Few-Shot (Calibración de Tono y Formato)</span>
+Reseña: "El paquete llegó un día antes de lo programado y el producto superó mis expectativas en calidad."
+Salida: {"sentimiento": "Positiva", "confianza": 0.98}
+
+Reseña: "El color no coincide con las fotografías del anuncio y el material se siente quebradizo."
+Salida: {"sentimiento": "Negativa", "confianza": 0.95}
+
+Reseña: "El pedido llegó en tiempo normal. El empaque es estándar y cumple con la descripción básica."
+Salida: {"sentimiento": "Neutra", "confianza": 0.88}
+
+<span class="code-cm"># Nueva Entrada para Inferencia</span>
+Reseña: "Funciona correctamente para lo básico, aunque la batería dura menos de lo que afirma la caja."
+Salida:</code></pre>
+                </div>
+              </div>
+            </div>
+            <div class="step-flow-item" style="border-left-color:#059669;">
+              <div class="step-num-badge" style="background:#059669;">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:#059669;">Justificación de Ingeniería</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Al incluir un ejemplo para cada una de las 3 clases, el espacio latente del transformer queda restringido: el modelo no emitirá explicaciones conversacionales largas, sino la estructura JSON exacta solicitada, permitiendo su parseo directo por microservicios en producción.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- EJERCICIO 2 -->
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 2</span>
+        <h4 class="exercise-title">Desglose de Razonamiento: Chain-of-Thought en Problemas Matemáticos</h4>
+      </div>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado Oficial
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Explica por qué una técnica de chain-of-thought podría mejorar la respuesta de un modelo ante la operación matemática: “Un tren lleva 120 pasajeros. Bajan 15 en la primera parada y suben el doble de los que bajaron en la segunda. ¿Cuántos pasajeros hay al final?”. Describe qué pasaría si solo se usara zero-shot.
+        </p>
+      </div>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Comparativa Zero vs CoT</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">A</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Fallo en Modo Zero-Shot Directo</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  En Zero-Shot, el modelo intenta predecir el número final en un solo paso hacia adelante ($t+1$). Dado que los LLMs son modelos autorregresivos sin memoria de cálculo fuera de los tokens emitidos, forzar una respuesta inmediata causa que el transformer confunda los operadores o duplique la resta inicial, emitiendo cifras incorrectas como 135 o 105.
+                </p>
+              </div>
+            </div>
+            <div class="step-flow-item">
+              <div class="step-num-badge">B</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Mecanismo de Desglose con Chain-of-Thought (CoT)</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Al forzar la directiva <i>"Razona paso a paso antes de emitir la respuesta"</i>, el modelo genera tokens intermedios en el contexto que sirven como memoria de trabajo para los siguientes pasos de atención:<br>
+                  • <b>Paso 1:</b> Pasajeros iniciales = $120$.<br>
+                  • <b>Paso 2:</b> Bajan $15$ en la parada 1 &rarr; $120 - 15 = 105$ pasajeros restantes.<br>
+                  • <b>Paso 3:</b> Suben el doble de los que bajaron en la parada 2 &rarr; $2 	imes 15 = 30$ pasajeros nuevos.<br>
+                  • <b>Paso 4:</b> Total acumulado &rarr; $105 + 30 = 135$ pasajeros al final.<br>
+                  <b>Resultado:</b> La autoatención sobre los cálculos intermedios garantiza 100% de precisión lógica.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- EJERCICIO 3 -->
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 3</span>
+        <h4 class="exercise-title">Arquitectura RAG para Información Médica Dinámica</h4>
+      </div>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado Oficial
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Imagina que trabajas en una clínica y necesitas que un asistente con Llama responda sobre los efectos secundarios de medicamentos que la autoridad sanitaria actualiza mensualmente. Diseña un esquema de RAG en tres pasos (indexación, recuperación y generación) y justifica por qué los embeddings son más útiles que una búsqueda por palabra clave exacta.
+        </p>
+      </div>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Pipeline RAG</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Fase 1: Indexación y Chunking</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Cada mes, las circulares de la autoridad sanitaria se dividen en fragmentos de $512	ext{ tokens}$ con solapamiento de $64	ext{ tokens}$. Un modelo como <code>bge-base-en-v1.5</code> genera vectores densos de $768	ext{ dimensiones}$ que se indexan en ChromaDB con metadatos de medicamento y fecha.
+                </p>
+              </div>
+            </div>
+            <div class="step-flow-item">
+              <div class="step-num-badge">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Fase 2: Recuperación Vectorial por Similitud Coseno</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Cuando el médico o paciente pregunta: <i>"¿Qué pasa si me duele la cabeza tras tomar fármaco X?"</i>, la consulta se vectoriza y se extraen los $k=3$ chunks con mayor similitud semántica.
+                </p>
+              </div>
+            </div>
+            <div class="step-flow-item">
+              <div class="step-num-badge">3</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Fase 3: Generación Anclada (Grounded Generation)</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Se inyecta el contexto recuperado en el prompt de Llama 3 con instrucción estricta de no alucinar. Llama 3 sintetiza la respuesta citando la sección oficial de farmacovigilancia.
+                </p>
+              </div>
+            </div>
+            <div class="step-flow-item" style="border-left-color:#a855f7;">
+              <div class="step-num-badge" style="background:#a855f7;">★</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:#a855f7;">¿Por qué Embeddings superan a la Búsqueda por Palabra Clave Exacta?</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  La búsqueda por palabras clave falla si el usuario escribe <i>"vértigo y mareos"</i> pero el documento médico oficial utiliza el término técnico <i>"hipotensión ortostática o trastorno vestibular"</i>. Los embeddings capturan la proximidad semántica en el espacio vectorial, uniendo el lenguaje coloquial del paciente con la nomenclatura médica oficial.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </article>
+
+    <!-- EJERCICIO 4 -->
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 4</span>
+        <h4 class="exercise-title">Análisis de Decisión Arquitectónica: RAG vs Fine-Tuning</h4>
+      </div>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Aplicación
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Un banco necesita actualizar las tasas de interés y comisiones de sus productos crediticios cada lunes. Analiza por qué reentrenar o hacer fine-tuning al modelo semanalmente es inviable y por qué RAG es la única solución arquitectónicamente viable.
+        </p>
+      </div>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Matriz de Decisión</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Inviabilidad de Fine-Tuning Semanal</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  1. <b>Costo y Latencia de Reentrenamiento:</b> Compilar adaptadores LoRA semanalmente requiere pipelines de cómputo GPU continuos.<br>
+                  2. <b>Riesgo de Olvido Catastrófico:</b> El fine-tuning no garantiza que el modelo recuerde con 100% de precisión números exactos (tasas de interés como 14.85%), ya que los LLMs parametrizan probabilidades y sufren de alucinación con valores numéricos aislados.<br>
+                  3. <b>Imposibilidad de Borrado Inmediato:</b> Si una tasa se revoca por orden regulatoria, un modelo con fine-tuning no permite eliminar un dato puntual sin volver a reentrenar.
+                </p>
+              </div>
+            </div>
+            <div class="step-flow-item" style="border-left-color:#059669;">
+              <div class="step-num-badge" style="background:#059669;">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:#059669;">Ventajas Deterministas de RAG</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Con RAG, actualizar las tasas toma menos de 2 segundos: se reemplaza el documento en la base vectorial ChromaDB. Llama 3 lee el valor exacto del contexto inyectado y cita la circular vigente con trazabilidad absoluta y sin riesgo de alucinación paramétrica.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </article>
+
+  </section>
+
+<section class="sources-section" id="fuentes-oficiales">
  <div style="text-align: center; margin-bottom: 2.2rem;">
  <span class="hero-badge-tag">Evidencia Científica & Recursos Oficiales</span>
  <h2 style="font-size: 2.2rem; font-family: var(--font-disp); font-weight: 800; color: var(--text-primary);">Fuentes de Información Reales & Referencias Académicas</h2>
