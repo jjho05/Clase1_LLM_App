@@ -1443,27 +1443,30 @@ abla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
   </div>
   </div>
 
-  <!-- Diagnóstico MLOps y Generador de Script Hugging Face -->
-  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-  
-  <!-- Diagnóstico MLOps -->
-  <div class="result-box" style="margin-top:0;">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
-  <div style="font-size:0.85rem; font-weight:700; color:var(--text-primary); text-transform:uppercase;">Diagnóstico de Salud MLOps:</div>
-  <span class="status-pill-safe" id="hp-diagnosis-badge"> Régimen Óptimo</span>
+  <!-- Diagnóstico de Salud MLOps -->
+  <div class="result-box" style="margin: 0 0 1.2rem 0; border-left: 4px solid var(--meta-blue);">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
+  <div style="font-size:0.86rem; font-weight:700; color:var(--text-primary); text-transform:uppercase; display:flex; align-items:center; gap:0.4rem;">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--meta-blue)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+    <span>Diagnóstico de Régimen de Entrenamiento:</span>
   </div>
-  <div id="hp-diagnosis-desc" style="font-size:0.86rem; color:var(--text-secondary); line-height:1.5;">
-  El Batch Size Efectivo de <b>16 ejemplos</b> con <b>375 pasos</b> garantiza un balance ideal entre estabilidad del estimador AdamW y velocidad de convergencia en 1x GPU comercial.
+  <span class="status-pill-safe" id="hp-diagnosis-badge">Régimen Óptimo SFT</span>
+  </div>
+  <div id="hp-diagnosis-desc" style="font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+  El Batch Size Efectivo de <b>16 ejemplos</b> con <b>375 pasos totales</b> y <b>19 steps de warmup (5%)</b> garantiza un balance ideal entre estabilidad del estimador AdamW y velocidad de convergencia en 1x GPU comercial.
   </div>
   </div>
 
-  <!-- Generador de TrainingArguments -->
+  <!-- Generador de Código Hugging Face / TRL Completo y Espacioso -->
+  <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem;">
+  Paso 3 · Script de Configuración Generado en Vivo para Hugging Face / TRL:
+  </div>
   <div class="code-box" style="margin:0;">
   <div class="code-header">
-  <span>training_args_config.py (Hugging Face / TRL)</span>
+  <span>training_args_config.py (Hugging Face Transformers / TRL)</span>
   <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
   </div>
-  <pre class="code-content" style="max-height:160px; overflow-y:auto;"><code id="hp-code-snippet"><span class="code-kw">from</span> <span class="code-var">transformers</span> <span class="code-kw">import</span> <span class="code-fn">TrainingArguments</span>
+  <pre class="code-content"><code id="hp-code-snippet"><span class="code-kw">from</span> <span class="code-var">transformers</span> <span class="code-kw">import</span> <span class="code-fn">TrainingArguments</span>
 
 <span class="code-var">training_args</span> = <span class="code-fn">TrainingArguments</span>(
     <span class="code-var">output_dir</span>=<span class="code-str">"./llama3-sft-checkpoint"</span>,
@@ -1477,8 +1480,6 @@ abla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
     <span class="code-var">logging_steps</span>=<span class="code-num">10</span>,
     <span class="code-var">save_strategy</span>=<span class="code-str">"epoch"</span>,
 )</code></pre>
-  </div>
-
   </div>
 
   </div>
