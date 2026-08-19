@@ -1922,7 +1922,173 @@
  </div>
  </article>
 
- </section>
+  <!-- ==========================================================================
+  SUBTEMA 1.3.8: DESPLIEGUE EN PRODUCCIÓN CON vLLM, OLLAMA Y GGUF
+  ========================================================================== -->
+  <article class="tema-card" id="tema-1-3-8">
+  <div class="tema-header">
+  <div class="tema-eyebrow">Tema 1.3.8 · Exportación y Despliegue Industrial</div>
+  <h3 class="tema-title">Del Adaptador Entrenado a Producción: vLLM, Ollama y GGUF</h3>
+  </div>
+
+  <div class="tema-section-block">
+  <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Concepto Formal</span> Pipeline de Exportación Post-Fine-Tuning</h4>
+  <p class="prose-p">
+  Una vez completado el entrenamiento con QLoRA, el modelo no está listo para producción en su forma de adaptadores separados. El flujo de exportación sigue tres etapas obligatorias: <b>Merge</b> (fusión de pesos LoRA en el modelo base), <b>Cuantización de Inferencia</b> (GGUF con llama.cpp o AWQ con AutoAWQ) y <b>Servicio</b> (Ollama, vLLM o TensorRT-LLM). Omitir el merge e intentar servir directamente adaptadores PEFT añade latencia adicional por bifurcaciones de cálculo en cada forward pass.
+  </p>
+  <p class="prose-p">
+  <b>vLLM</b> maximiza el throughput en GPU con <i>PagedAttention</i> y <i>Continuous Batching</i>, ideal para APIs de alto tráfico. <b>Ollama</b> prioriza la facilidad de despliegue local con cuantización GGUF integrada, opción estándar para equipos pequeños y edge. <b>TensorRT-LLM</b> ofrece latencia mínima absoluta en hardware NVIDIA de producción a costa de una compilación previa específica por modelo y GPU.
+  </p>
+  </div>
+
+  <div class="tema-section-block">
+  <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Pipeline de Despliegue</span> Merge, Cuantización GGUF y Servicio</h4>
+  
+  <!-- PASO 1: MERGE -->
+  <div style="margin-bottom: 1.8rem;">
+    <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:0.5rem;">
+      <span class="step-num-badge">1</span>
+      <h5 style="margin:0; font-size:1.05rem; font-family:var(--font-head); color:var(--text-primary);">
+        Merge: Fusión de Adaptadores LoRA en Pesos Base
+      </h5>
+    </div>
+    <p style="margin:0 0 0.8rem 0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+      El método <code>model.merge_and_unload()</code> suma matemáticamente los pesos LoRA al modelo base ($W_{	ext{final}} = W_0 + rac{lpha}{r}BA$) y produce un checkpoint consolidado en <code>.safetensors</code> con cero sobrecarga computacional en inferencia.
+    </p>
+    <div class="code-box" style="margin:0;">
+      <div class="code-header">
+        <span>merge_lora.py (Fusión Definitiva)</span>
+        <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="code-content"><code><span class="code-kw">from</span> <span class="code-var">peft</span> <span class="code-kw">import</span> <span class="code-fn">PeftModel</span>
+<span class="code-kw">from</span> <span class="code-var">transformers</span> <span class="code-kw">import</span> <span class="code-fn">AutoModelForCausalLM</span>
+
+<span class="code-cm"># 1. Cargamos el modelo base en precisión bfloat16</span>
+<span class="code-var">base</span> = <span class="code-fn">AutoModelForCausalLM</span>.<span class="code-fn">from_pretrained</span>(<span class="code-str">"meta-llama/Meta-Llama-3-8B-Instruct"</span>, <span class="code-var">torch_dtype</span>=<span class="code-str">"bfloat16"</span>)
+
+<span class="code-cm"># 2. Enlazamos los pesos del adaptador entrenado</span>
+<span class="code-var">lora_model</span> = <span class="code-fn">PeftModel</span>.<span class="code-fn">from_pretrained</span>(<span class="code-var">base</span>, <span class="code-str">"./llama3-sft-checkpoint"</span>)
+
+<span class="code-cm"># 3. Fusionamos matrices: W_final = W_0 + (alpha/r)*B*A</span>
+<span class="code-var">merged</span> = <span class="code-var">lora_model</span>.<span class="code-fn">merge_and_unload</span>()
+<span class="code-var">merged</span>.<span class="code-fn">save_pretrained</span>(<span class="code-str">"./llama3-merged"</span>)</code></pre>
+    </div>
+  </div>
+
+  <!-- PASO 2: CUANTIZACIÓN GGUF -->
+  <div style="margin-bottom: 1.8rem;">
+    <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:0.5rem;">
+      <span class="step-num-badge">2</span>
+      <h5 style="margin:0; font-size:1.05rem; font-family:var(--font-head); color:var(--text-primary);">
+        Cuantización GGUF para Despliegue Local con Ollama / llama.cpp
+      </h5>
+    </div>
+    <p style="margin:0 0 0.8rem 0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+      Convertimos el modelo fusionado a formato GGUF con cuantización <code>Q4_K_M</code> (4.5 bits por peso con k-quants), reduciendo la huella de memoria de Llama 3 8B de 16 GB (FP16) a ~4.8 GB con nula degradación de calidad.
+    </p>
+    <div class="code-box" style="margin:0;">
+      <div class="code-header">
+        <span>convert_gguf.sh (Conversión y Cuantización a 4 bits)</span>
+        <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="code-content"><code><span class="code-cm"># Paso 1: Convertir checkpoint Hugging Face a binario GGUF FP16</span>
+<span class="code-fn">python</span> <span class="code-var">llama.cpp/convert_hf_to_gguf.py</span> <span class="code-str">./llama3-merged</span> <span class="code-var">--outfile</span> <span class="code-str">./llama3-f16.gguf</span>
+
+<span class="code-cm"># Paso 2: Cuantizar a 4 bits Q4_K_M (Balance óptimo velocidad / precisión)</span>
+<span class="code-fn">./llama.cpp/llama-quantize</span> <span class="code-str">./llama3-f16.gguf</span> <span class="code-str">./llama3-q4km.gguf</span> <span class="code-var">q4_k_m</span></code></pre>
+    </div>
+  </div>
+
+  <!-- PASO 3: SERVICIO OLLAMA Y vLLM -->
+  <div style="margin-bottom: 1.2rem;">
+    <div style="display:flex; align-items:center; gap:0.65rem; margin-bottom:0.5rem;">
+      <span class="step-num-badge">3</span>
+      <h5 style="margin:0; font-size:1.05rem; font-family:var(--font-head); color:var(--text-primary);">
+        Servicio en Producción: Modelfile de Ollama y Servidor vLLM
+      </h5>
+    </div>
+    <p style="margin:0 0 0.8rem 0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+      Para uso local o edge usamos un <code>Modelfile</code> declarativo en Ollama. Para APIs de alta concurrencia usamos el servidor de <b>vLLM</b> con <i>PagedAttention</i> y <i>Continuous Batching</i>.
+    </p>
+    <div class="code-box" style="margin:0 0 0.9rem 0;">
+      <div class="code-header">
+        <span>Modelfile (Despliegue Local con Ollama)</span>
+        <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="code-content"><code><span class="code-kw">FROM</span> <span class="code-str">./llama3-q4km.gguf</span>
+<span class="code-kw">SYSTEM</span> <span class="code-str">"Eres un asistente legal experto en derecho corporativo mexicano. Cita artículos del Código de Comercio."</span>
+<span class="code-kw">PARAMETER</span> <span class="code-var">temperature</span> <span class="code-num">0.2</span>
+<span class="code-kw">PARAMETER</span> <span class="code-var">top_p</span> <span class="code-num">0.9</span></code></pre>
+    </div>
+    <div class="code-box" style="margin:0;">
+      <div class="code-header">
+        <span>vLLM Server (API Compatible con OpenAI)</span>
+        <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre class="code-content"><code><span class="code-fn">vllm</span> <span class="code-var">serve</span> <span class="code-str">./llama3-merged</span> <span class="code-var">--host</span> <span class="code-num">0.0.0.0</span> <span class="code-var">--port</span> <span class="code-num">8000</span> <span class="code-var">--dtype</span> <span class="code-str">bfloat16</span> <span class="code-var">--max-model-len</span> <span class="code-num">4096</span></code></pre>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="tema-section-block">
+  <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Tabla Comparativa</span> Motores de Servicio</h4>
+  <div style="overflow-x:auto; margin-top:1rem;">
+  <table style="width:100%; border-collapse:collapse; font-size:0.88rem; font-family:var(--font-body);">
+  <thead>
+  <tr style="background:var(--meta-blue-subtle); border-bottom:2px solid var(--meta-blue-border);">
+  <th style="padding:0.7rem 1rem; text-align:left; font-weight:800; color:var(--text-primary);">Criterio</th>
+  <th style="padding:0.7rem 1rem; text-align:center; font-weight:800; color:var(--meta-blue);">vLLM</th>
+  <th style="padding:0.7rem 1rem; text-align:center; font-weight:800; color:var(--accent-easy);">Ollama</th>
+  <th style="padding:0.7rem 1rem; text-align:center; font-weight:800; color:var(--text-primary);">TensorRT-LLM</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr style="border-bottom:1px solid var(--border-light);">
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Throughput (tokens/s)</td>
+  <td style="padding:0.65rem 1rem; text-align:center; color:var(--meta-blue); font-weight:700;">3,000–8,000</td>
+  <td style="padding:0.65rem 1rem; text-align:center; color:var(--accent-easy); font-weight:700;">400–800</td>
+  <td style="padding:0.65rem 1rem; text-align:center; font-weight:700;">5,000–12,000</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--border-light); background:var(--bg-subtle);">
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Hardware Requerido</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">GPU NVIDIA (CUDA)</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">CPU, GPU, Apple Silicon</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">NVIDIA H100 / A100</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--border-light);">
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">API Compatible</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">OpenAI v1</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">Ollama REST + OpenAI</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">Triton Inference Server</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--border-light); background:var(--bg-subtle);">
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Formato de Modelo</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">HuggingFace / AWQ</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">GGUF (llama.cpp)</td>
+  <td style="padding:0.65rem 1rem; text-align:center;">TRT Engine (.trt)</td>
+  </tr>
+  <tr>
+  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Caso de Uso Ideal</td>
+  <td style="padding:0.65rem 1rem; text-align:center; color:var(--meta-blue); font-weight:700;">API producción multi-usuario</td>
+  <td style="padding:0.65rem 1rem; text-align:center; color:var(--accent-easy); font-weight:700;">Dev local / Edge</td>
+  <td style="padding:0.65rem 1rem; text-align:center; font-weight:700;">Latencia crítica empresarial</td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+  </div>
+
+  <div class="easy-explainer-box" style="margin-top:1.5rem;">
+  <div class="easy-header">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+  <span>Regla Práctica de Selección</span>
+  </div>
+  <p class="easy-text">Para desarrollo y demos usa <b>Ollama + GGUF Q4_K_M</b>: cero configuración, cualquier hardware, Modelfile declarativo. Para APIs de producción con más de 50 usuarios concurrentes, despliega <b>vLLM</b> con PagedAttention en GPU NVIDIA — elimina la fragmentación del KV-Cache y multiplica el throughput por 3–5x frente a HuggingFace Inference nativo.</p>
+  </div>
+  </article>
+
+  </section>
 
   <!-- ==========================================================================
   EJERCICIOS PRÁCTICOS OFICIALES (1 AL 4) CON GUÍA Y SOLUCIONES DESPLEGABLES
@@ -2152,170 +2318,7 @@
 
 
 
-  <!-- ==========================================================================
-  SUBTEMA 1.3.8: DESPLIEGUE EN PRODUCCI&Oacute;N CON vLLM, OLLAMA Y GGUF
-  ========================================================================== -->
-  <article class="tema-card" id="tema-1-3-8">
-  <div class="tema-header">
-  <div class="tema-eyebrow">Tema 1.3.8 &middot; Exportaci&oacute;n y Despliegue Industrial</div>
-  <h3 class="tema-title">Del Adaptador Entrenado a Producci&oacute;n: vLLM, Ollama y GGUF</h3>
-  </div>
-
-  <div class="tema-section-block">
-  <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Concepto Formal</span> Pipeline de Exportaci&oacute;n Post-Fine-Tuning</h4>
-  <p class="prose-p">
-  Una vez completado el entrenamiento con QLoRA, el modelo no est&aacute; listo para producci&oacute;n en su forma de adaptadores separados. El flujo de exportaci&oacute;n sigue tres etapas obligatorias: <b>Merge</b> (fusi&oacute;n de pesos LoRA en el modelo base), <b>Cuantizaci&oacute;n de Inferencia</b> (GGUF con llama.cpp o AWQ con AutoAWQ) y <b>Servicio</b> (Ollama, vLLM o TensorRT-LLM). Omitir el merge e intentar servir directamente adaptadores PEFT a&ntilde;ade latencia adicional por bifurcaciones de c&aacute;lculo en cada forward pass.
-  </p>
-  <p class="prose-p">
-  <b>vLLM</b> maximiza el throughput en GPU con <i>PagedAttention</i> y <i>Continuous Batching</i>, ideal para APIs de alto tr&aacute;fico. <b>Ollama</b> prioriza la facilidad de despliegue local con cuantizaci&oacute;n GGUF integrada, opci&oacute;n est&aacute;ndar para equipos peque&ntilde;os y edge. <b>TensorRT-LLM</b> ofrece latencia m&iacute;nima absoluta en hardware NVIDIA de producci&oacute;n a costa de una compilaci&oacute;n previa espec&iacute;fica por modelo y GPU.
-  </p>
-  </div>
-
-  <div class="tema-section-block">
-  <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Pipeline de Despliegue</span> Merge, Cuantización GGUF y Servicio</h4>
-  <div class="step-flow-list">
   
-  <div class="step-flow-item">
-    <div class="step-num-badge">1</div>
-    <div class="step-flow-content" style="flex: 1; min-width: 0;">
-      <h5 style="margin: 0 0 0.4rem 0; font-size: 1.05rem; font-family: var(--font-head); color: var(--text-primary);">
-        Merge: Fusión de Adaptadores LoRA en Pesos Base
-      </h5>
-      <p style="margin: 0 0 0.8rem 0; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
-        El método <code>model.merge_and_unload()</code> suma matemáticamente los pesos LoRA al modelo base ($W_{\text{final}} = W_0 + \frac{\alpha}{r}BA$) y produce un checkpoint consolidado en <code>.safetensors</code> con cero sobrecarga computacional en inferencia.
-      </p>
-      <div class="code-box" style="margin: 0; width: 100%;">
-        <div class="code-header">
-          <span>merge_lora.py (Fusión Definitiva)</span>
-          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
-        </div>
-        <pre class="code-content"><code><span class="code-kw">from</span> <span class="code-var">peft</span> <span class="code-kw">import</span> <span class="code-fn">PeftModel</span>
-<span class="code-kw">from</span> <span class="code-var">transformers</span> <span class="code-kw">import</span> <span class="code-fn">AutoModelForCausalLM</span>
-
-<span class="code-cm"># 1. Cargamos el modelo base en precisión bfloat16</span>
-<span class="code-var">base</span> = <span class="code-fn">AutoModelForCausalLM</span>.<span class="code-fn">from_pretrained</span>(<span class="code-str">"meta-llama/Meta-Llama-3-8B-Instruct"</span>, <span class="code-var">torch_dtype</span>=<span class="code-str">"bfloat16"</span>)
-
-<span class="code-cm"># 2. Enlazamos los pesos del adaptador entrenado</span>
-<span class="code-var">lora_model</span> = <span class="code-fn">PeftModel</span>.<span class="code-fn">from_pretrained</span>(<span class="code-var">base</span>, <span class="code-str">"./llama3-sft-checkpoint"</span>)
-
-<span class="code-cm"># 3. Fusionamos matrices: W_final = W_0 + (alpha/r)*B*A</span>
-<span class="code-var">merged</span> = <span class="code-var">lora_model</span>.<span class="code-fn">merge_and_unload</span>()
-<span class="code-var">merged</span>.<span class="code-fn">save_pretrained</span>(<span class="code-str">"./llama3-merged"</span>)</code></pre>
-      </div>
-    </div>
-  </div>
-
-  <div class="step-flow-item">
-    <div class="step-num-badge">2</div>
-    <div class="step-flow-content" style="flex: 1; min-width: 0;">
-      <h5 style="margin: 0 0 0.4rem 0; font-size: 1.05rem; font-family: var(--font-head); color: var(--text-primary);">
-        Cuantización GGUF para Despliegue Local con Ollama / llama.cpp
-      </h5>
-      <p style="margin: 0 0 0.8rem 0; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
-        Convertimos el modelo fusionado a formato GGUF con cuantización <code>Q4_K_M</code> (4.5 bits por peso con k-quants), reduciendo la huella de memoria de Llama 3 8B de 16 GB (FP16) a ~4.8 GB con nula degradación de calidad.
-      </p>
-      <div class="code-box" style="margin: 0; width: 100%;">
-        <div class="code-header">
-          <span>convert_gguf.sh (Conversión y Cuantización a 4 bits)</span>
-          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
-        </div>
-        <pre class="code-content"><code><span class="code-cm"># Paso 1: Convertir checkpoint Hugging Face a binario GGUF FP16</span>
-<span class="code-fn">python</span> <span class="code-var">llama.cpp/convert_hf_to_gguf.py</span> <span class="code-str">./llama3-merged</span> <span class="code-var">--outfile</span> <span class="code-str">./llama3-f16.gguf</span>
-
-<span class="code-cm"># Paso 2: Cuantizar a 4 bits Q4_K_M (Balance óptimo velocidad / precisión)</span>
-<span class="code-fn">./llama.cpp/llama-quantize</span> <span class="code-str">./llama3-f16.gguf</span> <span class="code-str">./llama3-q4km.gguf</span> <span class="code-var">q4_k_m</span></code></pre>
-      </div>
-    </div>
-  </div>
-
-  <div class="step-flow-item">
-    <div class="step-num-badge">3</div>
-    <div class="step-flow-content" style="flex: 1; min-width: 0;">
-      <h5 style="margin: 0 0 0.4rem 0; font-size: 1.05rem; font-family: var(--font-head); color: var(--text-primary);">
-        Servicio en Producción: Modelfile de Ollama y Servidor vLLM
-      </h5>
-      <p style="margin: 0 0 0.8rem 0; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
-        Para uso local o edge usamos un <code>Modelfile</code> declarativo en Ollama. Para APIs de alta concurrencia usamos el servidor de <b>vLLM</b> con <i>PagedAttention</i> y <i>Continuous Batching</i>.
-      </p>
-      <div class="code-box" style="margin: 0 0 0.9rem 0; width: 100%;">
-        <div class="code-header">
-          <span>Modelfile (Despliegue Local con Ollama)</span>
-          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
-        </div>
-        <pre class="code-content"><code><span class="code-kw">FROM</span> <span class="code-str">./llama3-q4km.gguf</span>
-<span class="code-kw">SYSTEM</span> <span class="code-str">"Eres un asistente legal experto en derecho corporativo mexicano. Cita artículos del Código de Comercio."</span>
-<span class="code-kw">PARAMETER</span> <span class="code-var">temperature</span> <span class="code-num">0.2</span>
-<span class="code-kw">PARAMETER</span> <span class="code-var">top_p</span> <span class="code-num">0.9</span></code></pre>
-      </div>
-      <div class="code-box" style="margin: 0; width: 100%;">
-        <div class="code-header">
-          <span>vLLM Server (API Compatible con OpenAI)</span>
-          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
-        </div>
-        <pre class="code-content"><code><span class="code-fn">vllm</span> <span class="code-var">serve</span> <span class="code-str">./llama3-merged</span> <span class="code-var">--host</span> <span class="code-num">0.0.0.0</span> <span class="code-var">--port</span> <span class="code-num">8000</span> <span class="code-var">--dtype</span> <span class="code-str">bfloat16</span> <span class="code-var">--max-model-len</span> <span class="code-num">4096</span></code></pre>
-      </div>
-    </div>
-  </div>
-
-  </div>
-  </div>
-
-  <div class="tema-section-block">
-  <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Tabla Comparativa</span> Motores de Servicio</h4>
-  <div style="overflow-x:auto; margin-top:1rem;">
-  <table style="width:100%; border-collapse:collapse; font-size:0.88rem; font-family:var(--font-body);">
-  <thead>
-  <tr style="background:var(--meta-blue-subtle); border-bottom:2px solid var(--meta-blue-border);">
-  <th style="padding:0.7rem 1rem; text-align:left; font-weight:800; color:var(--text-primary);">Criterio</th>
-  <th style="padding:0.7rem 1rem; text-align:center; font-weight:800; color:var(--meta-blue);">vLLM</th>
-  <th style="padding:0.7rem 1rem; text-align:center; font-weight:800; color:var(--accent-easy);">Ollama</th>
-  <th style="padding:0.7rem 1rem; text-align:center; font-weight:800; color:var(--text-primary);">TensorRT-LLM</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr style="border-bottom:1px solid var(--border-light);">
-  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Throughput (tokens/s)</td>
-  <td style="padding:0.65rem 1rem; text-align:center; color:var(--meta-blue); font-weight:700;">3,000&ndash;8,000</td>
-  <td style="padding:0.65rem 1rem; text-align:center; color:var(--accent-easy); font-weight:700;">400&ndash;800</td>
-  <td style="padding:0.65rem 1rem; text-align:center; font-weight:700;">5,000&ndash;12,000</td>
-  </tr>
-  <tr style="border-bottom:1px solid var(--border-light); background:var(--bg-subtle);">
-  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Hardware Requerido</td>
-  <td style="padding:0.65rem 1rem; text-align:center;">GPU NVIDIA (CUDA)</td>
-  <td style="padding:0.65rem 1rem; text-align:center;">CPU, GPU, Apple Silicon</td>
-  <td style="padding:0.65rem 1rem; text-align:center;">NVIDIA H100 / A100</td>
-  </tr>
-  <tr style="border-bottom:1px solid var(--border-light);">
-  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">API Compatible</td>
-  <td style="padding:0.65rem 1rem; text-align:center;">OpenAI v1</td>
-  <td style="padding:0.65rem 1rem; text-align:center;">Ollama REST + OpenAI</td>
-  <td style="padding:0.65rem 1rem; text-align:center;">Triton Inference Server</td>
-  </tr>
-  <tr style="border-bottom:1px solid var(--border-light); background:var(--bg-subtle);">
-  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Formato de Modelo</td>
-  <td style="padding:0.65rem 1rem; text-align:center;">HuggingFace / AWQ</td>
-  <td style="padding:0.65rem 1rem; text-align:center;">GGUF (llama.cpp)</td>
-  <td style="padding:0.65rem 1rem; text-align:center;">TRT Engine (.trt)</td>
-  </tr>
-  <tr>
-  <td style="padding:0.65rem 1rem; font-weight:600; color:var(--text-secondary);">Caso de Uso Ideal</td>
-  <td style="padding:0.65rem 1rem; text-align:center; color:var(--meta-blue); font-weight:700;">API producci&oacute;n multi-usuario</td>
-  <td style="padding:0.65rem 1rem; text-align:center; color:var(--accent-easy); font-weight:700;">Dev local / Edge</td>
-  <td style="padding:0.65rem 1rem; text-align:center; font-weight:700;">Latencia cr&iacute;tica empresarial</td>
-  </tr>
-  </tbody>
-  </table>
-  </div>
-  </div>
-
-  <div class="easy-explainer-box" style="margin-top:1.5rem;">
-  <div class="easy-header">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
-  <span>Regla Pr&aacute;ctica de Selecci&oacute;n</span>
-  </div>
-  <p class="easy-text">Para desarrollo y demos usa <b>Ollama + GGUF Q4_K_M</b>: cero configuraci&oacute;n, cualquier hardware, Modelfile declarativo. Para APIs de producci&oacute;n con m&aacute;s de 50 usuarios concurrentes, despliega <b>vLLM</b> con PagedAttention en GPU NVIDIA &mdash; elimina la fragmentaci&oacute;n del KV-Cache y multiplica el throughput por 3&ndash;5x frente a HuggingFace Inference nativo.</p>
-  </div>
-  </article>
 
  <!-- ==========================================================================
  GLOSARIO TÉCNICO OFICIAL (FILTRABLE Y CON BUSCADOR)
