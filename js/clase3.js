@@ -432,22 +432,28 @@
  }
 
  /* ==========================================================================
-  BANCO 1.3.4: VALIDADOR JSONL & INSPECTOR DE LOSS MASKING CON PESTAÑAS
+  BANCO 1.3.4: VALIDADOR JSONL & INSPECTOR DE LOSS MASKING CON EDITOR EN COLOR
   ========================================================================== */
   function initDatasetValidator() {
-    const editor = document.getElementById('jsonl-editor');
+    const codeDisplay = document.getElementById('jsonl-code-display');
     const validateBtn = document.getElementById('jsonl-validate-btn');
     const formatBtn = document.getElementById('jsonl-format-btn');
+    const copyBtn = document.getElementById('jsonl-copy-btn');
+    const copyRawBtn = document.getElementById('jsonl-copy-raw-btn');
+    const downloadBtn = document.getElementById('jsonl-download-btn');
     const statusBadge = document.getElementById('jsonl-status-badge');
     const streamContainer = document.getElementById('jsonl-rendered-preview');
     const tensorContainer = document.getElementById('jsonl-tensor-chips');
+    const auditReport = document.getElementById('jsonl-audit-report');
+    const auditDetail = document.getElementById('jsonl-audit-detail');
+    const auditBadge = document.getElementById('jsonl-audit-badge');
 
     const metricTotal = document.getElementById('jsonl-metric-total');
     const metricMasked = document.getElementById('jsonl-metric-masked');
     const metricTrainable = document.getElementById('jsonl-metric-trainable');
     const metricEfficiency = document.getElementById('jsonl-metric-efficiency');
 
-    if (!editor) return;
+    if (!codeDisplay) return;
 
     // Presets como objetos JS para garantizar 100% JSON válido
     const PRESETS_DATA = {
@@ -501,7 +507,22 @@
       }
     };
 
-    // Función de tokenización aproximada para Meta Llama 3
+    // Función de resaltado de sintaxis JSON en HTML
+    function colorizeJson(rawJsonStr) {
+      const s = rawJsonStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const pattern = /(?:"(?:\u[a-zA-Z0-9]{4}|\[^u]|[^\"])*")\s*:|(?:"(?:\u[a-zA-Z0-9]{4}|\[^u]|[^\"])*")|(?:true|false|null|-?\d+(?:\.\d+)?)/g;
+      return s.replace(pattern, match => {
+        if (/:$/.test(match)) {
+          return `<span class="code-var">${match.slice(0, -1)}</span>:`;
+        } else if (/^"/.test(match)) {
+          return `<span class="code-str">${match}</span>`;
+        } else {
+          return `<span class="code-num">${match}</span>`;
+        }
+      });
+    }
+
+    // Tokenizador aproximado BPE para Meta Llama 3
     function simulateTokenizer(text) {
       const rawTokens = text.match(/\w+|[^\w\s]|\s+/g) || [text];
       return rawTokens.filter(t => t.length > 0).map(tok => {
@@ -512,12 +533,19 @@
       });
     }
 
-    function validateAndRender() {
-      const rawText = editor.value.trim();
+    let currentParsedObj = null;
+
+    function renderFromObject(obj) {
+      currentParsedObj = obj;
+      const formattedJson = JSON.stringify(obj, null, 2);
+      codeDisplay.innerHTML = colorizeJson(formattedJson);
+      processDataset(obj);
+    }
+
+    function processDataset(parsed) {
       try {
-        const parsed = JSON.parse(rawText);
         if (!parsed.messages || !Array.isArray(parsed.messages)) {
-          throw new Error("El JSON debe contener un arreglo 'messages'.");
+          throw new Error("El JSON debe contener un arreglo de 'messages'.");
         }
 
         if (statusBadge) {
@@ -546,9 +574,9 @@
           const role = msg.role || 'user';
           const content = msg.content || '';
           const isAssistant = role === 'assistant';
+          const turnClass = role === 'system' ? 'system-turn' : isAssistant ? 'assistant-turn' : 'user-turn';
 
           // Turn Card
-          const turnClass = role === 'system' ? 'system-turn' : role === 'assistant' ? 'assistant-turn' : 'user-turn';
           streamHtml += `
             <div class="chat-turn-card ${turnClass}">
               <div class="chat-turn-header">
@@ -577,9 +605,8 @@
 
           // Tokenizer Simulation
           const tokens = simulateTokenizer(content);
-          const headerTokens = 4; // <|start_header_id|>, role, <|end_header_id|>, 
-
-          const eotTokens = 1;   // <|eot_id|>
+          const headerTokens = 4;
+          const eotTokens = 1;
           const count = tokens.length + headerTokens + eotTokens;
 
           totalTokens += count;
@@ -590,7 +617,7 @@
             maskedTokens += count;
           }
 
-          // Generate Tensor Chips for Inspector
+          // Tensor Chips
           tensorHtml += `<div class="tensor-token-chip masked" title="Header: &lt;|start_header_id|&gt;${role}&lt;|end_header_id|&gt;&#10;labels: -100">&lt;|${role}|&gt; <span class="chip-label">-100</span></div>`;
           tokens.forEach(tok => {
             if (isAssistant) {
@@ -614,27 +641,141 @@
         if (metricTrainable) metricTrainable.textContent = `${trainableTokens} (${efficiency}%)`;
         if (metricEfficiency) metricEfficiency.textContent = `${efficiency}% Gradiente`;
 
+        // Reporte de Auditoría
+        if (auditReport && auditDetail && auditBadge) {
+          auditReport.style.borderLeftColor = '#10b981';
+          auditBadge.className = 'status-pill-safe';
+          auditBadge.textContent = 'Auditoría Aprobada';
+          auditDetail.innerHTML = `Total de <b>${totalTokens} tokens BPE</b> (${trainableTokens} con gradiente activo y ${maskedTokens} enmascarados con <code>label = -100</code>). Cumple con el estándar de Meta Llama 3.`;
+        }
+
       } catch (err) {
         if (statusBadge) {
           statusBadge.textContent = 'Error de Sintaxis';
           statusBadge.style.color = '#ef4444';
         }
-        if (streamContainer) {
-          streamContainer.innerHTML = `<div class="result-box" style="border-left:4px solid #ef4444; color:#ef4444; background:rgba(239,68,68,0.06); padding:0.8rem 1rem;"><b>Error de Formato JSON:</b> ${err.message}</div>`;
+        if (auditReport && auditDetail && auditBadge) {
+          auditReport.style.borderLeftColor = '#ef4444';
+          auditBadge.className = 'status-pill-danger';
+          auditBadge.textContent = 'Error en Formato';
+          auditDetail.innerHTML = `<b>Fallo de Validación:</b> ${err.message}`;
         }
       }
+    }
+
+    // Evento de Auditoría y Tokenización (Botón Principal)
+    if (validateBtn) {
+      validateBtn.addEventListener('click', () => {
+        try {
+          const raw = codeDisplay.innerText;
+          const parsed = JSON.parse(raw);
+          renderFromObject(parsed);
+          
+          // Feedback visual
+          const oldHtml = validateBtn.innerHTML;
+          validateBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-right:4px;"><path d="M20 6L9 17l-5-5"/></svg>
+            <span>¡Dataset Auditado con Éxito!</span>
+          `;
+          validateBtn.style.background = '#059669';
+          setTimeout(() => {
+            validateBtn.innerHTML = oldHtml;
+            validateBtn.style.background = '';
+          }, 1800);
+        } catch (e) {
+          if (statusBadge) {
+            statusBadge.textContent = 'JSON Inválido';
+            statusBadge.style.color = '#ef4444';
+          }
+        }
+      });
+    }
+
+    // Copiar JSON Formateado
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const text = codeDisplay.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          const old = copyBtn.textContent;
+          copyBtn.textContent = '¡Copiado!';
+          copyBtn.style.background = '#059669';
+          copyBtn.style.color = '#ffffff';
+          setTimeout(() => {
+            copyBtn.textContent = old;
+            copyBtn.style.background = '';
+            copyBtn.style.color = '';
+          }, 1800);
+        });
+      });
+    }
+
+    // Copiar 1 Línea JSONL (Formato de Producción SFT)
+    if (copyRawBtn) {
+      copyRawBtn.addEventListener('click', () => {
+        try {
+          const raw = codeDisplay.innerText;
+          const parsed = JSON.parse(raw);
+          const oneLineJsonl = JSON.stringify(parsed);
+          navigator.clipboard.writeText(oneLineJsonl).then(() => {
+            const old = copyRawBtn.textContent;
+            copyRawBtn.textContent = '¡1 Línea JSONL Copiada!';
+            copyRawBtn.style.background = '#059669';
+            copyRawBtn.style.color = '#ffffff';
+            setTimeout(() => {
+              copyRawBtn.textContent = old;
+              copyRawBtn.style.background = '';
+              copyRawBtn.style.color = '';
+            }, 1800);
+          });
+        } catch (e) {}
+      });
+    }
+
+    // Descargar dataset_sft.jsonl
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', () => {
+        try {
+          const raw = codeDisplay.innerText;
+          const parsed = JSON.parse(raw);
+          const oneLineJsonl = JSON.stringify(parsed) + '\n';
+          const blob = new Blob([oneLineJsonl], { type: 'application/jsonl;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'dataset_sft_llama3.jsonl';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        } catch (e) {}
+      });
     }
 
     // Auto-formatear JSON
     if (formatBtn) {
       formatBtn.addEventListener('click', () => {
         try {
-          const parsed = JSON.parse(editor.value);
-          editor.value = JSON.stringify(parsed, null, 2);
-          validateAndRender();
+          const raw = codeDisplay.innerText;
+          const parsed = JSON.parse(raw);
+          renderFromObject(parsed);
         } catch (e) {}
       });
     }
+
+    // Edición manual en vivo
+    codeDisplay.addEventListener('input', () => {
+      try {
+        const raw = codeDisplay.innerText;
+        const parsed = JSON.parse(raw);
+        currentParsedObj = parsed;
+        processDataset(parsed);
+      } catch (e) {
+        if (statusBadge) {
+          statusBadge.textContent = 'JSON Inválido';
+          statusBadge.style.color = '#ef4444';
+        }
+      }
+    });
 
     // Pestañas (Chat Template, Tensores PyTorch, Comparativa)
     const tabBtns = document.querySelectorAll('.jsonl-tab-btn');
@@ -659,18 +800,13 @@
         btn.classList.add('active');
         const sampleKey = btn.getAttribute('data-sample');
         if (PRESETS_DATA[sampleKey]) {
-          editor.value = JSON.stringify(PRESETS_DATA[sampleKey], null, 2);
-          validateAndRender();
+          renderFromObject(PRESETS_DATA[sampleKey]);
         }
       });
     });
 
-    if (validateBtn) validateBtn.addEventListener('click', validateAndRender);
-    editor.addEventListener('input', validateAndRender);
-
-    // Carga inicial 100% válida
-    editor.value = JSON.stringify(PRESETS_DATA['support'], null, 2);
-    validateAndRender();
+    // Carga inicial
+    renderFromObject(PRESETS_DATA['support']);
   }
 
   /* ==========================================================================

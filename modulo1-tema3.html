@@ -1061,12 +1061,12 @@
   <option value="medical">medical</option>
   </select>
 
-  <!-- Editor de Registro JSONL -->
+  <!-- Editor de Registro JSONL con Resaltado de Sintaxis -->
   <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem;">
-  Paso 2 · Registro JSONL del Dataset SFT (Editable en Tiempo Real):
+  Paso 2 · Registro JSONL del Dataset SFT (Editor en Color con Resaltado VS Code):
   </div>
-  <div class="terminal-shell" style="margin-bottom: 1rem;">
-  <div class="terminal-topbar" style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0.85rem; background:#0f172a; border-bottom:1px solid rgba(255,255,255,0.1);">
+  <div class="code-box" style="margin-bottom: 1rem;">
+  <div class="code-header" style="background:#0f172a; border-bottom:1px solid rgba(255,255,255,0.1); padding:0.55rem 0.95rem;">
   <div style="display:flex; align-items:center; gap:0.6rem;">
     <div style="display:flex; gap:5px;">
       <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#ef4444;"></span>
@@ -1075,24 +1075,47 @@
     </div>
     <span style="font-family:var(--font-mono); font-size:0.78rem; font-weight:700; color:#94a3b8;">dataset_sft_sample.jsonl</span>
   </div>
-  <span style="color:#34d399; font-weight:700; font-size:0.78rem;" id="jsonl-status-badge">JSON Válido</span>
+  <div style="display:flex; align-items:center; gap:0.6rem;">
+    <span style="color:#34d399; font-weight:700; font-size:0.78rem;" id="jsonl-status-badge">JSON Válido</span>
+    <button class="btn-copy-code" id="jsonl-copy-btn">Copiar</button>
   </div>
-  <div style="padding: 0.85rem; background: #0b1120;">
-  <textarea class="code-editor-input" id="jsonl-editor" rows="7" style="width:100%; border:none; background:transparent; color:#f1f5f9; font-family:var(--font-mono); font-size:0.86rem; line-height:1.55; resize:vertical;"></textarea>
+  </div>
+  <div style="background:#0b1120; border-radius:0 0 10px 10px; overflow:hidden;">
+    <pre class="code-content" id="jsonl-code-display" contenteditable="true" spellcheck="false" style="padding:1.1rem; margin:0; outline:none; font-family:var(--font-mono); font-size:0.86rem; line-height:1.6; color:#f1f5f9; min-height:180px; max-height:300px; overflow-y:auto; white-space:pre-wrap;"></pre>
   </div>
   </div>
 
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem; flex-wrap:wrap; gap:0.6rem;">
-  <div style="display:flex; gap:0.6rem;">
-  <button class="btn-primary" id="jsonl-validate-btn" style="padding:0.6rem 1.2rem; font-size:0.86rem;">
+  <!-- Barra de Herramientas de Auditoría e Ingeniería de Datos -->
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem; flex-wrap:wrap; gap:0.6rem;">
+  <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+  <button class="btn-primary" id="jsonl-validate-btn" style="padding:0.55rem 1.15rem; font-size:0.86rem;">
   <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-right:4px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-  <span>Validar & Tokenizar con Llama 3</span>
+  <span>Auditar Dataset &amp; Tokenizar BPE</span>
   </button>
-  <button class="btn-secondary" id="jsonl-format-btn" style="padding:0.6rem 1rem; font-size:0.86rem;">
-  <span>Auto-formatear JSON</span>
+  <button class="btn-secondary" id="jsonl-copy-raw-btn" style="padding:0.55rem 0.95rem; font-size:0.84rem;">
+  <span>Copiar 1 Línea JSONL</span>
+  </button>
+  <button class="btn-secondary" id="jsonl-download-btn" style="padding:0.55rem 0.95rem; font-size:0.84rem;">
+  <span>Descargar .jsonl</span>
+  </button>
+  <button class="btn-secondary" id="jsonl-format-btn" style="padding:0.55rem 0.95rem; font-size:0.84rem;">
+  <span>Auto-formatear</span>
   </button>
   </div>
-  <div id="jsonl-stats" style="display:flex; gap:0.5rem; flex-wrap:wrap;"></div>
+  </div>
+
+  <!-- Reporte de Auditoría de Datos en Vivo -->
+  <div id="jsonl-audit-report" class="result-box" style="margin: 0 0 1.25rem 0; border-left: 4px solid #10b981; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.8rem;">
+  <div>
+    <div style="font-size:0.86rem; font-weight:700; color:var(--text-primary); margin-bottom:0.25rem; display:flex; align-items:center; gap:0.4rem;">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="#10b981"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      <span>Auditoría SFT: Compatible con SFTTrainer / TRL / Unsloth</span>
+    </div>
+    <div style="font-size:0.82rem; color:var(--text-secondary);" id="jsonl-audit-detail">
+      Secuencia válida en vocabulario Llama 3 (128,256 tokens). Enmascaramiento activo en system y user (label = -100).
+    </div>
+  </div>
+  <span class="status-pill-safe" id="jsonl-audit-badge">Auditoría Aprobada</span>
   </div>
 
   <!-- Visor Multi-Pestaña de Loss Masking -->
