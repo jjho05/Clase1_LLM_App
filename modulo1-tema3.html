@@ -413,7 +413,7 @@
  <div class="formula-card">
  <div class="formula-math-area">
  $$h = W_0 x + \Delta W x = W_0 x + \frac{\alpha}{r} (B \cdot A) x$$
- $$\text{Inicializaci\acute{o}n: } A \sim \mathcal{N}\left(0, \frac{1}{r}\right), \quad B = 0 \implies \Delta W = 0 \text{ al inicio}$$
+ $$\text{Inicialización: } A \sim \mathcal{N}\left(0,\, \frac{1}{r}\right), \quad B = 0 \implies \Delta W = 0 \quad (\text{al inicio})$$
  </div>
  <details class="formula-breakdown-details">
  <summary class="formula-breakdown-summary">
@@ -1186,7 +1186,7 @@
 
  <div class="formula-card">
  <div class="formula-math-area">
- $$\text{PPL}(W) = \exp\left( -\frac{1}{N} \sum_{i=1}^{N} \log P(w_i \mid w_{<i}) \right)$$
+ $$\text{PPL}(W) = \exp\left( -\frac{1}{N} \sum_{i=1}^{N} \log P(w_i \mid w_{1:i-1}) \right)$$
  $$\text{BLEU-4} = \text{BP} \cdot \exp\left( \sum_{n=1}^{4} \frac{1}{4} \log p_n \right), \quad \text{ROUGE-L} = \frac{(1 + \beta^2) R_{\text{LCS}} P_{\text{LCS}}}{R_{\text{LCS}} + \beta^2 P_{\text{LCS}}}$$
  </div>
  <details class="formula-breakdown-details">
@@ -1559,15 +1559,15 @@
   Conceptos necesarios para este ejercicio
   </div>
   <ul class="exercise-context-list">
-  <li><b>Arquitectura LoRA:</b> Añade dos matrices de baja dimensión $B \in \mathbb{R}^{d 	imes r}$ y $A \in \mathbb{R}^{r 	imes d}$ por proyección adaptada, donde el rango $r \ll d_{	ext{model}}$. Solo se entrenan estas matrices; los pesos originales $W_0$ se congelan.</li>
-  <li><b>Rango $r$ y escala $lpha$:</b> $r=16$ define el cuello de botella dimensional. La actualización efectiva es $\Delta W = rac{lpha}{r} B \cdot A$. Con $lpha=32$ y $r=16$, el factor de escala es 2.</li>
+  <li><b>Arquitectura LoRA:</b> Añade dos matrices de baja dimensión $B \in \mathbb{R}^{d \times r}$ y $A \in \mathbb{R}^{r \times d}$ por proyección adaptada, donde el rango $r \ll d_{\text{model}}$. Solo se entrenan estas matrices; los pesos originales $W_0$ se congelan.</li>
+  <li><b>Rango $r$ y escala $\alpha$:</b> $r=16$ define el cuello de botella dimensional. La actualización efectiva es $\Delta W = \frac{\alpha}{r} B \cdot A$. Con $\alpha=32$ y $r=16$, el factor de escala es 2.</li>
   <li><b>VRAM en FP16:</b> Cada parámetro en FP16 (half-precision) ocupa 2 bytes. Total bytes = número de parámetros × 2.</li>
-  <li><b>Fusión (Merge):</b> Antes del despliegue se calcula $W_{	ext{final}} = W_0 + rac{lpha}{r}(B \cdot A)$ una sola vez. El resultado tiene las mismas dimensiones que $W_0$, sin overhead de inferencia.</li>
+  <li><b>Fusión (Merge):</b> Antes del despliegue se calcula $W_{\text{final}} = W_0 + \frac{\alpha}{r}(B \cdot A)$ una sola vez. El resultado tiene las mismas dimensiones que $W_0$, sin overhead de inferencia.</li>
   </ul>
   </div>
 
   <p class="exercise-prompt">
-  Para un modelo Meta Llama 3 8B ($d_{	ext{model}} = 4096$, 32 capas transformer), calcula la cantidad exacta de parámetros entrenables si se aplica LoRA con $r=16$ y $lpha=32$ adaptando únicamente $W_q$ y $W_v$. Compara la VRAM requerida por los pesos entrenables en FP16 frente a un Full Fine-Tuning de 8B parámetros, y explica por qué la inferencia no sufre latencia adicional tras la fusión.
+  Para un modelo Meta Llama 3 8B ($d_{\text{model}} = 4096$, 32 capas transformer), calcula la cantidad exacta de parámetros entrenables si se aplica LoRA con $r=16$ y $\alpha=32$ adaptando únicamente $W_q$ y $W_v$. Compara la VRAM requerida por los pesos entrenables en FP16 frente a un Full Fine-Tuning de 8B parámetros, y explica por qué la inferencia no sufre latencia adicional tras la fusión.
   </p>
 
   <details class="exercise-solution-details">
@@ -1578,20 +1578,20 @@
   <div class="exercise-solution-panel">
   <p><b>1. Parámetros entrenables por capa:</b></p>
   <ul>
-  <li>Matriz $B \in \mathbb{R}^{4096 	imes 16}$: $4096 	imes 16 = 65{,}536$ parámetros.</li>
-  <li>Matriz $A \in \mathbb{R}^{16 	imes 4096}$: $16 	imes 4096 = 65{,}536$ parámetros.</li>
+  <li>Matriz $B \in \mathbb{R}^{4096 \times 16}$: $4096 \times 16 = 65{,}536$ parámetros.</li>
+  <li>Matriz $A \in \mathbb{R}^{16 \times 4096}$: $16 \times 4096 = 65{,}536$ parámetros.</li>
   <li>Por proyección ($W_q$ o $W_v$): $65{,}536 + 65{,}536 = 131{,}072$ parámetros.</li>
-  <li>Ambas proyecciones por capa: $2 	imes 131{,}072 = 262{,}144$ parámetros.</li>
+  <li>Ambas proyecciones por capa: $2 \times 131{,}072 = 262{,}144$ parámetros.</li>
   </ul>
   <p><b>2. Total en 32 capas:</b></p>
-  $$	ext{Total LoRA} = 32 	imes 262{,}144 = 8{,}388{,}608 pprox 8.39	ext{ M parámetros}$$
+  $$\text{Total LoRA} = 32 \times 262{,}144 = 8{,}388{,}608 \approx 8.39\text{ M parámetros}$$
   <p><b>3. Comparativa VRAM:</b></p>
   <ul>
-  <li><b>LoRA FP16:</b> $8{,}388{,}608 	imes 2	ext{ B} pprox 16.78	ext{ MB}$ — cabe en cualquier GPU de consumo.</li>
-  <li><b>Full FT FP16:</b> $8 	imes 10^9 	imes 2	ext{ B} pprox 16	ext{ GB}$ de pesos + $\sim$64 GB de estados AdamW.</li>
+  <li><b>LoRA FP16:</b> $8{,}388{,}608 \times 2\text{ B} \approx 16.78\text{ MB}$ — cabe en cualquier GPU de consumo.</li>
+  <li><b>Full FT FP16:</b> $8 \times 10^9 \times 2\text{ B} \approx 16\text{ GB}$ de pesos + $\sim$64 GB de estados AdamW.</li>
   <li><b>Reducción:</b> LoRA entrena el $\mathbf{0.10\%}$ de los parámetros del modelo completo.</li>
   </ul>
-  <p style="margin:0.5rem 0 0; font-size:0.88rem; color:var(--text-secondary);"><b>Merge sin latencia:</b> $W_{	ext{final}} = W_0 + rac{lpha}{r}(B \cdot A)$ se computa offline una sola vez. El resultado $\in \mathbb{R}^{4096 	imes 4096}$ es idéntico en forma a $W_0$ — el forward pass no ejecuta operaciones adicionales en tiempo de inferencia.</p>
+  <p style="margin:0.5rem 0 0; font-size:0.88rem; color:var(--text-secondary);"><b>Merge sin latencia:</b> $W_{\text{final}} = W_0 + \frac{\alpha}{r}(B \cdot A)$ se computa offline una sola vez. El resultado $\in \mathbb{R}^{4096 \times 4096}$ es idéntico en forma a $W_0$ — el forward pass no ejecuta operaciones adicionales en tiempo de inferencia.</p>
   </div>
   </details>
   </article>
@@ -1638,8 +1638,7 @@
 ]}</code></pre>
   </div>
   <p style="margin:0.9rem 0 0.4rem; font-size:0.88rem; color:var(--text-secondary);"><b>Justificación matemática del Loss Masking:</b> La función de pérdida SFT correcta es:</p>
-  $$\mathcal{L}_{	ext{SFT}} = -\sum_{t \in \mathcal{A}} \log P_	heta\!\left(y_t \;\middle|\; x_{	ext{sys}},\, x_{	ext{usr}},\, y_{1:t-1}
-ight)$$
+  $$\mathcal{L}_{\text{SFT}} = -\sum_{t \in \mathcal{A}} \log P_\theta\!\left(y_t \;\middle|\; x_{\text{sys}},\, x_{\text{usr}},\, y_{1:t-1}\right)$$
   <p style="margin:0.3rem 0 0; font-size:0.88rem; color:var(--text-secondary);">Donde $\mathcal{A}$ es el conjunto de índices de los tokens del asistente. Asignar <code>label = -100</code> a todos los demás tokens garantiza que <code>torch.nn.CrossEntropyLoss(ignore_index=-100)</code> no calcule gradientes sobre el prompt — el modelo aprende exclusivamente a generar respuestas expertas, no a imitar las preguntas del usuario.</p>
   </div>
   </details>
@@ -1716,12 +1715,12 @@ ight)$$
   <li><b>RLHF con PPO:</b> Proceso de 4 etapas — entrenar reward model, inicializar política, optimizar con PPO (Proximal Policy Optimization), monitorear divergencia KL. Requiere ajustar 15+ hiperparámetros y puede colapsar la política si la KL no se controla.</li>
   <li><b>DPO (Direct Preference Optimization):</b> Elimina el reward model y el bucle RL. Optimiza directamente la política a partir de pares preferidos/rechazados $(y_w, y_l)$ usando una función de pérdida cerrada derivada de la solución analítica del RLHF.</li>
   <li><b>Dataset de Preferencias:</b> Formato de tripletas $(x, y_w, y_l)$. TRL espera columnas <code>prompt</code>, <code>chosen</code>, <code>rejected</code>. El 70-80% del dataset debe cubrir casos ambiguos donde la diferencia de calidad es sutil.</li>
-  <li><b>Coeficiente $eta$:</b> Penalización KL entre $\pi_	heta$ (política entrenada) y $\pi_{	ext{ref}}$ (checkpoint SFT congelado). $eta=0.1$ es conservador; valores altos hacen que el modelo no se separe de la referencia.</li>
+  <li><b>Coeficiente $\beta$:</b> Penalización KL entre $\pi_\theta$ (política entrenada) y $\pi_{\text{ref}}$ (checkpoint SFT congelado). $\beta=0.1$ es conservador; valores altos hacen que el modelo no se separe de la referencia.</li>
   </ul>
   </div>
 
   <p class="exercise-prompt">
-  Tras un SFT exitoso, el equipo de ML de una legal-tech aplica DPO para alinear Llama 3 8B con preferencias de abogados senior usando 1,200 pares $(x, y_w, y_l)$. (a)&nbsp;Escribe la función de pérdida DPO formal con $eta=0.1$ identificando cada variable; (b)&nbsp;Explica en tres puntos por qué DPO es más estable que RLHF-PPO; (c)&nbsp;Escribe el script completo con TRL <code>DPOTrainer</code> con los hiperparámetros críticos justificados.
+  Tras un SFT exitoso, el equipo de ML de una legal-tech aplica DPO para alinear Llama 3 8B con preferencias de abogados senior usando 1,200 pares $(x, y_w, y_l)$. (a)&nbsp;Escribe la función de pérdida DPO formal con $\beta=0.1$ identificando cada variable; (b)&nbsp;Explica en tres puntos por qué DPO es más estable que RLHF-PPO; (c)&nbsp;Escribe el script completo con TRL <code>DPOTrainer</code> con los hiperparámetros críticos justificados.
   </p>
 
   <details class="exercise-solution-details">
@@ -1731,13 +1730,11 @@ ight)$$
   </summary>
   <div class="exercise-solution-panel">
   <p><b>a) Función de Pérdida DPO:</b></p>
-  $$\mathcal{L}_{	ext{DPO}}(\pi_	heta;\, \pi_{	ext{ref}}) = -\mathbb{E}_{(x,\, y_w,\, y_l) \sim \mathcal{D}} \left[ \log \sigma \!\left( eta \log rac{\pi_	heta(y_w \mid x)}{\pi_{	ext{ref}}(y_w \mid x)} - eta \log rac{\pi_	heta(y_l \mid x)}{\pi_{	ext{ref}}(y_l \mid x)} 
-ight) 
-ight]$$
+  $$\mathcal{L}_{\text{DPO}}(\pi_\theta;\, \pi_{\text{ref}}) = -\mathbb{E}_{(x,\, y_w,\, y_l) \sim \mathcal{D}} \left[ \log \sigma \!\left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)} \right) \right]$$
   <ul style="margin:0.6rem 0 0.8rem 1.4rem; font-size:0.88rem; color:var(--text-secondary);">
-  <li><b>$\pi_	heta$</b> — política en entrenamiento (Llama 3 + LoRA activo).</li>
-  <li><b>$\pi_{	ext{ref}}$</b> — política de referencia congelada: el checkpoint SFT sin gradientes.</li>
-  <li><b>$eta = 0.1$</b> — penalización KL; valores pequeños permiten mayor divergencia de la referencia.</li>
+  <li><b>$\pi_\theta$</b> — política en entrenamiento (Llama 3 + LoRA activo).</li>
+  <li><b>$\pi_{\text{ref}}$</b> — política de referencia congelada: el checkpoint SFT sin gradientes.</li>
+  <li><b>$\beta = 0.1$</b> — penalización KL; valores pequeños permiten mayor divergencia de la referencia.</li>
   <li><b>$\sigma$</b> — sigmoide: transforma la diferencia de log-ratios en probabilidad $[0, 1]$.</li>
   </ul>
   <p><b>b) DPO vs. RLHF-PPO:</b></p>
