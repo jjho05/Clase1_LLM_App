@@ -70,19 +70,14 @@ document.addEventListener('DOMContentLoaded', () => {
    ========================================================================== */
 function initQuizEngine() {
   const quizBoxes = document.querySelectorAll('.quiz-box');
-  const certDate = document.getElementById('cert-date');
-  if (certDate) {
-    certDate.textContent = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
-  }
 
   function updateScore() {
     let correct = 0;
     quizBoxes.forEach(box => {
       if (box.querySelector('.quiz-option.correct')) correct++;
     });
-    const certPanel = document.getElementById('certificate-panel');
-    if (certPanel && correct >= quizBoxes.length && quizBoxes.length > 0) {
-      certPanel.style.display = 'block';
+    if (correct >= quizBoxes.length && quizBoxes.length > 0) {
+      if (window.celebrateConfetti) window.celebrateConfetti();
     }
   }
 

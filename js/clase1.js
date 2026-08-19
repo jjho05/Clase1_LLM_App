@@ -32,12 +32,7 @@
  var totalQuizzes = document.querySelectorAll(".quiz-box").length;
  var quizCounterText = document.getElementById("quiz-counter-text");
  var btnResetAllQuizzes = document.getElementById("btn-reset-all-quizzes");
- var certPanel = document.getElementById("certificate-panel");
- var certDate = document.getElementById("cert-date");
 
- if(certDate){
- certDate.textContent = new Date().toLocaleDateString("es-MX", { year: 'numeric', month: 'long', day: 'numeric' });
- }
 
  function updateQuizScore(){
  var correctCount = 0;
@@ -52,12 +47,8 @@
  });
  if(quizCounterText) quizCounterText.textContent = answered + " / " + totalQuizzes;
 
- if(correctCount === totalQuizzes && certPanel){
- if(certPanel.style.display !== "block"){
- certPanel.style.display = "block";
- certPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+ if(correctCount === totalQuizzes){
  if(window.celebrateConfetti) window.celebrateConfetti();
- }
  }
  }
 
@@ -100,7 +91,6 @@
  var fb = box.querySelector(".quiz-feedback");
  if(fb) fb.style.display = "none";
  });
- if(certPanel) certPanel.style.display = "none";
  updateQuizScore();
  });
  }
