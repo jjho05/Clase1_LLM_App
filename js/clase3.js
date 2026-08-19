@@ -548,8 +548,9 @@
           const isAssistant = role === 'assistant';
 
           // Turn Card
+          const turnClass = role === 'system' ? 'system-turn' : role === 'assistant' ? 'assistant-turn' : 'user-turn';
           streamHtml += `
-            <div class="chat-turn-card ${isAssistant ? 'trainable' : 'masked'}">
+            <div class="chat-turn-card ${turnClass}">
               <div class="chat-turn-header">
                 <div class="chat-turn-role-group">
                   <span class="role-pill ${role}">
