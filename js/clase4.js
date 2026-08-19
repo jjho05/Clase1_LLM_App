@@ -43,6 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Banco 1.4.4: Calculadora de Latencia MLOps y SLA
   initLatencySlaCalculator();
+
+  // Banco 1.4.5: Simulador de Streaming SSE
+  initStreamingSimulator();
 });
 
 /* ==========================================================================
@@ -502,6 +505,11 @@ function initLatencySlaCalculator() {
     const slaPass = totalLatencyMs <= 2000;
     const slaPercent = Math.max(92.0, (100 - (totalLatencyMs > 2000 ? (totalLatencyMs - 2000) / 100 : 0))).toFixed(1);
 
+    const canvas = document.getElementById('latency-chart-canvas');
+    if (canvas) {
+      drawLatencyConcurrencyCanvas(canvas, users, hwFactor, tokens);
+    }
+
     if (metricTtft) metricTtft.textContent = `${baseTtft} ms`;
     if (metricTotalTime) metricTotalTime.textContent = `${(totalLatencyMs / 1000).toFixed(2)} s`;
     if (metricThroughput) metricThroughput.textContent = `${clusterThroughput} tok/s`;
@@ -526,4 +534,235 @@ function initLatencySlaCalculator() {
   if (hwSelect) hwSelect.addEventListener('change', recalculate);
 
   recalculate();
+}
+
+
+/* ==========================================================================
+   BANCO 1.4.5: SIMULADOR DE STREAMING SSE vs MODO BLOQUEANTE
+   ========================================================================== */
+function initStreamingSimulator() {
+  const btnSse = document.getElementById('btn-stream-sse');
+  const btnBlock = document.getElementById('btn-stream-block');
+  const terminalOut = document.getElementById('stream-terminal-out');
+  const rawStreamBox = document.getElementById('raw-stream-chunks');
+  const ttftBadge = document.getElementById('stream-metric-ttft');
+  const itlBadge = document.getElementById('stream-metric-itl');
+  const totalTimeBadge = document.getElementById('stream-metric-total');
+
+  if (!btnSse || !terminalOut) return;
+
+  const SAMPLE_RESPONSE = "Meta Llama 3 en producción utiliza Server-Sent Events (SSE) para enviar cada token en cuanto la función de muestreo lo emite. Esto reduce el Time to First Token (TTFT) de 2.8 segundos a tan solo 75 milisegundos, transformando una espera estática en una conversación interactiva y natural.";
+  const tokens = SAMPLE_RESPONSE.split(' ');
+
+  let isStreaming = false;
+
+  btnSse.addEventListener('click', () => {
+    if (isStreaming) return;
+    isStreaming = true;
+    btnSse.disabled = true;
+    if (btnBlock) btnBlock.disabled = true;
+
+    terminalOut.innerHTML = '<span class="cursor-blink">|</span>';
+    if (rawStreamBox) rawStreamBox.textContent = 'Iniciando conexión HTTP text/event-stream...\n';
+    if (ttftBadge) ttftBadge.textContent = 'Calculando...';
+    if (itlBadge) itlBadge.textContent = '--';
+    if (totalTimeBadge) totalTimeBadge.textContent = '--';
+
+    const startTime = performance.now();
+    let firstTokenTime = null;
+    let index = 0;
+
+    // Primer token (TTFT simulado: ~75ms)
+    setTimeout(() => {
+      firstTokenTime = performance.now();
+      const ttft = Math.round(firstTokenTime - startTime);
+      if (ttftBadge) ttftBadge.textContent = `${ttft} ms`;
+      if (rawStreamBox) {
+        rawStreamBox.textContent += `[0ms] HTTP/1.1 200 OK (Content-Type: text/event-stream)\n`;
+      }
+
+      function streamNextToken() {
+        if (index < tokens.length) {
+          const tok = tokens[index];
+          index++;
+
+          // Actualizar terminal renderizado
+          terminalOut.innerHTML = tokens.slice(0, index).join(' ') + ' <span class="cursor-blink" style="color:var(--meta-blue); font-weight:800;">|</span>';
+
+          // Actualizar chunks raw SSE
+          if (rawStreamBox) {
+            const chunkJson = JSON.stringify({ "choices": [{ "delta": { "content": tok + " " } }] });
+            rawStreamBox.textContent += `data: ${chunkJson}\n`;
+            rawStreamBox.scrollTop = rawStreamBox.scrollHeight;
+          }
+
+          // Latencia inter-token (ITL: ~28ms)
+          const itl = 28 + Math.floor(Math.random() * 12);
+          if (itlBadge) itlBadge.textContent = `${itl} ms / tok`;
+
+          setTimeout(streamNextToken, itl);
+        } else {
+          // Fin del stream
+          const totalTime = ((performance.now() - startTime) / 1000).toFixed(2);
+          if (totalTimeBadge) totalTimeBadge.textContent = `${totalTime} s`;
+          if (rawStreamBox) rawStreamBox.textContent += `data: [DONE]\n`;
+          terminalOut.innerHTML = tokens.join(' ');
+          isStreaming = false;
+          btnSse.disabled = false;
+          if (btnBlock) btnBlock.disabled = false;
+        }
+      }
+
+      streamNextToken();
+    }, 75);
+  });
+
+  if (btnBlock) {
+    btnBlock.addEventListener('click', () => {
+      if (isStreaming) return;
+      isStreaming = true;
+      btnBlock.disabled = true;
+      btnSse.disabled = true;
+
+      terminalOut.innerHTML = '<div style="color:var(--text-muted); font-style:italic;"><span class="loading-spinner"></span> Esperando que el modelo termine de procesar todos los 52 tokens... (Pantalla congelada)</div>';
+      if (rawStreamBox) rawStreamBox.textContent = 'Enviando petición HTTP 1.1 estándar (application/json)...\nEsperando respuesta completa en un solo paquete...\n';
+      if (ttftBadge) ttftBadge.textContent = '2,450 ms (Bloqueado)';
+      if (itlBadge) itlBadge.textContent = 'N/A (Sin stream)';
+      if (totalTimeBadge) totalTimeBadge.textContent = 'Calculando...';
+
+      const startTime = performance.now();
+
+      setTimeout(() => {
+        const totalTime = ((performance.now() - startTime) / 1000).toFixed(2);
+        terminalOut.innerHTML = SAMPLE_RESPONSE;
+        if (totalTimeBadge) totalTimeBadge.textContent = `${totalTime} s`;
+        if (rawStreamBox) {
+          rawStreamBox.textContent += `\n[2450ms] HTTP/1.1 200 OK\n` + JSON.stringify({
+            "choices": [{ "message": { "role": "assistant", "content": SAMPLE_RESPONSE } }]
+          }, null, 2);
+        }
+        isStreaming = false;
+        btnBlock.disabled = false;
+        btnSse.disabled = false;
+      }, 2450);
+    });
+  }
+}
+
+/* ==========================================================================
+   DIBUJO EN CANVAS DE LA CURVA DE LATENCIA vs CONCURRENCIA (MLOps)
+   ========================================================================== */
+function drawLatencyConcurrencyCanvas(cvs, users, hwFactor, tokens) {
+  if (!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = cvs.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) return;
+
+  cvs.width = rect.width * dpr;
+  cvs.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+
+  const w = rect.width;
+  const h = rect.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const textColor = isDark ? '#e2e8f0' : '#1e293b';
+  const mutedColor = isDark ? '#94a3b8' : '#64748b';
+  const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+
+  const padL = 55;
+  const padR = 25;
+  const padT = 20;
+  const padB = 35;
+  const plotW = w - padL - padR;
+  const plotH = h - padT - padB;
+
+  const maxUsers = 100;
+  const maxLatencyMs = 4000;
+
+  // Cuadrícula y Ejes
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = padT + (plotH / 4) * i;
+    ctx.beginPath();
+    ctx.moveTo(padL, y);
+    ctx.lineTo(w - padR, y);
+    ctx.stroke();
+
+    const latVal = Math.round(maxLatencyMs * (1 - i / 4));
+    ctx.fillStyle = mutedColor;
+    ctx.font = '10px var(--font-mono, monospace)';
+    ctx.textAlign = 'right';
+    ctx.fillText(`${latVal}ms`, padL - 6, y + 3);
+  }
+
+  // Eje X: Usuarios
+  for (let u = 0; u <= 100; u += 25) {
+    const x = padL + (u / maxUsers) * plotW;
+    ctx.fillStyle = mutedColor;
+    ctx.font = '10px var(--font-mono, monospace)';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${u}u`, x, h - 12);
+  }
+
+  // Línea de Umbral SLA (2000ms en Rojo)
+  const slaY = padT + plotH - (2000 / maxLatencyMs) * plotH;
+  ctx.strokeStyle = 'rgba(239, 68, 68, 0.45)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(padL, slaY);
+  ctx.lineTo(w - padR, slaY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = '#ef4444';
+  ctx.font = '9px var(--font-mono, monospace)';
+  ctx.textAlign = 'right';
+  ctx.fillText('Límite SLA (2.0s)', w - padR - 5, slaY - 5);
+
+  // Curva de Latencia Teórica
+  ctx.beginPath();
+  ctx.strokeStyle = isDark ? '#38bdf8' : '#0284c7';
+  ctx.lineWidth = 3;
+
+  for (let u = 1; u <= maxUsers; u++) {
+    const ttft = 55 * hwFactor + (u * 2.8);
+    const speed = Math.max(15, (120 / hwFactor) / Math.sqrt(u));
+    const totalLat = ttft + (tokens / speed) * 1000 + 25;
+
+    const x = padL + (u / maxUsers) * plotW;
+    const y = padT + plotH - Math.min(plotH, (totalLat / maxLatencyMs) * plotH);
+
+    if (u === 1) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Punto Actual del Usuario
+  const currTtft = 55 * hwFactor + (users * 2.8);
+  const currSpeed = Math.max(15, (120 / hwFactor) / Math.sqrt(users));
+  const currTotalLat = currTtft + (tokens / currSpeed) * 1000 + 25;
+
+  const curX = padL + (users / maxUsers) * plotW;
+  const curY = padT + plotH - Math.min(plotH, (currTotalLat / maxLatencyMs) * plotH);
+
+  // Círculo del punto actual
+  ctx.beginPath();
+  ctx.fillStyle = currTotalLat > 2000 ? '#ef4444' : '#10b981';
+  ctx.arc(curX, curY, 6, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Etiqueta flotante
+  ctx.fillStyle = textColor;
+  ctx.font = 'bold 11px var(--font-mono, monospace)';
+  ctx.textAlign = curX > w - 120 ? 'right' : 'left';
+  const labelX = curX > w - 120 ? curX - 10 : curX + 10;
+  ctx.fillText(`${users}u: ${Math.round(currTotalLat)}ms`, labelX, curY - 8);
 }
