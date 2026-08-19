@@ -693,7 +693,7 @@
 
                 <div class="formula-card">
           <div class="formula-math-area">
-            $$	ext{Latencia Percibida} = 	ext{TTFT} = T_{	ext{red}} + T_{	ext{prefill}}(S_{	ext{prompt}}) + T_{	ext{decode}}(1)$$
+            $$\text{Latencia Percibida} = \text{TTFT} = T_{\text{red}} + T_{\text{prefill}}(S_{\text{prompt}}) + T_{\text{decode}}(1)$$
           </div>
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
@@ -709,19 +709,19 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$	ext{TTFT}$</span>
+                  <span class="breakdown-row-badge">$\text{TTFT}$</span>
                   <div class="breakdown-row-text"><strong>Time to First Token:</strong> Tiempo transcurrido desde que el usuario presiona Enviar hasta que la primera palabra aparece en pantalla.</div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$T_{	ext{red}}$ (RTT)</span>
+                  <span class="breakdown-row-badge">$T_{\text{red}}$ (RTT)</span>
                   <div class="breakdown-row-text"><strong>Latencia de Red:</strong> Tiempo de transmisión del paquete HTTP y handshake TLS entre cliente y servidor.</div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$T_{	ext{prefill}}$</span>
+                  <span class="breakdown-row-badge">$T_{\text{prefill}}$</span>
                   <div class="breakdown-row-text"><strong>Fase de Prefill (Prompt Processing):</strong> Tiempo de cálculo paralelo para procesar y proyectar los embeddings de todo el prompt de entrada en GPU.</div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$T_{	ext{decode}}(1)$</span>
+                  <span class="breakdown-row-badge">$T_{\text{decode}}(1)$</span>
                   <div class="breakdown-row-text"><strong>Primer Paso Autoregresivo:</strong> Tiempo de ejecución de una pasada hacia adelante (forward pass) y muestreo Softmax del token #1.</div>
                 </div>
               </div>
