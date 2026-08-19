@@ -1030,6 +1030,19 @@ a.step-flow-item:hover {
   margin-bottom: 1.5rem;
 }
 
+.controls-grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.15rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 720px) {
+  .controls-grid-2x2 {
+    grid-template-columns: 1fr;
+  }
+}
+
 .control-group {
   display: flex;
   flex-direction: column;
@@ -4038,6 +4051,430 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
 /* ==========================================================================
    ESTILOS DE IMPRESIÓN OFICIAL PARA CERTIFICADOS
    ========================================================================== */
+
+/* ==========================================================================
+   COMPONENTES OFICIALES EXTENDIDOS (GLOSARIO, EJERCICIOS, FOOTER, CERTIFICADO)
+   ========================================================================== */
+
+/* === 1. Ejercicios Prácticos: Sección, Caja de Contexto y Guía Didáctica === */
+.exercises-section {
+  max-width: 960px;
+  margin: 3.5rem auto;
+  padding: 0 1rem;
+}
+
+.exercise-context-box {
+  background: var(--meta-blue-subtle, #eff6ff);
+  border: 1px solid var(--meta-blue-border, #bfdbfe);
+  border-left: 4px solid var(--meta-blue, #2563eb);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 0.85rem 0 1.2rem;
+  transition: all 0.2s ease;
+}
+
+.exercise-context-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--meta-blue, #2563eb);
+  margin-bottom: 0.6rem;
+}
+
+.exercise-context-list {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.exercise-context-list li {
+  margin: 0;
+}
+
+.exercise-item-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.5rem 1.6rem;
+  margin-bottom: 1.25rem;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.exercise-item-box:hover {
+  border-color: var(--meta-blue);
+  box-shadow: var(--shadow-sm);
+}
+
+/* === 2. Glosario Técnico Rediseñado: Cabecera, Buscador y Filtros === */
+.glossary-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.glossary-search-wrap {
+  position: relative;
+  min-width: 280px;
+  max-width: 480px;
+  flex: 1;
+}
+
+.glossary-search-input {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  border-radius: 30px;
+  border: 1.5px solid var(--border-strong, #cbd5e1);
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-primary, #0f172a);
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.05));
+}
+
+.glossary-search-input:focus {
+  border-color: var(--meta-blue, #2563eb);
+  box-shadow: 0 0 0 4px var(--meta-blue-subtle, rgba(37, 99, 235, 0.15)), 0 4px 12px rgba(37, 99, 235, 0.1);
+}
+
+.glossary-filters {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1.8rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.glossary-filter-pill {
+  background: var(--bg-surface, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e2e8f0);
+  color: var(--text-secondary, #64748b);
+  padding: 0.5rem 1.1rem;
+  border-radius: 24px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.glossary-filter-pill:hover {
+  border-color: var(--meta-blue, #2563eb);
+  color: var(--meta-blue, #2563eb);
+  background: var(--meta-blue-subtle, #eff6ff);
+  transform: translateY(-1px);
+}
+
+.glossary-filter-pill.active {
+  background: var(--meta-blue, #2563eb);
+  border-color: var(--meta-blue, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+.glossary-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.glossary-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  background: var(--meta-blue-subtle, #eff6ff);
+  color: var(--meta-blue, #2563eb);
+  border: 1px solid var(--meta-blue-border, #bfdbfe);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* === 3. Workbench Content Layout & Botones de Interacción === */
+.workbench-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.hallucination-case-btn,
+.prompt-strategy-btn,
+.rag-step-pill {
+  background: var(--bg-surface, #ffffff);
+  border: 1.5px solid var(--border-subtle, #e2e8f0);
+  color: var(--text-secondary, #64748b);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hallucination-case-btn:hover,
+.prompt-strategy-btn:hover,
+.rag-step-pill:hover {
+  border-color: var(--meta-blue, #2563eb);
+  color: var(--meta-blue, #2563eb);
+  background: var(--meta-blue-subtle, #eff6ff);
+}
+
+.hallucination-case-btn.active,
+.prompt-strategy-btn.active,
+.rag-step-pill.active {
+  background: var(--meta-blue, #2563eb);
+  border-color: var(--meta-blue, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.nlp-step-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+/* === 4. Certificado Digital: Metadatos en Grid === */
+.cert-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  max-width: 780px;
+  margin: 1.5rem auto 1.75rem;
+  text-align: left;
+}
+
+.cert-meta-item {
+  background: var(--bg-subtle, #f8fafc);
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: all 0.2s ease;
+}
+
+.cert-meta-item:hover {
+  border-color: var(--meta-blue-border, #bfdbfe);
+  box-shadow: var(--shadow-sm);
+}
+
+.cert-meta-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted, #94a3b8);
+}
+
+.cert-meta-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary, #0f172a);
+}
+
+/* === 5. Footer Multi-Columna del Sistema === */
+.footer-custom {
+  background: var(--bg-surface, #ffffff);
+  border-top: 1px solid var(--border-subtle, #e2e8f0);
+  padding: 4.5rem 2rem 2.5rem;
+  margin-top: 5rem;
+}
+
+.footer-grid {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1.5fr;
+  gap: 3rem;
+}
+
+@media (max-width: 860px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.footer-col-title {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-primary, #0f172a);
+  margin-bottom: 1.1rem;
+}
+
+.footer-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.footer-link {
+  color: var(--text-secondary, #64748b);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.footer-link:hover {
+  color: var(--meta-blue, #2563eb);
+  transform: translateX(3px);
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-subtle, #e2e8f0);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted, #94a3b8);
+}
+
+/* === 6. Dark Theme Overrides para Nuevos Componentes === */
+[data-theme="dark"] .exercise-context-box {
+  background: rgba(37, 99, 235, 0.12);
+  border-color: rgba(59, 130, 246, 0.25);
+  border-left-color: #60a5fa;
+}
+
+[data-theme="dark"] .exercise-context-title {
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .exercise-context-list {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .exercise-item-box {
+  background: rgba(16, 24, 43, 0.7);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .exercise-item-box:hover {
+  border-color: rgba(96, 165, 250, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .glossary-search-input {
+  background: rgba(16, 24, 43, 0.85);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .glossary-search-input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2), 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .glossary-filter-pill {
+  background: rgba(16, 24, 43, 0.75);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .glossary-filter-pill:hover {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: #60a5fa;
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .glossary-filter-pill.active {
+  background: #2563eb;
+  border-color: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45);
+}
+
+[data-theme="dark"] .glossary-tag {
+  background: rgba(37, 99, 235, 0.18);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .cert-meta-item {
+  background: rgba(14, 21, 38, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .cert-meta-item:hover {
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+[data-theme="dark"] .cert-meta-val {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .footer-custom {
+  background: #080c18;
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .footer-bottom {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .hallucination-case-btn,
+[data-theme="dark"] .prompt-strategy-btn,
+[data-theme="dark"] .rag-step-pill {
+  background: rgba(16, 24, 43, 0.75);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .hallucination-case-btn:hover,
+[data-theme="dark"] .prompt-strategy-btn:hover,
+[data-theme="dark"] .rag-step-pill:hover {
+  border-color: #60a5fa;
+  color: #93c5fd;
+  background: rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="dark"] .hallucination-case-btn.active,
+[data-theme="dark"] .prompt-strategy-btn.active,
+[data-theme="dark"] .rag-step-pill.active {
+  background: #2563eb;
+  border-color: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.45);
+}
+
 @media print {
   body {
     background: #ffffff !important;
@@ -4051,6 +4488,8 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
   .mobile-backdrop,
   .course-pagination-nav,
   .course-footer,
+  .footer-custom,
+  .exercises-section,
   .course-hero,
   .tema-card,
   .glossary-section,
@@ -4081,280 +4520,4 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
     text-align: center !important;
     color: #0866ff !important;
   }
-}
-
-/* ==========================================================================
-   COMPONENTES FALTANTES — PARCHE COMPLETO v1.0
-   Clases identificadas en auditoría CSS↔HTML que no estaban definidas
-   ========================================================================== */
-
-/* ── 1. EXERCISE CONTEXT BOX (Guía pedagógica pre-ejercicio) ─────────────── */
-.exercises-section {
-  max-width: 900px;
-  margin: 0 auto 3.5rem;
-}
-
-.exercise-context-box {
-  background: var(--meta-blue-subtle, #eff6ff);
-  border: 1px solid var(--meta-blue-border, #bfdbfe);
-  border-left: 4px solid var(--meta-blue, #2563eb);
-  border-radius: 10px;
-  padding: 0.9rem 1.15rem 0.85rem;
-  margin: 0 0 1rem;
-  transition: background 0.2s ease;
-}
-
-.exercise-context-title {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.74rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--meta-blue, #2563eb);
-  margin-bottom: 0.6rem;
-}
-
-.exercise-context-list {
-  margin: 0;
-  padding-left: 1.1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.38rem;
-  font-size: 0.855rem;
-  color: var(--text-secondary);
-  line-height: 1.57;
-}
-
-.exercise-context-list li {
-  margin: 0;
-}
-
-[data-theme="dark"] .exercise-context-box {
-  background: rgba(37, 99, 235, 0.08);
-  border-color: rgba(37, 99, 235, 0.35);
-  border-left-color: var(--meta-blue, #2563eb);
-}
-
-/* ── 2. STEP-FLOW-CONTENT (base del elemento — sub-reglas ya existían) ───── */
-.step-flow-content {
-  flex: 1;
-  min-width: 0;
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-}
-
-/* ── 3. WORKBENCH CONTENT (área principal del sandbox interactivo) ────────── */
-.workbench-content {
-  padding: 1.5rem 1.6rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-}
-
-/* ── 4. FOOTER PERSONALIZADO DEL MÓDULO ─────────────────────────────────── */
-.footer-custom {
-  background: var(--bg-subtle, #f8fafc);
-  border-top: 1px solid var(--border-subtle, #e2e8f0);
-  padding: 2.5rem 0 1.25rem;
-  margin-top: 4rem;
-}
-
-.footer-grid {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-}
-
-@media (max-width: 640px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
-
-.footer-col-title {
-  font-size: 0.78rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text-tertiary, #94a3b8);
-  margin-bottom: 0.65rem;
-}
-
-.footer-links-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.footer-link {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.footer-link:hover {
-  color: var(--meta-blue, #2563eb);
-}
-
-.footer-bottom {
-  max-width: 1100px;
-  margin: 1.75rem auto 0;
-  padding: 1.1rem 2rem 0;
-  border-top: 1px solid var(--border-subtle, #e2e8f0);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--text-tertiary, #94a3b8);
-}
-
-[data-theme="dark"] .footer-custom {
-  background: var(--bg-surface);
-  border-top-color: rgba(255, 255, 255, 0.07);
-}
-
-[data-theme="dark"] .footer-bottom {
-  border-top-color: rgba(255, 255, 255, 0.07);
-}
-
-/* ── 5. GLOSSARY SEARCH & FILTERS ───────────────────────────────────────── */
-.glossary-top {
-  margin-bottom: 1.5rem;
-}
-
-.glossary-search-wrap {
-  position: relative;
-  margin-bottom: 1rem;
-}
-
-.glossary-search-input {
-  width: 100%;
-  padding: 0.7rem 1rem 0.7rem 2.6rem;
-  border: 1px solid var(--border-subtle, #e2e8f0);
-  border-radius: 10px;
-  font-size: 0.9rem;
-  font-family: var(--font-body);
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  box-sizing: border-box;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-  outline: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 0.75rem center;
-}
-
-.glossary-search-input:focus {
-  border-color: var(--meta-blue, #2563eb);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-}
-
-.glossary-search-input::placeholder {
-  color: var(--text-tertiary, #94a3b8);
-}
-
-.glossary-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  margin-bottom: 1.25rem;
-}
-
-.glossary-filter-pill {
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.28rem 0.7rem;
-  border-radius: 20px;
-  border: 1px solid var(--border-subtle, #e2e8f0);
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-}
-
-.glossary-filter-pill:hover,
-.glossary-filter-pill.active {
-  background: var(--meta-blue-subtle, #eff6ff);
-  border-color: var(--meta-blue-border, #bfdbfe);
-  color: var(--meta-blue, #2563eb);
-}
-
-.glossary-table {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.glossary-tag {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 0.18rem 0.55rem;
-  border-radius: 20px;
-  background: var(--meta-blue-subtle, #eff6ff);
-  color: var(--meta-blue, #2563eb);
-  border: 1px solid var(--meta-blue-border, #bfdbfe);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-}
-
-[data-theme="dark"] .glossary-search-input {
-  background-color: var(--bg-subtle);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
-}
-
-[data-theme="dark"] .glossary-filter-pill {
-  background: var(--bg-subtle);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: var(--text-secondary);
-}
-
-/* ── 6. CERTIFICATE META GRID (cuadrícula de datos del diploma) ──────────── */
-.cert-meta-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 1rem;
-  margin: 1.5rem 0;
-  padding: 1.25rem 1.5rem;
-  background: var(--bg-subtle, #f8fafc);
-  border: 1px solid var(--border-subtle, #e2e8f0);
-  border-radius: 12px;
-}
-
-.cert-meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.cert-meta-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text-tertiary, #94a3b8);
-}
-
-.cert-meta-val {
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-family: var(--font-head);
 }
