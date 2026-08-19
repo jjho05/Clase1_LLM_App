@@ -449,28 +449,62 @@
 
     if (!editor) return;
 
-    const PRESETS = {
-      'support': `{"messages": [
-  {"role": "system", "content": "Eres un DBA senior experto en PostgreSQL. Proporciona diagnósticos con EXPLAIN ANALYZE e índices concisos."},
-  {"role": "user", "content": "SELECT * FROM ordenes WHERE cliente_id=450 AND estado='PAGADO' tarda 4.2s con 10M filas. ¿Cómo la optimizo?"},
-  {"role": "assistant", "content": "1. Crea índice compuesto B-Tree:\nCREATE INDEX idx_ord ON ordenes (cliente_id, estado);\n2. ANALYZE ordenes;\n3. El Seq Scan pasa a Index Scan en <5ms."}
-]}`,
-      'code': `{"messages": [
-  {"role": "system", "content": "Eres un arquitecto backend experto en FastAPI y Pydantic v2. Genera esquemas con tipado estricto."},
-  {"role": "user", "content": "Crea un endpoint POST /transferencias bancarias con validación de saldo positivo y cuenta CLABE de 18 dígitos."},
-  {"role": "assistant", "content": "from pydantic import BaseModel, Field\nfrom fastapi import FastAPI, HTTPException\n\nclass Transferencia(BaseModel):\n    monto: float = Field(gt=0, description='Monto mayor a cero')\n    clabe: str = Field(min_length=18, max_length=18, pattern=r'^\\d{18}$')\n\n@app.post('/transferencias')\nasync def procesar(t: Transferencia):\n    return {'status': 'success', 'monto': t.monto}"}
-]}`,
-      'medical': `{"messages": [
-  {"role": "system", "content": "Eres un sistema de triaje médico informativo. Siempre incluye clasificación de urgencia y descargo legal."},
-  {"role": "user", "content": "Tengo dolor torácico opresivo que se irradia al brazo izquierdo y falta de aire desde hace 20 minutos."},
-  {"role": "assistant", "content": "URGENCIA NIVEL 1 (Código Rojo - Posible Síndrome Coronario Agudo):\n1. Llama inmediatamente a emergencias (911) o acude a urgencias.\n2. Permanece en reposo absoluto.\n\n*Aviso médico obligatorio: Este asistente no reemplaza la atención de urgencia presencial.*"}
-]}`
+    // Presets como objetos JS para garantizar 100% JSON válido
+    const PRESETS_DATA = {
+      'support': {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Eres un DBA senior experto en PostgreSQL. Proporciona diagnósticos con EXPLAIN ANALYZE e índices concisos."
+          },
+          {
+            "role": "user",
+            "content": "SELECT * FROM ordenes WHERE cliente_id=450 AND estado='PAGADO' tarda 4.2s con 10M filas. ¿Cómo la optimizo?"
+          },
+          {
+            "role": "assistant",
+            "content": "1. Crea índice compuesto B-Tree:\nCREATE INDEX idx_ord ON ordenes (cliente_id, estado);\n2. ANALYZE ordenes;\n3. El Seq Scan pasa a Index Scan en <5ms."
+          }
+        ]
+      },
+      'code': {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Eres un arquitecto backend experto en FastAPI y Pydantic v2. Genera esquemas con tipado estricto."
+          },
+          {
+            "role": "user",
+            "content": "Crea un endpoint POST /transferencias con validación de saldo positivo y cuenta CLABE de 18 dígitos."
+          },
+          {
+            "role": "assistant",
+            "content": "from pydantic import BaseModel, Field\nfrom fastapi import FastAPI, HTTPException\n\nclass Transferencia(BaseModel):\n    monto: float = Field(gt=0, description='Monto mayor a cero')\n    clabe: str = Field(min_length=18, max_length=18, pattern=r'^\\d{18}$')\n\n@app.post('/transferencias')\nasync def procesar(t: Transferencia):\n    return {'status': 'success', 'monto': t.monto}"
+          }
+        ]
+      },
+      'medical': {
+        "messages": [
+          {
+            "role": "system",
+            "content": "Eres un sistema de triaje médico informativo. Siempre incluye clasificación de urgencia y descargo legal."
+          },
+          {
+            "role": "user",
+            "content": "Tengo dolor torácico opresivo que se irradia al brazo izquierdo y falta de aire desde hace 20 minutos."
+          },
+          {
+            "role": "assistant",
+            "content": "URGENCIA NIVEL 1 (Código Rojo - Posible Síndrome Coronario Agudo):\n1. Llama inmediatamente a emergencias (911) o acude a urgencias.\n2. Permanece en reposo absoluto.\n\n*Aviso médico obligatorio: Este asistente no reemplaza la atención médica presencial de urgencias.*"
+          }
+        ]
+      }
     };
 
     // Función de tokenización aproximada para Meta Llama 3
     function simulateTokenizer(text) {
       const rawTokens = text.match(/\w+|[^\w\s]|\s+/g) || [text];
-      return rawTokens.filter(t => t.length > 0).map((tok) => {
+      return rawTokens.filter(t => t.length > 0).map(tok => {
         let hash = 0;
         for (let i = 0; i < tok.length; i++) hash = (hash << 5) - hash + tok.charCodeAt(i);
         const inputId = Math.abs(hash % 128000) + 256;
@@ -483,11 +517,11 @@
       try {
         const parsed = JSON.parse(rawText);
         if (!parsed.messages || !Array.isArray(parsed.messages)) {
-          throw new Error("El JSON debe contener un arreglo de 'messages'.");
+          throw new Error("El JSON debe contener un arreglo 'messages'.");
         }
 
         if (statusBadge) {
-          statusBadge.textContent = ' JSON Válido';
+          statusBadge.textContent = 'JSON Válido';
           statusBadge.style.color = '#34d399';
         }
 
@@ -496,7 +530,12 @@
         let trainableTokens = 0;
 
         let streamHtml = '<div class="chat-timeline-container">';
-        streamHtml += '<div class="sequence-boundary-chip"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> &lt;|begin_of_text|&gt; · Inicio de Secuencia Meta Llama 3</div>';
+        streamHtml += `
+          <div class="sequence-boundary-chip">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+            <span>&lt;|begin_of_text|&gt; (Inicio de Secuencia)</span>
+          </div>
+        `;
         totalTokens += 1;
         maskedTokens += 1;
 
@@ -504,50 +543,42 @@
         tensorHtml += `<div class="tensor-token-chip masked" title="Token Especial: &lt;|begin_of_text|&gt;&#10;input_id: 128000&#10;labels: -100 (Ignorado)">&lt;|begin_of_text|&gt; <span class="chip-label">-100</span></div>`;
 
         parsed.messages.forEach(msg => {
-          const role = (msg.role || 'user').toLowerCase();
+          const role = msg.role || 'user';
           const content = msg.content || '';
           const isAssistant = role === 'assistant';
 
-          let roleTitle = 'CONSULTA DEL USUARIO';
-          let roleIcon = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
-          if (role === 'system') {
-            roleTitle = 'SYSTEM PROMPT';
-            roleIcon = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>';
-          } else if (role === 'assistant') {
-            roleTitle = 'RESPUESTA DEL ASISTENTE';
-            roleIcon = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>';
-          }
-
-          streamHtml += `<div class="chat-turn-card ${isAssistant ? 'trainable' : 'masked'}">`;
-          
-          // Turn Header
-          streamHtml += `<div class="chat-turn-header">`;
-          streamHtml += `<div class="chat-turn-role-group">`;
-          streamHtml += `<span class="role-pill ${role}">${roleIcon} ${roleTitle}</span>`;
-          streamHtml += `<span class="special-token-tag">&lt;|start_header_id|&gt;${role}&lt;|end_header_id|&gt;</span>`;
-          streamHtml += `</div>`;
-          streamHtml += isAssistant 
-            ? `<span class="loss-tag-trainable"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Target de Pérdida SFT · Gradiente Activo</span>`
-            : `<span class="loss-tag-mask"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg> label = -100 · Gradiente = 0</span>`;
-          streamHtml += `</div>`;
-
-          // Turn Body
-          streamHtml += `<div class="chat-turn-body">`;
-          streamHtml += content.replace(/\n/g, '<br>');
-          streamHtml += `</div>`;
-
-          // Turn Footer
-          streamHtml += `<div class="chat-turn-footer">`;
-          streamHtml += `<span>Delimitador de Cierre: <code class="special-token-tag">&lt;|eot_id|&gt;</code></span>`;
-          streamHtml += `<span style="color:var(--text-muted); font-family:var(--font-mono); font-size:0.7rem;">Turno ${role.toUpperCase()} Completado</span>`;
-          streamHtml += `</div>`;
-
-          streamHtml += `</div>`;
+          // Turn Card
+          streamHtml += `
+            <div class="chat-turn-card ${isAssistant ? 'trainable' : 'masked'}">
+              <div class="chat-turn-header">
+                <div class="chat-turn-role-group">
+                  <span class="role-pill ${role}">
+                    <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor">
+                      ${role === 'system' ? '<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>' : role === 'user' ? '<path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>' : '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>'}
+                    </svg>
+                    <span>${role.toUpperCase()}</span>
+                  </span>
+                  <span class="special-token-tag">&lt;|start_header_id|&gt;${role}&lt;|end_header_id|&gt;</span>
+                </div>
+                <span class="loss-badge ${isAssistant ? 'badge-loss-active' : 'badge-loss-ignore'}">
+                  ${isAssistant ? 'Gradiente Activo (Loss Target)' : 'Máscara: label = -100'}
+                </span>
+              </div>
+              <div class="chat-turn-body">
+                ${content.replace(/\n/g, '<br>')}
+              </div>
+              <div class="chat-turn-footer">
+                <span class="special-token-tag">&lt;|eot_id|&gt;</span>
+                <span style="font-size:0.72rem; color:var(--text-muted);">Fin de turno</span>
+              </div>
+            </div>
+          `;
 
           // Tokenizer Simulation
           const tokens = simulateTokenizer(content);
-          const headerTokens = 4;
-          const eotTokens = 1;
+          const headerTokens = 4; // <|start_header_id|>, role, <|end_header_id|>, 
+
+          const eotTokens = 1;   // <|eot_id|>
           const count = tokens.length + headerTokens + eotTokens;
 
           totalTokens += count;
@@ -584,11 +615,11 @@
 
       } catch (err) {
         if (statusBadge) {
-          statusBadge.textContent = ' Error de Sintaxis';
+          statusBadge.textContent = 'Error de Sintaxis';
           statusBadge.style.color = '#ef4444';
         }
         if (streamContainer) {
-          streamContainer.innerHTML = `<div class="result-box" style="border-left:4px solid #ef4444; color:#ef4444;"><b>Error de Formato JSON:</b> ${err.message}</div>`;
+          streamContainer.innerHTML = `<div class="result-box" style="border-left:4px solid #ef4444; color:#ef4444; background:rgba(239,68,68,0.06); padding:0.8rem 1rem;"><b>Error de Formato JSON:</b> ${err.message}</div>`;
         }
       }
     }
@@ -626,8 +657,8 @@
         presetPills.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const sampleKey = btn.getAttribute('data-sample');
-        if (PRESETS[sampleKey]) {
-          editor.value = PRESETS[sampleKey];
+        if (PRESETS_DATA[sampleKey]) {
+          editor.value = JSON.stringify(PRESETS_DATA[sampleKey], null, 2);
           validateAndRender();
         }
       });
@@ -636,8 +667,8 @@
     if (validateBtn) validateBtn.addEventListener('click', validateAndRender);
     editor.addEventListener('input', validateAndRender);
 
-    // Carga inicial
-    editor.value = PRESETS['support'];
+    // Carga inicial 100% válida
+    editor.value = JSON.stringify(PRESETS_DATA['support'], null, 2);
     validateAndRender();
   }
 

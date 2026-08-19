@@ -1066,9 +1066,16 @@
   Paso 2 · Registro JSONL del Dataset SFT (Editable en Tiempo Real):
   </div>
   <div class="terminal-shell" style="margin-bottom: 1rem;">
-  <div class="terminal-topbar">
-  <span> dataset_sft_sample.jsonl (Estructura de Turnos Oficial Llama 3)</span>
-  <span style="color:#34d399; font-weight:700;" id="jsonl-status-badge"> JSON Válido</span>
+  <div class="terminal-topbar" style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0.85rem; background:#0f172a; border-bottom:1px solid rgba(255,255,255,0.1);">
+  <div style="display:flex; align-items:center; gap:0.6rem;">
+    <div style="display:flex; gap:5px;">
+      <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#ef4444;"></span>
+      <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#eab308;"></span>
+      <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#10b981;"></span>
+    </div>
+    <span style="font-family:var(--font-mono); font-size:0.78rem; font-weight:700; color:#94a3b8;">dataset_sft_sample.jsonl</span>
+  </div>
+  <span style="color:#34d399; font-weight:700; font-size:0.78rem;" id="jsonl-status-badge">JSON Válido</span>
   </div>
   <div style="padding: 0.85rem; background: #0b1120;">
   <textarea class="code-editor-input" id="jsonl-editor" rows="7" style="width:100%; border:none; background:transparent; color:#f1f5f9; font-family:var(--font-mono); font-size:0.86rem; line-height:1.55; resize:vertical;"></textarea>
