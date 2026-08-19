@@ -245,6 +245,20 @@
  </div>
 
  <div class="workbench-content">
+  <!-- Tarjeta Pedagógica Introductoria -->
+  <div class="workbench-pedagogy-card">
+  <div class="workbench-pedagogy-icon">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+  </div>
+  <div class="workbench-pedagogy-content">
+  <h4>¿Cómo elegir la arquitectura óptima entre Prompting, RAG, LoRA y Full FT?</h4>
+  <p>La selección arquitectónica depende del balance entre 4 factores fundamentales: el dinamismo con el que cambia la información, la rigidez del formato requerido, el presupuesto de GPU y la tolerancia a alucinaciones. Este simulador calcula la técnica recomendada con su respectiva justificación técnica.</p>
+  <div class="workbench-pedagogy-rule">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span><b>Regla de Decisión:</b> RAG es insustituible para conocimiento fáctico dinámico; Fine-Tuning (LoRA) es insustituible para comportamiento, tono, formato estricto (JSON/SQL) y reducción de latencia en inferencia.</span>
+  </div>
+  </div>
+  </div>
  <!-- Preset Case Pills -->
  <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.6rem;">
  Cargar Escenario de Negocio Preconfigurado:
@@ -483,6 +497,20 @@
  </div>
 
  <div class="workbench-content">
+  <!-- Tarjeta Pedagógica Introductoria -->
+  <div class="workbench-pedagogy-card">
+  <div class="workbench-pedagogy-icon">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+  </div>
+  <div class="workbench-pedagogy-content">
+  <h4>¿Cómo funciona la descomposición de bajo rango (Low-Rank Adaptation)?</h4>
+  <p>En lugar de actualizar toda la matriz densa $W_0 \in \mathbb{R}^{d \times d}$ (que requiere gigabytes de gradientes), LoRA congela $W_0$ y entrena únicamente dos matrices delgadas $B \in \mathbb{R}^{d \times r}$ y $A \in \mathbb{R}^{r \times d}$ donde $r \ll d$. Modifica el rango $r$ y el factor $\alpha$ para ver cómo cambia la compresión en tiempo real.</p>
+  <div class="workbench-pedagogy-rule">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span><b>Regla de Inicialización:</b> Inicializar $B=0$ asegura que $\Delta W = \frac{\alpha}{r}(B \cdot A) = 0$ al inicio, garantizando cero regresión sobre las capacidades base de Llama 3.</span>
+  </div>
+  </div>
+  </div>
  <!-- Selector de Modelos y Módulos con Píldoras -->
  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.2rem;">
  <div>
@@ -543,18 +571,95 @@
  </div>
  </div>
 
- <!-- Marco Canvas con Terminal Shell -->
- <div class="workbench-canvas-frame">
- <div class="workbench-canvas-header">
- <span> Multiplicación Matricial LoRA: W₀ [d×k] + (α/r) · (B [d×r] · A [r×k])</span>
- <span id="lora-scaling-factor" style="color:var(--accent-success);">Escalado: 2.00x</span>
- </div>
- <div style="padding: 1.2rem; display: flex; justify-content: center; align-items: center; background: #0b1120;">
- <canvas id="lora-matrix-canvas" style="width: 100%; height: 210px; max-width: 780px; display: block;"></canvas>
- </div>
- </div>
+   <!-- Visualizador de Descomposición Matricial LoRA -->
+  <div class="lora-diagram-card">
+  <div class="lora-diagram-header">
+  <div class="lora-header-title">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--meta-blue)"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+  <span>Ecuación Matricial LoRA: $h = W_0 x + \frac{\alpha}{r}(B \cdot A)x$</span>
+  </div>
+  <span class="status-pill-safe" id="lora-scaling-factor">Escalado: ΔW = 2.00 · (B·A)</span>
+  </div>
 
- <!-- 4 Métricas de Compresión -->
+  <div class="lora-flow-container">
+  
+  <!-- Matriz Base Congelada W0 -->
+  <div class="lora-matrix-box">
+  <div class="lora-box-badge frozen">
+  <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+  <span>Congelada</span>
+  </div>
+  <div class="lora-matrix-shape square">
+  <span class="matrix-title">W₀</span>
+  <span class="matrix-dim" id="lora-dim-w0">4096 × 4096</span>
+  </div>
+  <div class="lora-box-footer">Pesos Base (Grad=False)</div>
+  </div>
+
+  <!-- Operador Suma -->
+  <div class="lora-flow-op">+</div>
+
+  <!-- Multiplicador de Escala -->
+  <div class="lora-scale-pill-box">
+  <span class="lora-scale-tag">Escala</span>
+  <span class="lora-scale-val" id="lora-scale-val">α/r = 2.00</span>
+  </div>
+
+  <!-- Grupo Adaptadores B · A -->
+  <div class="lora-adapters-group">
+  <!-- Matriz B -->
+  <div class="lora-matrix-box">
+  <div class="lora-box-badge trainable">
+  <span>🔥 Entrenable</span>
+  </div>
+  <div class="lora-matrix-shape tall" id="lora-shape-b">
+  <span class="matrix-title">B</span>
+  <span class="matrix-dim" id="lora-dim-b">4096 × 16</span>
+  </div>
+  <div class="lora-box-footer init-zero">Init: B = 0</div>
+  </div>
+
+  <!-- Operador Producto -->
+  <div class="lora-flow-op-sm">·</div>
+
+  <!-- Matriz A -->
+  <div class="lora-matrix-box">
+  <div class="lora-box-badge trainable">
+  <span>🔥 Entrenable</span>
+  </div>
+  <div class="lora-matrix-shape wide" id="lora-shape-a">
+  <span class="matrix-title">A</span>
+  <span class="matrix-dim" id="lora-dim-a">16 × 4096</span>
+  </div>
+  <div class="lora-box-footer init-gauss">Init: 𝒩(0, 1/r)</div>
+  </div>
+  </div>
+
+  <!-- Operador Igual -->
+  <div class="lora-flow-op">=</div>
+
+  <!-- Tarjeta de Salida y Ventajas -->
+  <div class="lora-result-card">
+  <div class="lora-result-title">Activación Resultante ($h$)</div>
+  <div class="lora-result-formula" id="lora-result-formula">
+  h = W₀x + 2.00 · (B·A)x
+  </div>
+  <div class="lora-result-points">
+  <div class="point-item">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="#10b981" style="flex-shrink:0; margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span><b>Sin regresión:</b> Al inicio $B=0 \implies \Delta W=0$.</span>
+  </div>
+  <div class="point-item">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="#10b981" style="flex-shrink:0; margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span><b>99.9% ahorro:</b> Solo <span id="lora-inline-trainable" style="font-weight:700; color:var(--meta-blue);">14.7M</span> params activos.</span>
+  </div>
+  </div>
+  </div>
+
+  </div>
+  </div>
+
+  <!-- 4 Métricas de Compresión -->
  <div class="token-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
  <div class="metric-card">
  <div class="metric-num" id="lora-total-base">8.0B</div>
@@ -685,6 +790,20 @@
  </div>
 
  <div class="workbench-content">
+  <!-- Tarjeta Pedagógica Introductoria -->
+  <div class="workbench-pedagogy-card">
+  <div class="workbench-pedagogy-icon">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+  </div>
+  <div class="workbench-pedagogy-content">
+  <h4>¿Por qué la memoria VRAM no solo almacena los pesos del modelo?</h4>
+  <p>Durante el entrenamiento, la VRAM de la GPU se divide en 4 componentes críticos: <b>1. Pesos del Modelo</b> (FP16/FP8/NF4), <b>2. Gradientes</b> (activados solo para parámetros entrenables), <b>3. Estados de AdamW</b> (8 bytes por parámetro para momentos $m_t$ y $v_t$), y <b>4. Activaciones / KV Cache</b> (que crecen linealmente con la longitud de contexto $S$).</p>
+  <div class="workbench-pedagogy-rule">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span><b>Por qué QLoRA es revolucionario:</b> Al cuantizar los pesos base a 4-bit (NF4) y congelar el 99.9% de los parámetros, elimina el 90% de los estados de optimizador, permitiendo afinar Llama 3 8B en una sola GPU comercial de 16–24 GB.</span>
+  </div>
+  </div>
+  </div>
  <!-- Preset Buttons para Método y Modelo -->
  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.2rem;">
  <div>
@@ -870,67 +989,196 @@
  </div>
 
  <!-- BANCO DE PRUEBAS 1.3.4 -->
- <div class="workbench-section">
- <div class="workbench-top">
- <div class="workbench-label">
- <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
- Banco de Pruebas 1.3.4: Validador JSONL & Visor de Loss Masking
- </div>
- <div class="workbench-actions">
- <span class="workbench-tag">Tokenizador & Loss Masking</span>
- </div>
- </div>
+  <div class="workbench-section">
+  <div class="workbench-top">
+  <div class="workbench-label">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+  Banco de Pruebas 1.3.4: Validador JSONL & Inspector Interactivo de Loss Masking
+  </div>
+  <div class="workbench-actions">
+  <span class="workbench-tag">Chat Template Llama 3 & PyTorch Tensors</span>
+  </div>
+  </div>
 
- <div class="workbench-content">
- <!-- Preset Buttons para JSONL -->
- <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.4rem;">
- Cargar Muestra de Entrenamiento (Dataset SFT):
- </div>
- <div class="preset-pills-row" id="jsonl-preset-pills">
- <button class="preset-pill-btn active" data-sample="support"> Ejemplo 1: Soporte Técnico Llama Tech</button>
- <button class="preset-pill-btn" data-sample="code">Ejemplo 2: Generador de Código PyTorch</button>
- <button class="preset-pill-btn" data-sample="medical"> Ejemplo 3: Asistente Médico con Disclaimer</button>
- </div>
- <select id="jsonl-preset-select" style="display:none;">
- <option value="support" selected>support</option>
- <option value="code">code</option>
- <option value="medical">medical</option>
- </select>
+  <div class="workbench-content">
+  <!-- Tarjeta Pedagógica Introductoria -->
+  <div class="jsonl-pedagogy-card">
+  <div class="jsonl-pedagogy-icon">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+  </div>
+  <div class="jsonl-pedagogy-content">
+  <h4>¿Por qué es indispensable el Loss Masking en SFT?</h4>
+  <p>En Fine-Tuning Supervisado, cada registro contiene el contexto (<code>system</code>), la consulta (<code>user</code>) y la respuesta experta (<code>assistant</code>). Si no enmascaras el prompt, PyTorch calculará gradientes sobre las preguntas del usuario, haciendo que el modelo aprenda a repetir o adivinar preguntas. Con <b>Loss Masking</b>, se asigna <code>label = -100</code> al prompt para que <b>el 100% del gradiente optimice exclusivamente la respuesta del asistente</b>.</p>
+  </div>
+  </div>
 
- <!-- Editor en Terminal Shell -->
- <div class="terminal-shell" style="margin-bottom: 1rem;">
- <div class="terminal-topbar">
- <span> dataset_sft_train.jsonl (Registro Individual JSONL)</span>
- <span style="color:#60a5fa;">Formato OpenAI / Meta Messages</span>
- </div>
- <div style="padding: 0.8rem; background: #0b1120;">
- <textarea class="code-editor-input" id="jsonl-editor" rows="6" style="width:100%; border:none; background:transparent; color:#e2e8f0; font-size:0.86rem;"></textarea>
- </div>
- </div>
+  <!-- Selector de Casos Prácticos Reales -->
+  <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem;">
+  Paso 1 · Selecciona un Caso de Uso Industrial para Fine-Tuning:
+  </div>
+  <div class="jsonl-presets-grid" id="jsonl-preset-pills">
+  <button class="jsonl-preset-card-btn active" data-sample="support">
+  <div class="jsonl-preset-title">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="#3b82f6"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+  <span>1. DBA PostgreSQL (Consultas SQL)</span>
+  </div>
+  <div class="jsonl-preset-desc">Enseña al modelo a diagnosticar con EXPLAIN ANALYZE y crear índices B-Tree sin memorizar queries de usuarios.</div>
+  </button>
 
- <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.2rem; flex-wrap:wrap; gap:0.6rem;">
- <button class="btn-primary" id="jsonl-validate-btn" style="padding:0.65rem 1.4rem; font-size:0.88rem;">
- <span>Validar Formato & Renderizar Template Llama 3</span>
- </button>
- <div id="jsonl-stats" style="display:flex; gap:0.6rem; flex-wrap:wrap;"></div>
- </div>
+  <button class="jsonl-preset-card-btn" data-sample="code">
+  <div class="jsonl-preset-title">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="#10b981"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+  <span>2. API Segura con FastAPI & Pydantic</span>
+  </div>
+  <div class="jsonl-preset-desc">Entrena al modelo para emitir esquemas de validación estricta, manejo de excepciones HTTP y tipado fuerte.</div>
+  </button>
 
- <!-- Visor de Chat Template con Máscara de Pérdida -->
- <div class="workbench-canvas-frame">
- <div class="workbench-canvas-header">
- <span>Secuencia de Tokens Llama 3 con Enmascaramiento de Pérdida (Loss Masking)</span>
- <span style="color:#34d399;">Verde = Gradientes Activos | Gris = Enmascarado (-100)</span>
- </div>
- <div style="padding: 1.2rem; background: var(--bg-surface);">
- <div id="jsonl-rendered-preview" style="font-family:var(--font-mono); font-size:0.86rem; line-height:1.6; max-height:300px; overflow-y:auto;">
- <!-- Poblado por JS -->
- </div>
- </div>
- </div>
- </div>
- </div>
+  <button class="jsonl-preset-card-btn" data-sample="medical">
+  <div class="jsonl-preset-title">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="#a855f7"><path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/></svg>
+  <span>3. Asistente Médico & Compliance</span>
+  </div>
+  <div class="jsonl-preset-desc">Forzar respuesta de triaje con clasificación de urgencia y descargo de responsabilidad legal obligatorio.</div>
+  </button>
+  </div>
 
- <!-- QUIZ 4 -->
+  <select id="jsonl-preset-select" style="display:none;">
+  <option value="support" selected>support</option>
+  <option value="code">code</option>
+  <option value="medical">medical</option>
+  </select>
+
+  <!-- Editor de Registro JSONL -->
+  <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem;">
+  Paso 2 · Registro JSONL del Dataset SFT (Editable en Tiempo Real):
+  </div>
+  <div class="terminal-shell" style="margin-bottom: 1rem;">
+  <div class="terminal-topbar">
+  <span> dataset_sft_sample.jsonl (Estructura de Turnos Oficial Llama 3)</span>
+  <span style="color:#34d399; font-weight:700;" id="jsonl-status-badge"> JSON Válido</span>
+  </div>
+  <div style="padding: 0.85rem; background: #0b1120;">
+  <textarea class="code-editor-input" id="jsonl-editor" rows="7" style="width:100%; border:none; background:transparent; color:#f1f5f9; font-family:var(--font-mono); font-size:0.86rem; line-height:1.55; resize:vertical;"></textarea>
+  </div>
+  </div>
+
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem; flex-wrap:wrap; gap:0.6rem;">
+  <div style="display:flex; gap:0.6rem;">
+  <button class="btn-primary" id="jsonl-validate-btn" style="padding:0.6rem 1.2rem; font-size:0.86rem;">
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" style="margin-right:4px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <span>Validar & Tokenizar con Llama 3</span>
+  </button>
+  <button class="btn-secondary" id="jsonl-format-btn" style="padding:0.6rem 1rem; font-size:0.86rem;">
+  <span>Auto-formatear JSON</span>
+  </button>
+  </div>
+  <div id="jsonl-stats" style="display:flex; gap:0.5rem; flex-wrap:wrap;"></div>
+  </div>
+
+  <!-- Visor Multi-Pestaña de Loss Masking -->
+  <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem;">
+  Paso 3 · Inspección Interna: ¿Cómo procesa PyTorch la secuencia?
+  </div>
+  <div class="workbench-canvas-frame" style="overflow:hidden; border-radius:12px;">
+  
+  <div class="jsonl-tabs-nav">
+  <button class="jsonl-tab-btn active" data-tab="stream">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+  <span>1. Chat Template Llama 3 (Tokens Especiales)</span>
+  </button>
+  <button class="jsonl-tab-btn" data-tab="tensor">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+  <span>2. Tensor PyTorch (input_ids vs labels)</span>
+  </button>
+  <button class="jsonl-tab-btn" data-tab="compare">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+  <span>3. Con Masking vs Sin Masking</span>
+  </button>
+  </div>
+
+  <!-- PANE 1: Chat Template Stream -->
+  <div class="jsonl-tab-pane active" id="pane-stream">
+  <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem; display:flex; justify-content:space-between; flex-wrap:wrap;">
+  <span>Estructura de delimitadores oficiales de Meta Llama 3:</span>
+  <span style="color:#059669; font-weight:700;"> Verde: Gradiente Activo |  Gris: label = -100 (Ignorado)</span>
+  </div>
+  <div id="jsonl-rendered-preview" style="font-family:var(--font-mono); font-size:0.86rem; line-height:1.6; max-height:320px; overflow-y:auto;"></div>
+  </div>
+
+  <!-- PANE 2: PyTorch Tensor Inspector -->
+  <div class="jsonl-tab-pane" id="pane-tensor">
+  <div class="tensor-grid-container">
+  <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.45;">
+  Pasa el cursor sobre cada token para inspeccionar su <b>input_id</b> en el vocabulario (128,256 tokens) y su valor en el tensor de etiquetas <b>labels</b> de PyTorch:
+  </div>
+  <div class="tensor-stream-wrap" id="jsonl-tensor-chips">
+  <!-- Poblado por JS -->
+  </div>
+  <div style="display:flex; gap:1rem; font-size:0.78rem; flex-wrap:wrap; margin-top:0.4rem;">
+  <span style="display:inline-flex; align-items:center; gap:0.3rem;"><span style="display:inline-block; width:10px; height:10px; border-radius:3px; background:#94a3b8;"></span> <b>label = -100:</b> Token del prompt. CrossEntropyLoss lo ignora. Gradiente = 0.</span>
+  <span style="display:inline-flex; align-items:center; gap:0.3rem;"><span style="display:inline-block; width:10px; height:10px; border-radius:3px; background:#10b981;"></span> <b>label = ID Real:</b> Token del asistente. Gradiente $
+abla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
+  </div>
+  </div>
+  </div>
+
+  <!-- PANE 3: Con Masking vs Sin Masking -->
+  <div class="jsonl-tab-pane" id="pane-compare">
+  <div class="loss-compare-grid">
+  <div class="loss-compare-card bad">
+  <div class="loss-compare-title">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+  <span>❌ Sin Loss Masking (Error Típico)</span>
+  </div>
+  <ul class="loss-compare-list">
+  <li>El modelo calcula pérdida sobre las preguntas del usuario y el system prompt.</li>
+  <li><b>Consecuencia 1:</b> Desperdicia capacidad aprendiendo a autocompletar preguntas en lugar de resolverlas.</li>
+  <li><b>Consecuencia 2:</b> En inferencia tiende a repetir el prompt o alucinar turnos de usuario inexistentes.</li>
+  <li><b>Consecuencia 3:</b> Sobreajuste (overfitting) a la sintaxis específica del conjunto de entrenamiento.</li>
+  </ul>
+  </div>
+
+  <div class="loss-compare-card good">
+  <div class="loss-compare-title">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+  <span>✅ Con Loss Masking (Estándar SFT Oficial)</span>
+  </div>
+  <ul class="loss-compare-list">
+  <li>PyTorch recibe <code>label = -100</code> para los turnos <code>system</code> y <code>user</code>.</li>
+  <li><b>Beneficio 1:</b> El 100% de los pasos de optimización afinan la calidad técnica de la respuesta.</li>
+  <li><b>Beneficio 2:</b> Generalización óptima ante cualquier formulación o variación de la pregunta.</li>
+  <li><b>Beneficio 3:</b> Cero pérdida de cómputo en tokens que el usuario proporcionará en tiempo real.</li>
+  </ul>
+  </div>
+  </div>
+  </div>
+
+  </div>
+
+  <!-- Métricas Rápidas de la Muestra -->
+  <div class="token-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top:1.2rem;">
+  <div class="metric-card">
+  <div class="metric-num" id="jsonl-metric-total">0</div>
+  <div class="metric-label">Tokens Totales en Muestra</div>
+  </div>
+  <div class="metric-card">
+  <div class="metric-num" id="jsonl-metric-masked" style="color:var(--text-muted);">0 (0%)</div>
+  <div class="metric-label">Enmascarados (label = -100)</div>
+  </div>
+  <div class="metric-card">
+  <div class="metric-num" id="jsonl-metric-trainable" style="color:var(--accent-success);">0 (0%)</div>
+  <div class="metric-label">Entrenables (Gradiente Activo)</div>
+  </div>
+  <div class="metric-card">
+  <div class="metric-num" style="color:var(--meta-blue);">100%</div>
+  <div class="metric-label">Eficiencia en Respuestas</div>
+  </div>
+  </div>
+
+  </div>
+  </div>
+
+  <!-- QUIZ 4 -->
  <div class="quiz-box">
  <div class="quiz-header">
  <span class="quiz-tag">Autoevaluación 1.3.4</span>
@@ -1015,134 +1263,205 @@
  </div>
 
  <!-- BANCO DE PRUEBAS 1.3.5 -->
- <div class="workbench-section">
- <div class="workbench-top">
- <div class="workbench-label">
- <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
- Banco de Pruebas 1.3.5: Planificador de Hiperparámetros & Curva de Learning Rate
- </div>
- <div class="workbench-actions">
- <span class="workbench-tag">Cosine Annealing Schedule</span>
- </div>
- </div>
+  <div class="workbench-section">
+  <div class="workbench-top">
+  <div class="workbench-label">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="color:var(--meta-blue); vertical-align:middle; margin-right:4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+  Banco de Pruebas 1.3.5: Planificador de Hiperparámetros & Curva de Learning Rate
+  </div>
+  <div class="workbench-actions">
+  <span class="workbench-tag">Cosine Annealing & TRL Optimizer</span>
+  </div>
+  </div>
 
- <div class="workbench-content">
-  <!-- 4 Parameter Cards para Sliders en Cuadrícula 2x2 -->
-  <div class="controls-grid-2x2">
- <div class="param-card">
- <div class="param-header">
- <span> Tamaño del Dataset ($N$):</span>
- <span class="param-badge" id="hp-dataset-val">2,000 ejemplos</span>
- </div>
- <input type="range" class="scale-range" id="hp-dataset-slider" min="200" max="20000" step="200" value="2000">
- <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
- <span>200</span>
- <span>2,000 (Estándar)</span>
- <span>20,000</span>
- </div>
- </div>
+  <div class="workbench-content">
+  <!-- Tarjeta Pedagógica Introductoria -->
+  <div class="workbench-pedagogy-card">
+  <div class="workbench-pedagogy-icon">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+  </div>
+  <div class="workbench-pedagogy-content">
+  <h4>¿Cómo configurar un régimen de entrenamiento estable y predecible?</h4>
+  <p>En el fine-tuning de LLMs, un mal régimen de hiperparámetros destruye las capacidades base del modelo (olvido catastrófico) o genera inestabilidad numérica en los gradientes. Este simulador calcula en tiempo real el <b>Batch Size Efectivo ($B_{\text{eff}} = \text{Micro Batch} \times \text{Grad Accum}$)</b>, el total de pasos de optimización y la curva de decaimiento cosenoidal con <b>calentamiento lineal (Warmup)</b>.</p>
+  <div class="workbench-pedagogy-rule">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span><b>Regla de Oro de la Industria:</b> Mantén un $B_{\text{eff}} \in [16, 64]$ ejemplos. Con LoRA ($r=16$), un $\text{learning rate} = 2\times 10^{-4}$ con 3% a 5% de warmup logra la convergencia óptima en 3 épocas.</span>
+  </div>
+  </div>
+  </div>
 
- <div class="param-card">
- <div class="param-header">
- <span> Micro Batch Size ($B$):</span>
- <span class="param-badge" id="hp-microbatch-val">2</span>
- </div>
- <input type="range" class="scale-range" id="hp-microbatch-slider" min="1" max="8" step="1" value="2">
- <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
- <span>1 (Mínimo VRAM)</span>
- <span>2</span>
- <span>8</span>
- </div>
- </div>
+  <!-- 4 Parameter Cards para Sliders en Cuadrícula 2x2 con Explicaciones -->
+  <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem;">
+  Paso 1 · Configura la Escala del Dataset y Batching por GPU:
+  </div>
+  <div class="controls-grid-2x2" style="margin-bottom:1.2rem;">
+  <div class="param-card">
+  <div class="param-header">
+  <span>Tamaño del Dataset ($N$):</span>
+  <span class="param-badge" id="hp-dataset-val">2,000 ejemplos</span>
+  </div>
+  <input type="range" class="scale-range" id="hp-dataset-slider" min="200" max="20000" step="200" value="2000">
+  <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+  <span>200 (Micro-SFT)</span>
+  <span>2,000 (Estándar)</span>
+  <span>20,000 (Masivo)</span>
+  </div>
+  <div class="param-help-text">Cantidad de pares de diálogo en el dataset JSONL. Entre 1,000 y 3,000 ejemplos de alta calidad bastan para la mayoría de dominios.</div>
+  </div>
 
- <div class="param-card">
- <div class="param-header">
- <span> Gradient Accumulation ($G$):</span>
- <span class="param-badge" id="hp-gradacc-val">8</span>
- </div>
- <input type="range" class="scale-range" id="hp-gradacc-slider" min="1" max="32" step="1" value="8">
- <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
- <span>1 step</span>
- <span>8 steps</span>
- <span>32 steps</span>
- </div>
- </div>
+  <div class="param-card">
+  <div class="param-header">
+  <span>Micro Batch Size ($B$):</span>
+  <span class="param-badge" id="hp-microbatch-val">2</span>
+  </div>
+  <input type="range" class="scale-range" id="hp-microbatch-slider" min="1" max="8" step="1" value="2">
+  <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+  <span>1 (Mínimo VRAM)</span>
+  <span>2 (Recomendado 24GB)</span>
+  <span>8 (A100 80GB)</span>
+  </div>
+  <div class="param-help-text">Ejemplos cargados simultáneamente en la VRAM de la GPU. Con 24 GB de VRAM y secuencia 2048, $B=2$ evita errores Out-Of-Memory.</div>
+  </div>
 
- <div class="param-card">
- <div class="param-header">
- <span> Épocas ($E$):</span>
- <span class="param-badge" id="hp-epochs-val">3 épocas</span>
- </div>
- <input type="range" class="scale-range" id="hp-epochs-slider" min="1" max="5" step="1" value="3">
- <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
- <span>1 época</span>
- <span>3 (Recomendado)</span>
- <span>5 épocas</span>
- </div>
- </div>
- </div>
+  <div class="param-card">
+  <div class="param-header">
+  <span>Gradient Accumulation ($G$):</span>
+  <span class="param-badge" id="hp-gradacc-val">8</span>
+  </div>
+  <input type="range" class="scale-range" id="hp-gradacc-slider" min="1" max="32" step="1" value="8">
+  <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+  <span>1 step (Sin acumulación)</span>
+  <span>8 steps (Estándar)</span>
+  <span>32 steps</span>
+  </div>
+  <div class="param-help-text">Pasos de forward/backward acumulados antes de ejecutar una sola actualización de pesos en AdamW. Simula un batch mayor.</div>
+  </div>
 
- <!-- Learning Rate Pills y Warmup -->
- <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.2rem;">
- <div>
- <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.4rem;">Learning Rate Máximo ($\eta$):</div>
- <div class="preset-pills-row" id="hp-lr-pills">
- <button class="preset-pill-btn" data-lr="0.00005">5e-5 (Conservador)</button>
- <button class="preset-pill-btn" data-lr="0.0001">1e-4 (LoRA 70B)</button>
- <button class="preset-pill-btn active" data-lr="0.0002">2e-4 (QLoRA 8B)</button>
- <button class="preset-pill-btn" data-lr="0.0005">5e-4 (Agresivo)</button>
- </div>
- <select id="hp-lr-select" style="display:none;">
- <option value="0.00005">5e-5</option>
- <option value="0.0001">1e-4</option>
- <option value="0.0002" selected>2e-4</option>
- <option value="0.0005">5e-4</option>
- </select>
- </div>
+  <div class="param-card">
+  <div class="param-header">
+  <span>Épocas de Entrenamiento ($E$):</span>
+  <span class="param-badge" id="hp-epochs-val">3 épocas</span>
+  </div>
+  <input type="range" class="scale-range" id="hp-epochs-slider" min="1" max="5" step="1" value="3">
+  <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+  <span>1 época</span>
+  <span>3 (Recomendado SFT)</span>
+  <span>5 épocas</span>
+  </div>
+  <div class="param-help-text">Veces que el optimizador recorre el dataset completo. En LLMs, más de 3–4 épocas suele provocar sobreajuste (memorización de sintaxis).</div>
+  </div>
+  </div>
 
- <div class="param-card" style="padding: 0.8rem 1rem;">
- <div class="param-header">
- <span>Warmup Ratio:</span>
- <span class="param-badge" id="hp-warmup-val">5% (19 steps)</span>
- </div>
- <input type="range" class="scale-range" id="hp-warmup-slider" min="0.01" max="0.15" step="0.01" value="0.05" style="margin-top:0.4rem;">
- </div>
- </div>
+  <!-- Learning Rate Pills y Warmup con Explicaciones -->
+  <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem;">
+  Paso 2 · Selecciona la Tasa de Aprendizaje y Porcentaje de Calentamiento:
+  </div>
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.2rem;">
+  <div class="param-card">
+  <div style="font-size:0.84rem; font-weight:700; color:var(--text-primary); margin-bottom:0.4rem;">Learning Rate Máximo ($\eta_{\text{max}}$):</div>
+  <div class="preset-pills-row" id="hp-lr-pills">
+  <button class="preset-pill-btn" data-lr="0.00005">5e-5 (Conservador)</button>
+  <button class="preset-pill-btn" data-lr="0.0001">1e-4 (LoRA 70B)</button>
+  <button class="preset-pill-btn active" data-lr="0.0002">2e-4 (QLoRA 8B)</button>
+  <button class="preset-pill-btn" data-lr="0.0005">5e-4 (Agresivo)</button>
+  </div>
+  <div class="param-help-text" style="margin-top:0.5rem;">LoRA adapta matrices inicializadas en cero, requiriendo un LR ~100x mayor que Full FT ($2\times 10^{-4}$ vs $1\times 10^{-6}$).</div>
+  <select id="hp-lr-select" style="display:none;">
+  <option value="0.00005">5e-5</option>
+  <option value="0.0001">1e-4</option>
+  <option value="0.0002" selected>2e-4</option>
+  <option value="0.0005">5e-4</option>
+  </select>
+  </div>
 
- <!-- Canvas de Curva de Learning Rate -->
- <div class="workbench-canvas-frame">
- <div class="workbench-canvas-header">
- <span>Planificador de Tasa de Aprendizaje: Warmup Lineal + Decaimiento Coseno (Cosine Annealing)</span>
- <span style="color:#eab308;">Curva de Convergencia</span>
- </div>
- <div style="padding: 1rem; background: #0b1120;">
- <canvas id="hp-schedule-canvas" style="width: 100%; height: 190px; display: block;"></canvas>
- </div>
- </div>
+  <div class="param-card">
+  <div class="param-header">
+  <span>Warmup Ratio (% Calentamiento):</span>
+  <span class="param-badge" id="hp-warmup-val">5% (19 steps)</span>
+  </div>
+  <input type="range" class="scale-range" id="hp-warmup-slider" min="0.01" max="0.15" step="0.01" value="0.05" style="margin-top:0.4rem;">
+  <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">
+  <span>1% (Rápido)</span>
+  <span>5% (Óptimo)</span>
+  <span>15% (Largo)</span>
+  </div>
+  <div class="param-help-text">Porcentaje inicial donde el LR asciende linealmente desde 0 hasta $\eta_{\text{max}}$. Evita que gradientes iniciales caóticos desestabilicen el modelo.</div>
+  </div>
+  </div>
 
- <!-- 4 Métricas del Planificador -->
- <div class="token-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
- <div class="metric-card">
- <div class="metric-num" id="hp-eff-batch">16 ejemplos</div>
- <div class="metric-label">Batch Size Efectivo ($B \times G$)</div>
- </div>
- <div class="metric-card">
- <div class="metric-num" id="hp-total-steps" style="color:var(--meta-blue);">375 steps</div>
- <div class="metric-label">Pasos Totales de Optimización</div>
- </div>
- <div class="metric-card">
- <div class="metric-num" id="hp-warmup-steps" style="color:#eab308;">19 steps</div>
- <div class="metric-label">Pasos de Calentamiento Lineal</div>
- </div>
- <div class="metric-card">
- <div class="metric-num" id="hp-time-est" style="color:var(--accent-success);">~1m 8s</div>
- <div class="metric-label">Tiempo Estimado (1x RTX 4090)</div>
- </div>
- </div>
- </div>
- </div>
+  <!-- Canvas de Curva de Learning Rate -->
+  <div class="workbench-canvas-frame" style="margin-bottom:1.2rem;">
+  <div class="workbench-canvas-header">
+  <span>Planificador de Tasa de Aprendizaje: Warmup Lineal + Decaimiento Coseno (Cosine Annealing)</span>
+  <span style="color:#eab308; font-weight:700;">Curva de Convergencia</span>
+  </div>
+  <div style="padding: 1rem; background: #0b1120;">
+  <canvas id="hp-schedule-canvas" style="width: 100%; height: 190px; display: block;"></canvas>
+  </div>
+  </div>
 
- <!-- QUIZ 5 -->
+  <!-- 4 Métricas del Planificador -->
+  <div class="token-metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.9rem; margin-bottom:1.2rem;">
+  <div class="metric-card">
+  <div class="metric-num" id="hp-eff-batch">16 ejemplos</div>
+  <div class="metric-label">Batch Size Efectivo ($B \times G$)</div>
+  </div>
+  <div class="metric-card">
+  <div class="metric-num" id="hp-total-steps" style="color:var(--meta-blue);">375 steps</div>
+  <div class="metric-label">Pasos Totales de Optimización</div>
+  </div>
+  <div class="metric-card">
+  <div class="metric-num" id="hp-warmup-steps" style="color:#eab308;">19 steps</div>
+  <div class="metric-label">Pasos de Calentamiento (Warmup)</div>
+  </div>
+  <div class="metric-card">
+  <div class="metric-num" id="hp-time-est" style="color:var(--accent-success);">~1h 8m</div>
+  <div class="metric-label">Tiempo Estimado (1x RTX 4090)</div>
+  </div>
+  </div>
+
+  <!-- Diagnóstico MLOps y Generador de Script Hugging Face -->
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+  
+  <!-- Diagnóstico MLOps -->
+  <div class="result-box" style="margin-top:0;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+  <div style="font-size:0.85rem; font-weight:700; color:var(--text-primary); text-transform:uppercase;">Diagnóstico de Salud MLOps:</div>
+  <span class="status-pill-safe" id="hp-diagnosis-badge"> Régimen Óptimo</span>
+  </div>
+  <div id="hp-diagnosis-desc" style="font-size:0.86rem; color:var(--text-secondary); line-height:1.5;">
+  El Batch Size Efectivo de <b>16 ejemplos</b> con <b>375 pasos</b> garantiza un balance ideal entre estabilidad del estimador AdamW y velocidad de convergencia en 1x GPU comercial.
+  </div>
+  </div>
+
+  <!-- Generador de TrainingArguments -->
+  <div class="code-box" style="margin:0;">
+  <div class="code-header">
+  <span>training_args_config.py (Hugging Face / TRL)</span>
+  <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+  </div>
+  <pre class="code-content" style="max-height:160px; overflow-y:auto;"><code id="hp-code-snippet"><span class="code-kw">from</span> <span class="code-var">transformers</span> <span class="code-kw">import</span> <span class="code-fn">TrainingArguments</span>
+
+<span class="code-var">training_args</span> = <span class="code-fn">TrainingArguments</span>(
+    <span class="code-var">output_dir</span>=<span class="code-str">"./llama3-sft-checkpoint"</span>,
+    <span class="code-var">per_device_train_batch_size</span>=<span class="code-num">2</span>,
+    <span class="code-var">gradient_accumulation_steps</span>=<span class="code-num">8</span>,  <span class="code-cm"># Batch efectivo = 16</span>
+    <span class="code-var">learning_rate</span>=<span class="code-num">2e-4</span>,
+    <span class="code-var">num_train_epochs</span>=<span class="code-num">3</span>,
+    <span class="code-var">warmup_ratio</span>=<span class="code-num">0.05</span>,              <span class="code-cm"># 19 steps de calentamiento</span>
+    <span class="code-var">lr_scheduler_type</span>=<span class="code-str">"cosine"</span>,
+    <span class="code-var">fp16</span>=<span class="code-kw">True</span>,
+    <span class="code-var">logging_steps</span>=<span class="code-num">10</span>,
+    <span class="code-var">save_strategy</span>=<span class="code-str">"epoch"</span>,
+)</code></pre>
+  </div>
+
+  </div>
+
+  </div>
+  </div>
+
+  <!-- QUIZ 5 -->
  <div class="quiz-box">
  <div class="quiz-header">
  <span class="quiz-tag">Autoevaluación 1.3.5</span>
@@ -1257,6 +1576,20 @@
  </div>
 
  <div class="workbench-content">
+  <!-- Tarjeta Pedagógica Introductoria -->
+  <div class="workbench-pedagogy-card">
+  <div class="workbench-pedagogy-icon">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8m-4-4v8"/></svg>
+  </div>
+  <div class="workbench-pedagogy-content">
+  <h4>¿Cómo evaluar cuantitativamente la fidelidad de un LLM adaptado?</h4>
+  <p>La evaluación de texto generado requiere combinar múltiples métricas complementarias: <b>Perplexity (PPL)</b> evalúa la sorpresa probabilística (valores bajos $\approx 2–6$ indican alta fluidez); <b>BLEU-4</b> evalúa coincidencia exacta de 4-gramas contiguos (estricto en código/SQL); y <b>ROUGE-L</b> evalúa la subsecuencia común más larga (ideal para síntesis y respuestas explicativas).</p>
+  <div class="workbench-pedagogy-rule">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span><b>Criterio de Validación Productiva:</b> Se requiere $\text{ROUGE-L} \ge 0.70$ y $\text{BLEU-4} \ge 0.45$ para certificar adaptadores LoRA en banca, salud o legal-tech.</span>
+  </div>
+  </div>
+  </div>
  <!-- Preset Buttons para Casos NLP -->
  <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.4rem;">
  Cargar Caso de Prueba Comparativo:
@@ -1431,6 +1764,20 @@
  </div>
 
  <div class="workbench-content">
+  <!-- Tarjeta Pedagógica Introductoria -->
+  <div class="workbench-pedagogy-card">
+  <div class="workbench-pedagogy-icon">
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  </div>
+  <div class="workbench-pedagogy-content">
+  <h4>Arquitectura de Evaluación en Dos Capas: Llama Guard 3 & LLM-as-a-Judge</h4>
+  <p>La evaluación en producción no puede depender de revisiones humanas manuales. Se despliega una defensa de dos capas: <b>1. Llama Guard 3</b> (microservicio ultra-rápido &lt;40ms que clasifica 14 categorías de riesgo $S_1$–$S_{14}$ y frena inyecciones de prompt); y <b>2. LLM-as-a-Judge</b> (modelo evaluador sintético que califica Factualidad, Relevancia, Coherencia y Adherencia Regulatoria en escala 1 a 5).</p>
+  <div class="workbench-pedagogy-rule">
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span><b>Umbral de Pase:</b> Puntuación media $\bar{S} \ge 4.5/5.0$ y veredicto de Llama Guard <code>safe</code> para autorizar el despliegue automático del modelo.</span>
+  </div>
+  </div>
+  </div>
  <!-- Preset Buttons para Casos de Auditoría -->
  <div style="font-size:0.82rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.4rem;">
  Seleccionar Caso de Auditoría en Pipeline:
@@ -1631,10 +1978,13 @@
   <span>dataset_sft_postgresql.jsonl</span>
   <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
   </div>
-  <pre class="code-content"><code>{"messages": [
-  {"role": "system",    "content": "Eres un DBA senior experto en PostgreSQL. Proporciona diagnósticos con EXPLAIN ANALYZE e índices concisos."},
-  {"role": "user",      "content": "SELECT * FROM ordenes WHERE cliente_id=450 AND estado='PAGADO' tarda 4.2s con 10M filas. ¿Cómo la optimizo?"},
-  {"role": "assistant", "content": "1. Crea índice compuesto B-Tree:\nCREATE INDEX idx_ord ON ordenes (cliente_id, estado);\n2. ANALYZE ordenes;\n3. El Seq Scan pasa a Index Scan en &lt;5ms."}
+    <pre class="code-content"><code>{<span class="code-var">"messages"</span>: [
+  {<span class="code-var">"role"</span>: <span class="code-str">"system"</span>,    <span class="code-var">"content"</span>: <span class="code-str">"Eres un DBA senior experto en PostgreSQL. Proporciona diagnósticos con EXPLAIN ANALYZE e índices concisos."</span>},
+  {<span class="code-var">"role"</span>: <span class="code-str">"user"</span>,      <span class="code-var">"content"</span>: <span class="code-str">"SELECT * FROM ordenes WHERE cliente_id=450 AND estado='PAGADO' tarda 4.2s con 10M filas. ¿Cómo la optimizo?"</span>},
+  {<span class="code-var">"role"</span>: <span class="code-str">"assistant"</span>, <span class="code-var">"content"</span>: <span class="code-str">"1. Crea índice compuesto B-Tree:
+CREATE INDEX idx_ord ON ordenes (cliente_id, estado);
+2. ANALYZE ordenes;
+3. El Seq Scan pasa a Index Scan en &lt;5ms."</span>}
 ]}</code></pre>
   </div>
   <p style="margin:0.9rem 0 0.4rem; font-size:0.88rem; color:var(--text-secondary);"><b>Justificación matemática del Loss Masking:</b> La función de pérdida SFT correcta es:</p>
@@ -1746,47 +2096,47 @@
   <p><b>c) Script TRL DPOTrainer:</b></p>
   <div class="code-box">
   <div class="code-header"><span>dpo_legal_llama3.py</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
-  <pre class="code-content"><code>from trl import DPOTrainer, DPOConfig
-from peft import LoraConfig, get_peft_model
-from transformers import AutoModelForCausalLM, AutoTokenizer
+  <pre class="code-content"><code><span class="code-kw">from</span> <span class="code-var">trl</span> <span class="code-kw">import</span> <span class="code-fn">DPOTrainer</span>, <span class="code-fn">DPOConfig</span>
+<span class="code-kw">from</span> <span class="code-var">peft</span> <span class="code-kw">import</span> <span class="code-fn">LoraConfig</span>, <span class="code-fn">get_peft_model</span>
+<span class="code-kw">from</span> <span class="code-var">transformers</span> <span class="code-kw">import</span> <span class="code-fn">AutoModelForCausalLM</span>, <span class="code-fn">AutoTokenizer</span>
 
-# 1. Modelo SFT como base con QLoRA (congelado)
-model = AutoModelForCausalLM.from_pretrained(
-    "meta-llama/Meta-Llama-3-8B-Instruct",
-    load_in_4bit=True,
+<span class="code-cm"># 1. Modelo SFT como base con QLoRA (congelado)</span>
+<span class="code-var">model</span> = <span class="code-fn">AutoModelForCausalLM</span>.<span class="code-fn">from_pretrained</span>(
+    <span class="code-str">"meta-llama/Meta-Llama-3-8B-Instruct"</span>,
+    <span class="code-var">load_in_4bit</span>=<span class="code-kw">True</span>,
 )
-tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct")
+<span class="code-var">tokenizer</span> = <span class="code-fn">AutoTokenizer</span>.<span class="code-fn">from_pretrained</span>(<span class="code-str">"meta-llama/Meta-Llama-3-8B-Instruct"</span>)
 
-# 2. Adaptador LoRA — proyecciones de atencion full
-lora_cfg = LoraConfig(
-    r=16, lora_alpha=32,
-    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],
-    lora_dropout=0.05, bias="none",
+<span class="code-cm"># 2. Adaptador LoRA — proyecciones de atención full</span>
+<span class="code-var">lora_cfg</span> = <span class="code-fn">LoraConfig</span>(
+    <span class="code-var">r</span>=<span class="code-num">16</span>, <span class="code-var">lora_alpha</span>=<span class="code-num">32</span>,
+    <span class="code-var">target_modules</span>=[<span class="code-str">"q_proj"</span>, <span class="code-str">"v_proj"</span>, <span class="code-str">"k_proj"</span>, <span class="code-str">"o_proj"</span>],
+    <span class="code-var">lora_dropout</span>=<span class="code-num">0.05</span>, <span class="code-var">bias</span>=<span class="code-str">"none"</span>,
 )
-model = get_peft_model(model, lora_cfg)
+<span class="code-var">model</span> = <span class="code-fn">get_peft_model</span>(<span class="code-var">model</span>, <span class="code-var">lora_cfg</span>)
 
-# 3. Hiperparametros DPO con justificacion
-dpo_cfg = DPOConfig(
-    beta=0.1,                        # KL conservador para dominio legal
-    learning_rate=5e-7,              # LR muy bajo: evita colapso de politica
-    num_train_epochs=3,
-    per_device_train_batch_size=2,
-    gradient_accumulation_steps=8,   # Batch efectivo = 16
-    max_length=2048,
-    max_prompt_length=512,
-    output_dir="./llama3-legal-dpo",
-    logging_steps=10,
+<span class="code-cm"># 3. Hiperparámetros DPO con justificación técnica</span>
+<span class="code-var">dpo_cfg</span> = <span class="code-fn">DPOConfig</span>(
+    <span class="code-var">beta</span>=<span class="code-num">0.1</span>,                        <span class="code-cm"># KL conservador para dominio legal</span>
+    <span class="code-var">learning_rate</span>=<span class="code-num">5e-7</span>,              <span class="code-cm"># LR bajo: previene colapso de política</span>
+    <span class="code-var">num_train_epochs</span>=<span class="code-num">3</span>,
+    <span class="code-var">per_device_train_batch_size</span>=<span class="code-num">2</span>,
+    <span class="code-var">gradient_accumulation_steps</span>=<span class="code-num">8</span>,   <span class="code-cm"># Batch efectivo = 16</span>
+    <span class="code-var">max_length</span>=<span class="code-num">2048</span>,
+    <span class="code-var">max_prompt_length</span>=<span class="code-num">512</span>,
+    <span class="code-var">output_dir</span>=<span class="code-str">"./llama3-legal-dpo"</span>,
+    <span class="code-var">logging_steps</span>=<span class="code-num">10</span>,
 )
 
-# 4. Entrenar — ref_model=None: TRL desactiva LoRA para la referencia
-trainer = DPOTrainer(
-    model=model, ref_model=None,
-    args=dpo_cfg,
-    train_dataset=dpo_dataset,       # columnas: prompt, chosen, rejected
-    tokenizer=tokenizer,
+<span class="code-cm"># 4. Entrenar — ref_model=None: TRL desactiva LoRA internamente</span>
+<span class="code-var">trainer</span> = <span class="code-fn">DPOTrainer</span>(
+    <span class="code-var">model</span>=<span class="code-var">model</span>, <span class="code-var">ref_model</span>=<span class="code-kw">None</span>,
+    <span class="code-var">args</span>=<span class="code-var">dpo_cfg</span>,
+    <span class="code-var">train_dataset</span>=<span class="code-var">dpo_dataset</span>,       <span class="code-cm"># Columnas: prompt, chosen, rejected</span>
+    <span class="code-var">tokenizer</span>=<span class="code-var">tokenizer</span>,
 )
-trainer.train()
-# -> Exportar: merge_and_unload() -> GGUF -> Ollama/vLLM (ver Tema 1.3.8)</code></pre>
+<span class="code-var">trainer</span>.<span class="code-fn">train</span>()
+<span class="code-cm"># -> Exportar: merge_and_unload() -> GGUF -> Ollama/vLLM</span></code></pre>
   </div>
   </div>
   </details>
@@ -1824,14 +2174,13 @@ trainer.train()
   <b>Merge: Fusi&oacute;n de Adaptadores LoRA</b> &mdash; <code>model.merge_and_unload()</code> produce un checkpoint en <code>.safetensors</code> con las dimensiones originales y cero overhead de inferencia.
   <div class="code-box" style="margin-top:0.75rem;">
   <div class="code-header"><span>merge_lora.py</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
-  <pre class="code-content"><code>from peft import PeftModel
-from transformers import AutoModelForCausalLM
+  <pre class="code-content"><code><span class="code-kw">from</span> <span class="code-var">peft</span> <span class="code-kw">import</span> <span class="code-fn">PeftModel</span>
+<span class="code-kw">from</span> <span class="code-var">transformers</span> <span class="code-kw">import</span> <span class="code-fn">AutoModelForCausalLM</span>
 
-base = AutoModelForCausalLM.from_pretrained("meta-llama/Meta-Llama-3-8B-Instruct")
-model = PeftModel.from_pretrained(base, "./mi-adaptador-lora")
-# W_final = W0 + (alpha/r) * B*A  (calculado una sola vez en frio)
-merged = model.merge_and_unload()
-merged.save_pretrained("./llama3-merged", safe_serialization=True)</code></pre>
+<span class="code-var">base</span> = <span class="code-fn">AutoModelForCausalLM</span>.<span class="code-fn">from_pretrained</span>(<span class="code-str">"meta-llama/Meta-Llama-3-8B-Instruct"</span>, <span class="code-var">torch_dtype</span>=<span class="code-str">"bfloat16"</span>)
+<span class="code-var">lora_model</span> = <span class="code-fn">PeftModel</span>.<span class="code-fn">from_pretrained</span>(<span class="code-var">base</span>, <span class="code-str">"./llama3-sft-checkpoint"</span>)
+<span class="code-var">merged</span> = <span class="code-var">lora_model</span>.<span class="code-fn">merge_and_unload</span>() <span class="code-cm"># W_final = W_0 + (alpha/r)*BA</span>
+<span class="code-var">merged</span>.<span class="code-fn">save_pretrained</span>(<span class="code-str">"./llama3-merged"</span>)</code></pre>
   </div>
   </div>
   </div>
@@ -1841,11 +2190,11 @@ merged.save_pretrained("./llama3-merged", safe_serialization=True)</code></pre>
   <b>Cuantizaci&oacute;n GGUF para Ollama</b> &mdash; <code>llama.cpp</code> convierte a GGUF con <code>Q4_K_M</code>, reduciendo Llama&nbsp;3&nbsp;8B de 16&nbsp;GB (FP16) a ~4.8&nbsp;GB.
   <div class="code-box" style="margin-top:0.75rem;">
   <div class="code-header"><span>convert_gguf.sh</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
-  <pre class="code-content"><code># Paso 1: HuggingFace -> GGUF F16
-python llama.cpp/convert_hf_to_gguf.py ./llama3-merged --outtype f16 --outfile llama3-f16.gguf
+  <pre class="code-content"><code><span class="code-cm"># Paso 1: HuggingFace -&gt; GGUF F16</span>
+<span class="code-fn">python</span> <span class="code-var">llama.cpp/convert_hf_to_gguf.py</span> <span class="code-str">./llama3-merged</span> <span class="code-var">--outfile</span> <span class="code-str">./llama3-f16.gguf</span>
 
-# Paso 2: cuantizar a Q4_K_M (~4.8 GB, calidad optima 4-bit)
-./llama.cpp/llama-quantize llama3-f16.gguf llama3-q4km.gguf Q4_K_M</code></pre>
+<span class="code-cm"># Paso 2: Cuantización a 4 bits Q4_K_M (SOTA balance velocidad/calidad)</span>
+<span class="code-fn">./llama.cpp/llama-quantize</span> <span class="code-str">./llama3-f16.gguf</span> <span class="code-str">./llama3-q4km.gguf</span> <span class="code-var">q4_k_m</span></code></pre>
   </div>
   </div>
   </div>
@@ -1855,16 +2204,14 @@ python llama.cpp/convert_hf_to_gguf.py ./llama3-merged --outtype f16 --outfile l
   <b>Servicio con Ollama y vLLM</b> &mdash; Ollama usa un <code>Modelfile</code> declarativo; vLLM sirve API compatible con OpenAI con throughput 3&ndash;5x superior.
   <div class="code-box" style="margin-top:0.75rem;">
   <div class="code-header"><span>Modelfile (Ollama)</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
-  <pre class="code-content"><code>FROM ./llama3-q4km.gguf
-SYSTEM "Eres un asistente legal experto en derecho corporativo mexicano."
-PARAMETER temperature 0.2
-PARAMETER top_p 0.9
-PARAMETER num_ctx 4096
-# ollama create llama3-legal -f Modelfile && ollama run llama3-legal</code></pre>
+  <pre class="code-content"><code><span class="code-kw">FROM</span> <span class="code-str">./llama3-q4km.gguf</span>
+<span class="code-kw">SYSTEM</span> <span class="code-str">"Eres un asistente legal experto en derecho corporativo mexicano. Cita artículos del Código de Comercio."</span>
+<span class="code-kw">PARAMETER</span> <span class="code-var">temperature</span> <span class="code-num">0.2</span>
+<span class="code-kw">PARAMETER</span> <span class="code-var">top_p</span> <span class="code-num">0.9</span></code></pre>
   </div>
   <div class="code-box" style="margin-top:0.6rem;">
   <div class="code-header"><span>vLLM OpenAI Server</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
-  <pre class="code-content"><code>vllm serve ./llama3-merged --host 0.0.0.0 --port 8000 --dtype bfloat16 --max-model-len 4096</code></pre>
+  <pre class="code-content"><code><span class="code-fn">vllm</span> <span class="code-var">serve</span> <span class="code-str">./llama3-merged</span> <span class="code-var">--host</span> <span class="code-num">0.0.0.0</span> <span class="code-var">--port</span> <span class="code-num">8000</span> <span class="code-var">--dtype</span> <span class="code-str">bfloat16</span> <span class="code-var">--max-model-len</span> <span class="code-num">4096</span></code></pre>
   </div>
   </div>
   </div>
