@@ -571,7 +571,7 @@
  </div>
  </div>
 
-   <!-- Visualizador de Descomposición Matricial LoRA -->
+     <!-- Visualizador de Descomposición Matricial LoRA -->
   <div class="lora-diagram-card">
   <div class="lora-diagram-header">
   <div class="lora-header-title">
@@ -607,10 +607,16 @@
 
   <!-- Grupo Adaptadores B · A -->
   <div class="lora-adapters-group">
+  <div class="lora-adapters-group-header">
+  <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+  <span>Adaptadores LoRA (Bajo Rango)</span>
+  </div>
+  <div class="lora-adapters-inner">
   <!-- Matriz B -->
   <div class="lora-matrix-box">
   <div class="lora-box-badge trainable">
-  <span>🔥 Entrenable</span>
+  <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+  <span>Entrenable</span>
   </div>
   <div class="lora-matrix-shape tall" id="lora-shape-b">
   <span class="matrix-title">B</span>
@@ -625,7 +631,8 @@
   <!-- Matriz A -->
   <div class="lora-matrix-box">
   <div class="lora-box-badge trainable">
-  <span>🔥 Entrenable</span>
+  <svg viewBox="0 0 24 24" width="10" height="10" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+  <span>Entrenable</span>
   </div>
   <div class="lora-matrix-shape wide" id="lora-shape-a">
   <span class="matrix-title">A</span>
@@ -634,23 +641,29 @@
   <div class="lora-box-footer init-gauss">Init: 𝒩(0, 1/r)</div>
   </div>
   </div>
+  </div>
 
   <!-- Operador Igual -->
   <div class="lora-flow-op">=</div>
 
   <!-- Tarjeta de Salida y Ventajas -->
   <div class="lora-result-card">
-  <div class="lora-result-title">Activación Resultante ($h$)</div>
+  <div class="lora-result-header">
+  <span class="lora-box-badge output">
+  <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span>Salida Activada</span>
+  </span>
+  </div>
   <div class="lora-result-formula" id="lora-result-formula">
   h = W₀x + 2.00 · (B·A)x
   </div>
   <div class="lora-result-points">
   <div class="point-item">
-  <svg viewBox="0 0 24 24" width="14" height="14" fill="#10b981" style="flex-shrink:0; margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <svg viewBox="0 0 24 24" width="13" height="13" fill="#10b981" style="flex-shrink:0; margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
   <span><b>Sin regresión:</b> Al inicio $B=0 \implies \Delta W=0$.</span>
   </div>
   <div class="point-item">
-  <svg viewBox="0 0 24 24" width="14" height="14" fill="#10b981" style="flex-shrink:0; margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <svg viewBox="0 0 24 24" width="13" height="13" fill="#10b981" style="flex-shrink:0; margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
   <span><b>99.9% ahorro:</b> Solo <span id="lora-inline-trainable" style="font-weight:700; color:var(--meta-blue);">14.7M</span> params activos.</span>
   </div>
   </div>
@@ -1128,7 +1141,7 @@ abla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
   <div class="loss-compare-card bad">
   <div class="loss-compare-title">
   <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-  <span>❌ Sin Loss Masking (Error Típico)</span>
+  <span>Sin Loss Masking (Error Típico)</span>
   </div>
   <ul class="loss-compare-list">
   <li>El modelo calcula pérdida sobre las preguntas del usuario y el system prompt.</li>
@@ -1141,7 +1154,7 @@ abla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
   <div class="loss-compare-card good">
   <div class="loss-compare-title">
   <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-  <span>✅ Con Loss Masking (Estándar SFT Oficial)</span>
+  <span>Con Loss Masking (Estándar SFT Oficial)</span>
   </div>
   <ul class="loss-compare-list">
   <li>PyTorch recibe <code>label = -100</code> para los turnos <code>system</code> y <code>user</code>.</li>
@@ -1917,79 +1930,44 @@ abla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
   Para un modelo Meta Llama 3 8B ($d_{\text{model}} = 4096$, 32 capas transformer), calcula la cantidad exacta de parámetros entrenables si se aplica LoRA con $r=16$ y $\alpha=32$ adaptando únicamente $W_q$ y $W_v$. Compara la VRAM requerida por los pesos entrenables en FP16 frente a un Full Fine-Tuning de 8B parámetros, y explica por qué la inferencia no sufre latencia adicional tras la fusión.
   </p>
 
-  <details class="exercise-solution-details">
-  <summary class="exercise-solution-summary">
-  <span>Ver Criterio de Solución &amp; Desglose Matemático</span>
-  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-  </summary>
-  <div class="exercise-solution-panel">
-  <p><b>1. Parámetros entrenables por capa:</b></p>
-  <ul>
-  <li>Matriz $B \in \mathbb{R}^{4096 \times 16}$: $4096 \times 16 = 65{,}536$ parámetros.</li>
-  <li>Matriz $A \in \mathbb{R}^{16 \times 4096}$: $16 \times 4096 = 65{,}536$ parámetros.</li>
-  <li>Por proyección ($W_q$ o $W_v$): $65{,}536 + 65{,}536 = 131{,}072$ parámetros.</li>
-  <li>Ambas proyecciones por capa: $2 \times 131{,}072 = 262{,}144$ parámetros.</li>
-  </ul>
-  <p><b>2. Total en 32 capas:</b></p>
-  $$\text{Total LoRA} = 32 \times 262{,}144 = 8{,}388{,}608 \approx 8.39\text{ M parámetros}$$
-  <p><b>3. Comparativa VRAM:</b></p>
-  <ul>
-  <li><b>LoRA FP16:</b> $8{,}388{,}608 \times 2\text{ B} \approx 16.78\text{ MB}$ — cabe en cualquier GPU de consumo.</li>
-  <li><b>Full FT FP16:</b> $8 \times 10^9 \times 2\text{ B} \approx 16\text{ GB}$ de pesos + $\sim$64 GB de estados AdamW.</li>
-  <li><b>Reducción:</b> LoRA entrena el $\mathbf{0.10\%}$ de los parámetros del modelo completo.</li>
-  </ul>
-  <p style="margin:0.5rem 0 0; font-size:0.88rem; color:var(--text-secondary);"><b>Merge sin latencia:</b> $W_{\text{final}} = W_0 + \frac{\alpha}{r}(B \cdot A)$ se computa offline una sola vez. El resultado $\in \mathbb{R}^{4096 \times 4096}$ es idéntico en forma a $W_0$ — el forward pass no ejecuta operaciones adicionales en tiempo de inferencia.</p>
-  </div>
-  </details>
-  </article>
-
-  <!-- EJERCICIO 2 -->
-  <article class="exercise-card">
-  <div class="exercise-header">
-  <span class="exercise-num-badge">Ejercicio 2</span>
-  <h4 class="exercise-title">Estructuración de Dataset SFT en JSONL con Loss Masking</h4>
-  </div>
-
-  <div class="exercise-context-box">
-  <div class="exercise-context-title">
-  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
-  Conceptos necesarios para este ejercicio
-  </div>
-  <ul class="exercise-context-list">
-  <li><b>Formato JSONL:</b> Cada línea del dataset es un JSON independiente con la clave <code>"messages"</code> conteniendo una lista de turnos <code>{"role": "...", "content": "..."}</code> — los roles válidos en Llama 3 son <code>system</code>, <code>user</code> y <code>assistant</code>.</li>
-  <li><b>Chat Template de Llama 3:</b> El tokenizador inserta automáticamente tokens especiales: <code>&lt;|begin_of_text|&gt;</code> al inicio, <code>&lt;|start_header_id|&gt;</code> y <code>&lt;|end_header_id|&gt;</code> para delimitar roles, y <code>&lt;|eot_id|&gt;</code> al final de cada turno.</li>
-  <li><b>Loss Masking:</b> PyTorch ignora tokens con etiqueta <code>label = -100</code> en <code>CrossEntropyLoss(ignore_index=-100)</code>. Se asigna a todos los tokens del prompt (system + user) para que el gradiente solo fluya sobre los tokens del asistente.</li>
-  <li><b>Error crítico:</b> Si no enmascaras el prompt, el modelo aprende a predecir las preguntas del usuario en lugar de las respuestas — sobreajuste al formato de consulta, no al conocimiento experto.</li>
-  </ul>
-  </div>
-
-  <p class="exercise-prompt">
-  Escribe un registro completo en formato JSONL para un caso de soporte técnico de PostgreSQL con Llama 3. Muestra los delimitadores de Chat Template oficiales (<code>&lt;|start_header_id|&gt;</code>, <code>&lt;|end_header_id|&gt;</code>, <code>&lt;|eot_id|&gt;</code>) y explica formalmente con la función de pérdida matemática por qué los tokens del sistema y del usuario deben recibir <code>label = -100</code>.
-  </p>
-
-  <details class="exercise-solution-details">
+      <details class="exercise-solution-details">
   <summary class="exercise-solution-summary">
   <span>Ver Criterio de Solución &amp; JSONL Oficial</span>
   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
   </summary>
   <div class="exercise-solution-panel">
-  <div class="code-box">
+  <div class="step-flow-list" style="margin:0.5rem 0 0.8rem;">
+  
+  <div class="step-flow-item">
+  <div class="step-num-badge">1</div>
+  <div class="step-flow-content">
+  <b>Registro Estructurado en Formato JSONL Oficial:</b>
+  <div class="code-box" style="margin:0.6rem 0;">
   <div class="code-header">
   <span>dataset_sft_postgresql.jsonl</span>
   <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
   </div>
-    <pre class="code-content"><code>{<span class="code-var">"messages"</span>: [
+  <pre class="code-content"><code>{<span class="code-var">"messages"</span>: [
   {<span class="code-var">"role"</span>: <span class="code-str">"system"</span>,    <span class="code-var">"content"</span>: <span class="code-str">"Eres un DBA senior experto en PostgreSQL. Proporciona diagnósticos con EXPLAIN ANALYZE e índices concisos."</span>},
   {<span class="code-var">"role"</span>: <span class="code-str">"user"</span>,      <span class="code-var">"content"</span>: <span class="code-str">"SELECT * FROM ordenes WHERE cliente_id=450 AND estado='PAGADO' tarda 4.2s con 10M filas. ¿Cómo la optimizo?"</span>},
-  {<span class="code-var">"role"</span>: <span class="code-str">"assistant"</span>, <span class="code-var">"content"</span>: <span class="code-str">"1. Crea índice compuesto B-Tree:
-CREATE INDEX idx_ord ON ordenes (cliente_id, estado);
-2. ANALYZE ordenes;
-3. El Seq Scan pasa a Index Scan en &lt;5ms."</span>}
+  {<span class="code-var">"role"</span>: <span class="code-str">"assistant"</span>, <span class="code-var">"content"</span>: <span class="code-str">"1. Crea índice compuesto B-Tree:\nCREATE INDEX idx_ord ON ordenes (cliente_id, estado);\n2. ANALYZE ordenes;\n3. El Seq Scan pasa a Index Scan en &lt;5ms."</span>}
 ]}</code></pre>
   </div>
-  <p style="margin:0.9rem 0 0.4rem; font-size:0.88rem; color:var(--text-secondary);"><b>Justificación matemática del Loss Masking:</b> La función de pérdida SFT correcta es:</p>
+  </div>
+  </div>
+
+  <div class="step-flow-item">
+  <div class="step-num-badge">2</div>
+  <div class="step-flow-content">
+  <b>Justificación Matemática del Loss Masking:</b>
   $$\mathcal{L}_{\text{SFT}} = -\sum_{t \in \mathcal{A}} \log P_\theta\!\left(y_t \;\middle|\; x_{\text{sys}},\, x_{\text{usr}},\, y_{1:t-1}\right)$$
-  <p style="margin:0.3rem 0 0; font-size:0.88rem; color:var(--text-secondary);">Donde $\mathcal{A}$ es el conjunto de índices de los tokens del asistente. Asignar <code>label = -100</code> a todos los demás tokens garantiza que <code>torch.nn.CrossEntropyLoss(ignore_index=-100)</code> no calcule gradientes sobre el prompt — el modelo aprende exclusivamente a generar respuestas expertas, no a imitar las preguntas del usuario.</p>
+  <div style="font-size:0.84rem; color:var(--text-secondary); line-height:1.5; margin-top:0.3rem;">
+  Donde $\mathcal{A}$ es el conjunto exclusivo de índices de tokens del asistente. Asignar <code>label = -100</code> a los tokens de $x_{\text{sys}}$ y $x_{\text{usr}}$ garantiza que <code>torch.nn.CrossEntropyLoss(ignore_index=-100)</code> no calcule gradientes sobre el prompt del usuario.
+  </div>
+  </div>
+  </div>
+
+  </div>
   </div>
   </details>
   </article>

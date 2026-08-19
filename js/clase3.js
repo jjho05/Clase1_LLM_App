@@ -674,19 +674,19 @@
     // Diagnóstico MLOps
     if (diagBadge && diagDesc) {
       if (effectiveBatch < 8) {
-        diagBadge.textContent = '⚠️ Batch Size Pequeño';
+        diagBadge.textContent = ' Batch Size Pequeño';
         diagBadge.className = 'status-pill-warning';
         diagDesc.innerHTML = `Un Batch Size Efectivo de <b>${effectiveBatch}</b> introduce alto ruido estocástico en AdamW. Aumenta <i>Gradient Accumulation</i> a mínimo 8 steps para estabilizar la convergencia.`;
       } else if (effectiveBatch > 128) {
-        diagBadge.textContent = '⚠️ Batch Size Excesivo';
+        diagBadge.textContent = ' Batch Size Excesivo';
         diagBadge.className = 'status-pill-warning';
         diagDesc.innerHTML = `Un Batch Size Efectivo de <b>${effectiveBatch}</b> reduce los steps totales a solo <b>${totalSteps}</b>, lo que puede provocar subentrenamiento o menor generalización.`;
       } else if (totalSteps < 100) {
-        diagBadge.textContent = '⚠️ Pocos Steps Totales';
+        diagBadge.textContent = ' Pocos Steps Totales';
         diagBadge.className = 'status-pill-warning';
         diagDesc.innerHTML = `Solo <b>${totalSteps} pasos</b> de entrenamiento. Aumenta las épocas a 3 o reduce el batch efectivo para permitir que el optimizador recorra el espacio latente.`;
       } else {
-        diagBadge.textContent = '✅ Régimen Óptimo SFT';
+        diagBadge.textContent = 'Régimen Óptimo SFT';
         diagBadge.className = 'status-pill-safe';
         diagDesc.innerHTML = `Excelente configuración. Batch Size Efectivo de <b>${effectiveBatch} ejemplos</b> con <b>${totalSteps.toLocaleString()} pasos totales</b> y <b>${warmupSteps} steps de warmup (${(warmupRatio * 100).toFixed(0)}%)</b> garantiza máxima estabilidad en adaptadores LoRA.`;
       }
