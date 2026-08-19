@@ -309,7 +309,7 @@
  <div class="param-card">
  <div class="param-header">
  <span> Presupuesto / Cómputo GPU:</span>
- <span class="param-badge" id="budget-val">Bajo ($0 / API)</span>
+ <span class="param-badge" id="budget-val">Bajo (0 USD / API)</span>
  </div>
  <input type="range" class="scale-range" id="decision-budget-slider" min="0" max="100" value="30">
  <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
@@ -388,13 +388,8 @@
  </div>
  </div>
  </div>
- </div>
- </div>
- </div>
- </div>
- </div>
 
- <!-- QUIZ 1 -->
+  <!-- QUIZ 1 -->
  <div class="quiz-box">
  <div class="quiz-header">
  <span class="quiz-tag">Autoevaluación 1.3.1</span>
@@ -638,7 +633,7 @@
   <span class="matrix-title">A</span>
   <span class="matrix-dim" id="lora-dim-a">16 × 4096</span>
   </div>
-  <div class="lora-box-footer init-gauss">Init: 𝒩(0, 1/r)</div>
+  <div class="lora-box-footer init-gauss">Init: $\mathcal{N}$(0, 1/r)</div>
   </div>
   </div>
   </div>
@@ -1162,8 +1157,7 @@
   </div>
   <div style="display:flex; gap:1rem; font-size:0.78rem; flex-wrap:wrap; margin-top:0.4rem;">
   <span style="display:inline-flex; align-items:center; gap:0.3rem;"><span style="display:inline-block; width:10px; height:10px; border-radius:3px; background:#94a3b8;"></span> <b>label = -100:</b> Token del prompt. CrossEntropyLoss lo ignora. Gradiente = 0.</span>
-  <span style="display:inline-flex; align-items:center; gap:0.3rem;"><span style="display:inline-block; width:10px; height:10px; border-radius:3px; background:#10b981;"></span> <b>label = ID Real:</b> Token del asistente. Gradiente $
-abla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
+  <span style="display:inline-flex; align-items:center; gap:0.3rem;"><span style="display:inline-block; width:10px; height:10px; border-radius:3px; background:#10b981;"></span> <b>label = ID Real:</b> Token del asistente. Gradiente $\nabla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
   </div>
   </div>
   </div>
@@ -2178,55 +2172,91 @@ abla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
   </div>
 
   <div class="tema-section-block">
-  <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Pipeline Paso a Paso</span> Merge, GGUF y Servicio</h4>
+  <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Pipeline de Despliegue</span> Merge, Cuantización GGUF y Servicio</h4>
   <div class="step-flow-list">
+  
   <div class="step-flow-item">
-  <div class="step-num-badge">1</div>
-  <div class="step-flow-content">
-  <b>Merge: Fusi&oacute;n de Adaptadores LoRA</b> &mdash; <code>model.merge_and_unload()</code> produce un checkpoint en <code>.safetensors</code> con las dimensiones originales y cero overhead de inferencia.
-  <div class="code-box" style="margin-top:0.75rem;">
-  <div class="code-header"><span>merge_lora.py</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
-  <pre class="code-content"><code><span class="code-kw">from</span> <span class="code-var">peft</span> <span class="code-kw">import</span> <span class="code-fn">PeftModel</span>
+    <div class="step-num-badge">1</div>
+    <div class="step-flow-content" style="flex: 1; min-width: 0;">
+      <h5 style="margin: 0 0 0.4rem 0; font-size: 1.05rem; font-family: var(--font-head); color: var(--text-primary);">
+        Merge: Fusión de Adaptadores LoRA en Pesos Base
+      </h5>
+      <p style="margin: 0 0 0.8rem 0; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
+        El método <code>model.merge_and_unload()</code> suma matemáticamente los pesos LoRA al modelo base ($W_{\text{final}} = W_0 + \frac{\alpha}{r}BA$) y produce un checkpoint consolidado en <code>.safetensors</code> con cero sobrecarga computacional en inferencia.
+      </p>
+      <div class="code-box" style="margin: 0; width: 100%;">
+        <div class="code-header">
+          <span>merge_lora.py (Fusión Definitiva)</span>
+          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre class="code-content"><code><span class="code-kw">from</span> <span class="code-var">peft</span> <span class="code-kw">import</span> <span class="code-fn">PeftModel</span>
 <span class="code-kw">from</span> <span class="code-var">transformers</span> <span class="code-kw">import</span> <span class="code-fn">AutoModelForCausalLM</span>
 
+<span class="code-cm"># 1. Cargamos el modelo base en precisión bfloat16</span>
 <span class="code-var">base</span> = <span class="code-fn">AutoModelForCausalLM</span>.<span class="code-fn">from_pretrained</span>(<span class="code-str">"meta-llama/Meta-Llama-3-8B-Instruct"</span>, <span class="code-var">torch_dtype</span>=<span class="code-str">"bfloat16"</span>)
+
+<span class="code-cm"># 2. Enlazamos los pesos del adaptador entrenado</span>
 <span class="code-var">lora_model</span> = <span class="code-fn">PeftModel</span>.<span class="code-fn">from_pretrained</span>(<span class="code-var">base</span>, <span class="code-str">"./llama3-sft-checkpoint"</span>)
-<span class="code-var">merged</span> = <span class="code-var">lora_model</span>.<span class="code-fn">merge_and_unload</span>() <span class="code-cm"># W_final = W_0 + (alpha/r)*BA</span>
+
+<span class="code-cm"># 3. Fusionamos matrices: W_final = W_0 + (alpha/r)*B*A</span>
+<span class="code-var">merged</span> = <span class="code-var">lora_model</span>.<span class="code-fn">merge_and_unload</span>()
 <span class="code-var">merged</span>.<span class="code-fn">save_pretrained</span>(<span class="code-str">"./llama3-merged"</span>)</code></pre>
+      </div>
+    </div>
   </div>
-  </div>
-  </div>
+
   <div class="step-flow-item">
-  <div class="step-num-badge">2</div>
-  <div class="step-flow-content">
-  <b>Cuantizaci&oacute;n GGUF para Ollama</b> &mdash; <code>llama.cpp</code> convierte a GGUF con <code>Q4_K_M</code>, reduciendo Llama&nbsp;3&nbsp;8B de 16&nbsp;GB (FP16) a ~4.8&nbsp;GB.
-  <div class="code-box" style="margin-top:0.75rem;">
-  <div class="code-header"><span>convert_gguf.sh</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
-  <pre class="code-content"><code><span class="code-cm"># Paso 1: HuggingFace -&gt; GGUF F16</span>
+    <div class="step-num-badge">2</div>
+    <div class="step-flow-content" style="flex: 1; min-width: 0;">
+      <h5 style="margin: 0 0 0.4rem 0; font-size: 1.05rem; font-family: var(--font-head); color: var(--text-primary);">
+        Cuantización GGUF para Despliegue Local con Ollama / llama.cpp
+      </h5>
+      <p style="margin: 0 0 0.8rem 0; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
+        Convertimos el modelo fusionado a formato GGUF con cuantización <code>Q4_K_M</code> (4.5 bits por peso con k-quants), reduciendo la huella de memoria de Llama 3 8B de 16 GB (FP16) a ~4.8 GB con nula degradación de calidad.
+      </p>
+      <div class="code-box" style="margin: 0; width: 100%;">
+        <div class="code-header">
+          <span>convert_gguf.sh (Conversión y Cuantización a 4 bits)</span>
+          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre class="code-content"><code><span class="code-cm"># Paso 1: Convertir checkpoint Hugging Face a binario GGUF FP16</span>
 <span class="code-fn">python</span> <span class="code-var">llama.cpp/convert_hf_to_gguf.py</span> <span class="code-str">./llama3-merged</span> <span class="code-var">--outfile</span> <span class="code-str">./llama3-f16.gguf</span>
 
-<span class="code-cm"># Paso 2: Cuantización a 4 bits Q4_K_M (SOTA balance velocidad/calidad)</span>
+<span class="code-cm"># Paso 2: Cuantizar a 4 bits Q4_K_M (Balance óptimo velocidad / precisión)</span>
 <span class="code-fn">./llama.cpp/llama-quantize</span> <span class="code-str">./llama3-f16.gguf</span> <span class="code-str">./llama3-q4km.gguf</span> <span class="code-var">q4_k_m</span></code></pre>
+      </div>
+    </div>
   </div>
-  </div>
-  </div>
+
   <div class="step-flow-item">
-  <div class="step-num-badge">3</div>
-  <div class="step-flow-content">
-  <b>Servicio con Ollama y vLLM</b> &mdash; Ollama usa un <code>Modelfile</code> declarativo; vLLM sirve API compatible con OpenAI con throughput 3&ndash;5x superior.
-  <div class="code-box" style="margin-top:0.75rem;">
-  <div class="code-header"><span>Modelfile (Ollama)</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
-  <pre class="code-content"><code><span class="code-kw">FROM</span> <span class="code-str">./llama3-q4km.gguf</span>
+    <div class="step-num-badge">3</div>
+    <div class="step-flow-content" style="flex: 1; min-width: 0;">
+      <h5 style="margin: 0 0 0.4rem 0; font-size: 1.05rem; font-family: var(--font-head); color: var(--text-primary);">
+        Servicio en Producción: Modelfile de Ollama y Servidor vLLM
+      </h5>
+      <p style="margin: 0 0 0.8rem 0; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.55;">
+        Para uso local o edge usamos un <code>Modelfile</code> declarativo en Ollama. Para APIs de alta concurrencia usamos el servidor de <b>vLLM</b> con <i>PagedAttention</i> y <i>Continuous Batching</i>.
+      </p>
+      <div class="code-box" style="margin: 0 0 0.9rem 0; width: 100%;">
+        <div class="code-header">
+          <span>Modelfile (Despliegue Local con Ollama)</span>
+          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre class="code-content"><code><span class="code-kw">FROM</span> <span class="code-str">./llama3-q4km.gguf</span>
 <span class="code-kw">SYSTEM</span> <span class="code-str">"Eres un asistente legal experto en derecho corporativo mexicano. Cita artículos del Código de Comercio."</span>
 <span class="code-kw">PARAMETER</span> <span class="code-var">temperature</span> <span class="code-num">0.2</span>
 <span class="code-kw">PARAMETER</span> <span class="code-var">top_p</span> <span class="code-num">0.9</span></code></pre>
+      </div>
+      <div class="code-box" style="margin: 0; width: 100%;">
+        <div class="code-header">
+          <span>vLLM Server (API Compatible con OpenAI)</span>
+          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre class="code-content"><code><span class="code-fn">vllm</span> <span class="code-var">serve</span> <span class="code-str">./llama3-merged</span> <span class="code-var">--host</span> <span class="code-num">0.0.0.0</span> <span class="code-var">--port</span> <span class="code-num">8000</span> <span class="code-var">--dtype</span> <span class="code-str">bfloat16</span> <span class="code-var">--max-model-len</span> <span class="code-num">4096</span></code></pre>
+      </div>
+    </div>
   </div>
-  <div class="code-box" style="margin-top:0.6rem;">
-  <div class="code-header"><span>vLLM OpenAI Server</span><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button></div>
-  <pre class="code-content"><code><span class="code-fn">vllm</span> <span class="code-var">serve</span> <span class="code-str">./llama3-merged</span> <span class="code-var">--host</span> <span class="code-num">0.0.0.0</span> <span class="code-var">--port</span> <span class="code-num">8000</span> <span class="code-var">--dtype</span> <span class="code-str">bfloat16</span> <span class="code-var">--max-model-len</span> <span class="code-num">4096</span></code></pre>
-  </div>
-  </div>
-  </div>
+
   </div>
   </div>
 
