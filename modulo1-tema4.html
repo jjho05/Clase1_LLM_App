@@ -222,6 +222,44 @@
         <p class="conclusion-text">La calidad de un sistema de IA en producción no se mide solo por el loss del modelo, sino por la <b>robustez de su interfaz de servicio, su latencia bajo carga y su capacidad de recuperarse ante fallos</b>.</p>
       </div>
 
+              <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{Servicio Productivo} = \mathcal{M}_{\theta}(\text{Pesos}) + \mathcal{S}_{\text{API}}(\text{FastAPI}) + \mathcal{V}_{\text{Schema}}(\text{Pydantic}) + \mathcal{G}_{\text{SRE}}(\text{SLAs})$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de los 4 Pilares del Servicio en Producción</span>
+                <span class="breakdown-count-tag">4 componentes</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathcal{M}_{\theta}$ (Pesos)</span>
+                  <div class="breakdown-row-text"><strong>Modelo Optimizado:</strong> Pesos de Meta Llama 3 con cuantización NF4 y KV-Cache configurado en memoria VRAM.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathcal{S}_{\text{API}}$ (Endpoint)</span>
+                  <div class="breakdown-row-text"><strong>Capa de Servicio ASGI:</strong> Servidor asíncrono FastAPI y Uvicorn para atender miles de llamadas HTTP concurrentes.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathcal{V}_{\text{Schema}}$ (Pydantic)</span>
+                  <div class="breakdown-row-text"><strong>Contrato y Validación:</strong> Validación en Rust de tipos, rangos y mensajes rechazando peticiones inválidas con error 422.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathcal{G}_{\text{SRE}}$ (SLAs)</span>
+                  <div class="breakdown-row-text"><strong>Gobernanza y Resiliencia:</strong> Middlewares de logging, rate limiting, circuit breakers y métricas Prometheus de latencia.</div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
       <!-- QUIZ 1 -->
       <div class="quiz-box">
         <div class="quiz-header">
@@ -364,6 +402,48 @@
           </div>
         </div>
       </div>
+
+              <div class="formula-card">
+          <div class="formula-math-area">
+            $$W_{\text{prod}} = \text{merge\_and\_unload}(W_0, B, A, \alpha, r) = W_0 + \frac{\alpha}{r}(B \cdot A)$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de la Fusión de Adaptadores LoRA para Producción</span>
+                <span class="breakdown-count-tag">5 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$W_{\text{prod}}$ (Matriz Final)</span>
+                  <div class="breakdown-row-text"><strong>Pesos Fusionados:</strong> Matriz densa final en <code>bfloat16</code> lista para servir con vLLM o TensorRT-LLM sin sobrecarga.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$W_0$ (Base)</span>
+                  <div class="breakdown-row-text"><strong>Pesos Pre-entrenados:</strong> Matriz original de Meta Llama 3 con dimensiones $(d \times k)$.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$B \cdot A$ (LoRA)</span>
+                  <div class="breakdown-row-text"><strong>Producto de Adaptadores:</strong> Factorización de bajo rango ajustada durante el Supervised Fine-Tuning.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\frac{\alpha}{r}$ (Escala)</span>
+                  <div class="breakdown-row-text"><strong>Factor de Ponderación:</strong> Coeficiente constante que modula el impacto del conocimiento adaptado.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Overhead} \to 0$</span>
+                  <div class="breakdown-row-text"><strong>Cero Latencia Adicional:</strong> Elimina la necesidad de bifurcar operaciones tensoriales en tiempo de inferencia.</div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
 
       <!-- QUIZ 2 -->
       <div class="quiz-box">
@@ -543,6 +623,44 @@
         </div>
       </div>
 
+              <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{Throughput}_{\text{cluster}} = \frac{\sum_{i=1}^{U} N_{\text{tokens}}^{(i)}}{\Delta t} = \frac{U \cdot \bar{N}_{\text{tokens}}}{T_{\text{servicio}}}$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de la Capacidad y Throughput del Endpoint</span>
+                <span class="breakdown-count-tag">4 métricas</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Throughput}$</span>
+                  <div class="breakdown-row-text"><strong>Rendimiento Global:</strong> Tasa total de tokens emitidos por segundo a través de todos los clientes conectados.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$U$ (Usuarios)</span>
+                  <div class="breakdown-row-text"><strong>Concurrencia Activa:</strong> Número de peticiones simultáneas procesadas en el batch continuo de la GPU.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\bar{N}_{\text{tokens}}$</span>
+                  <div class="breakdown-row-text"><strong>Tokens Promedio:</strong> Longitud media de respuesta generada por solicitud ($S_{\text{gen}}$).</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{servicio}}$</span>
+                  <div class="breakdown-row-text"><strong>Tiempo de Servicio:</strong> Duración de ejecución en GPU incluyendo transferencia PCI-e y decodificación.</div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
       <!-- QUIZ 3 -->
       <div class="quiz-box">
         <div class="quiz-header">
@@ -573,16 +691,16 @@
           La solución estándar de la industria es el <b>Streaming asíncrono con Server-Sent Events (SSE)</b> bajo el tipo de contenido <code>text/event-stream</code>. El servidor emite cada token inmediatamente después de ser predicho por la función de muestreo ($y_t$), logrando un <b>Time to First Token (TTFT)</b> de menos de 100 ms.
         </p>
 
-        <div class="formula-card">
+                <div class="formula-card">
           <div class="formula-math-area">
-            $$\text{Latencia Percibida} = \text{TTFT} = T_{\text{red}} + T_{\text{prefill}} + T_{\text{decode}}(1)$$
+            $$	ext{Latencia Percibida} = 	ext{TTFT} = T_{	ext{red}} + T_{	ext{prefill}}(S_{	ext{prompt}}) + T_{	ext{decode}}(1)$$
           </div>
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
               <div class="summary-left">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                 <span>Desglose de la Fórmula de Latencia Percibida (TTFT)</span>
-                <span class="breakdown-count-tag">4 elementos</span>
+                <span class="breakdown-count-tag">4 variables</span>
               </div>
               <span class="summary-toggle-icon">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
@@ -591,19 +709,19 @@
             <div class="formula-breakdown-panel">
               <div class="breakdown-list-stack">
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\text{TTFT}</span>
+                  <span class="breakdown-row-badge">$	ext{TTFT}$</span>
                   <div class="breakdown-row-text"><strong>Time to First Token:</strong> Tiempo transcurrido desde que el usuario presiona Enviar hasta que la primera palabra aparece en pantalla.</div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">T_{\text{red}}</span>
-                  <div class="breakdown-row-text"><strong>Latencia de Red (RTT):</strong> Tiempo de transmisión del paquete HTTP y handshake TLS entre cliente y servidor.</div>
+                  <span class="breakdown-row-badge">$T_{	ext{red}}$ (RTT)</span>
+                  <div class="breakdown-row-text"><strong>Latencia de Red:</strong> Tiempo de transmisión del paquete HTTP y handshake TLS entre cliente y servidor.</div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">T_{\text{prefill}}</span>
+                  <span class="breakdown-row-badge">$T_{	ext{prefill}}$</span>
                   <div class="breakdown-row-text"><strong>Fase de Prefill (Prompt Processing):</strong> Tiempo de cálculo paralelo para procesar y proyectar los embeddings de todo el prompt de entrada en GPU.</div>
                 </div>
                 <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">T_{\text{decode}}(1)</span>
+                  <span class="breakdown-row-badge">$T_{	ext{decode}}(1)$</span>
                   <div class="breakdown-row-text"><strong>Primer Paso Autoregresivo:</strong> Tiempo de ejecución de una pasada hacia adelante (forward pass) y muestreo Softmax del token #1.</div>
                 </div>
               </div>
@@ -825,6 +943,48 @@
         </div>
       </div>
 
+              <div class="formula-card">
+          <div class="formula-math-area">
+            $$T_{\text{total\_E2E}} = T_{\text{red}} + T_{\text{retrieval}}(k) + T_{\text{prefill}} + \sum_{t=2}^{N} \text{ITL}_t$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de la Latencia End-to-End en Pipelines RAG</span>
+                <span class="breakdown-count-tag">5 términos</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{total\_E2E}}$</span>
+                  <div class="breakdown-row-text"><strong>Latencia Completa:</strong> Tiempo total de ejecución desde el envío de la consulta hasta la recepción del último token.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{retrieval}}(k)$</span>
+                  <div class="breakdown-row-text"><strong>Búsqueda Vectorial:</strong> Tiempo de consulta de similitud coseno en ChromaDB recuperando los $k$ chunks más relevantes.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{prefill}}$</span>
+                  <div class="breakdown-row-text"><strong>Prefill del Prompt Aumentado:</strong> Procesamiento en GPU del prompt enriquecido con el contexto recuperado.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{ITL}_t$</span>
+                  <div class="breakdown-row-text"><strong>Latencia Inter-Token:</strong> Tiempo medio entre la emisión de dos tokens consecutivos en la fase decodificadora.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$N$ (Longitud)</span>
+                  <div class="breakdown-row-text"><strong>Tokens Generados:</strong> Cantidad total de tokens producidos por la respuesta del asistente.</div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
       <!-- QUIZ 5 -->
       <div class="quiz-box">
         <div class="quiz-header">
@@ -852,75 +1012,7 @@
           Para dimensionar clusters de inferencia en producción se aplican tres ecuaciones fundamentales de ingeniería de sistemas:
         </p>
 
-        <!-- Fórmula de Latencia E2E -->
-        <div class="formula-card">
-          <div class="formula-math-area">
-            $$T_{\text{total}} = T_{\text{red}} + T_{\text{retrieval}} + T_{\text{TTFT}} + \frac{N_{\text{tokens}}}{\text{Throughput}_{\text{token/s}}}$$
-          </div>
-          <details class="formula-breakdown-details">
-            <summary class="formula-breakdown-summary">
-              <div class="summary-left">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                <span>Desglose de la Fórmula de Latencia Total E2E</span>
-                <span class="breakdown-count-tag">5 elementos</span>
-              </div>
-              <span class="summary-toggle-icon">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-              </span>
-            </summary>
-            <div class="formula-breakdown-panel">
-              <div class="breakdown-list-stack">
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">T_{\text{total}}</span>
-                  <div class="breakdown-row-text"><strong>Tiempo Total de Respuesta:</strong> Lapso completo desde el envío del request por el cliente hasta la recepción del último token.</div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">T_{\text{retrieval}}</span>
-                  <div class="breakdown-row-text"><strong>Tiempo de Búsqueda Vectorial:</strong> Latencia de generación de embedding de la consulta y búsqueda k-NN en la base vectorial.</div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">N_{\text{tokens}}</span>
-                  <div class="breakdown-row-text"><strong>Longitud de Respuesta:</strong> Cantidad total de tokens generados autoregresivamente.</div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\text{Throughput}</span>
-                  <div class="breakdown-row-text"><strong>Velocidad de Decodificación:</strong> Tasa de emisión de tokens por segundo por usuario en la GPU.</div>
-                </div>
-              </div>
-            </div>
-          </details>
-        </div>
-
-        <!-- Fórmula de Disponibilidad SLA -->
-        <div class="formula-card" style="margin-top:1rem;">
-          <div class="formula-math-area">
-            $$\text{Disponibilidad (SLA)} = A = \frac{\text{MTBF}}{\text{MTBF} + \text{MTTR}} \times 100\%$$
-          </div>
-          <details class="formula-breakdown-details">
-            <summary class="formula-breakdown-summary">
-              <div class="summary-left">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                <span>Desglose de la Fórmula de Disponibilidad (SLA)</span>
-                <span class="breakdown-count-tag">3 elementos</span>
-              </div>
-              <span class="summary-toggle-icon">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-              </span>
-            </summary>
-            <div class="formula-breakdown-panel">
-              <div class="breakdown-list-stack">
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\text{MTBF}</span>
-                  <div class="breakdown-row-text"><strong>Mean Time Between Failures:</strong> Tiempo promedio de operación continua del servicio sin interrupciones.</div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">\text{MTTR}</span>
-                  <div class="breakdown-row-text"><strong>Mean Time To Recovery:</strong> Tiempo promedio necesario para reiniciar el contenedor y restaurar el servicio tras un fallo.</div>
-                </div>
-              </div>
-            </div>
-          </details>
-        </div>
+        
       </div>
 
       <!-- LABORATORIO 4: CALCULADORA DE LATENCIA Y CONCURRENCIA -->
@@ -1031,6 +1123,44 @@
         </div>
       </div>
 
+              <div class="formula-card">
+          <div class="formula-math-area">
+            $$L = \lambda \cdot W \quad \iff \quad \text{Concurrencia} = \text{Tasa de Llegada (RPS)} \times \text{Tiempo de Respuesta (s)}$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de la Ley de Little para Dimensionamiento de Clusters</span>
+                <span class="breakdown-count-tag">4 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$L$ (Concurrencia)</span>
+                  <div class="breakdown-row-text"><strong>Solicitudes en Vuelo:</strong> Número promedio de peticiones activas simultáneamente en el servidor.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\lambda$ (RPS)</span>
+                  <div class="breakdown-row-text"><strong>Tasa de Llegada:</strong> Flujo de peticiones nuevas por segundo recibidas por el balanceador de carga.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$W$ (Latencia)</span>
+                  <div class="breakdown-row-text"><strong>Tiempo en el Sistema:</strong> Latencia promedio que tarda el microservicio en completar una petición.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$N_{\text{GPU}} = \lceil L / C \rceil$</span>
+                  <div class="breakdown-row-text"><strong>Cálculo de Hardware:</strong> GPUs necesarias dividiendo la concurrencia $L$ entre la capacidad por GPU $C$.</div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
       <!-- QUIZ 6 -->
       <div class="quiz-box">
         <div class="quiz-header">
@@ -1084,6 +1214,44 @@
 <span class="code-kw">CMD</span> [<span class="code-str">"uvicorn"</span>, <span class="code-str">"app_fastapi_llama3:app"</span>, <span class="code-str">"--host"</span>, <span class="code-str">"0.0.0.0"</span>, <span class="code-str">"--port"</span>, <span class="code-str">"8000"</span>, <span class="code-str">"--workers"</span>, <span class="code-str">"2"</span>]</code></pre>
         </div>
       </div>
+
+              <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{Disponibilidad (SLA)} = \frac{\text{MTBF}}{\text{MTBF} + \text{MTTR}} \times 100\% \ge 99.9\%$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de la Ecuación de Disponibilidad y Resiliencia SRE</span>
+                <span class="breakdown-count-tag">4 parámetros</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{SLA}$ (Uptime)</span>
+                  <div class="breakdown-row-text"><strong>Disponibilidad Comprometida:</strong> Porcentaje de tiempo que el endpoint responde exitosamente (200 OK) bajo el umbral de latencia acordado.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{MTBF}$ (Estabilidad)</span>
+                  <div class="breakdown-row-text"><strong>Mean Time Between Failures:</strong> Tiempo medio operativo sin fallos entre dos incidentes de producción.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{MTTR}$ (Recuperación)</span>
+                  <div class="breakdown-row-text"><strong>Mean Time To Recovery:</strong> Tiempo promedio requerido para reiniciar el contenedor Docker o reasignar tráfico al nodo secundario.</div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Error Budget}$</span>
+                  <div class="breakdown-row-text"><strong>Presupuesto de Error:</strong> Margen de tolerancia de fallos ($0.1\% \approx 43.8\text{ min/año}$) antes de congelar despliegues.</div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
 
       <!-- QUIZ 7 -->
       <div class="quiz-box">
