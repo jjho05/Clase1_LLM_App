@@ -159,211 +159,137 @@
  }
 
  /* ==========================================================================
- BANCO 1.3.2: CALCULADORA INTERACTIVA DE MATRICES LoRA & CANVAS
- ========================================================================== */
- function initLoraCalculator() {
- const modelSelect = document.getElementById('lora-model-select');
- const targetSelect = document.getElementById('lora-target-select');
- const rankSlider = document.getElementById('lora-rank-slider');
- const alphaSlider = document.getElementById('lora-alpha-slider');
- const canvas = document.getElementById('lora-matrix-canvas');
+  BANCO 1.3.2: CALCULADORA INTERACTIVA DE MATRICES LoRA & VISUALIZADOR
+  ========================================================================== */
+  function initLoraCalculator() {
+    const modelSelect = document.getElementById('lora-model-select');
+    const targetSelect = document.getElementById('lora-target-select');
+    const rankSlider = document.getElementById('lora-rank-slider');
+    const alphaSlider = document.getElementById('lora-alpha-slider');
 
- if (!modelSelect || !rankSlider || !canvas) return;
+    if (!rankSlider || !alphaSlider) return;
 
- function renderLora() {
- const model = modelSelect.value; // '8b', '70b', '405b'
- const target = targetSelect.value; // 'qv', 'qkov', 'all-linear'
- const r = parseInt(rankSlider.value, 10);
- const alpha = parseInt(alphaSlider.value, 10);
+    function renderLora() {
+      const model = modelSelect ? modelSelect.value : '8b'; // '8b', '70b', '405b'
+      const target = targetSelect ? targetSelect.value : 'all-linear'; // 'qv', 'qkov', 'all-linear'
+      const r = parseInt(rankSlider.value, 10);
+      const alpha = parseInt(alphaSlider.value, 10);
 
- // Dimensiones de Llama 3
- let d_model = 4096;
- let num_layers = 32;
- let total_params = 8030000000;
- if (model === '70b') {
- d_model = 8192;
- num_layers = 80;
- total_params = 70600000000;
- } else if (model === '405b') {
- d_model = 16384;
- num_layers = 126;
- total_params = 405000000000;
- }
+      // Dimensiones de Llama 3
+      let d_model = 4096;
+      let num_layers = 32;
+      let total_params = 8030000000;
+      if (model === '70b') {
+        d_model = 8192;
+        num_layers = 80;
+        total_params = 70600000000;
+      } else if (model === '405b') {
+        d_model = 16384;
+        num_layers = 126;
+        total_params = 405000000000;
+      }
 
- // Conteo de matrices adaptadas por capa
- let matrices_per_layer = 2; // q, v
- if (target === 'qkov') matrices_per_layer = 4; // q, k, v, o
- if (target === 'all-linear') matrices_per_layer = 7; // q, k, v, o, gate, up, down
+      // Conteo de matrices adaptadas por capa
+      let matrices_per_layer = 2; // q, v
+      if (target === 'qkov') matrices_per_layer = 4; // q, k, v, o
+      if (target === 'all-linear') matrices_per_layer = 7; // q, k, v, o, gate, up, down
 
- // Parámetros LoRA por matriz: B (d x r) + A (r x d) = 2 * d * r
- const lora_params_per_matrix = 2 * d_model * r;
- const total_lora_params = lora_params_per_matrix * matrices_per_layer * num_layers;
- const lora_percent = (total_lora_params / total_params) * 100;
- const lora_vram_mb = (total_lora_params * 2) / (1024 * 1024); // FP16: 2 bytes
- const scaling_factor = alpha / r;
+      // Parámetros LoRA por matriz: B (d x r) + A (r x d) = 2 * d * r
+      const lora_params_per_matrix = 2 * d_model * r;
+      const total_lora_params = lora_params_per_matrix * matrices_per_layer * num_layers;
+      const lora_percent = (total_lora_params / total_params) * 100;
+      const lora_vram_mb = (total_lora_params * 2) / (1024 * 1024); // FP16: 2 bytes
+      const scaling_factor = alpha / r;
 
- // Actualizar UI
- const rValEl = document.getElementById('lora-rank-val');
- const aValEl = document.getElementById('lora-alpha-val');
- const totalBaseEl = document.getElementById('lora-total-base');
- const totalTrainableEl = document.getElementById('lora-total-trainable');
- const percentEl = document.getElementById('lora-percent');
- const adapterVramEl = document.getElementById('lora-adapter-vram');
- const scalingEl = document.getElementById('lora-scaling-factor');
+      // Actualizar Badges de Sliders
+      const rValEl = document.getElementById('lora-rank-val');
+      const aValEl = document.getElementById('lora-alpha-val');
+      if (rValEl) rValEl.textContent = `r = ${r}`;
+      if (aValEl) aValEl.textContent = `α = ${alpha}`;
 
- if (rValEl) rValEl.textContent = `r = ${r}`;
- if (aValEl) aValEl.textContent = `α = ${alpha}`;
- if (totalBaseEl) totalBaseEl.textContent = (total_params / 1e9).toFixed(1) + 'B Parámetros';
- if (totalTrainableEl) totalTrainableEl.textContent = total_lora_params.toLocaleString() + ' params';
- if (percentEl) percentEl.textContent = lora_percent.toFixed(3) + '% del modelo';
- if (adapterVramEl) adapterVramEl.textContent = lora_vram_mb.toFixed(1) + ' MB (FP16)';
- if (scalingEl) scalingEl.textContent = `ΔW = (${alpha}/${r}) · (B·A) = ${scaling_factor.toFixed(2)} · (B·A)`;
+      // Actualizar Diagrama DOM
+      const scalingEl = document.getElementById('lora-scaling-factor');
+      const dimW0 = document.getElementById('lora-dim-w0');
+      const scaleVal = document.getElementById('lora-scale-val');
+      const dimB = document.getElementById('lora-dim-b');
+      const dimA = document.getElementById('lora-dim-a');
+      const resultFormula = document.getElementById('lora-result-formula');
+      const inlineTrainable = document.getElementById('lora-inline-trainable');
+      const shapeB = document.getElementById('lora-shape-b');
+      const shapeA = document.getElementById('lora-shape-a');
 
- drawLoraCanvas(canvas, d_model, r, alpha);
- }
+      if (scalingEl) scalingEl.textContent = `Escalado: ΔW = ${scaling_factor.toFixed(2)} · (B·A)`;
+      if (dimW0) dimW0.textContent = `${d_model} × ${d_model}`;
+      if (scaleVal) scaleVal.textContent = `α/r = ${scaling_factor.toFixed(2)}`;
+      if (dimB) dimB.textContent = `${d_model} × ${r}`;
+      if (dimA) dimA.textContent = `${r} × ${d_model}`;
+      if (resultFormula) resultFormula.textContent = `h = W₀x + ${scaling_factor.toFixed(2)} · (B·A)x`;
+      if (inlineTrainable) {
+        inlineTrainable.textContent = total_lora_params >= 1e6 
+          ? `${(total_lora_params / 1e6).toFixed(1)}M` 
+          : `${(total_lora_params / 1e3).toFixed(0)}k`;
+      }
 
- function drawLoraCanvas(cvs, d, r, alpha) {
- const ctx = cvs.getContext('2d');
- const dpr = window.devicePixelRatio || 1;
- const rect = cvs.getBoundingClientRect();
- cvs.width = rect.width * dpr;
- cvs.height = rect.height * dpr;
- ctx.scale(dpr, dpr);
+      // Escala visual reactiva para matrices B y A
+      if (shapeB) {
+        const bWidth = Math.max(28, Math.min(50, 24 + r * 0.2));
+        shapeB.style.width = `${bWidth}px`;
+      }
+      if (shapeA) {
+        const aHeight = Math.max(28, Math.min(50, 24 + r * 0.2));
+        shapeA.style.height = `${aHeight}px`;
+      }
 
- const w = rect.width;
- const h = rect.height;
- ctx.clearRect(0, 0, w, h);
+      // Actualizar Tarjetas de Métricas de Compresión
+      const totalBaseEl = document.getElementById('lora-total-base');
+      const totalTrainableEl = document.getElementById('lora-total-trainable');
+      const percentEl = document.getElementById('lora-percent');
+      const adapterVramEl = document.getElementById('lora-adapter-vram');
 
- const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
- const textColor = isDark ? '#e2e8f0' : '#1e293b';
- const mutedColor = isDark ? '#94a3b8' : '#64748b';
+      if (totalBaseEl) totalBaseEl.textContent = (total_params / 1e9).toFixed(1) + 'B Parámetros';
+      if (totalTrainableEl) totalTrainableEl.textContent = total_lora_params.toLocaleString() + ' params';
+      if (percentEl) percentEl.textContent = lora_percent.toFixed(3) + '% del modelo';
+      if (adapterVramEl) adapterVramEl.textContent = lora_vram_mb.toFixed(1) + ' MB (FP16)';
+    }
 
- // Dibujar W_0 (Matriz Base Congelada)
- const w0_x = 40;
- const w0_y = 35;
- const w0_w = 120;
- const w0_h = 120;
+    [rankSlider, alphaSlider].forEach(el => {
+      el.addEventListener('input', renderLora);
+      el.addEventListener('change', renderLora);
+    });
 
- ctx.fillStyle = isDark ? 'rgba(59, 130, 246, 0.15)' : 'rgba(0, 100, 224, 0.1)';
- ctx.strokeStyle = isDark ? '#3b82f6' : '#0064e0';
- ctx.lineWidth = 2;
- ctx.beginPath();
- ctx.roundRect(w0_x, w0_y, w0_w, w0_h, 8);
- ctx.fill();
- ctx.stroke();
+    if (modelSelect) {
+      modelSelect.addEventListener('change', renderLora);
+    }
+    if (targetSelect) {
+      targetSelect.addEventListener('change', renderLora);
+    }
 
- // Candado e indicativo de congelado
- ctx.fillStyle = textColor;
- ctx.font = 'bold 14px var(--font-sans, Inter, sans-serif)';
- ctx.textAlign = 'center';
- ctx.fillText('W₀ (Congelado)', w0_x + w0_w / 2, w0_y + w0_h / 2 - 8);
- ctx.font = '11px var(--font-mono, monospace)';
- ctx.fillStyle = mutedColor;
- ctx.fillText(`[${d} × ${d}]`, w0_x + w0_w / 2, w0_y + w0_h / 2 + 12);
- ctx.fillText(' Grad = False', w0_x + w0_w / 2, w0_y + w0_h / 2 + 28);
+    // Píldoras de Modelo LoRA
+    const modelPills = document.querySelectorAll('#lora-model-pills .preset-pill-btn');
+    modelPills.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modelPills.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (modelSelect) modelSelect.value = btn.getAttribute('data-model');
+        renderLora();
+      });
+    });
 
- // Signo +
- ctx.fillStyle = textColor;
- ctx.font = 'bold 22px sans-serif';
- ctx.fillText('+', w0_x + w0_w + 30, w0_y + w0_h / 2 + 6);
+    // Píldoras de Módulos Objetivo LoRA
+    const targetPills = document.querySelectorAll('#lora-target-pills .preset-pill-btn');
+    targetPills.forEach(btn => {
+      btn.addEventListener('click', () => {
+        targetPills.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (targetSelect) targetSelect.value = btn.getAttribute('data-target');
+        renderLora();
+      });
+    });
 
- // Matriz B (d x r)
- const b_x = w0_x + w0_w + 60;
- const b_y = w0_y;
- const b_w = Math.max(16, Math.min(36, r * 0.4));
- const b_h = 120;
+    renderLora();
+  }
 
- ctx.fillStyle = 'rgba(168, 85, 247, 0.2)';
- ctx.strokeStyle = '#a855f7';
- ctx.beginPath();
- ctx.roundRect(b_x, b_y, b_w, b_h, 6);
- ctx.fill();
- ctx.stroke();
-
- ctx.fillStyle = textColor;
- ctx.font = 'bold 12px var(--font-sans, Inter, sans-serif)';
- ctx.fillText('B', b_x + b_w / 2, b_y - 8);
- ctx.font = '10px var(--font-mono, monospace)';
- ctx.fillStyle = '#a855f7';
- ctx.fillText(`[${d}×${r}]`, b_x + b_w / 2, b_y + b_h + 16);
- ctx.fillText('Init: 0', b_x + b_w / 2, b_y + b_h / 2 + 3);
-
- // Signo ·
- ctx.fillStyle = textColor;
- ctx.font = 'bold 22px sans-serif';
- ctx.fillText('·', b_x + b_w + 20, w0_y + w0_h / 2 + 6);
-
- // Matriz A (r x d)
- const a_x = b_x + b_w + 40;
- const a_w = 120;
- const a_h = Math.max(16, Math.min(36, r * 0.4));
- const a_y = w0_y + (w0_h - a_h) / 2;
-
- ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
- ctx.strokeStyle = '#10b981';
- ctx.beginPath();
- ctx.roundRect(a_x, a_y, a_w, a_h, 6);
- ctx.fill();
- ctx.stroke();
-
- ctx.fillStyle = textColor;
- ctx.font = 'bold 12px var(--font-sans, Inter, sans-serif)';
- ctx.fillText('A', a_x + a_w / 2, a_y - 8);
- ctx.font = '10px var(--font-mono, monospace)';
- ctx.fillStyle = '#10b981';
- ctx.fillText(`[${r}×${d}]`, a_x + a_w / 2, a_y + a_h + 16);
- ctx.fillText('Init: 𝒩(0, σ²)', a_x + a_w / 2, a_y + a_h / 2 + 3);
-
- // Signo =
- const eq_x = a_x + a_w + 30;
- ctx.fillStyle = textColor;
- ctx.font = 'bold 22px sans-serif';
- ctx.fillText('=', eq_x, w0_y + w0_h / 2 + 6);
-
- // Salida h = W_0 x + (alpha/r)BAx
- const out_x = eq_x + 30;
- ctx.textAlign = 'left';
- ctx.font = 'bold 14px var(--font-mono, monospace)';
- ctx.fillStyle = isDark ? '#38bdf8' : '#0284c7';
- ctx.fillText(`h = W₀x + ${(alpha / r).toFixed(2)} · (BA)x`, out_x, w0_y + w0_h / 2 - 10);
- ctx.font = '12px var(--font-sans, Inter, sans-serif)';
- ctx.fillStyle = mutedColor;
- ctx.fillText(' Cero pérdida al inicio (B=0 ⇒ BA=0)', out_x, w0_y + w0_h / 2 + 14);
- ctx.fillText(' 99.9% menos memoria de gradientes', out_x, w0_y + w0_h / 2 + 34);
- }
-
- [modelSelect, targetSelect, rankSlider, alphaSlider].forEach(el => {
- el.addEventListener('input', renderLora);
- el.addEventListener('change', renderLora);
- });
-
- // Píldoras de Modelo LoRA
- const modelPills = document.querySelectorAll('#lora-model-pills .preset-pill-btn');
- modelPills.forEach(btn => {
- btn.addEventListener('click', () => {
- modelPills.forEach(b => b.classList.remove('active'));
- btn.classList.add('active');
- modelSelect.value = btn.getAttribute('data-model');
- renderLora();
- });
- });
-
- // Píldoras de Módulos Objetivo LoRA
- const targetPills = document.querySelectorAll('#lora-target-pills .preset-pill-btn');
- targetPills.forEach(btn => {
- btn.addEventListener('click', () => {
- targetPills.forEach(b => b.classList.remove('active'));
- btn.classList.add('active');
- targetSelect.value = btn.getAttribute('data-target');
- renderLora();
- });
- });
-
- window.addEventListener('resize', renderLora);
- renderLora();
- }
-
- /* ==========================================================================
+  /* ==========================================================================
  BANCO 1.3.3: SIMULADOR DE VRAM DE ENTRENAMIENTO (FULL VS LORA VS QLORA)
  ========================================================================== */
  function initVramSimulator() {
@@ -506,111 +432,216 @@
  }
 
  /* ==========================================================================
- BANCO 1.3.4: VALIDADOR JSONL & CHAT TEMPLATE LOSS MASKING
- ========================================================================== */
- function initDatasetValidator() {
- const presetSelect = document.getElementById('jsonl-preset-select');
- const editor = document.getElementById('jsonl-editor');
- const validateBtn = document.getElementById('jsonl-validate-btn');
- const previewContainer = document.getElementById('jsonl-rendered-preview');
- const statsEl = document.getElementById('jsonl-stats');
+  BANCO 1.3.4: VALIDADOR JSONL & INSPECTOR DE LOSS MASKING CON PESTAÑAS
+  ========================================================================== */
+  function initDatasetValidator() {
+    const editor = document.getElementById('jsonl-editor');
+    const validateBtn = document.getElementById('jsonl-validate-btn');
+    const formatBtn = document.getElementById('jsonl-format-btn');
+    const statusBadge = document.getElementById('jsonl-status-badge');
+    const streamContainer = document.getElementById('jsonl-rendered-preview');
+    const tensorContainer = document.getElementById('jsonl-tensor-chips');
 
- if (!editor || !validateBtn) return;
+    const metricTotal = document.getElementById('jsonl-metric-total');
+    const metricMasked = document.getElementById('jsonl-metric-masked');
+    const metricTrainable = document.getElementById('jsonl-metric-trainable');
+    const metricEfficiency = document.getElementById('jsonl-metric-efficiency');
 
- const PRESETS = {
- 'support': `{"messages": [{"role": "system", "content": "Eres un especialista de soporte de Llama Tech. Responde con tono profesional y estructurado."}, {"role": "user", "content": "¿Cómo puedo reiniciar mi clave de API?"}, {"role": "assistant", "content": "Para restablecer tu clave de API, sigue estos pasos:\\n1. Ingresa a https://console.llama.ai/settings\\n2. Ve a la pestaña 'API Keys' y haz clic en 'Revoke & Generate New'.\\n3. Guarda tu nuevo token en un archivo .env seguro."}]}`,
- 'code': `{"messages": [{"role": "system", "content": "Eres un asistente de programación experto en Python y PyTorch."}, {"role": "user", "content": "Escribe una función para calcular la similitud coseno entre dos tensores."}, {"role": "assistant", "content": "import torch\\nimport torch.nn.functional as F\\n\\ndef cosine_similarity_tensor(a: torch.Tensor, b: torch.Tensor) -> float:\\n \\"\\"\\"Calcula similitud coseno entre vectores a y b.\\"\\"\\"\\n return F.cosine_similarity(a.unsqueeze(0), b.unsqueeze(0)).item()"}]}`,
- 'medical': `{"messages": [{"role": "system", "content": "Eres un asistente médico informativo. Siempre incluye el descargo de responsabilidad obligatorio al final."}, {"role": "user", "content": "¿Cuáles son los síntomas de la hipertensión?"}, {"role": "assistant", "content": "La hipertensión arterial suele ser asintomática ('el asesino silencioso'), pero en casos severos puede presentar:\\n- Cefaleas matutinas pulsátiles\\n- Mareos y visión borrosa\\n- Fatiga injustificada\\n\\n*Aviso médico: Esta información es meramente educativa. Consulta a un médico titulado para cualquier diagnóstico.*"}]}`
- };
+    if (!editor) return;
 
- function validateAndRender() {
- const rawText = editor.value.trim();
- try {
- const parsed = JSON.parse(rawText);
- if (!parsed.messages || !Array.isArray(parsed.messages)) {
- throw new Error("El objeto raíz debe contener la propiedad 'messages' como un arreglo.");
- }
+    const PRESETS = {
+      'support': `{"messages": [
+  {"role": "system", "content": "Eres un DBA senior experto en PostgreSQL. Proporciona diagnósticos con EXPLAIN ANALYZE e índices concisos."},
+  {"role": "user", "content": "SELECT * FROM ordenes WHERE cliente_id=450 AND estado='PAGADO' tarda 4.2s con 10M filas. ¿Cómo la optimizo?"},
+  {"role": "assistant", "content": "1. Crea índice compuesto B-Tree:\nCREATE INDEX idx_ord ON ordenes (cliente_id, estado);\n2. ANALYZE ordenes;\n3. El Seq Scan pasa a Index Scan en <5ms."}
+]}`,
+      'code': `{"messages": [
+  {"role": "system", "content": "Eres un arquitecto backend experto en FastAPI y Pydantic v2. Genera esquemas con tipado estricto."},
+  {"role": "user", "content": "Crea un endpoint POST /transferencias bancarias con validación de saldo positivo y cuenta CLABE de 18 dígitos."},
+  {"role": "assistant", "content": "from pydantic import BaseModel, Field\nfrom fastapi import FastAPI, HTTPException\n\nclass Transferencia(BaseModel):\n    monto: float = Field(gt=0, description='Monto mayor a cero')\n    clabe: str = Field(min_length=18, max_length=18, pattern=r'^\\d{18}$')\n\n@app.post('/transferencias')\nasync def procesar(t: Transferencia):\n    return {'status': 'success', 'monto': t.monto}"}
+]}`,
+      'medical': `{"messages": [
+  {"role": "system", "content": "Eres un sistema de triaje médico informativo. Siempre incluye clasificación de urgencia y descargo legal."},
+  {"role": "user", "content": "Tengo dolor torácico opresivo que se irradia al brazo izquierdo y falta de aire desde hace 20 minutos."},
+  {"role": "assistant", "content": "URGENCIA NIVEL 1 (Código Rojo - Posible Síndrome Coronario Agudo):\n1. Llama inmediatamente a emergencias (911) o acude a urgencias.\n2. Permanece en reposo absoluto.\n\n*Aviso médico obligatorio: Este asistente no reemplaza la atención de urgencia presencial.*"}
+]}`
+    };
 
- let totalTokens = 0;
- let maskedTokens = 0;
- let trainableTokens = 0;
+    // Función de tokenización aproximada para Meta Llama 3
+    function simulateTokenizer(text) {
+      const rawTokens = text.match(/\w+|[^\w\s]|\s+/g) || [text];
+      return rawTokens.filter(t => t.length > 0).map((tok) => {
+        let hash = 0;
+        for (let i = 0; i < tok.length; i++) hash = (hash << 5) - hash + tok.charCodeAt(i);
+        const inputId = Math.abs(hash % 128000) + 256;
+        return { text: tok, inputId };
+      });
+    }
 
- let html = '<div class="chat-template-stream">';
- html += '<span class="special-token">&lt;|begin_of_text|&gt;</span>\n';
+    function validateAndRender() {
+      const rawText = editor.value.trim();
+      try {
+        const parsed = JSON.parse(rawText);
+        if (!parsed.messages || !Array.isArray(parsed.messages)) {
+          throw new Error("El JSON debe contener un arreglo de 'messages'.");
+        }
 
- parsed.messages.forEach(msg => {
- const role = msg.role;
- const content = msg.content;
- const isAssistant = role === 'assistant';
+        if (statusBadge) {
+          statusBadge.textContent = ' JSON Válido';
+          statusBadge.style.color = '#34d399';
+        }
 
- const approxTokens = Math.ceil(content.length / 3.8) + 4; // header tokens
- totalTokens += approxTokens;
+        let totalTokens = 0;
+        let maskedTokens = 0;
+        let trainableTokens = 0;
 
- if (isAssistant) {
- trainableTokens += approxTokens;
- } else {
- maskedTokens += approxTokens;
- }
+        let streamHtml = '<div class="chat-timeline-container">';
+        streamHtml += '<div class="sequence-boundary-chip"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> &lt;|begin_of_text|&gt; · Inicio de Secuencia Meta Llama 3</div>';
+        totalTokens += 1;
+        maskedTokens += 1;
 
- html += `<div class="chat-msg-block ${isAssistant ? 'msg-trainable' : 'msg-masked'}">`;
- html += `<span class="special-token">&lt;|start_header_id|&gt;${role}&lt;|end_header_id|&gt;</span>\n`;
- html += `<div class="msg-content ${isAssistant ? 'highlight-train' : 'highlight-mask'}">`;
- html += content.replace(/\n/g, '<br>');
- html += `</div>`;
- html += `<span class="special-token">&lt;|eot_id|&gt;</span>`;
- html += `<span class="loss-badge ${isAssistant ? 'badge-loss-active' : 'badge-loss-ignore'}">${isAssistant ? ' Pérdida Calculada (Loss Target)' : ' Máscara: label = -100 (Ignorado)'}</span>`;
- html += `</div>\n`;
- });
+        let tensorHtml = '';
+        tensorHtml += `<div class="tensor-token-chip masked" title="Token Especial: &lt;|begin_of_text|&gt;&#10;input_id: 128000&#10;labels: -100 (Ignorado)">&lt;|begin_of_text|&gt; <span class="chip-label">-100</span></div>`;
 
- html += '</div>';
- if (previewContainer) previewContainer.innerHTML = html;
+        parsed.messages.forEach(msg => {
+          const role = (msg.role || 'user').toLowerCase();
+          const content = msg.content || '';
+          const isAssistant = role === 'assistant';
 
- if (statsEl) {
- statsEl.innerHTML = `
- <div class="stat-pill">Tokens Totales: <b>${totalTokens}</b></div>
- <div class="stat-pill" style="color:var(--text-muted);">Enmascarados (Prompt): <b>${maskedTokens}</b> (${((maskedTokens / totalTokens) * 100).toFixed(0)}%)</div>
- <div class="stat-pill" style="color:var(--accent-success);">Entrenables (Gradiente): <b>${trainableTokens}</b> (${((trainableTokens / totalTokens) * 100).toFixed(0)}%)</div>
- `;
- }
+          let roleTitle = 'CONSULTA DEL USUARIO';
+          let roleIcon = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+          if (role === 'system') {
+            roleTitle = 'SYSTEM PROMPT';
+            roleIcon = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>';
+          } else if (role === 'assistant') {
+            roleTitle = 'RESPUESTA DEL ASISTENTE';
+            roleIcon = '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>';
+          }
 
- } catch (err) {
- if (previewContainer) {
- previewContainer.innerHTML = `<div class="error-msg-box"> <b>Error de Sintaxis JSONL:</b> ${err.message}</div>`;
- }
- if (statsEl) statsEl.innerHTML = '';
- }
- }
+          streamHtml += `<div class="chat-turn-card ${isAssistant ? 'trainable' : 'masked'}">`;
+          
+          // Turn Header
+          streamHtml += `<div class="chat-turn-header">`;
+          streamHtml += `<div class="chat-turn-role-group">`;
+          streamHtml += `<span class="role-pill ${role}">${roleIcon} ${roleTitle}</span>`;
+          streamHtml += `<span class="special-token-tag">&lt;|start_header_id|&gt;${role}&lt;|end_header_id|&gt;</span>`;
+          streamHtml += `</div>`;
+          streamHtml += isAssistant 
+            ? `<span class="loss-tag-trainable"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg> Target de Pérdida SFT · Gradiente Activo</span>`
+            : `<span class="loss-tag-mask"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg> label = -100 · Gradiente = 0</span>`;
+          streamHtml += `</div>`;
 
- if (presetSelect) {
- presetSelect.addEventListener('change', (e) => {
- if (PRESETS[e.target.value]) {
- editor.value = PRESETS[e.target.value];
- validateAndRender();
- }
- });
- }
+          // Turn Body
+          streamHtml += `<div class="chat-turn-body">`;
+          streamHtml += content.replace(/\n/g, '<br>');
+          streamHtml += `</div>`;
 
- // Píldoras de Presets JSONL
- const jsonlPills = document.querySelectorAll('#jsonl-preset-pills .preset-pill-btn');
- jsonlPills.forEach(btn => {
- btn.addEventListener('click', () => {
- jsonlPills.forEach(b => b.classList.remove('active'));
- btn.classList.add('active');
- const key = btn.getAttribute('data-sample');
- if (presetSelect) presetSelect.value = key;
- if (PRESETS[key]) {
- editor.value = PRESETS[key];
- validateAndRender();
- }
- });
- });
+          // Turn Footer
+          streamHtml += `<div class="chat-turn-footer">`;
+          streamHtml += `<span>Delimitador de Cierre: <code class="special-token-tag">&lt;|eot_id|&gt;</code></span>`;
+          streamHtml += `<span style="color:var(--text-muted); font-family:var(--font-mono); font-size:0.7rem;">Turno ${role.toUpperCase()} Completado</span>`;
+          streamHtml += `</div>`;
 
- validateBtn.addEventListener('click', validateAndRender);
- editor.value = PRESETS['support'];
- validateAndRender();
- }
+          streamHtml += `</div>`;
 
- /* ==========================================================================
+          // Tokenizer Simulation
+          const tokens = simulateTokenizer(content);
+          const headerTokens = 4;
+          const eotTokens = 1;
+          const count = tokens.length + headerTokens + eotTokens;
+
+          totalTokens += count;
+          if (isAssistant) {
+            trainableTokens += tokens.length + eotTokens;
+            maskedTokens += headerTokens;
+          } else {
+            maskedTokens += count;
+          }
+
+          // Generate Tensor Chips for Inspector
+          tensorHtml += `<div class="tensor-token-chip masked" title="Header: &lt;|start_header_id|&gt;${role}&lt;|end_header_id|&gt;&#10;labels: -100">&lt;|${role}|&gt; <span class="chip-label">-100</span></div>`;
+          tokens.forEach(tok => {
+            if (isAssistant) {
+              tensorHtml += `<div class="tensor-token-chip trainable" title="Token: '${tok.text}'&#10;input_id: ${tok.inputId}&#10;labels: ${tok.inputId} (Gradiente Activo)">${tok.text} <span class="chip-label">${tok.inputId}</span></div>`;
+            } else {
+              tensorHtml += `<div class="tensor-token-chip masked" title="Token: '${tok.text}'&#10;input_id: ${tok.inputId}&#10;labels: -100 (Ignorado)">${tok.text} <span class="chip-label">-100</span></div>`;
+            }
+          });
+          tensorHtml += `<div class="tensor-token-chip ${isAssistant ? 'trainable' : 'masked'}" title="Token: &lt;|eot_id|&gt;&#10;input_id: 128009&#10;labels: ${isAssistant ? '128009' : '-100'}">&lt;|eot_id|&gt; <span class="chip-label">${isAssistant ? '128009' : '-100'}</span></div>`;
+        });
+
+        streamHtml += '</div>';
+
+        if (streamContainer) streamContainer.innerHTML = streamHtml;
+        if (tensorContainer) tensorContainer.innerHTML = tensorHtml;
+
+        // Actualizar Métricas
+        const efficiency = totalTokens > 0 ? ((trainableTokens / totalTokens) * 100).toFixed(0) : 0;
+        if (metricTotal) metricTotal.textContent = totalTokens.toString();
+        if (metricMasked) metricMasked.textContent = `${maskedTokens} (${(100 - efficiency)}%)`;
+        if (metricTrainable) metricTrainable.textContent = `${trainableTokens} (${efficiency}%)`;
+        if (metricEfficiency) metricEfficiency.textContent = `${efficiency}% Gradiente`;
+
+      } catch (err) {
+        if (statusBadge) {
+          statusBadge.textContent = ' Error de Sintaxis';
+          statusBadge.style.color = '#ef4444';
+        }
+        if (streamContainer) {
+          streamContainer.innerHTML = `<div class="result-box" style="border-left:4px solid #ef4444; color:#ef4444;"><b>Error de Formato JSON:</b> ${err.message}</div>`;
+        }
+      }
+    }
+
+    // Auto-formatear JSON
+    if (formatBtn) {
+      formatBtn.addEventListener('click', () => {
+        try {
+          const parsed = JSON.parse(editor.value);
+          editor.value = JSON.stringify(parsed, null, 2);
+          validateAndRender();
+        } catch (e) {}
+      });
+    }
+
+    // Pestañas (Chat Template, Tensores PyTorch, Comparativa)
+    const tabBtns = document.querySelectorAll('.jsonl-tab-btn');
+    const tabPanes = document.querySelectorAll('.jsonl-tab-pane');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.getAttribute('data-tab');
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabPanes.forEach(p => p.classList.remove('active'));
+
+        btn.classList.add('active');
+        const targetPane = document.getElementById(`pane-${targetTab}`);
+        if (targetPane) targetPane.classList.add('active');
+      });
+    });
+
+    // Píldoras de Presets
+    const presetPills = document.querySelectorAll('#jsonl-preset-pills .jsonl-preset-card-btn');
+    presetPills.forEach(btn => {
+      btn.addEventListener('click', () => {
+        presetPills.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const sampleKey = btn.getAttribute('data-sample');
+        if (PRESETS[sampleKey]) {
+          editor.value = PRESETS[sampleKey];
+          validateAndRender();
+        }
+      });
+    });
+
+    if (validateBtn) validateBtn.addEventListener('click', validateAndRender);
+    editor.addEventListener('input', validateAndRender);
+
+    // Carga inicial
+    editor.value = PRESETS['support'];
+    validateAndRender();
+  }
+
+  /* ==========================================================================
   BANCO 1.3.5: PLANIFICADOR DE HIPERPARÁMETROS & CURVA DE LEARNING RATE
   ========================================================================== */
   function initHyperparameterPlanner() {

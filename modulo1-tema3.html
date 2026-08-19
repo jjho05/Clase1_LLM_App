@@ -1097,25 +1097,28 @@
   <div class="jsonl-tabs-nav">
   <button class="jsonl-tab-btn active" data-tab="stream">
   <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-  <span>1. Chat Template Llama 3 (Tokens Especiales)</span>
+  <span>1. Chat Template (Delimitadores)</span>
   </button>
   <button class="jsonl-tab-btn" data-tab="tensor">
   <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
-  <span>2. Tensor PyTorch (input_ids vs labels)</span>
+  <span>2. Tensores PyTorch (Tokens &amp; Labels)</span>
   </button>
   <button class="jsonl-tab-btn" data-tab="compare">
   <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
-  <span>3. Con Masking vs Sin Masking</span>
+  <span>3. Análisis Masking vs Sin Masking</span>
   </button>
   </div>
 
   <!-- PANE 1: Chat Template Stream -->
   <div class="jsonl-tab-pane active" id="pane-stream">
-  <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem; display:flex; justify-content:space-between; flex-wrap:wrap;">
+  <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
   <span>Estructura de delimitadores oficiales de Meta Llama 3:</span>
-  <span style="color:#059669; font-weight:700;"> Verde: Gradiente Activo |  Gris: label = -100 (Ignorado)</span>
+  <div style="display:flex; gap:0.75rem; font-size:0.75rem; font-weight:700;">
+  <span style="color:#059669; display:inline-flex; align-items:center; gap:0.3rem;"><span style="width:8px; height:8px; border-radius:50%; background:#10b981; display:inline-block;"></span> Gradiente Activo (Asistente)</span>
+  <span style="color:#64748b; display:inline-flex; align-items:center; gap:0.3rem;"><span style="width:8px; height:8px; border-radius:50%; background:#94a3b8; display:inline-block;"></span> label = -100 (Prompt)</span>
   </div>
-  <div id="jsonl-rendered-preview" style="font-family:var(--font-mono); font-size:0.86rem; line-height:1.6; max-height:320px; overflow-y:auto;"></div>
+  </div>
+  <div id="jsonl-rendered-preview" style="max-height:360px; overflow-y:auto;"></div>
   </div>
 
   <!-- PANE 2: PyTorch Tensor Inspector -->
@@ -1183,7 +1186,7 @@ abla_\theta \mathcal{L}$ actualiza pesos LoRA.</span>
   <div class="metric-label">Entrenables (Gradiente Activo)</div>
   </div>
   <div class="metric-card">
-  <div class="metric-num" style="color:var(--meta-blue);">100%</div>
+  <div class="metric-num" id="jsonl-metric-efficiency" style="color:var(--meta-blue);">100% Gradiente</div>
   <div class="metric-label">Eficiencia en Respuestas</div>
   </div>
   </div>
