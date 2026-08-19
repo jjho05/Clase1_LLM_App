@@ -429,31 +429,38 @@
             <button class="btn-secondary api-preset-pill" data-payload="empty-prompt">Caso 3: Mensajes Vacíos (422 Error)</button>
           </div>
 
-          <!-- Layout de Cliente HTTP en 2 Columnas -->
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1.2rem; margin-bottom:1.2rem;">
+          <!-- Layout de Cliente HTTP en 2 Columnas con Resaltado de Sintaxis Completo -->
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:1.2rem; margin-bottom:1.2rem;">
             
-            <!-- Columna Request -->
+            <!-- Columna Request (Editor Colorizado Interactivo) -->
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
                 <span style="font-size:0.78rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">HTTP Request Payload (JSON):</span>
                 <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--meta-blue); font-weight:700;">POST /v1/chat/completions</span>
               </div>
-              <textarea id="api-payload-editor" class="code-editor-input" rows="10" style="width:100%; border:1px solid var(--border-subtle); border-radius:10px; background:#0b1120; color:#f1f5f9; font-family:var(--font-mono); font-size:0.84rem; line-height:1.5; padding:0.9rem; resize:vertical; outline:none;">{
-  "model": "meta-llama/Meta-Llama-3-8B-Instruct",
-  "messages": [
-    { "role": "system", "content": "Eres un asistente financiero corporativo experto." },
-    { "role": "user", "content": "¿Cuál es la fórmula del Valor Presente Neto (VPN)?" }
-  ],
-  "temperature": 0.2,
-  "max_tokens": 150
-}</textarea>
+              <div class="code-box" style="margin:0;">
+                <div class="code-header" style="background:#0f172a; border-bottom:1px solid rgba(255,255,255,0.1); padding:0.5rem 0.9rem;">
+                  <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <div style="display:flex; gap:4px;">
+                      <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#ef4444;"></span>
+                      <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#eab308;"></span>
+                      <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#10b981;"></span>
+                    </div>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#94a3b8;">request_payload.json</span>
+                  </div>
+                  <span style="color:#34d399; font-weight:700; font-size:0.75rem;" id="api-req-status-badge">JSON Válido</span>
+                </div>
+                <div style="background:#0b1120; border-radius:0 0 10px 10px; overflow:hidden;">
+                  <pre class="code-content" id="api-payload-display" contenteditable="true" spellcheck="false" style="padding:1rem; margin:0; outline:none; font-family:var(--font-mono); font-size:0.84rem; line-height:1.55; color:#f1f5f9; height:210px; overflow-y:auto; white-space:pre-wrap;"></pre>
+                </div>
+              </div>
               <button class="btn-primary" id="api-send-btn" style="width:100%; margin-top:0.6rem; padding:0.65rem 1.2rem; font-size:0.88rem;">
                 <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" style="margin-right:4px;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                 <span>Enviar HTTP Request</span>
               </button>
             </div>
 
-            <!-- Columna Response -->
+            <!-- Columna Response (Visor de Respuesta Colorizado) -->
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
                 <span style="font-size:0.78rem; font-weight:800; color:var(--text-muted); text-transform:uppercase;">HTTP Server Response:</span>
@@ -462,15 +469,30 @@
                   <span id="api-response-time" style="font-size:0.75rem; font-family:var(--font-mono); color:var(--text-muted);">92 ms</span>
                 </div>
               </div>
-              <pre id="api-response-body" style="background:#0b1120; color:#34d399; padding:0.9rem; border-radius:10px; font-family:var(--font-mono); font-size:0.82rem; line-height:1.5; height:220px; overflow-y:auto; border:1px solid var(--border-subtle); white-space:pre-wrap; margin:0;"></pre>
+              <div class="code-box" style="margin:0;">
+                <div class="code-header" style="background:#0f172a; border-bottom:1px solid rgba(255,255,255,0.1); padding:0.5rem 0.9rem;">
+                  <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <div style="display:flex; gap:4px;">
+                      <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#ef4444;"></span>
+                      <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#eab308;"></span>
+                      <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:#10b981;"></span>
+                    </div>
+                    <span style="font-family:var(--font-mono); font-size:0.75rem; font-weight:700; color:#94a3b8;">response_200.json</span>
+                  </div>
+                  <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                </div>
+                <div style="background:#0b1120; border-radius:0 0 10px 10px; overflow:hidden;">
+                  <pre id="api-response-body" class="code-content" style="padding:1rem; margin:0; font-family:var(--font-mono); font-size:0.82rem; line-height:1.55; height:210px; overflow-y:auto; white-space:pre-wrap;"></pre>
+                </div>
+              </div>
               
-              <!-- Response Headers -->
-              <div style="margin-top:0.6rem; padding:0.5rem 0.8rem; background:var(--bg-subtle); border:1px solid var(--border-subtle); border-radius:8px;">
-                <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.2rem;">Cabeceras HTTP:</div>
-                <pre id="api-response-headers" style="margin:0; font-family:var(--font-mono); font-size:0.74rem; color:var(--text-secondary); line-height:1.4;">content-type: application/json; charset=utf-8
-server: uvicorn / fastapi
-x-process-time: 92ms
-x-llama-engine: vLLM PagedAttention</pre>
+              <!-- Response Headers con Resaltado -->
+              <div style="margin-top:0.6rem; padding:0.6rem 0.9rem; background:#0b1120; border:1px solid var(--border-subtle); border-radius:8px;">
+                <div style="font-size:0.72rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.25rem;">Cabeceras HTTP:</div>
+                <pre id="api-response-headers" style="margin:0; font-family:var(--font-mono); font-size:0.76rem; line-height:1.45;"><span class="code-var">content-type</span>: <span class="code-str">application/json; charset=utf-8</span>
+<span class="code-var">server</span>: <span class="code-str">uvicorn / fastapi</span>
+<span class="code-var">x-process-time</span>: <span class="code-num">92ms</span>
+<span class="code-var">x-llama-engine</span>: <span class="code-str">vLLM PagedAttention</span></pre>
               </div>
             </div>
 

@@ -1,7 +1,7 @@
 
 function colorizeJsonHtml(rawJsonStr) {
   const s = rawJsonStr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  const pattern = /(?:"(?:\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")\s*:|(?:"(?:\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*")|\b(?:true|false|null|-?\d+(?:\.\d+)?)\b/g;
+  const pattern = /(?:"(?:\\[\s\S]|[^\\"])*")\s*:|(?:"(?:\\[\s\S]|[^\\"])*")|\b(?:true|false|null|-?\d+(?:\.\d+)?)\b/g;
   return s.replace(pattern, match => {
     if (/:$/.test(match)) {
       return `<span class="code-var">${match.slice(0, -1)}</span>:`;
@@ -249,15 +249,19 @@ function initPipelineFlowSimulator() {
 /* ==========================================================================
    BANCO 1.4.2: FASTAPI & SWAGGER UI PLAYGROUND EN VIVO
    ========================================================================== */
+/* ==========================================================================
+   BANCO 1.4.2: FASTAPI & SWAGGER UI PLAYGROUND EN VIVO
+   ========================================================================== */
 function initFastApiSwaggerPlayground() {
-  const payloadEditor = document.getElementById('api-payload-editor');
+  const payloadDisplay = document.getElementById('api-payload-display');
   const sendBtn = document.getElementById('api-send-btn');
+  const reqStatusBadge = document.getElementById('api-req-status-badge');
   const statusCodeBadge = document.getElementById('api-status-code');
   const responseTimeBadge = document.getElementById('api-response-time');
   const responseBody = document.getElementById('api-response-body');
   const headerDetails = document.getElementById('api-response-headers');
 
-  if (!sendBtn || !payloadEditor) return;
+  if (!sendBtn || !payloadDisplay) return;
 
   const PRESET_PAYLOADS = {
     'valid': {
@@ -281,6 +285,32 @@ function initFastApiSwaggerPlayground() {
     }
   };
 
+  const INITIAL_MOCK_RESPONSE = {
+    "id": "chatcmpl-argb98z3k",
+    "object": "chat.completion",
+    "created": 1787110082,
+    "model": "meta-llama/Meta-Llama-3-8B-Instruct",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "La fórmula del Valor Presente Neto (VPN) es: VPN = \sum_{t=1}^{n} \frac{R_t}{(1 + k)^t} - I_0. Donde R_t son los flujos de caja, k la tasa de descuento e I_0 la inversión inicial."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 32,
+      "completion_tokens": 48,
+      "total_tokens": 80
+    }
+  };
+
+  // Inicialización de Editores con Resaltado de Sintaxis
+  payloadDisplay.innerHTML = colorizeJsonHtml(JSON.stringify(PRESET_PAYLOADS['valid'], null, 2));
+  if (responseBody) responseBody.innerHTML = colorizeJsonHtml(JSON.stringify(INITIAL_MOCK_RESPONSE, null, 2));
+
   const presetBtns = document.querySelectorAll('.api-preset-pill');
   presetBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -288,7 +318,16 @@ function initFastApiSwaggerPlayground() {
       btn.classList.add('active');
       const key = btn.getAttribute('data-payload');
       if (PRESET_PAYLOADS[key]) {
-        payloadEditor.value = JSON.stringify(PRESET_PAYLOADS[key], null, 2);
+        payloadDisplay.innerHTML = colorizeJsonHtml(JSON.stringify(PRESET_PAYLOADS[key], null, 2));
+        if (reqStatusBadge) {
+          if (key === 'valid') {
+            reqStatusBadge.textContent = 'JSON Válido';
+            reqStatusBadge.style.color = '#34d399';
+          } else {
+            reqStatusBadge.textContent = 'Payload para Prueba de Error';
+            reqStatusBadge.style.color = '#eab308';
+          }
+        }
       }
     });
   });
@@ -306,7 +345,7 @@ function initFastApiSwaggerPlayground() {
         <span>Enviar HTTP Request</span>
       `;
 
-      const raw = payloadEditor.value.trim();
+      const raw = payloadDisplay.innerText.trim();
       let parsed = null;
       try {
         parsed = JSON.parse(raw);
@@ -331,7 +370,7 @@ function initFastApiSwaggerPlayground() {
 
       // 200 OK Exitoso
       renderSuccess(parsed, startTime);
-    }, 450);
+    }, 380);
   });
 
   function renderSuccess(req, startTime) {
@@ -352,7 +391,7 @@ function initFastApiSwaggerPlayground() {
           "index": 0,
           "message": {
             "role": "assistant",
-            "content": "La fórmula del Valor Presente Neto (VPN) es:\n\nVPN = \\sum_{t=1}^{n} \\frac{R_t}{(1 + k)^t} - I_0\n\nDonde R_t son los flujos de caja en el período t, k es la tasa de descuento e I_0 es la inversión inicial."
+            "content": "La fórmula del Valor Presente Neto (VPN) es: VPN = \sum_{t=1}^{n} \frac{R_t}{(1 + k)^t} - I_0. Donde R_t son los flujos de caja, k la tasa de descuento e I_0 la inversión inicial."
           },
           "finish_reason": "stop"
         }
@@ -367,10 +406,10 @@ function initFastApiSwaggerPlayground() {
     if (responseBody) responseBody.innerHTML = colorizeJsonHtml(JSON.stringify(mockResponse, null, 2));
     if (headerDetails) {
       headerDetails.innerHTML = `
-content-type: application/json; charset=utf-8
-server: uvicorn / fastapi
-x-process-time: ${elapsed}ms
-x-llama-engine: vLLM PagedAttention
+<span class="code-var">content-type</span>: <span class="code-str">application/json; charset=utf-8</span>
+<span class="code-var">server</span>: <span class="code-str">uvicorn / fastapi</span>
+<span class="code-var">x-process-time</span>: <span class="code-num">${elapsed}ms</span>
+<span class="code-var">x-llama-engine</span>: <span class="code-str">vLLM PagedAttention</span>
       `.trim();
     }
   }
@@ -395,9 +434,9 @@ x-llama-engine: vLLM PagedAttention
     if (responseBody) responseBody.innerHTML = colorizeJsonHtml(JSON.stringify(errorResp, null, 2));
     if (headerDetails) {
       headerDetails.innerHTML = `
-content-type: application/json
-server: uvicorn / fastapi
-x-validation-error: pydantic_v2
+<span class="code-var">content-type</span>: <span class="code-str">application/json</span>
+<span class="code-var">server</span>: <span class="code-str">uvicorn / fastapi</span>
+<span class="code-var">x-validation-error</span>: <span class="code-str">pydantic_v2_schema_violation</span>
       `.trim();
     }
   }
