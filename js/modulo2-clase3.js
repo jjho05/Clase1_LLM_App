@@ -42,6 +42,98 @@
 
     if (!btnExecute || !logConsole) return;
 
+    // Parser NLU para extracción de parámetros de restaurante / servicios
+    function parseRestaurantNLU(text) {
+      const lower = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const rawLower = text.toLowerCase();
+
+      let args = {
+        personas: 2,
+        fecha: "Viernes",
+        hora: "20:00",
+        zona: "Interior"
+      };
+
+      // 1. Personas
+      const numMatch = rawLower.match(/(\d+)\s*(?:personas?|comensales?|lugares?|adultos?|amigos?)|(?:somos\s+)(\d+)|(?:para\s+)(\d+)/i);
+      if (numMatch) {
+        args.personas = parseInt(numMatch[1] || numMatch[2] || numMatch[3], 10);
+      } else if (lower.includes("una persona") || lower.includes("un lugar") || lower.includes("solo yo")) {
+        args.personas = 1;
+      } else if (lower.includes("pareja") || lower.includes("dos personas") || lower.includes("somos dos")) {
+        args.personas = 2;
+      } else if (lower.includes("tres")) {
+        args.personas = 3;
+      } else if (lower.includes("cuatro")) {
+        args.personas = 4;
+      } else if (lower.includes("cinco")) {
+        args.personas = 5;
+      } else if (lower.includes("seis")) {
+        args.personas = 6;
+      } else if (lower.includes("ocho")) {
+        args.personas = 8;
+      } else if (lower.includes("diez")) {
+        args.personas = 10;
+      }
+
+      // 2. Fecha
+      if (lower.includes("lunes")) args.fecha = "Lunes";
+      else if (lower.includes("martes")) args.fecha = "Martes";
+      else if (lower.includes("miercoles")) args.fecha = "Miércoles";
+      else if (lower.includes("jueves")) args.fecha = "Jueves";
+      else if (lower.includes("viernes")) args.fecha = "Viernes";
+      else if (lower.includes("sabado")) args.fecha = "Sábado";
+      else if (lower.includes("domingo")) args.fecha = "Domingo";
+      else if (lower.includes("hoy")) args.fecha = "Hoy";
+      else if (lower.includes("manana")) args.fecha = "Mañana";
+
+      const dateMatch = rawLower.match(/(\d{1,2}\s+de\s+[a-záéíóú]+)/i);
+      if (dateMatch) args.fecha = dateMatch[1];
+
+      // 3. Hora
+      const timePmMatch = rawLower.match(/(\d{1,2}(?::\d{2})?)\s*(?:pm|p\.m\.|de la tarde|de la noche|noche)/i);
+      const timeAmMatch = rawLower.match(/(\d{1,2}(?::\d{2})?)\s*(?:am|a\.m\.|de la mañana|de la manana)/i);
+      const militaryMatch = rawLower.match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);
+
+      if (timePmMatch) {
+        let val = timePmMatch[1];
+        if (!val.includes(":")) {
+          let h = parseInt(val, 10);
+          if (h < 12) h += 12;
+          val = `${h}:00`;
+        }
+        args.hora = val;
+      } else if (timeAmMatch) {
+        let val = timeAmMatch[1];
+        if (!val.includes(":")) {
+          let h = parseInt(val, 10);
+          val = `${h.toString().padStart(2, '0')}:00`;
+        }
+        args.hora = val;
+      } else if (militaryMatch) {
+        args.hora = militaryMatch[0];
+      } else if (lower.includes("noche") || lower.includes("cenar")) {
+        args.hora = "21:00";
+      } else if (lower.includes("tarde") || lower.includes("comer")) {
+        args.hora = "14:30";
+      }
+
+      // 4. Zona
+      if (lower.includes("terraza") || lower.includes("balcon") || lower.includes("aire libre")) {
+        args.zona = "Terraza Panorámica";
+      } else if (lower.includes("jardin")) {
+        args.zona = "Jardín";
+      } else if (lower.includes("privado") || lower.includes("vip")) {
+        args.zona = "Salón Privado VIP";
+      } else if (lower.includes("barra")) {
+        args.zona = "Barra de Mixología";
+      } else {
+        args.zona = "Salón Principal Interior";
+      }
+
+      return args;
+    }
+
     function runToolExecution() {
       const text = userMsgInput ? userMsgInput.value.trim() : "";
       if (!text) return;
@@ -52,49 +144,54 @@
 
       // Paso 1: Recepción Webhook
       if (stepCards[0]) stepCards[0].className = "flow-step-tracker active";
-      logConsole.textContent += `[Paso 1 - Webhook Entrante]\nRecibido mensaje de WhatsApp: "${text}"\n`;
+      logConsole.textContent += `[Paso 1 - Webhook Entrante]\nRecibido mensaje de WhatsApp: "${text}"\nPayload validado con HMAC-SHA256 (OK)\n`;
       if (window.SOUND) window.SOUND.playPop(420);
 
       setTimeout(() => {
         if (stepCards[0]) stepCards[0].className = "flow-step-tracker completed";
         if (stepCards[1]) stepCards[1].className = "flow-step-tracker active";
 
-        // Parseo de entidades e intención
-        let toolCall = {
-          name: "consultar_disponibilidad_restaurante",
-          arguments: { personas: 4, fecha: "2026-08-22", hora: "20:00", zona: "Terraza" }
+        // Extracción NLU Dinámica
+        const parsedArgs = parseRestaurantNLU(text);
+        const toolCall = {
+          id: "call_" + Math.random().toString(36).substring(2, 11),
+          type: "function",
+          function: {
+            name: "consultar_disponibilidad_restaurante",
+            arguments: JSON.stringify(parsedArgs)
+          }
         };
 
-        if (text.toLowerCase().includes("2") || text.toLowerCase().includes("dos")) toolCall.arguments.personas = 2;
-        if (text.toLowerCase().includes("8") || text.toLowerCase().includes("ocho")) toolCall.arguments.personas = 8;
-        if (text.toLowerCase().includes("9") || text.toLowerCase().includes("21:00")) toolCall.arguments.hora = "21:00";
-
-        logConsole.textContent += `\n[Paso 2 - Inferencia Llama 3 (Tool Request)]\nEl modelo detectó intención de reserva. Generó Tool Call JSON:\n${JSON.stringify(toolCall, null, 2)}\n`;
+        logConsole.textContent += `\n[Paso 2 - Inferencia Llama 3 (Tool Request)]\nLlama 3 detectó intención operativa y generó llamada estructurada:\n${JSON.stringify(toolCall, null, 2)}\n`;
         if (window.SOUND) window.SOUND.playPop(480);
 
         setTimeout(() => {
           if (stepCards[1]) stepCards[1].className = "flow-step-tracker completed";
           if (stepCards[2]) stepCards[2].className = "flow-step-tracker active";
 
-          // Simulación de Base de Datos
+          const folioId = "RES-" + Math.floor(10000 + Math.random() * 90000);
           const dbResult = {
             status: "SUCCESS",
             disponible: true,
-            mesas_libres: 2,
-            zona_confirmada: toolCall.arguments.zona,
-            id_bloqueo_temporal: "RES-99482"
+            mesas_libres_zona: Math.floor(2 + Math.random() * 4),
+            capacidad_confirmada: parsedArgs.personas,
+            zona: parsedArgs.zona,
+            fecha: parsedArgs.fecha,
+            hora: parsedArgs.hora,
+            bloqueo_temporal_id: folioId,
+            tiempo_limite_confirmacion_min: 15
           };
 
-          logConsole.textContent += `\n[Paso 3 - Ejecución de Backend / Base de Datos]\nLlamada a execute_function("${toolCall.name}")\nRetorno de DB: ${JSON.stringify(dbResult, null, 2)}\n`;
+          logConsole.textContent += `\n[Paso 3 - Ejecución de Backend / SQL Database]\nInvocando función backend: consultar_disponibilidad_restaurante(**args)\nRespuesta de PostgreSQL (Pool asyncpg en 120ms):\n${JSON.stringify(dbResult, null, 2)}\n`;
           if (window.SOUND) window.SOUND.playPop(540);
 
           setTimeout(() => {
             if (stepCards[2]) stepCards[2].className = "flow-step-tracker completed";
             if (stepCards[3]) stepCards[3].className = "flow-step-tracker completed";
 
-            const finalReply = `¡Excelente noticia! Tenemos mesa disponible en ${toolCall.arguments.zona} para ${toolCall.arguments.personas} personas este ${toolCall.arguments.fecha} a las ${toolCall.arguments.hora}. He creado el bloqueo temporal #RES-99482. ¿Deseas que confirme la reserva a tu nombre?`;
+            const finalReply = `¡Buenas noticias! Tenemos mesa disponible en ${parsedArgs.zona} para ${parsedArgs.personas} personas este ${parsedArgs.fecha} a las ${parsedArgs.hora}. He reservado el bloqueo temporal #${folioId}. ¿Deseas que confirme la reservación a tu nombre?`;
 
-            logConsole.textContent += `\n[Paso 4 - Inferencia Final y Despacho WhatsApp]\nLlama 3 sintetizó la respuesta final:\n"${finalReply}"\n\nDespachado a Meta Graph API (HTTP 200 OK en 1.84s)`;
+            logConsole.textContent += `\n[Paso 4 - Inferencia 2 & Despacho WhatsApp Graph API]\nLlama 3 sintetizó la respuesta empática con rol='tool':\n"${finalReply}"\n\nDespachado a Meta Graph API v20.0 (HTTP 200 OK en 1.76s)`;
             
             if (finalWhatsAppBubble) {
               finalWhatsAppBubble.textContent = finalReply;
@@ -102,14 +199,23 @@
 
             btnExecute.disabled = false;
             if (window.SOUND) window.SOUND.playChime();
-          }, 600);
+          }, 550);
 
-        }, 600);
+        }, 550);
 
-      }, 500);
+      }, 450);
     }
 
     btnExecute.addEventListener("click", runToolExecution);
+
+    if (userMsgInput) {
+      userMsgInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          runToolExecution();
+        }
+      });
+    }
 
     presetPills.forEach(pill => {
       pill.addEventListener("click", function(){

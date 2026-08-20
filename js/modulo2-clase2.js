@@ -42,7 +42,6 @@
     const chatStatusText = document.getElementById("mem-chat-status-text");
     const chatModeTag = document.getElementById("mem-chat-mode-tag");
 
-    // Badges de entidad
     const badgeServicio = document.getElementById("badge-servicio");
     const badgeFecha = document.getElementById("badge-fecha");
     const badgeHora = document.getElementById("badge-hora");
@@ -66,7 +65,7 @@
 
     const maxContextTokens = 2048;
 
-    // Control de Modos: Stateful vs Stateless
+    // Selector de modo
     if (modeStatefulBtn && modeStatelessBtn) {
       modeStatefulBtn.addEventListener("click", function() {
         currentMode = "stateful";
@@ -122,19 +121,119 @@
       return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
+    // MOTOR NLU PROFUNDO (EXTRACTOR UNIVERSAL DE ENTIDADES)
+    function extractNLU(text) {
+      const lower = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // sin acentos para regex
+      const rawLower = text.toLowerCase();
+
+      let extracted = {
+        name: null,
+        service: null,
+        date: null,
+        time: null,
+        doctor: null,
+        isConfirmation: false,
+        isCancellation: false,
+        isQuery: false
+      };
+
+      // 1. Nombres
+      const nameMatch = rawLower.match(/(?:me llamo|mi nombre es|soy|a nombre de)\s+([a-záéíóúñA-ZÁÉÍÓÚÑ ]{3,25})/i);
+      if (nameMatch) {
+        extracted.name = nameMatch[1].trim();
+      }
+
+      // 2. Servicios Dentales
+      if (lower.includes("limpieza") || lower.includes("profilaxis") || lower.includes("sarro")) {
+        extracted.service = "Limpieza Dental & Profilaxis";
+      } else if (lower.includes("bracket") || lower.includes("ortodoncia") || lower.includes("alineador") || lower.includes("invisalign")) {
+        extracted.service = "Ortodoncia / Brackets";
+      } else if (lower.includes("carilla") || lower.includes("blanqueamiento") || lower.includes("estetica") || lower.includes("sonrisa")) {
+        extracted.service = "Diseño de Sonrisa & Carillas";
+      } else if (lower.includes("caries") || lower.includes("muela") || lower.includes("extraccion") || lower.includes("dolor") || lower.includes("tapar")) {
+        extracted.service = "Extracción & Tratamiento de Caries";
+      } else if (lower.includes("endodoncia") || lower.includes("conducto") || lower.includes("nervio")) {
+        extracted.service = "Endodoncia Especializada";
+      } else if (lower.includes("implante") || lower.includes("corona") || lower.includes("protesis")) {
+        extracted.service = "Implantología & Prótesis";
+      } else if (lower.includes("revision") || lower.includes("chequeo") || lower.includes("valoracion") || lower.includes("cita") || lower.includes("consulta")) {
+        extracted.service = "Consulta de Valoración Dental";
+      }
+
+      // 3. Fechas
+      if (lower.includes("lunes")) extracted.date = "Lunes";
+      else if (lower.includes("martes")) extracted.date = "Martes";
+      else if (lower.includes("miercoles")) extracted.date = "Miércoles";
+      else if (lower.includes("jueves")) extracted.date = "Jueves";
+      else if (lower.includes("viernes")) extracted.date = "Viernes";
+      else if (lower.includes("sabado")) extracted.date = "Sábado";
+      else if (lower.includes("domingo")) extracted.date = "Domingo";
+      else if (lower.includes("manana")) extracted.date = "Mañana";
+      else if (lower.includes("pasado manana")) extracted.date = "Pasado Mañana";
+      else if (lower.includes("hoy")) extracted.date = "Hoy";
+      else if (lower.includes("fin de semana")) extracted.date = "Este Fin de Semana";
+      
+      const specificDateMatch = rawLower.match(/(\d{1,2}\s+de\s+[a-záéíóú]+)/i);
+      if (specificDateMatch) {
+        extracted.date = specificDateMatch[1];
+      }
+
+      // 4. Horas (Cualquier formato: 9pm, 9:00 pm, 21:00, 10am, 4 de la tarde, etc.)
+      const timeMatch = rawLower.match(/(\d{1,2}(?::\d{2})?)\s*(?:pm|p\.m\.|hrs|horas|de la tarde|de la noche)/i);
+      const timeAmMatch = rawLower.match(/(\d{1,2}(?::\d{2})?)\s*(?:am|a\.m\.|de la mañana|de la manana)/i);
+      const militaryMatch = rawLower.match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);
+
+      if (timeMatch) {
+        let val = timeMatch[1];
+        if (!val.includes(":")) val += ":00";
+        extracted.time = `${val} PM`;
+      } else if (timeAmMatch) {
+        let val = timeAmMatch[1];
+        if (!val.includes(":")) val += ":00";
+        extracted.time = `${val} AM`;
+      } else if (militaryMatch) {
+        extracted.time = `${militaryMatch[0]} hrs`;
+      } else if (lower.includes("tarde") || lower.includes("noche")) {
+        extracted.time = "6:00 PM";
+      } else if (lower.includes("manana") || lower.includes("temprano")) {
+        extracted.time = "10:00 AM";
+      } else if (lower.includes("mediodia") || lower.includes("medio dia")) {
+        extracted.time = "12:00 PM";
+      }
+
+      // 5. Doctores
+      if (lower.includes("morales")) extracted.doctor = "Dra. Elena Morales";
+      else if (lower.includes("castillo")) extracted.doctor = "Dr. Roberto Castillo";
+      else if (lower.includes("sanchez")) extracted.doctor = "Dra. Sofía Sánchez";
+      else if (lower.includes("gomez")) extracted.doctor = "Dr. Andrés Gómez";
+
+      // 6. Intenciones
+      if (lower.match(/\b(si|sí|confirmo|confirmar|de acuerdo|perfecto|dale|ok|va|me parece bien|agendar|listo)\b/)) {
+        extracted.isConfirmation = true;
+      }
+      if (lower.match(/\b(cancelar|borrar|anular|eliminar)\b/)) {
+        extracted.isCancellation = true;
+      }
+      if (lower.match(/\b(a que hora|cuando|donde|que doctor|folio|resumen|datos de mi cita|quedo)\b/)) {
+        extracted.isQuery = true;
+      }
+
+      return extracted;
+    }
+
     function updateEntityBadges() {
       if (badgeServicio) badgeServicio.textContent = sessionVariables.servicio_detectado || "No definido";
       if (badgeFecha) badgeFecha.textContent = sessionVariables.fecha_mencionada || "No definida";
       if (badgeHora) {
         if (sessionVariables.hora_seleccionada) {
-          badgeHora.textContent = `${sessionVariables.hora_seleccionada} (${sessionVariables.doctor_asignado || 'Dr. General'})`;
+          badgeHora.textContent = `${sessionVariables.hora_seleccionada} (${sessionVariables.doctor_asignado || 'Dr. Asignado'})`;
         } else {
           badgeHora.textContent = "No asignado";
         }
       }
       if (badgeEstatus) {
         badgeEstatus.textContent = sessionVariables.estatus_cita;
-        badgeEstatus.style.color = sessionVariables.estatus_cita.includes("CONFIRMADA") ? "var(--accent-success)" : "#f59e0b";
+        badgeEstatus.style.color = sessionVariables.estatus_cita.includes("CONFIRMADA") ? "var(--accent-success)" : (sessionVariables.estatus_cita.includes("CANCELADA") ? "#ef4444" : "#f59e0b");
       }
     }
 
@@ -144,8 +243,8 @@
         const welcome = document.createElement("div");
         welcome.className = "chat-bubble bot-bubble";
         const welcomeText = currentMode === "stateful" 
-          ? "¡Hola! Bienvenido a Dental Clinic Meta. Cuento con memoria de estado para gestionar tu consulta. ¿Qué servicio requieres agendar hoy?"
-          : "¡Hola! Bienvenido a Dental Clinic Meta (Modo Stateless). Cada mensaje que envíes será procesado de forma 100% aislada sin recordar turnos previos.";
+          ? "¡Hola! Bienvenido a Dental Clinic Meta. Cuento con memoria de estado activa. Puedes pedirme cualquier cita (ej. 'Quiero una limpieza para el lunes a las 9pm')."
+          : "¡Hola! Bienvenido a Dental Clinic Meta (Modo Stateless). Cada mensaje será procesado de forma 100% aislada sin recordar turnos previos.";
         welcome.innerHTML = `<div class="bubble-text">${welcomeText}</div><div class="bubble-time">10:00 AM · Meta AI</div>`;
         chatContainer.appendChild(welcome);
       } else {
@@ -179,10 +278,10 @@
 Eres el asistente médico de Dental Clinic Meta.
 [Estado de Sesión Inyectado desde Redis]:
 - Usuario: ${sessionVariables.cliente_nombre} (${sessionVariables.user_id})
-- Servicio: ${sessionVariables.servicio_detectado || 'Pendiente de definir'}
-- Fecha: ${sessionVariables.fecha_mencionada || 'Pendiente de definir'}
-- Horario / Médico: ${sessionVariables.hora_seleccionada || 'Pendiente'} (${sessionVariables.doctor_asignado || 'No asignado'})
-- Estatus de Cita: ${sessionVariables.estatus_cita} ${sessionVariables.folio_reserva ? '(Folio: ' + sessionVariables.folio_reserva + ')' : ''}
+- Servicio: ${sessionVariables.servicio_detectado || 'Pendiente'}
+- Fecha: ${sessionVariables.fecha_mencionada || 'Pendiente'}
+- Horario / Doctor: ${sessionVariables.hora_seleccionada || 'Pendiente'} (${sessionVariables.doctor_asignado || 'No asignado'})
+- Estatus: ${sessionVariables.estatus_cita} ${sessionVariables.folio_reserva ? '(Folio: ' + sessionVariables.folio_reserva + ')' : ''}
 <|eot_id|>\n`;
 
         conversationHistory.forEach(turn => {
@@ -190,7 +289,6 @@ Eres el asistente médico de Dental Clinic Meta.
         });
         fullPrompt += `<|start_header_id|>assistant<|end_header_id|>\n`;
       } else {
-        // En Stateless solo viaja el último mensaje del usuario
         const lastUser = conversationHistory.filter(x => x.role === "user").slice(-1)[0];
         const lastText = lastUser ? lastUser.content : "Sin mensaje";
         fullPrompt = `<|start_header_id|>system<|end_header_id|>
@@ -208,7 +306,6 @@ ${lastText}<|eot_id|>
 
       updateEntityBadges();
 
-      // Tokens Aprox
       const approxTokens = Math.round(fullPrompt.length / 3.8);
       const pct = Math.min(100, Math.round((approxTokens / maxContextTokens) * 100));
       if (contextBar) {
@@ -223,34 +320,26 @@ ${lastText}<|eot_id|>
       const timeStr = new Date().toLocaleTimeString("es-MX", { hour: '2-digit', minute: '2-digit' });
       sessionVariables.turno_actual++;
 
-      const lower = text.toLowerCase();
+      const nlu = extractNLU(text);
 
-      // Extracción de Entidades NLU (Solo si es Stateful)
+      // Si es Stateful, aplicamos los datos al estado
       if (currentMode === "stateful") {
-        if (lower.includes("limpieza") || lower.includes("dental") || lower.includes("diente") || lower.includes("ortodoncia") || lower.includes("carillas") || lower.includes("muela") || lower.includes("revisión")) {
-          if (lower.includes("limpieza")) sessionVariables.servicio_detectado = "Limpieza Dental & Profilaxis";
-          else if (lower.includes("ortodoncia")) sessionVariables.servicio_detectado = "Ortodoncia / Brackets";
-          else if (lower.includes("carillas")) sessionVariables.servicio_detectado = "Diseño de Sonrisa & Carillas";
-          else sessionVariables.servicio_detectado = "Consulta Dental General";
+        if (nlu.name) sessionVariables.cliente_nombre = nlu.name;
+        if (nlu.service) sessionVariables.servicio_detectado = nlu.service;
+        if (nlu.date) sessionVariables.fecha_mencionada = nlu.date;
+        if (nlu.time) sessionVariables.hora_seleccionada = nlu.time;
+        if (nlu.doctor) sessionVariables.doctor_asignado = nlu.doctor;
+        else if (!sessionVariables.doctor_asignado && (nlu.time || sessionVariables.hora_seleccionada)) {
+          sessionVariables.doctor_asignado = "Dra. Elena Morales";
         }
 
-        if (lower.includes("sabado") || lower.includes("sábado") || lower.includes("jueves") || lower.includes("viernes") || lower.includes("lunes") || lower.includes("mañana")) {
-          if (lower.includes("sabado") || lower.includes("sábado")) sessionVariables.fecha_mencionada = "Sábado 23 de Agosto";
-          else if (lower.includes("viernes")) sessionVariables.fecha_mencionada = "Viernes 22 de Agosto";
-          else if (lower.includes("jueves")) sessionVariables.fecha_mencionada = "Jueves 21 de Agosto";
-          else sessionVariables.fecha_mencionada = "Mañana";
-        }
-
-        if (lower.includes("10") || lower.includes("12:30") || lower.includes("morales") || lower.includes("castillo")) {
-          if (lower.includes("10")) sessionVariables.hora_seleccionada = "10:00 AM";
-          else if (lower.includes("12:30")) sessionVariables.hora_seleccionada = "12:30 PM";
-          
-          if (lower.includes("morales")) sessionVariables.doctor_asignado = "Dra. Morales";
-          else if (lower.includes("castillo")) sessionVariables.doctor_asignado = "Dr. Castillo";
-          else sessionVariables.doctor_asignado = "Dra. Morales";
-          
+        if (nlu.isCancellation) {
+          sessionVariables.estatus_cita = "CANCELADA";
+        } else if (sessionVariables.servicio_detectado && sessionVariables.fecha_mencionada && sessionVariables.hora_seleccionada) {
           sessionVariables.estatus_cita = "CONFIRMADA";
-          sessionVariables.folio_reserva = "DEN-" + Math.floor(1000 + Math.random() * 9000);
+          if (!sessionVariables.folio_reserva) {
+            sessionVariables.folio_reserva = "DEN-" + Math.floor(1000 + Math.random() * 9000);
+          }
         }
       }
 
@@ -260,37 +349,41 @@ ${lastText}<|eot_id|>
 
       renderChat();
 
-      // Generar Respuesta de IA con Simulador
+      // Generar respuesta de IA
       setTimeout(() => {
         let botReply = "";
 
         if (currentMode === "stateless") {
-          // COMPORTAMIENTO STATELESS (AMNESIA DEMOSTRADA)
-          if (lower.includes("limpieza") || lower.includes("dental")) {
-            botReply = "Con gusto. En Dental Clinic Meta realizamos limpiezas dentales. ¿Para qué fecha deseas agendar tu cita?";
-          } else if (lower.includes("sabado") || lower.includes("sábado") || lower.includes("mañana")) {
-            botReply = "Hola. Para el sábado tenemos horarios disponibles. Sin embargo, ¿me puedes indicar tu nombre y qué servicio dental deseas agendar? (No tengo registro previo de tu mensaje anterior).";
-          } else if (lower.includes("10") || lower.includes("morales") || lower.includes("confirmo")) {
-            botReply = "No tengo contexto de qué servicio o cita estás solicitando. Por favor, indícame desde el inicio qué procedimiento dental necesitas para poder apoyarte.";
-          } else if (lower.includes("hora") || lower.includes("quedó") || lower.includes("cita")) {
-            botReply = "No tengo registro de ninguna cita previa en este mensaje. Como soy un sistema Stateless sin memoria, debes proporcionar todos tus datos en cada turno.";
+          // AMNESIA REAL STATELESS:
+          if (nlu.service && nlu.date && nlu.time) {
+            botReply = `Has solicitado ${nlu.service} para el ${nlu.date} a las ${nlu.time}. Como no tengo base de datos de estado en este modo Stateless, no puedo guardar tu cita. Debes conectarte al modo Stateful para confirmar.`;
+          } else if (nlu.service) {
+            botReply = `Con gusto te asesoramos con tu ${nlu.service}. ¿Para qué fecha y hora te gustaría agendar tu consulta?`;
+          } else if (nlu.date || nlu.time) {
+            botReply = `Hola. Recibí tu solicitud para el ${nlu.date || 'horario mencionado'} a las ${nlu.time || 'la hora indicada'}, pero no tengo registro previo de qué servicio buscas agendar ni tu nombre. ¿Me lo indicas por favor?`;
+          } else if (nlu.isQuery) {
+            botReply = `No tengo registro de ninguna cita previa en este mensaje porque estoy operando en modo Stateless (sin memoria de sesión).`;
           } else {
-            botReply = "Hola, bienvenido a Dental Clinic Meta. ¿En qué servicio dental te podemos asesorar?";
+            botReply = `Hola, bienvenido a Dental Clinic Meta. ¿En qué servicio dental te podemos ayudar hoy?`;
           }
         } else {
-          // COMPORTAMIENTO STATEFUL (MEMORIA PERSISTENTE COMPLETA)
-          if (sessionVariables.estatus_cita.includes("CONFIRMADA")) {
-            if (lower.includes("hora") || lower.includes("quedó") || lower.includes("servicio") || lower.includes("folio")) {
-              botReply = `Estimado ${sessionVariables.cliente_nombre}, tu cita para ${sessionVariables.servicio_detectado} está confirmada para el ${sessionVariables.fecha_mencionada} a las ${sessionVariables.hora_seleccionada} con la ${sessionVariables.doctor_asignado}. Tu folio de atención es [${sessionVariables.folio_reserva}]. ¿Necesitas indicaciones de ubicación?`;
+          // MEMORIA PERSISTENTE STATEFUL:
+          if (nlu.isCancellation) {
+            botReply = `Tu cita para ${sessionVariables.servicio_detectado || 'servicio dental'} ha sido cancelada exitosamente. Tu folio [${sessionVariables.folio_reserva || 'DEN-0000'}] ha sido liberado. ¿Deseas reagendar para otra fecha?`;
+          } else if (sessionVariables.estatus_cita === "CONFIRMADA") {
+            if (nlu.isQuery) {
+              botReply = `Estimado ${sessionVariables.cliente_nombre}, tu cita para ${sessionVariables.servicio_detectado} está confirmada para el ${sessionVariables.fecha_mencionada} a las ${sessionVariables.hora_seleccionada} con la ${sessionVariables.doctor_asignado}. Tu folio de reserva es [${sessionVariables.folio_reserva}]. Te esperamos 10 minutos antes.`;
             } else {
-              botReply = `¡Excelente elección! He reservado exitosamente tu cita para ${sessionVariables.servicio_detectado} el ${sessionVariables.fecha_mencionada} a las ${sessionVariables.hora_seleccionada} con la ${sessionVariables.doctor_asignado}. Tu folio de confirmación es [${sessionVariables.folio_reserva}]. Te enviaremos un recordatorio por WhatsApp.`;
+              botReply = `¡Excelente! He agendado formalmente tu cita de ${sessionVariables.servicio_detectado} para el ${sessionVariables.fecha_mencionada} a las ${sessionVariables.hora_seleccionada} con la ${sessionVariables.doctor_asignado}. Tu folio de confirmación es [${sessionVariables.folio_reserva}]. Te enviaremos un recordatorio por WhatsApp.`;
             }
-          } else if (sessionVariables.fecha_mencionada && sessionVariables.servicio_detectado) {
-            botReply = `Para tu ${sessionVariables.servicio_detectado}, el ${sessionVariables.fecha_mencionada} tenemos espacios disponibles a las 10:00 AM (Dra. Morales) y a las 12:30 PM (Dr. Castillo). ¿Cuál horario prefieres?`;
-          } else if (sessionVariables.servicio_detectado) {
-            botReply = `Perfecto, con gusto te apoyamos con tu ${sessionVariables.servicio_detectado}. ¿Qué día te gustaría asistir? (Ej. "Este sábado" o "El jueves por la tarde").`;
+          } else if (sessionVariables.fecha_mencionada && sessionVariables.servicio_detectado && !sessionVariables.hora_seleccionada) {
+            botReply = `Para tu ${sessionVariables.servicio_detectado} el ${sessionVariables.fecha_mencionada}, tenemos disponibilidad a las 10:00 AM (Dra. Elena Morales), a las 3:00 PM (Dr. Roberto Castillo) y a las 8:00 PM. ¿Qué horario te acomoda mejor?`;
+          } else if (sessionVariables.servicio_detectado && !sessionVariables.fecha_mencionada) {
+            botReply = `Perfecto, con gusto te apoyamos con tu ${sessionVariables.servicio_detectado}. ¿Qué día y horario te gustaría asistir? (Ej. "Lunes a las 9pm" o "Este sábado por la mañana").`;
+          } else if (sessionVariables.fecha_mencionada && !sessionVariables.servicio_detectado) {
+            botReply = `Claro, para el ${sessionVariables.fecha_mencionada} tenemos espacios disponibles. ¿Qué procedimiento dental necesitas realizarte? (Limpieza, Brackets, Carillas, Revisión de Caries, etc.).`;
           } else {
-            botReply = `Entendido. Registré tu solicitud en el sistema. ¿Qué servicio dental te gustaría agendar hoy?`;
+            botReply = `Entendido. He registrado tu perfil de ${sessionVariables.cliente_nombre}. ¿Qué servicio dental te gustaría cotizar o agendar?`;
           }
         }
 
@@ -298,7 +391,7 @@ ${lastText}<|eot_id|>
         conversationHistory.push({ role: "assistant", content: botReply, time: botTime });
         renderChat();
         if (window.SOUND) window.SOUND.playChime();
-      }, 450);
+      }, 400);
     }
 
     btnSend.addEventListener("click", function() {
@@ -330,7 +423,7 @@ ${lastText}<|eot_id|>
         turno_actual: 0
       };
       if (userMsgInput) {
-        userMsgInput.value = "Hola, quiero agendar una cita para limpieza dental";
+        userMsgInput.value = "Hola, quiero agendar una cita para limpieza dental el lunes a las 9pm";
       }
       renderChat();
       if (window.SOUND) window.SOUND.playPop(300);
