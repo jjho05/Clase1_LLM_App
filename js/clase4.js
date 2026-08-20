@@ -223,22 +223,33 @@ function initPipelineFlowSimulator() {
     }
   };
 
+  function setStage(st) {
+    const data = STAGES[st];
+    if (data) {
+      stepPills.forEach(p => p.classList.toggle('active', p.getAttribute('data-stage') === st));
+      stageTitle.textContent = data.title;
+      stageDesc.textContent = data.desc;
+      if (stageToolBadge) stageToolBadge.textContent = data.tool;
+      if (stageArtifact) stageArtifact.textContent = data.artifact;
+      if (stageMetric) stageMetric.textContent = data.metric;
+      if (stageCode) stageCode.innerHTML = data.codeHtml;
+    }
+  }
+
   stepPills.forEach(pill => {
     pill.addEventListener('click', () => {
-      stepPills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      const st = pill.getAttribute('data-stage');
-      const data = STAGES[st];
-      if (data) {
-        stageTitle.textContent = data.title;
-        stageDesc.textContent = data.desc;
-        if (stageToolBadge) stageToolBadge.textContent = data.tool;
-        if (stageArtifact) stageArtifact.textContent = data.artifact;
-        if (stageMetric) stageMetric.textContent = data.metric;
-        if (stageCode) stageCode.innerHTML = data.codeHtml;
-      }
+      if (window.SOUND) window.SOUND.playPop(380);
+      setStage(pill.getAttribute('data-stage'));
     });
   });
+
+  const btnResetPipeline = document.getElementById('btn-reset-pipeline');
+  if (btnResetPipeline) {
+    btnResetPipeline.addEventListener('click', () => {
+      if (window.SOUND) window.SOUND.playPop(300);
+      setStage('1');
+    });
+  }
 }
 
 /* ==========================================================================
@@ -326,6 +337,25 @@ function initFastApiSwaggerPlayground() {
       }
     });
   });
+
+  const btnResetSwagger = document.getElementById('btn-reset-swagger');
+  if (btnResetSwagger) {
+    btnResetSwagger.addEventListener('click', () => {
+      if (window.SOUND) window.SOUND.playPop(300);
+      presetBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-payload') === 'valid'));
+      payloadDisplay.innerHTML = colorizeJsonHtml(JSON.stringify(PRESET_PAYLOADS['valid'], null, 2));
+      if (reqStatusBadge) {
+        reqStatusBadge.textContent = 'JSON Válido';
+        reqStatusBadge.style.color = '#34d399';
+      }
+      if (responseBody) responseBody.innerHTML = colorizeJsonHtml(JSON.stringify(INITIAL_MOCK_RESPONSE, null, 2));
+      if (statusCodeBadge) {
+        statusCodeBadge.textContent = '200 OK';
+        statusCodeBadge.className = 'api-badge-200';
+      }
+      if (responseTimeBadge) responseTimeBadge.textContent = '145 ms';
+    });
+  }
 
   sendBtn.addEventListener('click', () => {
     sendBtn.disabled = true;
@@ -489,31 +519,42 @@ function initE2EFailureInjector() {
     }
   };
 
+  function setScenario(scKey) {
+    const data = SCENARIOS[scKey];
+    if (data) {
+      failureButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-failure') === scKey));
+      reportContainer.innerHTML = `
+        <div style="font-size:0.95rem; font-weight:700; color:var(--text-primary); margin-bottom:0.35rem;">
+          ${data.title}
+        </div>
+        <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.55; margin:0 0 0.8rem 0;">
+          ${data.desc}
+        </p>
+      `;
+      if (badgeResult) {
+        badgeResult.textContent = data.verdict;
+        badgeResult.className = data.badgeClass;
+      }
+      if (traceTerminal) {
+        traceTerminal.textContent = data.trace;
+      }
+    }
+  }
+
   failureButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-      failureButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const scKey = btn.getAttribute('data-failure');
-      const data = SCENARIOS[scKey];
-      if (data) {
-        reportContainer.innerHTML = `
-          <div style="font-size:0.95rem; font-weight:700; color:var(--text-primary); margin-bottom:0.35rem;">
-            ${data.title}
-          </div>
-          <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.55; margin:0 0 0.8rem 0;">
-            ${data.desc}
-          </p>
-        `;
-        if (badgeResult) {
-          badgeResult.textContent = data.verdict;
-          badgeResult.className = data.badgeClass;
-        }
-        if (traceTerminal) {
-          traceTerminal.textContent = data.trace;
-        }
-      }
+      if (window.SOUND) window.SOUND.playPop(390);
+      setScenario(btn.getAttribute('data-failure'));
     });
   });
+
+  const btnResetFaults = document.getElementById('btn-reset-faults');
+  if (btnResetFaults) {
+    btnResetFaults.addEventListener('click', () => {
+      if (window.SOUND) window.SOUND.playPop(300);
+      setScenario('chroma-down');
+    });
+  }
 }
 
 /* ==========================================================================
@@ -586,6 +627,17 @@ function initLatencySlaCalculator() {
   tokensSlider.addEventListener('input', recalculate);
   if (hwSelect) hwSelect.addEventListener('change', recalculate);
 
+  const btnResetLatency = document.getElementById('btn-reset-latency');
+  if (btnResetLatency) {
+    btnResetLatency.addEventListener('click', () => {
+      if (window.SOUND) window.SOUND.playPop(300);
+      usersSlider.value = 20;
+      tokensSlider.value = 150;
+      if (hwSelect) hwSelect.value = "1.0";
+      recalculate();
+    });
+  }
+
   recalculate();
 }
 
@@ -602,7 +654,22 @@ function initStreamingSimulator() {
   const itlBadge = document.getElementById('stream-metric-itl');
   const totalTimeBadge = document.getElementById('stream-metric-total');
 
+  const btnResetStreaming = document.getElementById('btn-reset-streaming');
   if (!btnSse || !terminalOut) return;
+
+  if (btnResetStreaming) {
+    btnResetStreaming.addEventListener('click', () => {
+      if (window.SOUND) window.SOUND.playPop(300);
+      isStreaming = false;
+      btnSse.disabled = false;
+      if (btnBlock) btnBlock.disabled = false;
+      terminalOut.innerHTML = '> Presiona "Iniciar Streaming SSE" para recibir la respuesta token por token en tiempo real...';
+      if (rawStreamBox) rawStreamBox.textContent = '> Buffer de chunks SSE vacío. Esperando petición HTTP text/event-stream...';
+      if (ttftBadge) ttftBadge.textContent = '--';
+      if (itlBadge) itlBadge.textContent = '--';
+      if (totalTimeBadge) totalTimeBadge.textContent = '--';
+    });
+  }
 
   const SAMPLE_RESPONSE = "Meta Llama 3 en producción utiliza Server-Sent Events (SSE) para enviar cada token en cuanto la función de muestreo lo emite. Esto reduce el Time to First Token (TTFT) de 2.8 segundos a tan solo 75 milisegundos, transformando una espera estática en una conversación interactiva y natural.";
   const tokens = SAMPLE_RESPONSE.split(' ');

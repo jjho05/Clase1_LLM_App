@@ -301,9 +301,23 @@
  }, 180);
  });
  }
+    var btnResetPromptSim = document.getElementById("btn-reset-prompt-sim");
+    if(btnResetPromptSim){
+      btnResetPromptSim.addEventListener("click", function(){
+        if(window.SOUND) window.SOUND.playPop(300);
+        currentTask = "math";
+        if(taskSelector) taskSelector.value = "math";
+        currentStrategy = "few";
+        isComparingAll = false;
+        strategyBtns.forEach(function(b){
+          b.classList.toggle("active", b.getAttribute("data-strategy") === "few");
+        });
+        renderPromptPreview();
+      });
+    }
 
- renderPromptPreview();
- })();
+    renderPromptPreview();
+  })();
 
  /* 4. SIMULADOR 1.2.2: MEMORIA PARAMÉTRICA VS RAG (DETECTOR DE ALUCINACIONES CON TIMELINE) */
  (function initHallucinationSimulator(){
@@ -383,6 +397,17 @@
  });
  });
 
+    var btnResetHallucination = document.getElementById("btn-reset-hallucination");
+    if(btnResetHallucination){
+      btnResetHallucination.addEventListener("click", function(){
+        if(window.SOUND) window.SOUND.playPop(300);
+        testBtns.forEach(function(b){
+          b.classList.toggle("active", b.getAttribute("data-case") === "policy");
+        });
+        renderCase("policy");
+      });
+    }
+
  renderCase("policy");
  })();
 
@@ -434,6 +459,17 @@
  setPipelineStep(pill.getAttribute("data-step"));
  });
  });
+
+    var btnResetRagStep = document.getElementById("btn-reset-rag-step");
+    if(btnResetRagStep){
+      btnResetRagStep.addEventListener("click", function(){
+        if(window.SOUND) window.SOUND.playPop(300);
+        stepPills.forEach(function(p){
+          p.classList.toggle("active", p.getAttribute("data-step") === "1");
+        });
+        setPipelineStep(1);
+      });
+    }
 
  setPipelineStep(1);
  })();
@@ -596,6 +632,15 @@
  });
  }
 
+    var btnResetCosineSim = document.getElementById("btn-reset-cosine-sim");
+    if(btnResetCosineSim){
+      btnResetCosineSim.addEventListener("click", function(){
+        if(window.SOUND) window.SOUND.playPop(300);
+        if(sentencePairSelect) sentencePairSelect.value = "synonyms";
+        drawVectors("synonyms");
+      });
+    }
+
  window.addEventListener("resize", function(){
  if(sentencePairSelect) drawVectors(sentencePairSelect.value);
  });
@@ -652,6 +697,18 @@
 
  if(chunkSlider) chunkSlider.addEventListener("input", generateChunks);
  if(overlapSlider) overlapSlider.addEventListener("input", generateChunks);
+
+    var btnResetChunking = document.getElementById("btn-reset-chunking");
+    if(btnResetChunking){
+      btnResetChunking.addEventListener("click", function(){
+        if(window.SOUND) window.SOUND.playPop(300);
+        if(chunkSlider) chunkSlider.value = "25";
+        if(overlapSlider) overlapSlider.value = "5";
+        if(searchInput) searchInput.value = "";
+        if(searchResultsContainer) searchResultsContainer.innerHTML = "";
+        generateChunks();
+      });
+    }
 
  if(btnSearch && searchInput && searchResultsContainer){
  btnSearch.addEventListener("click", function(){
