@@ -1,864 +1,1331 @@
 <!DOCTYPE html>
-
-<html data-theme="light" lang="es-MX">
+<html lang="es-MX" data-theme="light">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Unidad 2.2: Diseño de Agentes Conversacionales | Automatización Inteligente con WhatsApp</title>
-<meta content="Guía completa sobre diseño de agentes conversacionales con Meta Llama 3, gestión de estado de memoria fuera del modelo, Llama Stack, flujos híbridos y optimización de ventanas de contexto." name="description"/>
-<!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, Fira Code -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Outfit:wght@500;600;700;800;900&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<!-- KaTeX para renderizado matemático perfecto -->
-<link href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" rel="stylesheet"/>
-<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-<!-- Estilos Modulares Externos -->
-<link href="css/styles.css" rel="stylesheet"/>
-<!-- Scripts Modulares Externos -->
-<script defer="" src="js/app.js"></script>
-<script defer="" src="js/modulo2-clase2.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unidad 2.2: Diseño de Agentes Conversacionales | Automatización Inteligente con WhatsApp</title>
+  <meta name="description" content="Guía completa sobre diseño de agentes conversacionales con Meta Llama 3, gestión de estado de memoria fuera del modelo, Llama Stack, flujos híbridos y optimización de ventanas de contexto." />
+  
+  <!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- KaTeX para renderizado matemático perfecto -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Estilos Modulares Externos -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Scripts Modulares Externos -->
+  <script defer src="js/app.js"></script>
+  <script defer src="js/modulo2-clase2.js"></script>
 </head>
 <body>
-<!-- Header Principal Limpio & Unificado con Iconos Vectoriales SVG -->
-<header class="top-header">
-<div class="header-inner">
-<a class="brand-wrapper" href="index.html" title="Volver al Portal Principal">
-<svg class="meta-logo-svg" viewbox="0 0 36 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"></path>
-</svg>
-<span class="brand-text">Meta AI</span>
-</a>
-<nav class="nav-links">
-<a class="nav-link-item" href="modulo2-tema1.html" style="color: var(--meta-blue); font-weight: 700;">← Unidad 2.1</a>
-<a class="nav-link-item" href="#intro-modulo">Visión</a>
-<a class="nav-link-item" href="#subtemas-principales">Subtemas</a>
-<a class="nav-link-item" href="#simuladores">Laboratorios</a>
-<a class="nav-link-item" href="#ejercicios">Ejercicios</a>
-<a class="nav-link-item" href="#glosario">Glosario</a>
-<a class="nav-link-item" href="modulo2-tema3.html" style="color: var(--accent-success); font-weight: 700;">Unidad 2.3 →</a>
-</nav>
-<div class="header-controls">
-<!-- Botón de Audio con Icono SVG Vectorial -->
-<button class="btn-icon" id="sound-btn" title="Alternar Audio">
-<span id="sound-icon-container">
-<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
-</span>
-<span class="btn-text-label" id="sound-label">Audio ON</span>
-</button>
-<!-- Botón de Tema con Icono SVG Vectorial -->
-<button class="btn-icon" id="theme-btn" title="Alternar Modo Claro / Oscuro">
-<span id="theme-icon-container">
-<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"></path></svg>
-</span>
-<span class="btn-text-label" id="theme-label">Modo Claro</span>
-</button>
-<!-- Botón Menú Hamburguesa para Móviles -->
-<button aria-expanded="false" aria-label="Abrir menú de navegación" class="btn-menu-toggle" id="menu-toggle-btn">
-<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="20">
-<line x1="3" x2="21" y1="6" y2="6"></line>
-<line x1="3" x2="21" y1="12" y2="12"></line>
-<line x1="3" x2="21" y1="18" y2="18"></line>
-</svg>
-</button>
-</div>
-</div>
-</header>
-<!-- Backdrop & Drawer de Navegación Móvil -->
-<div aria-hidden="true" class="mobile-backdrop" id="mobile-backdrop"></div>
-<div aria-label="Menú de Navegación" aria-modal="true" class="mobile-drawer" id="mobile-drawer" role="dialog">
-<div class="mobile-drawer-header">
-<div class="mobile-drawer-title">
-<svg class="meta-logo-svg" style="width:24px;height:16px;" viewbox="0 0 36 24">
-<path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"></path>
-</svg>
-<span>Navegación Tema 2.2</span>
-</div>
-<button aria-label="Cerrar menú" class="mobile-drawer-close" id="mobile-drawer-close">
-<svg fill="none" height="18" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24" width="18"><path d="M18 6L6 18M6 6l12 12"></path></svg>
-</button>
-</div>
-<nav class="mobile-drawer-nav" id="mobile-drawer-nav">
-<!-- Poblado automáticamente por js/app.js -->
-</nav>
-<div class="mobile-drawer-footer">
-<div style="display:flex; justify-content:space-between; align-items:center;">
-<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Unidad 2.2 · Meta Llama 3</span>
-<a href="modulo2-tema3.html" style="font-size:0.75rem; color:var(--meta-blue); font-weight:700; text-decoration:none;">Unidad 2.3 →</a>
-</div>
-</div>
-</div>
-<div id="progress-bar"></div>
-<main class="main-container">
-<!-- ==========================================================================
-  HERO PRINCIPAL DEL MÓDULO 2 · TEMA 2.2
-  ========================================================================== -->
-<section class="course-hero" id="overview">
-<div class="hero-badge-pill">
-<span class="hero-badge-num">MÓDULO 2</span>
-<span class="hero-badge-divider"></span>
-<span class="hero-badge-label">TEMA 2 · DISEÑO DE AGENTES &amp; MEMORIA DE ESTADO</span>
-</div>
-<h1 class="hero-title">Diseño de Agentes Conversacionales</h1>
-<p class="hero-subtitle"><b>Cómo darle memoria persistente y estructura a una conversación con Llama 3</b>. Construye sistemas que recuerden quién habla, qué se dijo antes y hacia dónde va la interacción, estandarizando componentes con Llama Stack y diseñando flujos híbridos entre reglas fijas y razonamiento generativo.</p>
-</section>
-<!-- ==========================================================================
-  RESUMEN EJECUTIVO (TL;DR) & VISIÓN
-  ========================================================================== -->
-<article class="tema-card" id="intro-modulo" style="border-left: 5px solid var(--meta-blue); margin-bottom: 3.5rem;">
-<div class="tema-header">
-<div class="tema-eyebrow">Guía de Inicio · Visión de la Unidad 2.2</div>
-<h3 class="tema-title">Resumen Ejecutivo (TL;DR) &amp; Filosofía de Memoria</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. Resumen Ejecutivo</span> El Modelo no Recuerda Nada</h4>
-<p class="prose-p">
-        Un agente conversacional debe gestionar el <b>estado de la conversación completamente fuera del modelo</b>, ya que las redes neuronales como Llama 3 son intrínsecamente <i>stateless</i> (sin memoria entre peticiones a la API). Este estado se almacena en una base de datos (SQLite, Redis o PostgreSQL) asociado a un identificador único de usuario —típicamente su número de WhatsApp (<code>wa_id</code>)— y se inyecta como contexto comprimido en cada nueva llamada dentro de la ventana de contexto.
-      </p>
-<p class="prose-p">
-<b>Llama Stack</b> estandariza los bloques de construcción comunes (gestión de memoria, definición de herramientas y capas de blindaje) para evitar reinventar la arquitectura en cada desarrollo, mientras que un flujo conversacional industrial bien diseñado combina <b>reglas deterministas inquebrantables</b> para momentos críticos con la <b>flexibilidad de Llama</b> para interpretar lenguaje natural.
-      </p>
-</div>
-<div class="easy-explainer-box">
-<div class="easy-header">
-<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"></path></svg>
-<span>Mapa de Aprendizaje de la Unidad 2.2</span>
-</div>
-<div class="table-responsive-wrapper">
-<table class="table-pro">
-<thead>
-<tr>
-<th>Lo que vas a aprender</th>
-<th>La intuición cotidiana</th>
-<th>El concepto técnico</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Por qué el agente necesita recordar el hilo</strong></td>
-<td>Como un mesero que olvida el pedido al entrar a la cocina y necesita que le recuerden qué mesa pidió qué.</td>
-<td><strong>Estado de la Conversación (Session State)</strong></td>
-</tr>
-<tr>
-<td><strong>Cómo se gestiona el estado en WhatsApp</strong></td>
-<td>Como guardar la ficha de un paciente en un archivo etiquetado con su nombre para retomarla después.</td>
-<td><strong>Identificador de usuario (wa_id) + Historial persistente</strong></td>
-</tr>
-<tr>
-<td><strong>Qué es Llama Stack</strong></td>
-<td>Como usar una caja de herramientas estandarizada en vez de forjar cada tornillo y martillo a mano.</td>
-<td><strong>Llama Stack: Componentes estándar de arquitectura</strong></td>
-</tr>
-<tr>
-<td><strong>Cómo diseñar un flujo que no sea rígido</strong></td>
-<td>Como un semáforo inteligente que deja fluir el tráfico pero activa una barrera fija en emergencias.</td>
-<td><strong>Flujo Conversacional Híbrido (Rules + LLM)</strong></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</article>
-<!-- ==========================================================================
-  DESARROLLO TEMÁTICO RIGUROSO
-  ========================================================================== -->
-<section id="subtemas-principales">
-<!-- SUBTEMA 2.2.1 -->
-<article class="tema-card" id="tema-2-2-1">
-<div class="tema-header">
-<div class="tema-eyebrow">Tema 2.2.1 · Gestión de Estado</div>
-<h3 class="tema-title">De Responder Mensajes Aislados a Sostener una Conversación</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Problema Stateless</span> La Amnesia por Diseño de los LLMs</h4>
-<p class="prose-p">
-          Cada vez que ejecutas una inferencia con un LLM, el modelo procesa la secuencia de entrada desde cero. Si el usuario escribe <i>"Quiero agendar una cita dental"</i> y dos minutos después escribe <i>"Mejor el sábado a las 10"</i>, el modelo no tiene la menor idea de qué servicio se está agendando a menos que tu servidor le reenvíe explícitamente el mensaje anterior como contexto.
-        </p>
-<p class="prose-p">
-          El <b>estado de la conversación</b> no es solo el historial de texto crudo; incluye variables estructuradas de sesión:
-        </p>
-</div>
-<div class="formula-card">
-<div class="formula-math-area">
-          $$\text{Estado}(S_t) = \Big\{ \text{ID: } wa\_id, \quad \text{Historial: } [(u_1, a_1), \dots, (u_t, a_t)], \quad \text{Entidades: } \{k_i: v_i\} \Big\}$$
-          $$\text{Prompt}_{\text{Llama}} = \text{SystemPrompt} + \text{Contexto}(\text{Entidades}) + \text{Ventana}(S_t) + \text{MensajeActual}(u_{t+1})$$
-        </div>
-</div>
-<!-- QUIZ 1 -->
-<div class="quiz-box">
-<div class="quiz-header">
-<span class="quiz-tag">Autoevaluación 2.2.1</span>
-</div>
-<div class="quiz-question">¿Dónde se almacena y gestiona la memoria a corto plazo de un agente conversacional en WhatsApp?</div>
-<button class="quiz-option" data-correct="false">A) En los pesos internos del modelo Llama 3 mediante gradiente descendente.</button>
-<button class="quiz-option" data-correct="true">B) Fuera del modelo, en una base de datos de tu backend (asociada al wa_id del usuario) y se reinyecta en el prompt en cada llamada.</button>
-<button class="quiz-option" data-correct="false">C) En la memoria caché del teléfono del usuario.</button>
-<button class="quiz-option" data-correct="false">D) En los servidores de Meta WhatsApp Cloud API de forma automática.</button>
-<div class="quiz-feedback"></div>
-</div>
-</article>
-<!-- SUBTEMA 2.2.2 -->
-<article class="tema-card" id="tema-2-2-2">
-<div class="tema-header">
-<div class="tema-eyebrow">Tema 2.2.2 · Estandarización de Infraestructura</div>
-<h3 class="tema-title">Llama Stack: Piezas Estándar para no Reinventar la Arquitectura</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. Los 3 Pilares</span> Memoria, Herramientas y Seguridad</h4>
-<p class="prose-p">
-          Construir agentes ad-hoc suele derivar en código espagueti donde la persistencia, la ejecución de APIs y la moderación se mezclan en un solo archivo. <b>Llama Stack</b> estandariza estos tres bloques fundamentales:
-        </p>
-<div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top:1.5rem;">
-<div class="stat-card-clean" style="border-left:4px solid var(--meta-blue);">
-<div style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.15rem; margin-bottom:0.5rem;">1. Gestión de Memoria</div>
-<p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.55;">
-              Almacena, recupera y actualiza historiales de conversación, variables de sesión y perfiles de usuario en SQLite, Redis o PostgreSQL con políticas de expiración (TTL).
-            </p>
-</div>
-<div class="stat-card-clean" style="border-left:4px solid var(--accent-success);">
-<div style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.15rem; margin-bottom:0.5rem;">2. Definición de Herramientas</div>
-<p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.55;">
-              Interfaz declarativa que expone funciones (consultar base de datos, agendar citas, verificar existencias) con esquemas JSON Schema legibles para el modelo.
-            </p>
-</div>
-<div class="stat-card-clean" style="border-left:4px solid #ef4444;">
-<div style="font-family:var(--font-disp); font-weight:800; color:#ef4444; font-size:1.15rem; margin-bottom:0.5rem;">3. Capas de Seguridad (Guardrails)</div>
-<p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.55;">
-              Módulos de inspección que filtran entradas maliciosas (inyecciones de prompt con Prompt Guard) y clasifican contenido inapropiado con Llama Guard 3.
-            </p>
-</div>
-</div>
-</div>
-<!-- QUIZ 2 -->
-<div class="quiz-box" style="margin-top:2rem;">
-<div class="quiz-header">
-<span class="quiz-tag">Autoevaluación 2.2.2</span>
-</div>
-<div class="quiz-question">¿Cuál es el propósito principal del ecosistema Llama Stack en la ingeniería de agentes de IA?</div>
-<button class="quiz-option" data-correct="false">A) Reemplazar a Python por un nuevo lenguaje de programación propietario.</button>
-<button class="quiz-option" data-correct="true">B) Proveer una arquitectura y APIs estandarizadas para memoria, herramientas y seguridad, evitando construir cada componente desde cero.</button>
-<button class="quiz-option" data-correct="false">C) Convertir modelos de lenguaje en archivos ejecutables de Windows (.exe).</button>
-<button class="quiz-option" data-correct="false">D) Eliminar la necesidad de bases de datos relacionales.</button>
-<div class="quiz-feedback"></div>
-</div>
-</article>
-<!-- SUBTEMA 2.2.3 -->
-<article class="tema-card" id="tema-2-2-3">
-<div class="tema-header">
-<div class="tema-eyebrow">Tema 2.2.3 · Flujos Conversacionales Híbridos</div>
-<h3 class="tema-title">Diseñar el Flujo: Cuándo Poner Reglas Fijas y Cuándo Delegar al LLM</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Semáforo Inteligente</span> Separar el Andamiaje del Contenido</h4>
-<p class="prose-p">
-          Un agente industrial jamás otorga control absoluto e irrestricto al modelo probabilístico sobre decisiones críticas, ni encorseta al usuario en un aburrido menú numérico del tipo <i>"Presione 1 para ventas"</i>.
-        </p>
-<p class="prose-p">
-          Las <b>reglas fijas (Guardrails Deterministas)</b> actúan como rieles inquebrantables que evitan descarrilamientos en situaciones de alto riesgo:
-        </p>
-<ul class="clean-bullet-list" style="margin-left:1.5rem; line-height:1.8; color:var(--text-secondary);">
-<li><strong>Solicitud de Atención Humana:</strong> Si el usuario escribe <i>"quiero hablar con un asesor"</i>, se activa inmediatamente la cola de transferencia humana sin consultar al LLM.</li>
-<li><strong>Cumplimiento de Privacidad (GDPR / ARCO):</strong> Solicitudes de eliminación de datos se ejecutan con reglas de backend deterministas.</li>
-<li><strong>Emergencias Críticas:</strong> Detección de crisis médicas o reportes de fraude bancario detienen la generación probabilística.</li>
-<li><strong>Libertad Generativa para Llama 3:</strong> Interpretación de jerga, reformulación de preguntas complejas, síntesis empática y explicaciones contextuales.</li>
-</ul>
-</div>
-<!-- QUIZ 3 -->
-<div class="quiz-box">
-<div class="quiz-header">
-<span class="quiz-tag">Autoevaluación 2.2.3</span>
-</div>
-<div class="quiz-question">Si un usuario en WhatsApp escribe "Quiero cancelar mi cuenta y que borren mis datos personales", ¿cómo debe procesarse esta solicitud según el diseño de flujos híbridos?</div>
-<button class="quiz-option" data-correct="false">A) Dejar que Llama 3 intente convencer al usuario de no cancelar mediante argumentos persuasivos.</button>
-<button class="quiz-option" data-correct="true">B) Interceptar el mensaje con una regla fija determinista que inicie el protocolo de cancelación y confirmación sin dejar la decisión al modelo generativo.</button>
-<button class="quiz-option" data-correct="false">C) Ignorar el mensaje hasta que el usuario envíe una carta física.</button>
-<button class="quiz-option" data-correct="false">D) Reentrenar el modelo con los datos del usuario.</button>
-<div class="quiz-feedback"></div>
-</div>
-</article>
-<!-- SUBTEMA 2.2.4 -->
-<article class="tema-card" id="tema-2-2-4">
-<div class="tema-header">
-<div class="tema-eyebrow">Tema 2.2.4 · Optimización de Cómputo</div>
-<h3 class="tema-title">Gestión Eficiente de la Ventana de Contexto: Sliding Window &amp; Resumen</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Costo de Reenviar Todo</span> Latencia y Consumo Cuadrático</h4>
-<p class="prose-p">
-          Si reenvías todo el historial completo en cada turno, en una conversación de 20 mensajes estarás procesando más de 2,500 tokens por petición. Esto incrementa la latencia percibida por el usuario de WhatsApp y satura el cómputo de la GPU.
-        </p>
-<p class="prose-p">
-          Las dos estrategias industriales para mitigar esto son:
-        </p>
-<div class="stat-grid-clean" style="grid-template-columns: 1fr 1fr; margin-top:1rem;">
-<div class="stat-card-clean">
-<div style="font-family:var(--font-disp); font-weight:800; color:var(--accent-info); margin-bottom:0.4rem;">Ventana Deslizante (Sliding Window K)</div>
-<p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">Conserva intactos únicamente los últimos $K$ turnos (ej. los últimos 4 mensajes) y descarta los turnos antiguos. Mantiene la latencia constante pero pierde hechos lejanos.</p>
-</div>
-<div class="stat-card-clean">
-<div style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); margin-bottom:0.4rem;">Memoria con Resumen Jerárquico</div>
-<p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">Un modelo ligero comprime los turnos antiguos en un párrafo de hechos clave (<i>"Usuario agendó cita dental para el sábado"</i>) y reenvía ese resumen junto con los últimos 2 turnos recientes.</p>
-</div>
-</div>
-</div>
-<!-- QUIZ 4 -->
-<div class="quiz-box" style="margin-top:2rem;">
-<div class="quiz-header">
-<span class="quiz-tag">Autoevaluación 2.2.4</span>
-</div>
-<div class="quiz-question">¿Qué consecuencia técnica indeseable ocurre si un sistema reenvía siempre el 100% del historial de chat sin aplicar compresión ni ventana deslizante?</div>
-<button class="quiz-option" data-correct="false">A) Que el modelo cambia automáticamente de idioma a inglés.</button>
-<button class="quiz-option" data-correct="true">B) Que el consumo de tokens crece con cada mensaje, aumentando la latencia de respuesta y arriesgando desbordar la ventana de contexto máxima.</button>
-<button class="quiz-option" data-correct="false">C) Que WhatsApp desconecta el número de teléfono por inactividad.</button>
-<button class="quiz-option" data-correct="false">D) Que la base de datos se borra automáticamente.</button>
-<div class="quiz-feedback"></div>
-</div>
-</article>
-</section>
-<!-- ==========================================================================
-  BANCOS INTERACTIVOS & LABORATORIOS EN VIVO (5 SIMULADORES)
-  ========================================================================== -->
-<section id="simuladores" style="margin-top:4rem;">
-<div style="text-align:center; margin-bottom:2.5rem;">
-<div class="tema-eyebrow" style="justify-content:center; margin-bottom:0.6rem;">Laboratorios Prácticos en Vivo</div>
-<h2 style="font-size:2.2rem; font-family:var(--font-disp); font-weight:800; color:var(--text-primary); margin:0 0 0.8rem;">Bancos Interactivos de la Unidad 2.2</h2>
-<p style="color:var(--text-secondary); max-width:70ch; margin:0 auto; font-size:1.05rem;">Experimenta con memoria de estado en tiempo real, construye configuraciones de Llama Stack y prueba el enrutador de flujos híbridos.</p>
-</div>
-<!-- BANCO 1: SIMULADOR DE MEMORIA DE ESTADO -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.2.1 · Simulador de Memoria de Estado y Context Window (Stateless vs Stateful)</span>
-<div class="workbench-actions">
-<button class="btn-reset-sm" id="mem-btn-reset">
-<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"></path></svg>
-<span>Reiniciar Conversación</span>
-</button>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<div style="display:grid; grid-template-columns:1.1fr 1.3fr; gap:1.5rem;">
-<!-- Chat UI Dental Clinic -->
-<div style="background:#0b141a; border-radius:14px; padding:1rem; display:flex; flex-direction:column; height:440px; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
-<div style="display:flex; align-items:center; gap:0.75rem; padding-bottom:0.75rem; border-bottom:1px solid #202c33;">
-<div style="width:36px; height:36px; border-radius:50%; background:#10b981; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800;">DC</div>
-<div>
-<div style="color:#e9edef; font-weight:700; font-size:0.9rem;">Dental Clinic Meta</div>
-<div style="color:#00a884; font-size:0.75rem;">Agente con Memoria de Estado</div>
-</div>
-</div>
-<div id="mem-chat-history" style="flex:1; overflow-y:auto; padding:0.75rem 0; display:flex; flex-direction:column; gap:0.75rem;">
-<!-- Poblado dinámicamente -->
-</div>
-<div style="display:flex; gap:0.5rem; padding-top:0.5rem; border-top:1px solid #202c33;">
-<input id="mem-user-input" placeholder="Ej. 'Quiero cita dental' o '¿Tienen el sábado?'" style="flex:1; background:#2a3942; color:#d1d7db; border:none; border-radius:8px; padding:0.6rem 0.8rem; font-size:0.85rem;" type="text" value="Quiero agendar una cita dental"/>
-<button class="btn-primary" id="mem-btn-send" style="padding:0.6rem 1rem;">Enviar</button>
-</div>
-</div>
-<!-- Monitor de Estado y Reconstrucción del Prompt -->
-<div>
-<div style="font-size:0.85rem; font-weight:800; color:var(--meta-blue); margin-bottom:0.5rem;">Estado Persistente de la Sesión (JSON en Backend):</div>
-<pre id="mem-state-json" style="background:var(--bg-elevated); color:var(--text-primary); border:1px solid var(--border-subtle); border-radius:8px; padding:0.75rem; font-family:var(--font-mono); font-size:0.75rem; height:120px; overflow-y:auto; margin-bottom:1rem;"></pre>
-<div style="font-size:0.85rem; font-weight:800; color:var(--meta-purple); margin-bottom:0.5rem;">Prompt Reconstruido que Viaja a Llama 3:</div>
-<pre id="mem-reconstructed-prompt" style="background:#0f172a; color:#f8fafc; border-radius:8px; padding:0.75rem; font-family:var(--font-mono); font-size:0.72rem; height:160px; overflow-y:auto; white-space:pre-wrap; margin-bottom:0.75rem;"></pre>
-<div>
-<div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:0.3rem;">
-<span style="color:var(--text-muted);">Consumo de Ventana de Contexto:</span>
-<strong id="mem-context-count" style="color:var(--accent-success);">0 / 2048 tokens</strong>
-</div>
-<div style="width:100%; height:8px; background:var(--bg-subtle); border-radius:4px; overflow:hidden;">
-<div id="mem-context-bar" style="width:5%; height:100%; background:var(--accent-success); transition:width 0.3s ease;"></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- BANCO 2: BUILDER LLAMA STACK -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.2.2 · Playground Llama Stack (Arquitectura Modular Estandarizada)</span>
-<div class="workbench-actions">
-<button class="btn-reset-sm" id="stack-btn-reset" title="Restablecer configuración Llama Stack">
-<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"></path></svg>
-<span>Restablecer</span>
-</button>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1.2rem; margin-bottom:1.5rem;">
-<div>
-<label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.4rem;">Proveedor de Memoria:</label>
-<select class="bench-select-clean" id="stack-memory-select" style="width:100%;">
-<option value="sqlite">SQLite (Memoria Local en Disco)</option>
-<option value="redis">Redis (Caché en RAM de Alta Velocidad)</option>
-<option value="postgresql">PostgreSQL (Base de Datos Relacional)</option>
-</select>
-</div>
-<div>
-<label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.4rem;">Herramientas Registradas:</label>
-<div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.82rem;">
-<label><input checked="" class="stack-tool-cb" type="checkbox" value="consultar_disponibilidad_citas"/> consultar_disponibilidad_citas</label>
-<label><input checked="" class="stack-tool-cb" type="checkbox" value="confirmar_cita_en_calendario"/> confirmar_cita_en_calendario</label>
-<label><input class="stack-tool-cb" type="checkbox" value="enviar_recordatorio_sms"/> enviar_recordatorio_sms</label>
-</div>
-</div>
-<div>
-<label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.4rem;">Capa de Seguridad (Shield):</label>
-<select class="bench-select-clean" id="stack-safety-select" style="width:100%;">
-<option value="llama_guard_3">Llama Guard 3 (Filtro de Contenido)</option>
-<option value="prompt_guard">Prompt Guard (Anti-Inyecciones)</option>
-<option value="dual_shield">Dual Shield (Llama Guard + Prompt Guard)</option>
-</select>
-</div>
-</div>
-<div class="code-box">
-<div class="code-header">
-<span class="code-lang">Código Llama Stack Python SDK</span>
 
-<div class="code-actions"><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button><button class="btn-download-code" onclick="downloadCode(this)">Descargar</button></div></div>
-<pre class="code-content"><code class="language-python" id="stack-code-output"># Generando especificación Llama Stack...</code></pre>
-</div>
-</div>
-</div>
-<!-- BANCO 3: ENRUTADOR HÍBRIDO -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.2.3 · Árbol de Decisión Híbrido (Reglas Fijas Deterministas vs Inferencia LLM)</span>
-<div class="workbench-actions">
-<span class="bench-badge-status status-info" id="hybrid-decision-pill">Esperando Frase</span>
-<button class="btn-reset-sm" id="hybrid-btn-reset" title="Restablecer enrutador híbrido">
-<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"></path></svg>
-<span>Restablecer</span>
-</button>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1rem;">
-          Prueba cómo el enrutador separa solicitudes críticas (que activan protocolos inquebrantables) de consultas generales delegadas al razonamiento de Llama 3.
+  <!-- Header Principal Limpio & Unificado con Iconos Vectoriales SVG -->
+  <header class="top-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-wrapper" title="Volver al Portal Principal">
+        <svg class="meta-logo-svg" viewBox="0 0 36 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"/>
+        </svg>
+        <span class="brand-text">Meta AI</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="modulo2-tema1.html" class="nav-link-item" style="color: var(--meta-blue); font-weight: 700;">&larr; Unidad 2.1</a>
+        <a href="#intro-modulo" class="nav-link-item">Visión</a>
+        <a href="#subtemas-principales" class="nav-link-item">Subtemas</a>
+        <a href="#simuladores" class="nav-link-item">Laboratorios</a>
+        <a href="#ejercicios" class="nav-link-item">Ejercicios</a>
+        <a href="#glosario" class="nav-link-item">Glosario</a>
+        <a href="modulo2-tema3.html" class="nav-link-item" style="color: var(--accent-success); font-weight: 700;">Unidad 2.3 &rarr;</a>
+      </nav>
+
+      <div class="header-controls">
+        <!-- Botón de Audio con Icono SVG Vectorial -->
+        <button id="sound-btn" class="btn-icon" title="Alternar Audio">
+          <span id="sound-icon-container">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          </span>
+          <span class="btn-text-label" id="sound-label">Audio ON</span>
+        </button>
+
+        <!-- Botón de Tema con Icono SVG Vectorial -->
+        <button id="theme-btn" class="btn-icon" title="Alternar Modo Claro / Oscuro">
+          <span id="theme-icon-container">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+          </span>
+          <span class="btn-text-label" id="theme-label">Modo Claro</span>
+        </button>
+
+        <!-- Botón Menú Hamburguesa para Móviles -->
+        <button id="menu-toggle-btn" class="btn-menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Backdrop & Drawer de Navegación Móvil -->
+  <div id="mobile-backdrop" class="mobile-backdrop" aria-hidden="true"></div>
+  <div id="mobile-drawer" class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menú de Navegación">
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-title">
+        <svg class="meta-logo-svg" viewBox="0 0 36 24" style="width:24px;height:16px;">
+          <path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"/>
+        </svg>
+        <span>Navegación Tema 2.2</span>
+      </div>
+      <button id="mobile-drawer-close" class="mobile-drawer-close" aria-label="Cerrar menú">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <nav id="mobile-drawer-nav" class="mobile-drawer-nav">
+      <!-- Poblado automáticamente por js/app.js -->
+    </nav>
+    <div class="mobile-drawer-footer">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Unidad 2.2 · Meta Llama 3</span>
+        <a href="modulo2-tema3.html" style="font-size:0.75rem; color:var(--meta-blue); font-weight:700; text-decoration:none;">Unidad 2.3 &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="progress-bar"></div>
+
+  <main class="main-container">
+
+    <!-- ==========================================================================
+      HERO PRINCIPAL DEL MÓDULO 2 · TEMA 2.2
+      ========================================================================== -->
+    <section class="course-hero" id="overview">
+      <div class="hero-badge-pill">
+        <span class="hero-badge-num">MÓDULO 2</span>
+        <span class="hero-badge-divider"></span>
+        <span class="hero-badge-label">TEMA 2 · DISEÑO DE AGENTES &amp; MEMORIA DE ESTADO</span>
+      </div>
+      <h1 class="hero-title">Diseño de Agentes Conversacionales</h1>
+      <p class="hero-subtitle"><b>Cómo darle memoria persistente y estructura a una conversación con Llama 3</b>. Construye sistemas que recuerden quién habla, qué se dijo antes y hacia dónde va la interacción, estandarizando componentes con Llama Stack y diseñando flujos híbridos entre reglas fijas deterministas y razonamiento generativo.</p>
+    </section>
+
+    <!-- ==========================================================================
+      RESUMEN EJECUTIVO (TL;DR) & VISIÓN
+      ========================================================================== -->
+    <article class="tema-card" id="intro-modulo" style="border-left: 5px solid var(--meta-blue); margin-bottom: 3.5rem;">
+      <div class="tema-header">
+        <div class="tema-eyebrow">Guía de Inicio · Visión de la Unidad 2.2</div>
+        <h3 class="tema-title">Resumen Ejecutivo (TL;DR) &amp; Filosofía de Memoria</h3>
+      </div>
+
+      <div class="tema-section-block">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Resumen Ejecutivo</span> El Modelo no Recuerda Nada: Estado Externo Soberano</h4>
+        <p class="prose-p">
+          Un agente conversacional de nivel industrial debe gestionar el <b>estado de la conversación completamente fuera del modelo</b>, ya que las redes neuronales autorregresivas como Llama 3 son intrínsecamente <i>stateless</i> (sin persistencia de memoria entre peticiones HTTP a la API). Este estado se almacena en una base de datos de alta velocidad (Redis, PostgreSQL o SQLite) indexado por un identificador único de usuario —típicamente su número telefónico de WhatsApp (<code>wa_id</code>)— y se inyecta como contexto comprimido en cada nueva llamada dentro de la ventana de contexto.
         </p>
-<div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.2rem;">
-<button class="glossary-filter-pill hybrid-preset-pill" data-text="Quiero hablar con un asesor humano">Presionar: "Quiero hablar con un humano"</button>
-<button class="glossary-filter-pill hybrid-preset-pill" data-text="Deseo ejercer mis derechos ARCO y eliminar mis datos personales">Presionar: "Eliminar mis datos (Privacidad)"</button>
-<button class="glossary-filter-pill hybrid-preset-pill" data-text="Tengo una emergencia médica con sangrado abundante">Presionar: "Emergencia Médica Crítica"</button>
-<button class="glossary-filter-pill hybrid-preset-pill" data-text="¿Qué costo tiene la consulta de ortodoncia y qué incluye?">Presionar: "Consulta de Precios (LLM)"</button>
-</div>
-<div style="display:flex; gap:0.5rem; margin-bottom:1.2rem;">
-<input class="bench-input-clean" id="hybrid-user-input" placeholder="Escribe cualquier frase del usuario..." style="flex:1;" type="text" value="Quiero hablar con un asesor humano"/>
-<button class="btn-primary" id="hybrid-btn-route">Evaluar Enrutamiento</button>
-</div>
-<div id="hybrid-explanation" style="background:var(--card-surface); padding:1rem; border-radius:8px; border:1px solid var(--border-subtle); font-size:0.9rem; color:var(--text-secondary);">
-          Haz clic en "Evaluar Enrutamiento" para inspeccionar la decisión arquitectónica.
+        <p class="prose-p">
+          <b>Llama Stack</b> estandariza los bloques de construcción comunes (gestión de memoria, definición de herramientas y capas de blindaje con Llama Guard 3) para evitar reinventar la arquitectura en cada desarrollo, mientras que un flujo conversacional industrial bien diseñado combina <b>reglas deterministas inquebrantables</b> para momentos críticos (emergencias médicas, solicitud de asesor humano, derechos ARCO) con la <b>flexibilidad de Llama</b> para interpretar lenguaje natural.
+        </p>
+      </div>
+
+      <div class="easy-explainer-box">
+        <div class="easy-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+          <span>Mapa de Aprendizaje de la Unidad 2.2</span>
         </div>
-</div>
-</div>
-<!-- BANCO 4: COMPRESOR DE MEMORIA -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.2.4 · Compresor de Historial &amp; Optimizador de Tokens (Sliding Window vs Summary)</span>
-<div class="workbench-actions">
-<button class="btn-reset-sm" id="comp-btn-reset" title="Restablecer compresor de tokens">
-<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"></path></svg>
-<span>Restablecer</span>
-</button>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
-<div>
-<label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between;">
-<span>Longitud de la Conversación:</span>
-<strong id="comp-turns-val" style="color:var(--meta-blue);">12 turnos</strong>
-</label>
-<input id="comp-turns-slider" max="30" min="2" step="1" style="width:100%; margin-top:0.5rem;" type="range" value="12"/>
-<label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-top:1rem; margin-bottom:0.4rem;">Estrategia de Memoria:</label>
-<select class="bench-select-clean" id="comp-strategy-select" style="width:100%;">
-<option value="summary">Memoria Híbrida (Resumen Llama + Últimos 3 turnos)</option>
-<option value="sliding">Ventana Deslizante Fija (Sliding Window K=4)</option>
-<option value="full">Memoria Completa Sin Compresión (Reenviar Todo)</option>
-</select>
-</div>
-<div style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:flex; flex-direction:column; justify-content:space-around;">
-<div><span style="font-size:0.78rem; color:var(--text-muted);">Tokens en Bruto (Sin optimizar):</span> <strong id="comp-tokens-raw" style="color:#ef4444; font-size:1.1rem; display:block;">1,440 tokens</strong></div>
-<div><span style="font-size:0.78rem; color:var(--text-muted);">Tokens Reenviados al Modelo:</span> <strong id="comp-tokens-comp" style="color:var(--accent-success); font-size:1.1rem; display:block;">445 tokens</strong></div>
-<div><span style="font-size:0.78rem; color:var(--text-muted);">Ahorro de Cómputo &amp; Latencia:</span> <strong id="comp-tokens-saving" style="color:var(--meta-purple); font-size:1.1rem; display:block;">995 tokens (69% ahorro)</strong></div>
-</div>
-</div>
-<pre id="comp-preview-console" style="background:#0f172a; color:#f8fafc; padding:1rem; border-radius:8px; font-family:var(--font-mono); font-size:0.8rem; white-space:pre-wrap;"></pre>
-</div>
-</div>
-<!-- BANCO 5: SESIONES MULTI-USUARIO -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.2.5 · Aislamiento de Sesiones Multi-Usuario en Base de Datos (SQLite / Redis)</span>
-<div class="workbench-actions">
-<select class="bench-select-clean" id="multi-user-select" style="font-size:0.8rem;">
-<option value="user_1">Paciente 1: Lic. Jesús Olvera (+52 1 55 8765-4321)</option>
-<option value="user_2">Paciente 2: Dra. Sofía Morales (+52 1 55 1234-5678)</option>
-<option value="user_3">Paciente 3: Ing. Carlos Mendoza (+52 1 55 9988-7766)</option>
-</select>
-<button class="btn-reset-sm" id="multi-btn-reset" title="Restablecer sesiones de usuario">
-<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"></path></svg>
-<span>Restablecer</span>
-</button>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1rem;">
-          Comprueba cómo las variables de sesión y el estado de cada cliente de WhatsApp permanecen estrictamente aislados en la base de datos sin contaminar las conversaciones simultáneas.
-        </p>
-<pre id="multi-session-view" style="background:#0f172a; color:#38bdf8; padding:1.2rem; border-radius:10px; font-family:var(--font-mono); font-size:0.82rem; line-height:1.6; white-space:pre-wrap;"></pre>
-</div>
-</div>
-</section>
-<!-- ==========================================================================
-  EJERCICIOS PRÁCTICOS OFICIALES (CURSO.MD)
-  ========================================================================== -->
-<section class="module-block" id="ejercicios" style="margin-bottom: 4rem;">
-<div class="module-header">
-<div class="tema-eyebrow" style="margin-bottom:0.6rem;">Autoevaluación Práctica &amp; Análisis de Sistemas</div>
-<h2 class="module-title">Ejercicios Prácticos Oficiales de la Unidad 2.2</h2>
-<p class="module-desc">Resuelve los 3 desafíos de diseño de agentes y memoria de estado del temario oficial. Despliega cada solución para revisar el análisis paso a paso y los criterios de ingeniería.</p>
-</div>
-<!-- EJERCICIO 1 -->
-<article class="exercise-card">
-<div class="exercise-header">
-<span class="exercise-num-badge">Ejercicio 1</span>
-<h4 class="exercise-title">Rastreo del Estado Paso a Paso en un Caso Clínico</h4>
-</div>
-<div class="exercise-context-box">
-<div class="exercise-context-title">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4m0-4h.01"></path></svg>
-          Enunciado del Flujo Conversacional
+        <div class="table-responsive-wrapper">
+          <table class="table-pro">
+            <thead>
+              <tr>
+                <th>Lo que vas a aprender</th>
+                <th>La intuición cotidiana</th>
+                <th>El concepto técnico</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Por qué el agente necesita recordar el hilo</strong></td>
+                <td>Como un mesero que olvida el pedido al entrar a la cocina y necesita que le recuerden qué mesa pidió qué.</td>
+                <td><strong>Estado de la Conversación (Session State en Redis/SQL)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Cómo se gestiona el estado en WhatsApp</strong></td>
+                <td>Como guardar la ficha de un paciente en un archivador etiquetado con su teléfono para retomarla después.</td>
+                <td><strong>Identificador de usuario (<code>wa_id</code>) + Historial estructurado</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Qué es Llama Stack</strong></td>
+                <td>Como usar una caja de herramientas estandarizada ISO en vez de forjar cada tornillo y martillo a mano.</td>
+                <td><strong>Llama Stack: Componentes estándar de arquitectura (Memory, Tools, Safety)</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Cómo diseñar un flujo que no sea rígido</strong></td>
+                <td>Como un semáforo inteligente que deja fluir el tráfico pero activa una barrera fija en emergencias.</td>
+                <td><strong>Flujo Conversacional Híbrido (Deterministic Rules + LLM Reasoning)</strong></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-<p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
-          Revisa la conversación de la clínica dental donde un paciente escribe: (1) <i>"quiero una cita dental"</i> y luego (2) <i>"¿tienen horario el sábado?"</i>. Indica qué datos específicos debe contener el estado en memoria después de cada mensaje, qué información nueva se añade y qué se reinyecta en la siguiente llamada a Llama 3.
-        </p>
-</div>
-<details class="exercise-solution-details">
-<summary class="exercise-solution-summary">
-<span>Ver Solución de Ingeniería Paso a Paso &amp; Diagrama de Estado</span>
-<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6"></path></svg>
-</summary>
-<div class="exercise-solution-panel">
-<div class="step-flow-list">
-<div class="step-flow-item">
-<div class="step-num-badge">1</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Turno 1: Identificación de Intención y Apertura de Sesión</h5>
-<p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  • <b>Mensaje Usuario:</b> <i>"quiero una cita dental"</i>.<br/>
-                  • <b>Extracción del Agente:</b> <code>intent: "agendar_cita"</code>, <code>servicio: "odontologia_general"</code>, <code>etapa: "SELECCIONANDO_FECHA"</code>.<br/>
-                  • <b>Estado en Base de Datos (SQLite/Redis):</b>
-</p>
-<div class="code-box"><div class="code-header"><span class="code-lang">JSON Schema / Payload</span><div class="code-actions"><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button><button class="btn-download-code" onclick="downloadCode(this)">Descargar</button></div></div>
-<pre class="code-content"><code class="language-json">{
+      </div>
+    </article>
+
+    <!-- ==========================================================================
+      DESARROLLO TEMÁTICO RIGUROSO (4 SUBTEMAS COMPLETOS)
+      ========================================================================== -->
+    <section id="subtemas-principales">
+
+      <!-- SUBTEMA 2.2.1 -->
+      <article class="tema-card" id="tema-2-2-1">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.2.1 · Gestión de Estado</div>
+          <h3 class="tema-title">De Responder Mensajes Aislados a Sostener una Conversación</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Fundamentos</span> La Amnesia por Diseño de los Modelos de Lenguaje</h4>
+          <p class="prose-p">
+            Cada vez que ejecutas una inferencia con un LLM, el modelo procesa la secuencia de entrada desde cero. Si el usuario escribe <i>"Quiero agendar una cita dental"</i> y dos minutos después escribe <i>"Mejor el sábado a las 10"</i>, el modelo no tiene la menor idea de qué servicio se está agendando a menos que tu servidor le reenvíe explícitamente el mensaje anterior como contexto.
+          </p>
+          <p class="prose-p">
+            El <b>estado de la conversación</b> no es solo el historial de texto crudo; incluye variables estructuradas de sesión (slots de negocio, etapa de la máquina de estados, fecha seleccionada, ID de paciente y metadatos de telemetría):
+          </p>
+        </div>
+
+        <!-- FÓRMULA MATEMÁTICA FORMAL -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$	ext{Estado}(S_t) = \Big\langle 	ext{wa\_id}, \quad \mathcal{H}_t = ig[(u_1, a_1), \dots, (u_t, a_t)ig], \quad \mathcal{E}_t = \{k_i \mapsto v_i\}, \quad \sigma_t \in \Sigma \Bigangle$$
+            $$	ext{Prompt}_{	ext{Llama}}(S_t, u_{t+1}) = 	ext{SystemPrompt} \oplus 	ext{Serializar}(\mathcal{E}_t) \oplus \mathcal{W}_K(\mathcal{H}_t) \oplus 	ext{FormatearUser}(u_{t+1})$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <span>Ver Desglose Matemático &amp; Significado de Variables</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="formula-breakdown-content">
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(S_t\)</span>
+                <div class="formula-var-desc"><b>Vector de Estado en el Turno \(t\):</b> Tupla multidimensional que contiene toda la información de contexto necesaria para interpretar el siguiente mensaje sin requerir reentrenamiento del modelo.</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(	ext{wa\_id}\)</span>
+                <div class="formula-var-desc"><b>Clave Primaria de Sesión:</b> Número telefónico internacional normalizado (E.164) que actúa como clave de indexación en Redis (<code>session:5215587654321</code>).</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(\mathcal{H}_t\)</span>
+                <div class="formula-var-desc"><b>Historial Conversacional:</b> Secuencia ordenada de pares mensaje de usuario (\(u_i\)) y respuesta del asistente (\(a_i\)).</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(\mathcal{E}_t = \{k_i \mapsto v_i\}\)</span>
+                <div class="formula-var-desc"><b>Diccionario de Entidades Extraídas (Slots):</b> Mapeo clave-valor con variables de negocio (ej. <code>servicio: "Odontología"</code>, <code>fecha: "2026-08-23"</code>).</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(\sigma_t \in \Sigma\)</span>
+                <div class="formula-var-desc"><b>Estado de la FSM (Finite State Machine):</b> Etapa determinista del flujo (ej. <code>INIT</code>, <code>SELECTING_DATE</code>, <code>AWAITING_CONFIRMATION</code>, <code>COMPLETED</code>).</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(\mathcal{W}_K(\cdot)\)</span>
+                <div class="formula-var-desc"><b>Operador de Ventana Deslizante (Sliding Window):</b> Función que trunca el historial reteniendo únicamente los últimos \(K\) turnos relevantes para acotar la latencia y los tokens consumidos.</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil (Analogía de la vida real)</span>
+          </div>
+          <p class="easy-text">
+            Imagina que vas al médico especialista. El médico ve a 30 pacientes al día y <b>no recuerda de memoria tu caso cuando entras</b>. ¿Cómo sabe qué te dolía la semana pasada? Porque la recepcionista le entrega tu <b>expediente físico</b> en la puerta. El médico lee rápidamente los puntos clave del expediente, atiende tu consulta actual, anota los nuevos hallazgos y vuelve a guardar el expediente en el archivador. Llama 3 es el médico, tu backend FastAPI es la recepcionista y Redis es el archivador de expedientes.
+          </p>
+        </div>
+
+        <!-- CÓDIGO DE PRODUCCIÓN PYTHON -->
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">Código de Producción</span> Gestor de Estado de Sesión en Python con Redis &amp; Pydantic</h4>
+          <p class="prose-p">A continuación se presenta el código de producción para persistir y recuperar el estado de sesión de WhatsApp con serialización tipada y expiración TTL automática:</p>
+
+          <div class="code-box">
+            <div class="code-header">
+              <span class="code-lang">Python 3.11 · session_state_manager.py</span>
+              <div class="code-actions">
+                <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+              </div>
+            </div>
+            <pre class="code-content"><code class="language-python"><span class="code-cm"># 1. Importamos librerías para tipado fuerte y cliente Redis asíncrono</span>
+<span class="code-kw">from</span> <span class="code-var">typing</span> <span class="code-kw">import</span> <span class="code-type">Dict</span>, <span class="code-type">List</span>, <span class="code-type">Optional</span>, <span class="code-type">Any</span>
+<span class="code-kw">from</span> <span class="code-var">pydantic</span> <span class="code-kw">import</span> <span class="code-type">BaseModel</span>, <span class="code-type">Field</span>
+<span class="code-kw">import</span> <span class="code-var">json</span>
+<span class="code-kw">import</span> <span class="code-var">redis.asyncio</span> <span class="code-kw">as</span> <span class="code-var">aioredis</span>
+
+<span class="code-cm"># 2. Definimos el esquema tipado del estado de la conversación</span>
+<span class="code-kw">class</span> <span class="code-type">MensajeHistorial</span>(<span class="code-type">BaseModel</span>):
+    <span class="code-var">role</span>: <span class="code-type">str</span>  <span class="code-cm"># "user" o "assistant"</span>
+    <span class="code-var">content</span>: <span class="code-type">str</span>
+    <span class="code-var">timestamp</span>: <span class="code-type">int</span>
+
+<span class="code-kw">class</span> <span class="code-type">EstadoConversacion</span>(<span class="code-type">BaseModel</span>):
+    <span class="code-var">wa_id</span>: <span class="code-type">str</span>
+    <span class="code-var">etapa</span>: <span class="code-type">str</span> = <span class="code-str">"INIT"</span>
+    <span class="code-var">slots</span>: <span class="code-type">Dict</span>[<span class="code-type">str</span>, <span class="code-type">Any</span>] = <span class="code-type">Field</span>(<span class="code-var">default_factory</span>=<span class="code-type">dict</span>)
+    <span class="code-var">historial</span>: <span class="code-type">List</span>[<span class="code-type">MensajeHistorial</span>] = <span class="code-type">Field</span>(<span class="code-var">default_factory</span>=<span class="code-type">list</span>)
+    <span class="code-var">ultimo_acceso</span>: <span class="code-type">int</span> = <span class="code-num">0</span>
+
+<span class="code-cm"># 3. Clase controladora para interactuar con la memoria en Redis</span>
+<span class="code-kw">class</span> <span class="code-type">RedisSessionManager</span>:
+    <span class="code-kw">def</span> <span class="code-fn">__init__</span>(<span class="code-var">self</span>, <span class="code-var">redis_url</span>: <span class="code-type">str</span> = <span class="code-str">"redis://localhost:6379/0"</span>, <span class="code-var">ttl_seconds</span>: <span class="code-type">int</span> = <span class="code-num">86400</span>):
+        <span class="code-var">self</span>.<span class="code-var">redis</span> = <span class="code-var">aioredis</span>.<span class="code-fn">from_url</span>(<span class="code-var">redis_url</span>, <span class="code-var">decode_responses</span>=<span class="code-kw">True</span>)
+        <span class="code-var">self</span>.<span class="code-var">ttl</span> = <span class="code-var">ttl_seconds</span>  <span class="code-cm"># 24 horas de retención</span>
+
+    <span class="code-kw">async def</span> <span class="code-fn">obtener_estado</span>(<span class="code-var">self</span>, <span class="code-var">wa_id</span>: <span class="code-type">str</span>) -> <span class="code-type">EstadoConversacion</span>:
+        <span class="code-cm"># 4. Buscamos el estado por clave wa_id</span>
+        <span class="code-var">key</span> = <span class="code-str">f"session:{wa_id}"</span>
+        <span class="code-var">data</span> = <span class="code-kw">await</span> <span class="code-var">self</span>.<span class="code-var">redis</span>.<span class="code-fn">get</span>(<span class="code-var">key</span>)
+        <span class="code-kw">if not</span> <span class="code-var">data</span>:
+            <span class="code-kw">return</span> <span class="code-type">EstadoConversacion</span>(<span class="code-var">wa_id</span>=<span class="code-var">wa_id</span>)
+        <span class="code-kw">return</span> <span class="code-type">EstadoConversacion</span>.<span class="code-fn">model_validate_json</span>(<span class="code-var">data</span>)
+
+    <span class="code-kw">async def</span> <span class="code-fn">guardar_estado</span>(<span class="code-var">self</span>, <span class="code-var">estado</span>: <span class="code-type">EstadoConversacion</span>):
+        <span class="code-cm"># 5. Guardamos con serialización JSON y renovamos el TTL</span>
+        <span class="code-var">key</span> = <span class="code-str">f"session:{estado.wa_id}"</span>
+        <span class="code-kw">await</span> <span class="code-var">self</span>.<span class="code-var">redis</span>.<span class="code-fn">set</span>(<span class="code-var">key</span>, <span class="code-var">estado</span>.<span class="code-fn">model_dump_json</span>(), <span class="code-var">ex</span>=<span class="code-var">self</span>.<span class="code-var">ttl</span>)</code></pre>
+          </div>
+        </div>
+
+        <!-- QUIZ 1 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.2.1</span>
+          </div>
+          <div class="quiz-question">¿Dónde se almacena y gestiona la memoria a corto plazo de un agente conversacional en WhatsApp?</div>
+          <button class="quiz-option" data-correct="false">A) En los pesos internos del modelo Llama 3 mediante gradiente descendente.</button>
+          <button class="quiz-option" data-correct="true">B) Fuera del modelo, en una base de datos de tu backend (asociada al wa_id del usuario) y se reinyecta en el prompt en cada llamada.</button>
+          <button class="quiz-option" data-correct="false">C) En la memoria caché del teléfono del usuario.</button>
+          <button class="quiz-option" data-correct="false">D) En los servidores de Meta WhatsApp Cloud API de forma automática.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
+
+      <!-- SUBTEMA 2.2.2 -->
+      <article class="tema-card" id="tema-2-2-2">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.2.2 · Estandarización de Infraestructura</div>
+          <h3 class="tema-title">Llama Stack: Piezas Estándar para no Reinventar la Arquitectura</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Los 3 Pilares</span> Memoria, Herramientas y Seguridad Estandarizada</h4>
+          <p class="prose-p">
+            Construir agentes ad-hoc suele derivar en código espagueti donde la persistencia, la ejecución de APIs y la moderación se mezclan en un solo archivo. <b>Llama Stack</b> estandariza estos tres bloques fundamentales mediante especificaciones abiertas de cliente y servidor:
+          </p>
+
+          <div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top:1.5rem;">
+            <div class="stat-card-clean" style="border-left:4px solid var(--meta-blue);">
+              <div style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.15rem; margin-bottom:0.5rem;">1. Gestión de Memoria</div>
+              <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.55;">
+                Almacena, recupera y actualiza historiales de conversación, variables de sesión y perfiles de usuario en SQLite, Redis o PostgreSQL con políticas de expiración (TTL) y condensación automática.
+              </p>
+            </div>
+            <div class="stat-card-clean" style="border-left:4px solid var(--accent-success);">
+              <div style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.15rem; margin-bottom:0.5rem;">2. Definición de Herramientas</div>
+              <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.55;">
+                Interfaz declarativa que expone funciones (consultar base de datos, agendar citas, verificar existencias) con esquemas JSON Schema formalmente validados.
+              </p>
+            </div>
+            <div class="stat-card-clean" style="border-left:4px solid #ef4444;">
+              <div style="font-family:var(--font-disp); font-weight:800; color:#ef4444; font-size:1.15rem; margin-bottom:0.5rem;">3. Capas de Seguridad (Guardrails)</div>
+              <p style="font-size:0.9rem; color:var(--text-secondary); line-height:1.55;">
+                Módulos de inspección que filtran entradas maliciosas (inyecciones de prompt con Prompt Guard) y clasifican contenido inapropiado con Llama Guard 3 en milisegundos.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FÓRMULA DE LATENCIA EN PIPELINE LLAMA STACK -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$T_{	ext{Total}} = T_{	ext{Shield\_In}} + T_{	ext{Redis\_Fetch}} + T_{	ext{Prefill}}(	ext{Tokens}_{	ext{in}}) + T_{	ext{Decode}}(	ext{Tokens}_{	ext{out}}) + T_{	ext{Tool\_Exec}} + T_{	ext{Shield\_Out}} \le 3.0\,	ext{s}$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <span>Ver Desglose de Latencia &amp; Presupuesto de SLA</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="formula-breakdown-content">
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(T_{	ext{Shield\_In}}\)</span>
+                <div class="formula-var-desc"><b>Evaluación de Entrada Llama Guard 3:</b> Tiempo para verificar que el mensaje entrante es seguro (\(pprox 80	ext{ms}\)).</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(T_{	ext{Redis\_Fetch}}\)</span>
+                <div class="formula-var-desc"><b>Recuperación de Estado en RAM:</b> Latencia de lectura en base de datos en memoria (\(pprox 2	ext{ms}\) a \(5	ext{ms}\)).</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(T_{	ext{Prefill}} + T_{	ext{Decode}}\)</span>
+                <div class="formula-var-desc"><b>Inferencia GPU con Llama 3 8B:</b> Fase de procesamiento de prompt y generación token por token (\(pprox 400	ext{ms}\) - \(800	ext{ms}\)).</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(T_{	ext{Tool\_Exec}}\)</span>
+                <div class="formula-var-desc"><b>Ejecución de API Externa:</b> Consulta SQL a base de citas médicas o CRM (\(pprox 150	ext{ms}\)).</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(3.0\,	ext{s}\)</span>
+                <div class="formula-var-desc"><b>SLA Máximo de WhatsApp:</b> Umbral de calidad percibida por el usuario antes de considerar la experiencia como lenta.</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil (Analogía de la vida real)</span>
+          </div>
+          <p class="easy-text">
+            Piensa en los <b>enchufes eléctricos de tu casa</b>. En lugar de que cada fabricante de licuadoras, televisores y lámparas invente un cable con una forma diferente de clavija y voltaje, existe una <b>norma estándar</b>. Llama Stack es ese enchufe universal: define cómo se conectan la memoria, las herramientas de base de datos y la seguridad, para que puedas cambiar de base de datos o de modelo sin tener que reescribir todo tu sistema desde cero.
+          </p>
+        </div>
+
+        <!-- CÓDIGO LLAMA STACK -->
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">Código de Producción</span> Inicialización de Agente con Llama Stack SDK</h4>
+          <p class="prose-p">Implementación oficial utilizando el cliente Llama Stack para registrar proveedores de memoria, herramientas y seguridad unificada:</p>
+
+          <div class="code-box">
+            <div class="code-header">
+              <span class="code-lang">Python 3.11 · llama_stack_agent_setup.py</span>
+              <div class="code-actions">
+                <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+              </div>
+            </div>
+            <pre class="code-content"><code class="language-python"><span class="code-cm"># 1. Importamos cliente y tipos oficiales de Llama Stack</span>
+<span class="code-kw">from</span> <span class="code-var">llama_stack</span> <span class="code-kw">import</span> <span class="code-type">LlamaStackClient</span>
+<span class="code-kw">from</span> <span class="code-var">llama_stack.types</span> <span class="code-kw">import</span> <span class="code-type">MemoryConfig</span>, <span class="code-type">ToolDefinition</span>, <span class="code-type">SafetyConfig</span>
+
+<span class="code-cm"># 2. Inicializamos cliente apuntando a la instancia local de Llama Stack</span>
+<span class="code-var">client</span> = <span class="code-type">LlamaStackClient</span>(<span class="code-var">base_url</span>=<span class="code-str">"http://localhost:5000"</span>)
+
+<span class="code-cm"># 3. Configuramos la memoria de estado desacoplada</span>
+<span class="code-var">memory_config</span> = <span class="code-type">MemoryConfig</span>(
+    <span class="code-var">provider</span>=<span class="code-str">"redis"</span>,
+    <span class="code-var">session_ttl_seconds</span>=<span class="code-num">86400</span>,
+    <span class="code-var">max_history_turns</span>=<span class="code-num">8</span>,
+    <span class="code-var">compression_strategy</span>=<span class="code-str">"sliding_window_with_summary"</span>
+)
+
+<span class="code-cm"># 4. Declaramos herramientas operativas</span>
+<span class="code-var">tools</span> = [
+    <span class="code-type">ToolDefinition</span>(
+        <span class="code-var">name</span>=<span class="code-str">"consultar_disponibilidad_citas"</span>,
+        <span class="code-var">description</span>=<span class="code-str">"Consulta horarios libres en la agenda dental para una fecha dada."</span>
+    ),
+    <span class="code-type">ToolDefinition</span>(
+        <span class="code-var">name</span>=<span class="code-str">"confirmar_cita_en_calendario"</span>,
+        <span class="code-var">description</span>=<span class="code-str">"Bloquea y confirma una cita médica para el paciente."</span>
+    )
+]
+
+<span class="code-cm"># 5. Capa de blindaje de contenido y anti-jailbreak</span>
+<span class="code-var">safety_config</span> = <span class="code-type">SafetyConfig</span>(
+    <span class="code-var">shield_model</span>=<span class="code-str">"meta-llama/Llama-Guard-3-8B"</span>,
+    <span class="code-var">categories_blocked</span>=[<span class="code-str">"S1_Violent_Crimes"</span>, <span class="code-str">"S9_Prompt_Injection"</span>, <span class="code-str">"S14_PII"</span>]
+)
+
+<span class="code-cm"># 6. Creamos la instancia soberana del Agente</span>
+<span class="code-var">agent</span> = <span class="code-var">client</span>.<span class="code-var">agents</span>.<span class="code-fn">create</span>(
+    <span class="code-var">model</span>=<span class="code-str">"meta-llama/Llama-3.1-8B-Instruct"</span>,
+    <span class="code-var">instructions</span>=<span class="code-str">"Eres el asistente oficial de Dental Clinic en WhatsApp."</span>,
+    <span class="code-var">memory</span>=<span class="code-var">memory_config</span>,
+    <span class="code-var">tools</span>=<span class="code-var">tools</span>,
+    <span class="code-var">safety</span>=<span class="code-var">safety_config</span>
+)</code></pre>
+          </div>
+        </div>
+
+        <!-- QUIZ 2 -->
+        <div class="quiz-box" style="margin-top:2rem;">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.2.2</span>
+          </div>
+          <div class="quiz-question">¿Cuál es el propósito principal del ecosistema Llama Stack en la ingeniería de agentes de IA?</div>
+          <button class="quiz-option" data-correct="false">A) Reemplazar a Python por un nuevo lenguaje de programación propietario.</button>
+          <button class="quiz-option" data-correct="true">B) Proveer una arquitectura y APIs estandarizadas para memoria, herramientas y seguridad, evitando construir cada componente desde cero.</button>
+          <button class="quiz-option" data-correct="false">C) Convertir modelos de lenguaje en archivos ejecutables de Windows (.exe).</button>
+          <button class="quiz-option" data-correct="false">D) Eliminar la necesidad de bases de datos relacionales.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
+
+      <!-- SUBTEMA 2.2.3 -->
+      <article class="tema-card" id="tema-2-2-3">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.2.3 · Flujos Conversacionales Híbridos</div>
+          <h3 class="tema-title">Diseñar el Flujo: Cuándo Poner Reglas Fijas y Cuándo Delegar al LLM</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Semáforo Inteligente</span> Separar el Andamiaje de Seguridad del Razonamiento</h4>
+          <p class="prose-p">
+            Un agente industrial jamás otorga control absoluto e irrestricto al modelo probabilístico sobre decisiones críticas, ni encorseta al usuario en un aburrido menú numérico del tipo <i>"Presione 1 para ventas"</i>.
+          </p>
+          <p class="prose-p">
+            Las <b>reglas fijas (Guardrails Deterministas)</b> actúan como rieles inquebrantables que evitan descarrilamientos en situaciones de alto riesgo:
+          </p>
+
+          <ul class="clean-bullet-list" style="margin-left:1.5rem; line-height:1.8; color:var(--text-secondary);">
+            <li><strong>Solicitud de Atención Humana:</strong> Si el usuario escribe <i>"quiero hablar con un asesor"</i>, se activa inmediatamente la cola de transferencia humana sin consultar al LLM.</li>
+            <li><strong>Cumplimiento de Privacidad (GDPR / ARCO):</strong> Solicitudes de eliminación de datos se ejecutan con reglas de backend deterministas con validación de identidad.</li>
+            <li><strong>Emergencias Críticas:</strong> Detección de crisis médicas o reportes de fraude bancario detienen la generación probabilística y despachan ayuda inmediata.</li>
+            <li><strong>Libertad Generativa para Llama 3:</strong> Interpretación de jerga, reformulación de preguntas complejas, síntesis empática y explicaciones contextuales.</li>
+          </ul>
+        </div>
+
+        <!-- FÓRMULA DE ENRUTAMIENTO HÍBRIDO -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\delta(S_t, u_{t+1}) = egin{cases} 
+            	ext{Protocolo}_{	ext{Humano}}(u_{t+1}), & 	ext{si } 	ext{Regex}_{	ext{Human}}(u_{t+1}) = 	ext{true} \
+            	ext{Protocolo}_{	ext{ARCO}}(u_{t+1}), & 	ext{si } 	ext{Intent}_{	ext{Legal}}(u_{t+1}) = 	ext{true} \
+            	ext{Protocolo}_{	ext{911\_Emergencia}}(u_{t+1}), & 	ext{si } 	ext{Triage}_{	ext{Emergency}}(u_{t+1}) = 	ext{true} \
+            rg\max_y P(y \mid 	ext{Prompt}(S_t, u_{t+1}); 	heta), & 	ext{en cualquier otro caso (LLM)}
+            \end{cases}$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <span>Ver Desglose de la Función de Transición Híbrida</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="formula-breakdown-content">
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(\delta(S_t, u_{t+1})\)</span>
+                <div class="formula-var-desc"><b>Función de Transición de Estado Híbrida:</b> Mapea el estado actual y el mensaje entrante a una acción de sistema o a una inferencia generativa.</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(	ext{Regex}_{	ext{Human}}\)</span>
+                <div class="formula-var-desc"><b>Patrones Compilados Inquebrantables:</b> Filtro ultra-rápido (\(\lt 1	ext{ms}\)) que captura intenciones de transferencia sin consumir GPU.</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(rg\max_y P(y \mid \dots)\)</span>
+                <div class="formula-var-desc"><b>Inferencia Probabilística con Llama 3:</b> Se ejecuta únicamente cuando el mensaje pasa los filtros de seguridad y requiere comprensión de lenguaje natural.</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil (Analogía de la vida real)</span>
+          </div>
+          <p class="easy-text">
+            Imagina un <b>cajero automático bancario moderno</b>. Puedes hablar con él o escribirle en lenguaje natural para pedirle <i>"Quiero un desglose de mis gastos en cafeterías el mes pasado"</i> (ahí razona el LLM con total flexibilidad). Pero cuando presionas <b>"Retirar 500 pesos en efectivo"</b> o <b>"Bloquear tarjeta por robo"</b>, el cajero NO le pregunta a un modelo generativo qué hacer; ejecuta una <b>orden fija y blindada</b> en el sistema central del banco.
+          </p>
+        </div>
+
+        <!-- CÓDIGO ENRUTADOR HÍBRIDO -->
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">Código de Producción</span> Enrutador Defensivo Híbrido en Python</h4>
+          <p class="prose-p">Implementación de un despachador defensivo que evalúa reglas deterministas antes de invocar la inferencia de Llama 3:</p>
+
+          <div class="code-box">
+            <div class="code-header">
+              <span class="code-lang">Python 3.11 · hybrid_conversation_router.py</span>
+              <div class="code-actions">
+                <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+              </div>
+            </div>
+            <pre class="code-content"><code class="language-python"><span class="code-kw">import</span> <span class="code-var">re</span>
+<span class="code-kw">from</span> <span class="code-var">typing</span> <span class="code-kw">import</span> <span class="code-type">Dict</span>, <span class="code-type">Any</span>
+
+<span class="code-cm"># 1. Compilación de patrones regex de alta prioridad</span>
+<span class="code-var">HUMAN_REGEX</span> = <span class="code-var">re</span>.<span class="code-fn">compile</span>(<span class="code-str">r"(humano|asesor|agente|operador|persona real)"</span>, <span class="code-var">re</span>.<span class="code-type">IGNORECASE</span>)
+<span class="code-var">EMERGENCY_REGEX</span> = <span class="code-var">re</span>.<span class="code-fn">compile</span>(<span class="code-str">r"(sangrado|infarto|emergencia|ambulancia|grave|asfixia)"</span>, <span class="code-var">re</span>.<span class="code-type">IGNORECASE</span>)
+<span class="code-var">PRIVACY_REGEX</span> = <span class="code-var">re</span>.<span class="code-fn">compile</span>(<span class="code-str">r"(eliminar mis datos|borrar cuenta|derecho arco|cancelar servicio)"</span>, <span class="code-var">re</span>.<span class="code-type">IGNORECASE</span>)
+
+<span class="code-kw">async def</span> <span class="code-fn">enrutar_mensaje_hibrido</span>(<span class="code-var">texto</span>: <span class="code-type">str</span>, <span class="code-var">wa_id</span>: <span class="code-type">str</span>, <span class="code-var">estado</span>: <span class="code-type">Dict</span>[<span class="code-type">str</span>, <span class="code-type">Any</span>]) -> <span class="code-type">str</span>:
+    <span class="code-var">t</span> = <span class="code-var">texto</span>.<span class="code-fn">strip</span>()
+
+    <span class="code-cm"># 2. Riel 1: Transferencia Humana Incondicional</span>
+    <span class="code-kw">if</span> <span class="code-var">HUMAN_REGEX</span>.<span class="code-fn">search</span>(<span class="code-var">t</span>):
+        <span class="code-kw">await</span> <span class="code-fn">registrar_ticket_soporte</span>(<span class="code-var">wa_id</span>, <span class="code-str">"SOLICITUD_ASESOR"</span>)
+        <span class="code-kw">return</span> <span class="code-str">"Te he transferido con un asesor humano de nuestro equipo. En breve se comunicará contigo."</span>
+
+    <span class="code-cm"># 3. Riel 2: Protocolo de Emergencia Médica</span>
+    <span class="code-kw">if</span> <span class="code-var">EMERGENCY_REGEX</span>.<span class="code-fn">search</span>(<span class="code-var">t</span>):
+        <span class="code-kw">return</span> <span class="code-str">"ALERTA MÉDICA: Si tienes una urgencia vital, comunícate de inmediato al 911 o acude al hospital más cercano."</span>
+
+    <span class="code-cm"># 4. Riel 3: Protocolo Legal / Privacidad ARCO</span>
+    <span class="code-kw">if</span> <span class="code-var">PRIVACY_REGEX</span>.<span class="code-fn">search</span>(<span class="code-var">t</span>):
+        <span class="code-kw">return</span> <span class="code-str">"Para ejercer tus derechos de privacidad y eliminación de datos, responde 'CONFIRMAR BORRADO'."</span>
+
+    <span class="code-cm"># 5. Riel 4: Delegación al Razonamiento de Llama 3</span>
+    <span class="code-kw">return await</span> <span class="code-fn">ejecutar_inferencia_llama3</span>(<span class="code-var">texto</span>, <span class="code-var">wa_id</span>, <span class="code-var">estado</span>)</code></pre>
+          </div>
+        </div>
+
+        <!-- QUIZ 3 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.2.3</span>
+          </div>
+          <div class="quiz-question">Si un usuario en WhatsApp escribe "Quiero cancelar mi cuenta y que borren mis datos personales", ¿cómo debe procesarse esta solicitud según el diseño de flujos híbridos?</div>
+          <button class="quiz-option" data-correct="false">A) Dejar que Llama 3 intente convencer al usuario de no cancelar mediante argumentos persuasivos.</button>
+          <button class="quiz-option" data-correct="true">B) Interceptar el mensaje con una regla fija determinista que inicie el protocolo de cancelación y confirmación sin dejar la decisión al modelo generativo.</button>
+          <button class="quiz-option" data-correct="false">C) Ignorar el mensaje hasta que el usuario envíe una carta física.</button>
+          <button class="quiz-option" data-correct="false">D) Reentrenar el modelo con los datos del usuario.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
+
+      <!-- SUBTEMA 2.2.4 -->
+      <article class="tema-card" id="tema-2-2-4">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.2.4 · Optimización de Cómputo</div>
+          <h3 class="tema-title">Gestión Eficiente de la Ventana de Contexto: Sliding Window &amp; Resumen</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Costo de Reenviar Todo</span> Latencia Cuadrática y Consumo de GPU</h4>
+          <p class="prose-p">
+            Si reenvías todo el historial completo en cada turno, en una conversación de 20 mensajes estarás procesando más de 2,500 tokens por petición. Debido a la naturaleza cuadrática del mecanismo de auto-atención en los Transformers ($O(N^2)$), esto incrementa drásticamente el tiempo de <i>Prefill</i> en la GPU y dispara el consumo de memoria en la caché KV (Key-Value Cache).
+          </p>
+          <p class="prose-p">
+            Las dos estrategias industriales para mantener el costo y la latencia constantes son:
+          </p>
+
+          <div class="stat-grid-clean" style="grid-template-columns: 1fr 1fr; margin-top:1rem;">
+            <div class="stat-card-clean">
+              <div style="font-family:var(--font-disp); font-weight:800; color:var(--accent-info); margin-bottom:0.4rem;">Ventana Deslizante (Sliding Window K)</div>
+              <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">Conserva intactos únicamente los últimos \(K\) turnos (ej. los últimos 4 mensajes) y descarta los turnos antiguos. Mantiene la latencia estrictamente constante \(O(K)\).</p>
+            </div>
+            <div class="stat-card-clean">
+              <div style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); margin-bottom:0.4rem;">Memoria con Resumen Jerárquico</div>
+              <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">Un modelo ligero comprime los turnos antiguos en un párrafo de hechos clave (<i>"Usuario agendó cita dental para el sábado"</i>) y reenvía ese resumen condensado junto con los últimos 2 turnos recientes.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- FÓRMULA DE CRECIMIENTO CUADRÁTICO -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$C_{	ext{total}}(N) = \sum_{t=1}^{N} \Big( T_{	ext{sys}} + 2 \cdot t \cdot ar{L} \Big) = N \cdot T_{	ext{sys}} + N(N+1) \cdot ar{L}$$
+            $$M_{	ext{KV\_Cache}}(N) = 2 \cdot L_{	ext{layers}} \cdot H_{	ext{KV}} \cdot d_{	ext{head}} \cdot N \cdot b_{	ext{bytes}}$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <span>Ver Desglose Matemático de Crecimiento Cuadrático y VRAM</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="formula-breakdown-content">
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(N\)</span>
+                <div class="formula-var-desc"><b>Número Total de Turnos:</b> Cantidad de intercambios pregunta-respuesta que han ocurrido en la conversación.</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(ar{L}\)</span>
+                <div class="formula-var-desc"><b>Longitud Promedio por Mensaje:</b> Típicamente \(pprox 50\) tokens en mensajes de WhatsApp.</div>
+              </div>
+              <div class="formula-variable-row">
+                <span class="formula-var-symbol">\(N(N+1)ar{L}\)</span>
+                <div class="formula-var-desc"><b>Término Cuadrático Peligroso:</b> Explica por qué para \(N=15\) turnos el método ingenuo procesa <b>14,550 tokens</b> acumulados, mientras que con Sliding Window (\(K=4\)) procesa solo <b>4,500 tokens</b> (69% de reducción).</div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil (Analogía de la vida real)</span>
+          </div>
+          <p class="easy-text">
+            Si vas a tener una reunión de trabajo sobre el proyecto actual, <b>no le pides al equipo que lean completas las 500 páginas de actas de todas las reuniones de los últimos dos años</b> antes de empezar a hablar. En su lugar, el director lee un <b>resumen ejecutivo de media página</b> con las conclusiones clave y se enfoca en los temas de los últimos 15 minutos. Eso es exactamente la compresión jerárquica con ventana deslizante.
+          </p>
+        </div>
+
+        <!-- CÓDIGO COMPRESOR SLIDING WINDOW -->
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">Código de Producción</span> Compresor de Historial con Sliding Window y Resumen</h4>
+          <p class="prose-p">Script en Python para truncar y resumir automáticamente el contexto antes de inyectarlo en el prompt de Llama 3:</p>
+
+          <div class="code-box">
+            <div class="code-header">
+              <span class="code-lang">Python 3.11 · history_compressor.py</span>
+              <div class="code-actions">
+                <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+              </div>
+            </div>
+            <pre class="code-content"><code class="language-python"><span class="code-kw">from</span> <span class="code-var">typing</span> <span class="code-kw">import</span> <span class="code-type">List</span>, <span class="code-type">Dict</span>
+
+<span class="code-kw">def</span> <span class="code-fn">construir_contexto_optimizado</span>(
+    <span class="code-var">historial_completo</span>: <span class="code-type">List</span>[<span class="code-type">Dict</span>[<span class="code-type">str</span>, <span class="code-type">str</span>]],
+    <span class="code-var">resumen_previo</span>: <span class="code-type">str</span> = <span class="code-str">""</span>,
+    <span class="code-var">k_turnos</span>: <span class="code-type">int</span> = <span class="code-num">4</span>
+) -> <span class="code-type">str</span>:
+    <span class="code-cm"># 1. Si la conversación es corta, conservamos el historial sin truncar</span>
+    <span class="code-kw">if len</span>(<span class="code-var">historial_completo</span>) <= <span class="code-var">k_turnos</span> * <span class="code-num">2</span>:
+        <span class="code-var">lineas</span> = [<span class="code-str">f"{m['role'].upper()}: {m['content']}"</span> <span class="code-kw">for</span> <span class="code-var">m</span> <span class="code-kw">in</span> <span class="code-var">historial_completo</span>]
+        <span class="code-kw">return</span> <span class="code-str">"
+"</span>.<span class="code-fn">join</span>(<span class="code-var">lineas</span>)
+
+    <span class="code-cm"># 2. Aplicamos Sliding Window sobre los últimos K turnos recientes</span>
+    <span class="code-var">turnos_recientes</span> = <span class="code-var">historial_completo</span>[-(<span class="code-var">k_turnos</span> * <span class="code-num">2</span>):]
+    
+    <span class="code-cm"># 3. Ensamblamos el resumen consolidado + ventana reciente</span>
+    <span class="code-var">prompt_memoria</span> = <span class="code-str">f"RESUMEN DE HECHOS PREVIOS:
+{resumen_previo}
+
+ÚLTIMOS MENSAJES RECIENTES:
+"</span>
+    <span class="code-kw">for</span> <span class="code-var">m</span> <span class="code-kw">in</span> <span class="code-var">turnos_recientes</span>:
+        <span class="code-var">prompt_memoria</span> += <span class="code-str">f"{m['role'].upper()}: {m['content']}
+"</span>
+
+    <span class="code-kw">return</span> <span class="code-var">prompt_memoria</span></code></pre>
+          </div>
+        </div>
+
+        <!-- QUIZ 4 -->
+        <div class="quiz-box" style="margin-top:2rem;">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.2.4</span>
+          </div>
+          <div class="quiz-question">¿Qué consecuencia técnica indeseable ocurre si un sistema reenvía siempre el 100% del historial de chat sin aplicar compresión ni ventana deslizante?</div>
+          <button class="quiz-option" data-correct="false">A) Que el modelo cambia automáticamente de idioma a inglés.</button>
+          <button class="quiz-option" data-correct="true">B) Que el consumo de tokens crece cuadráticamente, aumentando la latencia de respuesta y arriesgando desbordar la ventana de contexto máxima.</button>
+          <button class="quiz-option" data-correct="false">C) Que WhatsApp desconecta el número de teléfono por inactividad.</button>
+          <button class="quiz-option" data-correct="false">D) Que la base de datos se borra automáticamente.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ==========================================================================
+      BANCOS INTERACTIVOS & LABORATORIOS EN VIVO (5 SIMULADORES)
+      ========================================================================== -->
+    <section id="simuladores" style="margin-top:4rem;">
+      <div style="text-align:center; margin-bottom:2.5rem;">
+        <div class="tema-eyebrow" style="justify-content:center; margin-bottom:0.6rem;">Laboratorios Prácticos en Vivo</div>
+        <h2 style="font-size:2.2rem; font-family:var(--font-disp); font-weight:800; color:var(--text-primary); margin:0 0 0.8rem;">Bancos Interactivos de la Unidad 2.2</h2>
+        <p style="color:var(--text-secondary); max-width:70ch; margin:0 auto; font-size:1.05rem;">Experimenta con memoria de estado en tiempo real, construye configuraciones de Llama Stack y prueba el enrutador de flujos híbridos.</p>
+      </div>
+
+      <!-- BANCO 1: SIMULADOR DE MEMORIA DE ESTADO -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.2.1 · Simulador de Memoria de Estado y Context Window (Stateless vs Stateful)</span>
+          <div class="workbench-actions">
+            <button class="btn-reset-sm" id="mem-btn-reset">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Reiniciar Conversación</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div style="display:grid; grid-template-columns:1.1fr 1.3fr; gap:1.5rem;">
+            <!-- Chat UI Dental Clinic -->
+            <div style="background:#0b141a; border-radius:14px; padding:1rem; display:flex; flex-direction:column; height:440px; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
+              <div style="display:flex; align-items:center; gap:0.75rem; padding-bottom:0.75rem; border-bottom:1px solid #202c33;">
+                <div style="width:36px; height:36px; border-radius:50%; background:#10b981; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800;">DC</div>
+                <div>
+                  <div style="color:#e9edef; font-weight:700; font-size:0.9rem;">Dental Clinic Meta</div>
+                  <div style="color:#00a884; font-size:0.75rem;">Agente con Memoria de Estado</div>
+                </div>
+              </div>
+              <div id="mem-chat-history" style="flex:1; overflow-y:auto; padding:0.75rem 0; display:flex; flex-direction:column; gap:0.75rem;">
+                <!-- Poblado dinámicamente -->
+              </div>
+              <div style="display:flex; gap:0.5rem; padding-top:0.5rem; border-top:1px solid #202c33;">
+                <input type="text" id="mem-user-input" placeholder="Ej. 'Quiero cita dental' o '¿Tienen el sábado?'" value="Quiero agendar una cita dental" style="flex:1; background:#2a3942; color:#d1d7db; border:none; border-radius:8px; padding:0.6rem 0.8rem; font-size:0.85rem;" />
+                <button id="mem-btn-send" class="btn-primary" style="padding:0.6rem 1rem;">Enviar</button>
+              </div>
+            </div>
+
+            <!-- Monitor de Estado y Reconstrucción del Prompt -->
+            <div>
+              <div style="font-size:0.85rem; font-weight:800; color:var(--meta-blue); margin-bottom:0.5rem;">Estado Persistente de la Sesión (JSON en Backend):</div>
+              <pre id="mem-state-json" style="background:var(--bg-elevated); color:var(--text-primary); border:1px solid var(--border-subtle); border-radius:8px; padding:0.75rem; font-family:var(--font-mono); font-size:0.75rem; height:120px; overflow-y:auto; margin-bottom:1rem;"></pre>
+
+              <div style="font-size:0.85rem; font-weight:800; color:var(--meta-purple); margin-bottom:0.5rem;">Prompt Reconstruido que Viaja a Llama 3:</div>
+              <pre id="mem-reconstructed-prompt" style="background:#0f172a; color:#f8fafc; border-radius:8px; padding:0.75rem; font-family:var(--font-mono); font-size:0.72rem; height:160px; overflow-y:auto; white-space:pre-wrap; margin-bottom:0.75rem;"></pre>
+
+              <div>
+                <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:0.3rem;">
+                  <span style="color:var(--text-muted);">Consumo de Ventana de Contexto:</span>
+                  <strong id="mem-context-count" style="color:var(--accent-success);">0 / 2048 tokens</strong>
+                </div>
+                <div style="width:100%; height:8px; background:var(--bg-subtle); border-radius:4px; overflow:hidden;">
+                  <div id="mem-context-bar" style="width:5%; height:100%; background:var(--accent-success); transition:width 0.3s ease;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANCO 2: BUILDER LLAMA STACK -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.2.2 · Playground Llama Stack (Arquitectura Modular Estandarizada)</span>
+          <div class="workbench-actions">
+            <button class="btn-reset-sm" id="stack-btn-reset" title="Restablecer configuración Llama Stack">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Restablecer</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1.2rem; margin-bottom:1.5rem;">
+            <div>
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.4rem;">Proveedor de Memoria:</label>
+              <select id="stack-memory-select" class="bench-select-clean" style="width:100%;">
+                <option value="sqlite">SQLite (Memoria Local en Disco)</option>
+                <option value="redis">Redis (Caché en RAM de Alta Velocidad)</option>
+                <option value="postgresql">PostgreSQL (Base de Datos Relacional)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.4rem;">Herramientas Registradas:</label>
+              <div style="display:flex; flex-direction:column; gap:0.4rem; font-size:0.82rem;">
+                <label><input type="checkbox" value="consultar_disponibilidad_citas" class="stack-tool-cb" checked /> consultar_disponibilidad_citas</label>
+                <label><input type="checkbox" value="confirmar_cita_en_calendario" class="stack-tool-cb" checked /> confirmar_cita_en_calendario</label>
+                <label><input type="checkbox" value="enviar_recordatorio_sms" class="stack-tool-cb" /> enviar_recordatorio_sms</label>
+              </div>
+            </div>
+            <div>
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.4rem;">Capa de Seguridad (Shield):</label>
+              <select id="stack-safety-select" class="bench-select-clean" style="width:100%;">
+                <option value="llama_guard_3">Llama Guard 3 (Filtro de Contenido)</option>
+                <option value="prompt_guard">Prompt Guard (Anti-Inyecciones)</option>
+                <option value="dual_shield">Dual Shield (Llama Guard + Prompt Guard)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="code-box">
+            <div class="code-header">
+              <span class="code-lang">Código Llama Stack Python SDK</span>
+              <div class="code-actions">
+                <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+              </div>
+            </div>
+            <pre class="code-content"><code class="language-python" id="stack-code-output"># Generando especificación Llama Stack...</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANCO 3: ENRUTADOR HÍBRIDO -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.2.3 · Árbol de Decisión Híbrido (Reglas Fijas Deterministas vs Inferencia LLM)</span>
+          <div class="workbench-actions">
+            <span class="bench-badge-status status-info" id="hybrid-decision-pill">Esperando Frase</span>
+            <button class="btn-reset-sm" id="hybrid-btn-reset" title="Restablecer enrutador híbrido">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Restablecer</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1rem;">
+            Prueba cómo el enrutador separa solicitudes críticas (que activan protocolos inquebrantables) de consultas generales delegadas al razonamiento de Llama 3.
+          </p>
+
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.2rem;">
+            <button class="glossary-filter-pill hybrid-preset-pill" data-text="Quiero hablar con un asesor humano">Presionar: "Quiero hablar con un humano"</button>
+            <button class="glossary-filter-pill hybrid-preset-pill" data-text="Deseo ejercer mis derechos ARCO y eliminar mis datos personales">Presionar: "Eliminar mis datos (Privacidad)"</button>
+            <button class="glossary-filter-pill hybrid-preset-pill" data-text="Tengo una emergencia médica con sangrado abundante">Presionar: "Emergencia Médica Crítica"</button>
+            <button class="glossary-filter-pill hybrid-preset-pill" data-text="¿Qué costo tiene la consulta de ortodoncia y qué incluye?">Presionar: "Consulta de Precios (LLM)"</button>
+          </div>
+
+          <div style="display:flex; gap:0.5rem; margin-bottom:1.2rem;">
+            <input type="text" id="hybrid-user-input" class="bench-input-clean" value="Quiero hablar con un asesor humano" placeholder="Escribe cualquier frase del usuario..." style="flex:1;" />
+            <button id="hybrid-btn-route" class="btn-primary">Evaluar Enrutamiento</button>
+          </div>
+
+          <div id="hybrid-explanation" style="background:var(--card-surface); padding:1rem; border-radius:8px; border:1px solid var(--border-subtle); font-size:0.9rem; color:var(--text-secondary);">
+            Haz clic en "Evaluar Enrutamiento" para inspeccionar la decisión arquitectónica.
+          </div>
+        </div>
+      </div>
+
+      <!-- BANCO 4: COMPRESOR DE MEMORIA -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.2.4 · Compresor de Historial &amp; Optimizador de Tokens (Sliding Window vs Summary)</span>
+          <div class="workbench-actions">
+            <button class="btn-reset-sm" id="comp-btn-reset" title="Restablecer compresor de tokens">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Restablecer</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+            <div>
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between;">
+                <span>Longitud de la Conversación:</span>
+                <strong id="comp-turns-val" style="color:var(--meta-blue);">12 turnos</strong>
+              </label>
+              <input type="range" id="comp-turns-slider" min="2" max="30" step="1" value="12" style="width:100%; margin-top:0.5rem;" />
+
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-top:1rem; margin-bottom:0.4rem;">Estrategia de Memoria:</label>
+              <select id="comp-strategy-select" class="bench-select-clean" style="width:100%;">
+                <option value="summary">Memoria Híbrida (Resumen Llama + Últimos 3 turnos)</option>
+                <option value="sliding">Ventana Deslizante Fija (Sliding Window K=4)</option>
+                <option value="full">Memoria Completa Sin Compresión (Reenviar Todo)</option>
+              </select>
+            </div>
+
+            <div style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:flex; flex-direction:column; justify-content:space-around;">
+              <div><span style="font-size:0.78rem; color:var(--text-muted);">Tokens en Bruto (Sin optimizar):</span> <strong id="comp-tokens-raw" style="color:#ef4444; font-size:1.1rem; display:block;">1,440 tokens</strong></div>
+              <div><span style="font-size:0.78rem; color:var(--text-muted);">Tokens Reenviados al Modelo:</span> <strong id="comp-tokens-comp" style="color:var(--accent-success); font-size:1.1rem; display:block;">445 tokens</strong></div>
+              <div><span style="font-size:0.78rem; color:var(--text-muted);">Ahorro de Cómputo &amp; Latencia:</span> <strong id="comp-tokens-saving" style="color:var(--meta-purple); font-size:1.1rem; display:block;">995 tokens (69% ahorro)</strong></div>
+            </div>
+          </div>
+
+          <pre id="comp-preview-console" style="background:#0f172a; color:#f8fafc; padding:1rem; border-radius:8px; font-family:var(--font-mono); font-size:0.8rem; white-space:pre-wrap;"></pre>
+        </div>
+      </div>
+
+      <!-- BANCO 5: SESIONES MULTI-USUARIO -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.2.5 · Aislamiento de Sesiones Multi-Usuario en Base de Datos (SQLite / Redis)</span>
+          <div class="workbench-actions">
+            <select id="multi-user-select" class="bench-select-clean" style="font-size:0.8rem;">
+              <option value="user_1">Paciente 1: Lic. Jesús Olvera (+52 1 55 8765-4321)</option>
+              <option value="user_2">Paciente 2: Dra. Sofía Morales (+52 1 55 1234-5678)</option>
+              <option value="user_3">Paciente 3: Ing. Carlos Mendoza (+52 1 55 9988-7766)</option>
+            </select>
+            <button class="btn-reset-sm" id="multi-btn-reset" title="Restablecer sesiones de usuario">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Restablecer</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1rem;">
+            Comprueba cómo las variables de sesión y el estado de cada cliente de WhatsApp permanecen estrictamente aislados en la base de datos sin contaminar las conversaciones simultáneas.
+          </p>
+          <pre id="multi-session-view" style="background:#0f172a; color:#38bdf8; padding:1.2rem; border-radius:10px; font-family:var(--font-mono); font-size:0.82rem; line-height:1.6; white-space:pre-wrap;"></pre>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================================================
+      EJERCICIOS PRÁCTICOS OFICIALES (3 DESAFÍOS INDUSTRIALES CON SOLUCIONES DETALLADAS)
+      ========================================================================== -->
+    <section class="module-block" id="ejercicios" style="margin-bottom: 4rem;">
+      <div class="module-header">
+        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Autoevaluación Práctica &amp; Análisis de Sistemas</div>
+        <h2 class="module-title">Ejercicios Prácticos Oficiales de la Unidad 2.2</h2>
+        <p class="module-desc">Resuelve los 3 desafíos de diseño de agentes y memoria de estado del temario oficial. Despliega cada solución para revisar el análisis paso a paso y los criterios de ingeniería.</p>
+      </div>
+
+      <!-- EJERCICIO 1 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <span class="exercise-num-badge">Ejercicio 1</span>
+          <h4 class="exercise-title">Rastreo del Estado Paso a Paso en un Caso Clínico</h4>
+        </div>
+        <div class="exercise-context-box">
+          <div class="exercise-context-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            Enunciado del Flujo Conversacional
+          </div>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+            Revisa la conversación de la clínica dental donde un paciente escribe: (1) <i>"quiero una cita dental"</i> y luego (2) <i>"¿tienen horario el sábado?"</i>. Indica qué datos específicos debe contener el estado en memoria después de cada mensaje, qué información nueva se añade y qué se reinyecta en la siguiente llamada a Llama 3.
+          </p>
+        </div>
+
+        <details class="exercise-solution-details">
+          <summary class="exercise-solution-summary">
+            <span>Ver Solución de Ingeniería Paso a Paso &amp; Diagrama de Estado</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="exercise-solution-panel">
+            <div class="step-flow-list">
+              <div class="step-flow-item">
+                <div class="step-num-badge">1</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Turno 1: Identificación de Intención y Apertura de Sesión</h5>
+                  <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    • <b>Mensaje Usuario:</b> <i>"quiero una cita dental"</i>.<br/>
+                    • <b>Extracción del Agente:</b> <code>intent: "agendar_cita"</code>, <code>servicio: "odontologia_general"</code>, <code>etapa: "SELECCIONANDO_FECHA"</code>.<br/>
+                    • <b>Estado en Base de Datos (SQLite/Redis):</b>
+                  </p>
+                  <div class="code-box">
+                    <div class="code-header">
+                      <span class="code-lang">JSON Schema / Payload</span>
+                      <div class="code-actions">
+                        <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                        <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+                      </div>
+                    </div>
+                    <pre class="code-content"><code class="language-json">{
   "wa_id": "5215587654321",
   "etapa": "SELECCIONANDO_FECHA",
   "slots": { "servicio": "odontologia_general", "fecha": null, "hora": null },
   "created_at": 1787112000
 }</code></pre>
-</div>
-</div>
-</div>
-<div class="step-flow-item">
-<div class="step-num-badge">2</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Turno 2: Enriquecimiento Incremental del Estado</h5>
-<p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  • <b>Mensaje Usuario:</b> <i>"¿tienen horario el sábado?"</i>.<br/>
-                  • <b>Actualización de Slots:</b> Se preserva <code>servicio: "odontologia_general"</code> y se añade <code>dia_solicitado: "sabado"</code>.<br/>
-                  • <b>Prompt Reinyectado a Llama 3:</b>
-</p>
-<div class="code-box"><div class="code-header"><span class="code-lang">Código</span><div class="code-actions"><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button><button class="btn-download-code" onclick="downloadCode(this)">Descargar</button></div></div>
-<pre class="code-content"><code class="language-markdown"># Contexto de Sesión del Paciente:
+                  </div>
+                </div>
+              </div>
+
+              <div class="step-flow-item">
+                <div class="step-num-badge">2</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Turno 2: Enriquecimiento Incremental del Estado</h5>
+                  <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    • <b>Mensaje Usuario:</b> <i>"¿tienen horario el sábado?"</i>.<br/>
+                    • <b>Actualización de Slots:</b> Se preserva <code>servicio: "odontologia_general"</code> y se añade <code>dia_solicitado: "sabado"</code>.<br/>
+                    • <b>Prompt Reinyectado a Llama 3:</b>
+                  </p>
+                  <div class="code-box">
+                    <div class="code-header">
+                      <span class="code-lang">Markdown · Prompt Reconstruido</span>
+                      <div class="code-actions">
+                        <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                        <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+                      </div>
+                    </div>
+                    <pre class="code-content"><code class="language-markdown"># Contexto de Sesión del Paciente:
 - Servicio solicitado: Odontología General (confirmado previamente)
 - Preferencia de fecha: Sábado
 - Horarios disponibles en base de datos: 10:00 AM, 12:30 PM, 04:00 PM.
 Instrucción: Ofrece amablemente los 3 horarios del sábado para odontología sin volver a preguntar qué servicio necesita.</code></pre>
-</div>
-</div>
-</div>
-<div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
-<div class="step-num-badge" style="background:var(--accent-success);">3</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Criterio de Validación Productiva</h5>
-<p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  Al inyectar el estado resumido en lugar del historial completo sin estructurar, el modelo responde con precisión quirúrgica en menos de <b>80 tokens</b>, reduciendo la latencia de 1.8s a <b>420ms</b> y eliminando preguntas redundantes que frustran al usuario.
-                </p>
-</div>
-</div>
-</div>
-</div>
-</details>
-</article>
-<!-- EJERCICIO 2 -->
-<article class="exercise-card">
-<div class="exercise-header">
-<span class="exercise-num-badge">Ejercicio 2</span>
-<h4 class="exercise-title">Distinción entre Reglas Fijas y Flexibilidad del Modelo</h4>
-</div>
-<div class="exercise-context-box">
-<div class="exercise-context-title">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4m0-4h.01"></path></svg>
-          Enunciado de Diseño de Enrutamiento Híbrido
+                  </div>
+                </div>
+              </div>
+
+              <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+                <div class="step-num-badge" style="background:var(--accent-success);">3</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Criterio de Validación Productiva</h5>
+                  <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Al inyectar el estado resumido en lugar del historial completo sin estructurar, el modelo responde con precisión quirúrgica en menos de <b>80 tokens</b>, reduciendo la latencia de 1.8s a <b>420ms</b> y eliminando preguntas redundantes que frustran al usuario.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </article>
+
+      <!-- EJERCICIO 2 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <span class="exercise-num-badge">Ejercicio 2</span>
+          <h4 class="exercise-title">Distinción entre Reglas Fijas y Flexibilidad del Modelo</h4>
         </div>
-<p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
-          Para cada una de las siguientes situaciones, decide si debe implementarse como una regla fija inquebrantable o como una decisión delegada a Llama 3: (a) Un usuario escribe <i>"quiero hablar con un humano"</i>, (b) Un usuario pregunta <i>"¿qué síntomas debo tener para una consulta de cardiología?"</i>, (c) Un usuario intenta modificar la fecha de una cita ya confirmada.
-        </p>
-</div>
-<details class="exercise-solution-details">
-<summary class="exercise-solution-summary">
-<span>Ver Solución de Ingeniería Paso a Paso &amp; Matriz de Decisión</span>
-<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6"></path></svg>
-</summary>
-<div class="exercise-solution-panel">
-<div class="step-flow-list">
-<div class="step-flow-item">
-<div class="step-num-badge">1</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Evaluación de los 3 Escenarios</h5>
-<div class="table-responsive-wrapper" style="margin-top:0.4rem;">
-<table class="table-pro" style="font-size:0.85rem;">
-<thead>
-<tr>
-<th>Caso</th>
-<th>Clasificación Arquitectónica</th>
-<th>Justificación Técnica</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><b>(a) "Hablar con humano"</b></td>
-<td><span class="status-pill-safe">Regla Fija Determinista</span></td>
-<td>Protocolo obligatorio. No debe someterse a inferencia del LLM; el backend transfiere inmediatamente el ticket al conmutador humano.</td>
-</tr>
-<tr>
-<td><b>(b) Consulta de Síntomas</b></td>
-<td><span class="status-pill-safe">Flexibilidad LLM + RAG</span></td>
-<td>Requiere comprensión de lenguaje natural y síntesis explicativa basada en guías clínicas oficiales con descargo de responsabilidad.</td>
-</tr>
-<tr>
-<td><b>(c) Modificar Cita</b></td>
-<td><span class="status-pill-warning">Flujo Híbrido en Dos Fases</span></td>
-<td>Llama 3 extrae la nueva fecha deseada (NLU), pero la validación de cupo y la transacción SQL la ejecuta una regla fija con bloqueo de concurrencia.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="step-flow-item">
-<div class="step-num-badge">2</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Implementación en Código Python del Enrutador Híbrido</h5>
-<div class="code-box" style="margin-top:0.4rem;">
-<div class="code-header">
-<span class="code-lang">Python 3.11 · Enrutador Defensivo</span>
+        <div class="exercise-context-box">
+          <div class="exercise-context-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            Enunciado de Diseño de Enrutamiento Híbrido
+          </div>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+            Para cada una de las siguientes situaciones, decide si debe implementarse como una regla fija inquebrantable o como una decisión delegada a Llama 3: (a) Un usuario escribe <i>"quiero hablar con un humano"</i>, (b) Un usuario pregunta <i>"¿qué síntomas debo tener para una consulta de cardiología?"</i>, (c) Un usuario intenta modificar la fecha de una cita ya confirmada.
+          </p>
+        </div>
 
-<div class="code-actions"><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button><button class="btn-download-code" onclick="downloadCode(this)">Descargar</button></div></div>
-<pre class="code-content"><code class="language-python"><span class="code-kw">import</span> <span class="code-var">re</span>
+        <details class="exercise-solution-details">
+          <summary class="exercise-solution-summary">
+            <span>Ver Solución de Ingeniería Paso a Paso &amp; Matriz de Decisión</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="exercise-solution-panel">
+            <div class="step-flow-list">
+              <div class="step-flow-item">
+                <div class="step-num-badge">1</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Evaluación de los 3 Escenarios</h5>
+                  <div class="table-responsive-wrapper" style="margin-top:0.4rem;">
+                    <table class="table-pro" style="font-size:0.85rem;">
+                      <thead>
+                        <tr>
+                          <th>Caso</th>
+                          <th>Clasificación Arquitectónica</th>
+                          <th>Justificación Técnica</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><b>(a) "Hablar con humano"</b></td>
+                          <td><span class="status-pill-safe">Regla Fija Determinista</span></td>
+                          <td>Protocolo obligatorio. No debe someterse a inferencia del LLM; el backend transfiere inmediatamente el ticket al conmutador humano.</td>
+                        </tr>
+                        <tr>
+                          <td><b>(b) Consulta de Síntomas</b></td>
+                          <td><span class="status-pill-safe">Flexibilidad LLM + RAG</span></td>
+                          <td>Requiere comprensión de lenguaje natural y síntesis explicativa basada en guías clínicas oficiales con descargo de responsabilidad.</td>
+                        </tr>
+                        <tr>
+                          <td><b>(c) Modificar Cita</b></td>
+                          <td><span class="status-pill-warning">Flujo Híbrido en Dos Fases</span></td>
+                          <td>Llama 3 extrae la nueva fecha deseada (NLU), pero la validación de cupo y la transacción SQL la ejecuta una regla fija con bloqueo de concurrencia.</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
 
-<span class="code-kw">def</span> <span class="code-fn">enrutar_mensaje</span>(texto: <span class="code-var">str</span>, wa_id: <span class="code-var">str</span>):
-    t_lower = texto.<span class="code-fn">lower</span>().<span class="code-fn">strip</span>()
+              <div class="step-flow-item">
+                <div class="step-num-badge">2</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Implementación en Código Python del Enrutador Híbrido</h5>
+                  <div class="code-box" style="margin-top:0.4rem;">
+                    <div class="code-header">
+                      <span class="code-lang">Python 3.11 · enrutador_defensivo.py</span>
+                      <div class="code-actions">
+                        <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                        <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+                      </div>
+                    </div>
+                    <pre class="code-content"><code class="language-python"><span class="code-kw">import</span> <span class="code-var">re</span>
+
+<span class="code-kw">def</span> <span class="code-fn">enrutar_mensaje</span>(<span class="code-var">texto</span>: <span class="code-type">str</span>, <span class="code-var">wa_id</span>: <span class="code-type">str</span>):
+    <span class="code-var">t_lower</span> = <span class="code-var">texto</span>.<span class="code-fn">lower</span>().<span class="code-fn">strip</span>()
     <span class="code-cm"># 1. Regla Determinista de Transferencia</span>
-    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"(humano|asesor|agente|operador|persona)"</span>, t_lower):
-        <span class="code-kw">return</span> <span class="code-fn">transferir_a_humano</span>(wa_id)
+    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"(humano|asesor|agente|operador|persona)"</span>, <span class="code-var">t_lower</span>):
+        <span class="code-kw">return</span> <span class="code-fn">transferir_a_humano</span>(<span class="code-var">wa_id</span>)
     
     <span class="code-cm"># 2. Regla de Emergencia Médica</span>
-    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"(sangrado|infarto|emergencia|ambulancia|grave)"</span>, t_lower):
-        <span class="code-kw">return</span> <span class="code-fn">activar_protocolo_urgencias</span>(wa_id)
+    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"(sangrado|infarto|emergencia|ambulancia|grave)"</span>, <span class="code-var">t_lower</span>):
+        <span class="code-kw">return</span> <span class="code-fn">activar_protocolo_urgencias</span>(<span class="code-var">wa_id</span>)
         
     <span class="code-cm"># 3. Delegación a Llama 3 para Consulta / NLU</span>
-    <span class="code-kw">return</span> <span class="code-fn">ejecutar_agente_llama3</span>(texto, wa_id)</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</details>
-</article>
-<!-- EJERCICIO 3 -->
-<article class="exercise-card">
-<div class="exercise-header">
-<span class="exercise-num-badge">Ejercicio 3</span>
-<h4 class="exercise-title">Análisis de Costo y Saturación de la Ventana de Contexto</h4>
-</div>
-<div class="exercise-context-box">
-<div class="exercise-context-title">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4m0-4h.01"></path></svg>
-          Enunciado de Optimización de Cómputo &amp; VRAM
-        </div>
-<p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
-          Explica por qué reenviar todo el historial completo en cada llamada afecta directamente el uso de la ventana de contexto y la latencia. Propón una estrategia de compresión para mantener la coherencia conversacional sin saturar el contexto.
-        </p>
-</div>
-<details class="exercise-solution-details">
-<summary class="exercise-solution-summary">
-<span>Ver Solución de Ingeniería Paso a Paso &amp; Algoritmo de Compresión</span>
-<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6"></path></svg>
-</summary>
-<div class="exercise-solution-panel">
-<div class="step-flow-list">
-<div class="step-flow-item">
-<div class="step-num-badge">1</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Fórmula del Crecimiento Cuadrático de Tokens</h5>
-<p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  Si se reenvía el historial completo en una conversación de $N$ turnos con longitud promedio $ar{L}$, el consumo acumulado de tokens crece de forma cuadrática:
-                </p>
-<div class="formula-card" style="margin:0.4rem 0;">
-<div class="formula-math-area">
-                    $$C_{	ext{total}} = \sum_{t=1}^{N} \left(T_{	ext{sys}} + 2 \cdot t \cdot ar{L}
-ight) = N \cdot T_{	ext{sys}} + N(N+1) \cdot ar{L}$$
+    <span class="code-kw">return</span> <span class="code-fn">ejecutar_agente_llama3</span>(<span class="code-var">texto</span>, <span class="code-var">wa_id</span>)</code></pre>
                   </div>
-</div>
-<p style="margin:0.4rem 0 0 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  Para una conversación de 15 turnos con $ar{L} = 50$ tokens y $T_{	ext{sys}} = 200$, el método ingenuo procesa <b>14,550 tokens</b>, elevando la latencia de la fase de <i>Prefill</i> en GPU y multiplicando el costo en APIs.
-                </p>
-</div>
-</div>
-<div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
-<div class="step-num-badge" style="background:var(--accent-success);">2</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Estrategia de Compresión Híbrida (Sliding Window + Summary)</h5>
-<p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  • <b>Ventana Deslizante Fija ($K=3$ turnos):</b> Conserva los últimos 3 intercambios verbatim para preservar la fluidez inmediata.<br/>
-                  • <b>Resumen Incremental de Entidades:</b> Cada 5 turnos, un sub-proceso asíncrono actualiza un resumen estructurado en JSON (<i>"Usuario: Juan, busca: endodoncia, cita: sábado 10am"</i>).<br/>
-                  • <b>Resultado en Producción:</b> Consumo constante de $pprox 450$ tokens por llamada independientemente de si la conversación dura 5 o 50 turnos, logrando un <b>ahorro de cómputo del 69%</b>.
-                </p>
-</div>
-</div>
-</div>
-</div>
-</details>
-</article>
-</section>
-<!-- ==========================================================================
-  GLOSARIO TÉCNICO OFICIAL
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </article>
+
+      <!-- EJERCICIO 3 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <span class="exercise-num-badge">Ejercicio 3</span>
+          <h4 class="exercise-title">Análisis de Costo y Saturación de la Ventana de Contexto</h4>
+        </div>
+        <div class="exercise-context-box">
+          <div class="exercise-context-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            Enunciado de Optimización de Cómputo &amp; VRAM
+          </div>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+            Explica por qué reenviar todo el historial completo en cada llamada afecta directamente el uso de la ventana de contexto y la latencia. Propón una estrategia de compresión para mantener la coherencia conversacional sin saturar el contexto.
+          </p>
+        </div>
+
+        <details class="exercise-solution-details">
+          <summary class="exercise-solution-summary">
+            <span>Ver Solución de Ingeniería Paso a Paso &amp; Algoritmo de Compresión</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="exercise-solution-panel">
+            <div class="step-flow-list">
+              <div class="step-flow-item">
+                <div class="step-num-badge">1</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Fórmula del Crecimiento Cuadrático de Tokens</h5>
+                  <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Si se reenvía el historial completo en una conversación de \(N\) turnos con longitud promedio \(ar{L}\), el consumo acumulado de tokens crece de forma cuadrática:
+                  </p>
+                  <div class="formula-card" style="margin:0.4rem 0;">
+                    <div class="formula-math-area">
+                      $$C_{	ext{total}} = \sum_{t=1}^{N} \Big( T_{	ext{sys}} + 2 \cdot t \cdot ar{L} \Big) = N \cdot T_{	ext{sys}} + N(N+1) \cdot ar{L}$$
+                    </div>
+                  </div>
+                  <p style="margin:0.4rem 0 0 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Para una conversación de 15 turnos con \(ar{L} = 50\) tokens y \(T_{	ext{sys}} = 200\), el método ingenuo procesa <b>14,550 tokens</b>, elevando la latencia de la fase de <i>Prefill</i> en GPU y multiplicando el costo en APIs.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+                <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Estrategia de Compresión Híbrida (Sliding Window + Summary)</h5>
+                  <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    • <b>Ventana Deslizante Fija (\(K=3\) turnos):</b> Conserva los últimos 3 intercambios verbatim para preservar la fluidez inmediata.<br/>
+                    • <b>Resumen Incremental de Entidades:</b> Cada 5 turnos, un sub-proceso asíncrono actualiza un resumen estructurado en JSON (<i>"Usuario: Juan, busca: endodoncia, cita: sábado 10am"</i>).<br/>
+                    • <b>Resultado en Producción:</b> Consumo constante de \(pprox 450\) tokens por llamada independientemente de si la conversación dura 5 o 50 turnos, logrando un <b>ahorro de cómputo del 69%</b>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </article>
+
+    </section>
+
+    <!-- ==========================================================================
+      GLOSARIO TÉCNICO OFICIAL
+      ========================================================================== -->
+    <section class="module-block" id="glosario" style="margin-bottom: 4rem;">
+      <div class="module-header">
+        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Diccionario de Conceptos</div>
+        <h2 class="module-title">Glosario Técnico Oficial · Unidad 2.2</h2>
+        <p class="module-desc">Definiciones clave sobre arquitectura de agentes, persistencia de estado y Llama Stack.</p>
+      </div>
+
+      <div style="margin-bottom: 1.5rem; display:flex; flex-direction:column; gap:1rem;">
+        <input type="text" id="glossary-search-input" class="bench-input-clean" placeholder="Buscar término en el glosario (ej. Estado, Llama Stack, Ventana de Contexto)..." style="width:100%; box-sizing:border-box;" />
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <button class="glossary-filter-pill active" data-category="todos">Todos</button>
+          <button class="glossary-filter-pill" data-category="agentes">Agentes &amp; Estado</button>
+          <button class="glossary-filter-pill" data-category="stack">Llama Stack</button>
+          <button class="glossary-filter-pill" data-category="optimizacion">Optimización &amp; Cómputo</button>
+        </div>
+      </div>
+
+      <div class="glossary-stack" style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="glossary-row-item" data-category="agentes" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Estado de la Conversación</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Información activa (historial de mensajes, variables recolectadas y metadatos de sesión) que se mantiene fuera del modelo entre turnos de una conversación para permitir continuidad lógica.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="stack" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Llama Stack</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Conjunto estandarizado de componentes y APIs de arquitectura para construir agentes basados en Llama, agrupando memoria, herramientas y seguridad en módulos reutilizables.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="agentes" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">Flujo Conversacional</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Diseño de la conducción de una conversación automatizada que equilibra reglas fijas para decisiones críticas con la libertad del modelo para interpretar lenguaje natural y responder con fluidez.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="optimizacion" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Ventana de Contexto</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Cantidad total de texto, medida en tokens, que un modelo puede procesar en una sola inferencia (ej. 128k en Llama 3); define el límite físico de memoria que se puede inyectar en cada interacción.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="agentes" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ec4899; font-size:1.05rem;">Identificador de Usuario (wa_id)</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Dato único (número telefónico internacional en WhatsApp) que permite asociar el estado y las variables de una conversación con la persona correcta en bases de datos multi-inquilino.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+      FUENTES OFICIALES & BIBLIOGRAFÍA
+      ========================================================================== -->
+    <section id="fuentes-oficiales" style="margin-bottom: 4rem;">
+      <div class="module-header">
+        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Repositorios</div>
+        <h2 class="module-title">Fuentes de Referencia de la Unidad 2.2</h2>
+      </div>
+
+      <div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Meta AI</span>
+            <span class="source-type-pill">Repositorio Oficial</span>
+          </div>
+          <h4 class="source-title">Llama Stack Specification &amp; SDK</h4>
+          <p class="source-desc">Especificación técnica abierta de APIs estandarizadas para memoria, herramientas, evaluación y despliegue de agentes Llama.</p>
+          <a href="https://github.com/meta-llama/llama-stack" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>github.com/meta-llama/llama-stack &rarr;</span>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Meta AI Research</span>
+            <span class="source-type-pill">Paper Científico</span>
+          </div>
+          <h4 class="source-title">The Llama 3 Herd of Models</h4>
+          <p class="source-desc">Detalles sobre la ventana de contexto de 128k tokens, Grouped-Query Attention y capacidades avanzadas de razonamiento conversacional.</p>
+          <a href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>ai.meta.com/research &rarr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+      PAGINACIÓN INFERIOR ESTILO GITHUB
+      ========================================================================== -->
+    <nav class="course-pagination-nav" aria-label="Navegación del Curso">
+      <a href="modulo2-tema1.html" class="pagination-link pagination-link--prev">
+        <div class="pagination-link__sublabel">
+          <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          <span>Tema Anterior</span>
+        </div>
+        <div class="pagination-link__label">
+          <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Unidad 2.1 · WhatsApp Cloud API &amp; Webhooks</span>
+        </div>
+      </a>
+
+      <a href="modulo2-tema3.html" class="pagination-link pagination-link--next">
+        <div class="pagination-link__sublabel">
+          <span>Siguiente Tema</span>
+          <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+        </div>
+        <div class="pagination-link__label">
+          <span>Unidad 2.3 · Integración Llama + Function Calling</span>
+          <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </nav>
+
+  </main>
+
+  <!-- ==========================================================================
+   FOOTER CON AUTORÍA OFICIAL
   ========================================================================== -->
-<section class="module-block" id="glosario" style="margin-bottom: 4rem;">
-<div class="module-header">
-<div class="tema-eyebrow" style="margin-bottom:0.6rem;">Diccionario de Conceptos</div>
-<h2 class="module-title">Glosario Técnico Oficial · Unidad 2.2</h2>
-<p class="module-desc">Definiciones clave sobre arquitectura de agentes, persistencia de estado y Llama Stack.</p>
-</div>
-<div style="margin-bottom: 1.5rem; display:flex; flex-direction:column; gap:1rem;">
-<input class="bench-input-clean" id="glossary-search-input" placeholder="Buscar término en el glosario (ej. Estado, Llama Stack, Ventana de Contexto)..." style="width:100%; box-sizing:border-box;" type="text"/>
-<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-<button class="glossary-filter-pill active" data-category="todos">Todos</button>
-<button class="glossary-filter-pill" data-category="agentes">Agentes &amp; Estado</button>
-<button class="glossary-filter-pill" data-category="stack">Llama Stack</button>
-<button class="glossary-filter-pill" data-category="optimizacion">Optimización &amp; Cómputo</button>
-</div>
-</div>
-<div class="glossary-stack" style="display:flex; flex-direction:column; gap:1rem;">
-<div class="glossary-row-item" data-category="agentes" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Estado de la Conversación</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Información activa (historial de mensajes, variables recolectadas y metadatos de sesión) que se mantiene fuera del modelo entre turnos de una conversación para permitir continuidad lógica.
-        </div>
-</div>
-<div class="glossary-row-item" data-category="stack" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Llama Stack</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Conjunto estandarizado de componentes y APIs de arquitectura para construir agentes basados en Llama, agrupando memoria, herramientas y seguridad en módulos reutilizables.
-        </div>
-</div>
-<div class="glossary-row-item" data-category="agentes" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">Flujo Conversacional</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Diseño de la conducción de una conversación automatizada que equilibra reglas fijas para decisiones críticas con la libertad del modelo para interpretar lenguaje natural y responder con fluidez.
-        </div>
-</div>
-<div class="glossary-row-item" data-category="optimizacion" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Ventana de Contexto</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Cantidad total de texto, medida en tokens, que un modelo puede procesar en una sola inferencia (ej. 128k en Llama 3); define el límite físico de memoria que se puede inyectar en cada interacción.
-        </div>
-</div>
-<div class="glossary-row-item" data-category="agentes" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ec4899; font-size:1.05rem;">Identificador de Usuario (wa_id)</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Dato único (número telefónico internacional en WhatsApp) que permite asociar el estado y las variables de una conversación con la persona correcta en bases de datos multi-inquilino.
-        </div>
-</div>
-</div>
-</section>
-<!-- ==========================================================================
-  FUENTES OFICIALES & BIBLIOGRAFÍA
-  ========================================================================== -->
-<section id="fuentes-oficiales" style="margin-bottom: 4rem;">
-<div class="module-header">
-<div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Repositorios</div>
-<h2 class="module-title">Fuentes de Referencia de la Unidad 2.2</h2>
-</div>
-<div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-<div class="source-card">
-<div class="source-card-header">
-<span class="source-tag">Meta AI</span>
-<span class="source-type-pill">Repositorio Oficial</span>
-</div>
-<h4 class="source-title">Llama Stack Specification &amp; SDK</h4>
-<p class="source-desc">Especificación técnica abierta de APIs estandarizadas para memoria, herramientas, evaluación y despliegue de agentes Llama.</p>
-<a class="source-link-btn" href="https://github.com/meta-llama/llama-stack" rel="noopener noreferrer" target="_blank">
-<span>github.com/meta-llama/llama-stack →</span>
-</a>
-</div>
-<div class="source-card">
-<div class="source-card-header">
-<span class="source-tag">Meta AI Research</span>
-<span class="source-type-pill">Paper Científico</span>
-</div>
-<h4 class="source-title">The Llama 3 Herd of Models</h4>
-<p class="source-desc">Detalles sobre la ventana de contexto de 128k tokens, Grouped-Query Attention y capacidades avanzadas de razonamiento conversacional.</p>
-<a class="source-link-btn" href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" rel="noopener noreferrer" target="_blank">
-<span>ai.meta.com/research →</span>
-</a>
-</div>
-</div>
-</section>
-<!-- ==========================================================================
-  PAGINACIÓN INFERIOR ESTILO GITHUB
-  ========================================================================== -->
-<nav aria-label="Navegación del Curso" class="course-pagination-nav">
-<a class="pagination-link pagination-link--prev" href="modulo2-tema1.html">
-<div class="pagination-link__sublabel">
-<svg class="nav-arrow-svg" fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
-<span>Tema Anterior</span>
-</div>
-<div class="pagination-link__label">
-<svg class="nav-arrow-svg" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="18"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
-<span>Unidad 2.1 · WhatsApp Cloud API &amp; Webhooks</span>
-</div>
-</a>
-<a class="pagination-link pagination-link--next" href="modulo2-tema3.html">
-<div class="pagination-link__sublabel">
-<span>Siguiente Tema</span>
-<svg class="nav-arrow-svg" fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path></svg>
-</div>
-<div class="pagination-link__label">
-<span>Unidad 2.3 · Integración Llama + Function Calling</span>
-<svg class="nav-arrow-svg" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="18"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-</div>
-</a>
-</nav>
-</main>
-<!-- ==========================================================================
- FOOTER CON AUTORÍA OFICIAL
-========================================================================== -->
-<footer class="course-footer">
-<div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem;">
-<h2 style="font-size: 1.85rem; font-family: var(--font-disp); margin-bottom: 0.8rem; color: var(--text-primary);">Unidad 2.2 Completada</h2>
-<p style="color: var(--text-secondary); margin-bottom: 1.6rem; font-size: 1.05rem;">Continúa con la Unidad 2.3 para implementar Function Calling y Tool Calling en WhatsApp o interactúa con los laboratorios de memoria.</p>
-<a class="btn-secondary" href="#overview">Volver arriba</a>
-<div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; gap: 0.35rem;">
-<p style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">
-        Página creada por <span style="color: var(--text-primary); font-weight: 700;">Ing. Jesús Javier Hernandez Olvera</span>
-</p>
-<p style="font-size: 0.82rem; color: var(--text-muted);">Meta AI · Formación en Ingeniería de Inteligencia Artificial</p>
-</div>
-</div>
-</footer>
+  <footer class="course-footer">
+    <div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem;">
+      <h2 style="font-size: 1.85rem; font-family: var(--font-disp); margin-bottom: 0.8rem; color: var(--text-primary);">Unidad 2.2 Completada</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1.6rem; font-size: 1.05rem;">Continúa con la Unidad 2.3 para implementar Function Calling y Tool Calling en WhatsApp o interactúa con los laboratorios de memoria.</p>
+      <a href="#overview" class="btn-secondary">Volver arriba</a>
+      <div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; gap: 0.35rem;">
+        <p style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">
+          Página creada por <span style="color: var(--text-primary); font-weight: 700;">Ing. Jesús Javier Hernandez Olvera</span>
+        </p>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Meta AI · Formación en Ingeniería de Inteligencia Artificial</p>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
