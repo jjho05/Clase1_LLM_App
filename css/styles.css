@@ -6222,3 +6222,24 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
   width: 100%;
 }
 
+/* Grid balanceado de 4 objetivos (2x2 simétrico en desktop/tablet, 4x1 en ultra-wide, 1 col en móvil) */
+.learning-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 1280px) {
+  .learning-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .learning-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+
