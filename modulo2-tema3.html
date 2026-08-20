@@ -416,6 +416,12 @@
     <div class="workbench-section" style="margin-bottom:3rem;">
       <div class="workbench-top">
         <span class="workbench-label">Banco 2.3.1 · Simulador Visual de Function Calling en Vivo (Llama 3 Tool Dispatcher)</span>
+        <div class="workbench-actions">
+          <button class="btn-reset-sm" id="fc-btn-reset" title="Restablecer simulador de Function Calling">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
+        </div>
       </div>
       <div style="padding:1.5rem;">
         
@@ -446,7 +452,7 @@
               <div class="bubble-text" id="fc-final-reply">Haz clic en "Ejecutar Ciclo de Function Calling" para ver la respuesta en vivo...</div>
               <div class="bubble-time">10:00 AM · Meta AI</div>
             </div>
-            <div style="font-size:0.72rem; color:#00a884; text-align:right;">✓✓ Entregado vía Graph API</div>
+            <div style="font-size:0.72rem; color:#00a884; text-align:right;">Entregado vía Graph API</div>
           </div>
         </div>
 
@@ -457,6 +463,12 @@
     <div class="workbench-section" style="margin-bottom:3rem;">
       <div class="workbench-top">
         <span class="workbench-label">Banco 2.3.2 · Diseñador &amp; Validador de Esquemas JSON Schema para Herramientas</span>
+        <div class="workbench-actions">
+          <button class="btn-reset-sm" id="schema-btn-reset" title="Restablecer diseñador de esquema">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
+        </div>
       </div>
       <div style="padding:1.5rem;">
         <div style="display:grid; grid-template-columns:1.1fr 1.3fr; gap:1.5rem;">
@@ -504,6 +516,10 @@
         <span class="workbench-label">Banco 2.3.3 · Desglosador y Calculador de Latencia Waterfall E2E</span>
         <div class="workbench-actions">
           <span class="bench-badge-status status-success" id="lat-status-pill">ÓPTIMO</span>
+          <button class="btn-reset-sm" id="lat-btn-reset" title="Restablecer latencias por defecto">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
         </div>
       </div>
       <div style="padding:1.5rem;">
@@ -599,6 +615,12 @@
     <div class="workbench-section" style="margin-bottom:3rem;">
       <div class="workbench-top">
         <span class="workbench-label">Banco 2.3.5 · Laboratorio de Manejo de Excepciones y Graceful Fallbacks</span>
+        <div class="workbench-actions">
+          <button class="btn-reset-sm" id="fb-btn-reset" title="Restablecer laboratorio de fallbacks">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
+        </div>
       </div>
       <div style="padding:1.5rem;">
         <div style="margin-bottom:1.2rem;">
@@ -621,67 +643,220 @@
   ========================================================================== -->
   <section class="module-block" id="ejercicios" style="margin-bottom: 4rem;">
     <div class="module-header">
-      <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Autoevaluación Práctica</div>
+      <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Autoevaluación Práctica &amp; Análisis de Sistemas</div>
       <h2 class="module-title">Ejercicios Prácticos Oficiales de la Unidad 2.3</h2>
-      <p class="module-desc">Resuelve los 3 ejercicios de Function Calling, latencia e idempotencia del temario oficial.</p>
+      <p class="module-desc">Resuelve los 3 ejercicios de Function Calling, presupuestos de latencia y contratos de tipado del temario oficial.</p>
     </div>
 
     <!-- EJERCICIO 1 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--meta-blue); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 1</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Diseño del Esquema de Herramienta para Reserva de Mesa</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 1</span>
+        <h4 class="exercise-title">Diseño del Esquema de Herramienta para Reserva de Mesa</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Escribe la especificación completa en JSON Schema para una herramienta llamada <code>confirmar_reserva</code> que requiera obligatoriamente: <code>nombre_cliente</code>, <code>telefono</code>, <code>personas</code> y <code>fecha_hora</code>. Justifica por qué los tipos de datos deben ser estrictos.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(8,102,255,0.05); border-left:4px solid var(--meta-blue); border-radius:8px;">
-        <h5 style="color:var(--meta-blue); margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          El esquema debe contener <code>type: "object"</code> con <code>required: ["nombre_cliente", "telefono", "personas", "fecha_hora"]</code>. Tipar <code>personas</code> como <code>integer</code> y <code>fecha_hora</code> como formato ISO <code>string</code> previene inyecciones SQL y errores de casteo en el ORM de base de datos.
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Contrato de API
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Escribe la especificación completa en JSON Schema para una herramienta llamada <code>confirmar_reserva</code> que requiera obligatoriamente: <code>nombre_cliente</code>, <code>telefono</code>, <code>personas</code> y <code>fecha_hora</code>. Justifica por qué los tipos de datos deben ser estrictos y cómo previene fallos en bases de datos relacionales.
         </p>
       </div>
+
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; JSON Schema Formal</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Especificación JSON Schema Estandarizada</h5>
+                <div class="code-box" style="margin-top:0.4rem;">
+                  <div class="code-header">
+                    <span class="code-lang">JSON Schema · Llama 3 Compatible</span>
+                    <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                  </div>
+                  <pre class="code-content"><code class="language-json">{
+  "name": "confirmar_reserva",
+  "description": "Registra una reservación de mesa formal en el sistema de gestión del restaurante.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "nombre_cliente": {
+        "type": "string",
+        "description": "Nombre y apellido de la persona que reserva."
+      },
+      "telefono": {
+        "type": "string",
+        "pattern": "^\+[1-9]\d{1,14}$",
+        "description": "Teléfono internacional en formato E.164 (ej. +5215587654321)."
+      },
+      "personas": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20,
+        "description": "Cantidad exacta de comensales (debe ser un número entero)."
+      },
+      "fecha_hora": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Fecha y hora en formato ISO 8601 (ej. 2026-08-23T20:00:00-06:00)."
+      }
+    },
+    "required": ["nombre_cliente", "telefono", "personas", "fecha_hora"]
+  }
+}</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+              <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Justificación de Seguridad &amp; Integridad de Datos</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>Tipado Estricto de <code>personas: integer</code>:</b> Si Llama 3 emitiera <code>"cuatro"</code> (texto), el ORM de SQLAlchemy fallaría con <code>DataError: invalid input syntax for type integer</code>, abortando la transacción.<br>
+                  • <b>Formato ISO 8601 en <code>fecha_hora</code>:</b> Previene ambigüedades de zona horaria (UTC vs Local) y asegura compatibilidad con índices temporales B-Tree en PostgreSQL.<br>
+                  • <b>Regex en <code>telefono</code>:</b> Garantiza que el número sea invocable mediante WhatsApp Graph API sin errores de enrutamiento telefónico.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 2 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--accent-success); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 2</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Cálculo y Optimización de la Latencia del Ciclo</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 2</span>
+        <h4 class="exercise-title">Cálculo y Optimización de la Latencia del Ciclo Completo</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Si la primera inferencia de Llama toma 1,200 ms, la consulta a base de datos tarda 400 ms y la segunda inferencia toma 1,300 ms (más 400 ms de red en webhooks), ¿cuál es la latencia total? ¿Qué estrategia implementarías si la base de datos sube su tiempo a 3,000 ms?
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(16,185,129,0.05); border-left:4px solid var(--accent-success); border-radius:8px;">
-        <h5 style="color:var(--accent-success); margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          <b>Latencia Total Actual:</b> <code>1200 + 400 + 1300 + 400 = 3,300 ms (3.3s)</code>.
-          <br><br>
-          <b>Estrategia ante lentitud de DB (3.0s):</b> La latencia total subiría a 5.9s. La solución es enviar un mensaje de estado intermedio inmediato en WhatsApp (<i>"Revisando disponibilidad en cocina..."</i>) y despachar la respuesta con <code>BackgroundTasks</code> al terminar la base de datos.
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Presupuesto de Rendimiento SLA
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Si la primera inferencia de Llama toma 1,200 ms, la consulta a base de datos tarda 400 ms y la segunda inferencia toma 1,300 ms (más 400 ms de red en webhooks), ¿cuál es la latencia total? ¿Qué estrategia implementarías si la base de datos sube su tiempo a 3,000 ms?
         </p>
       </div>
+
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Desglose Waterfall</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Desglose Matemático de la Latencia E2E</h5>
+                <div class="formula-card" style="margin:0.4rem 0;">
+                  <div class="formula-math-area">
+                    $$T_{	ext{total}} = T_{	ext{in}} + T_{	ext{inferencia\_1}} + T_{	ext{DB}} + T_{	ext{inferencia\_2}} + T_{	ext{out}}$$
+                    $$T_{	ext{total}} = 200	ext{ms} + 1200	ext{ms} + 400	ext{ms} + 1300	ext{ms} + 200	ext{ms} = 3,300	ext{ms} \quad (3.30	ext{ segundos})$$
+                  </div>
+                </div>
+                <p style="margin:0.4rem 0 0 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Una latencia de 3.3s se encuentra en el límite de la tolerancia conversacional en mensajería móvil.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+              <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Estrategia Arquitectónica ante Latencia de DB Elevada ($T_{	ext{DB}} = 3.0	ext{s}$)</h5>
+                <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Sin optimización, la latencia total escalaría a <b>5.90 segundos</b>, provocando que el usuario piense que el bot se trabó o vuelva a escribir.
+                </p>
+                <div class="step-flow-list">
+                  <div class="step-flow-item" style="border-left-color:var(--meta-blue);">
+                    <div class="step-flow-content">
+                      <strong style="color:var(--meta-blue); font-size:0.9rem;">1. Mensaje de Estado Intermedio (Sub-300ms):</strong>
+                      <p style="margin:0.2rem 0 0 0; font-size:0.85rem; color:var(--text-secondary);">El webhook despacha de inmediato un mensaje efímero: <i>"Consultando disponibilidad en cocina, un momento por favor..."</i>.</p>
+                    </div>
+                  </div>
+                  <div class="step-flow-item" style="border-left-color:var(--accent-success);">
+                    <div class="step-flow-content">
+                      <strong style="color:var(--accent-success); font-size:0.9rem;">2. Desacoplamiento Asíncrono con BackgroundTasks / Celery:</strong>
+                      <p style="margin:0.2rem 0 0 0; font-size:0.85rem; color:var(--text-secondary);">El backend libera el hilo del servidor HTTP y procesa la DB + Inferencia 2 en segundo plano, enviando la confirmación final por Graph API cuando el cómputo finaliza.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 3 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--meta-purple); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 3</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Diagnóstico de Fallo en Ejecución de Herramientas</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 3</span>
+        <h4 class="exercise-title">Diagnóstico de Fallo y Auto-Corrección en Ejecución de Herramientas</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Llama genera un JSON con <code>personas: "cuatro"</code> (string) cuando la función exige <code>personas: 4</code> (integer). Explica qué capa debe atrapar este error de validación y cómo debe reaccionar el agente sin colapsar el servicio.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(139,92,246,0.05); border-left:4px solid var(--meta-purple); border-radius:8px;">
-        <h5 style="color:var(--meta-purple); margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          La capa de validación en Python (mediante modelos de <b>Pydantic</b>) atrapa el error de tipo. Si el conversor automático falla, el backend le pasa a Llama un mensaje de error explicativo (<code>tool_result: "Error: personas debe ser un número entero"</code>) para que el modelo le pida la aclaración amablemente al usuario sin romper el webhook.
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Resiliencia y Auto-Healing
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Llama genera un JSON con <code>personas: "cuatro"</code> (string) cuando la función exige <code>personas: 4</code> (integer). Explica qué capa debe atrapar este error de validación y cómo debe reaccionar el agente sin colapsar el servicio ni romper el webhook de WhatsApp.
         </p>
       </div>
-    </article>
 
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Patrón de Reintento de Dos Pasos</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Capa de Validación con Pydantic v2</h5>
+                <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  El error debe ser capturado por la capa de validación del backend (FastAPI/Pydantic) <b>antes</b> de invocar a la base de datos:
+                </p>
+                <div class="code-box">
+                  <pre class="code-content"><code class="language-python"><span class="code-kw">from</span> <span class="code-var">pydantic</span> <span class="code-kw">import</span> <span class="code-fn">BaseModel</span>, <span class="code-fn">ValidationError</span>
+
+<span class="code-kw">class</span> <span class="code-fn">ReservaArgs</span>(<span class="code-fn">BaseModel</span>):
+    <span class="code-var">nombre_cliente</span>: <span class="code-var">str</span>
+    <span class="code-var">personas</span>: <span class="code-var">int</span>
+    <span class="code-var">fecha_hora</span>: <span class="code-var">str</span>
+
+<span class="code-kw">try</span>:
+    args = <span class="code-fn">ReservaArgs</span>.<span class="code-fn">model_validate_json</span>(raw_tool_args_str)
+<span class="code-kw">except</span> <span class="code-fn">ValidationError</span> <span class="code-kw">as</span> err:
+    <span class="code-cm"># Captura controlada del error sin lanzar HTTP 500</span>
+    error_msg = f<span class="code-str">"Error en argumento 'personas': Se recibió un string, pero se requiere un entero numérico (ej. 4)."</span></code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:var(--meta-purple); background:rgba(139,92,246,0.04);">
+              <div class="step-num-badge" style="background:#8b5cf6;">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:#8b5cf6;">Ciclo de Auto-Corrección (Self-Healing Loop)</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  En lugar de romper el servicio, el backend inyecta un mensaje de rol <code>tool</code> con el error estructurado: <code>{"tool_call_id": "call_123", "content": "ValidationError: 'personas' debe ser entero"}</code>. En la siguiente pasada, Llama 3 detecta su propia discrepancia y corrige automáticamente el payload a <code>{"personas": 4}</code> o formula una pregunta clarificatoria amigable al cliente.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </article>
   </section>
 
   <!-- ==========================================================================

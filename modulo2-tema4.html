@@ -382,6 +382,10 @@
         <span class="workbench-label">Banco 2.4.1 · Simulador de Blindaje Dual: Llama Guard 3 &amp; Prompt Guard</span>
         <div class="workbench-actions">
           <span class="bench-badge-status status-info" id="shield-decision-pill">Esperando Mensaje</span>
+          <button class="btn-reset-sm" id="shield-btn-reset" title="Restablecer simulador de blindaje">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
         </div>
       </div>
       <div style="padding:1.5rem;">
@@ -416,6 +420,12 @@
     <div class="workbench-section" style="margin-bottom:3rem;">
       <div class="workbench-top">
         <span class="workbench-label">Banco 2.4.2 · Inspector de Arquitectura del Pipeline de Producción E2E</span>
+        <div class="workbench-actions">
+          <button class="btn-reset-sm" id="arch-btn-reset" title="Restablecer inspector de capas">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
+        </div>
       </div>
       <div style="padding:1.5rem;">
         <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1.2rem;">
@@ -469,6 +479,10 @@
           <button class="deploy-tab-btn api-tab-btn active" data-type="docker">Docker Compose</button>
           <button class="deploy-tab-btn api-tab-btn" data-type="systemd">Servicio Systemd Linux</button>
           <button class="deploy-tab-btn api-tab-btn" data-type="nginx">NGINX Conf + SSL</button>
+          <button class="btn-reset-sm" id="deploy-btn-reset" title="Restablecer a Docker Compose">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
         </div>
       </div>
       <div style="padding:1.5rem;">
@@ -487,7 +501,11 @@
       <div class="workbench-top">
         <span class="workbench-label">Banco 2.4.4 · Dashboard de Telemetría &amp; Métricas Operativas en Vivo</span>
         <div class="workbench-actions">
-          <button class="btn-primary" id="dash-btn-burst" style="padding:0.35rem 0.85rem; font-size:0.78rem;">Simular Ráfaga de Tráfico (+250 mensajes)</button>
+          <button class="btn-primary" id="dash-btn-burst" style="padding:0.35rem 0.85rem; font-size:0.78rem;">Simular Ráfaga (+250 msgs)</button>
+          <button class="btn-reset-sm" id="dash-btn-reset" title="Restablecer métricas base">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
         </div>
       </div>
       <div style="padding:1.5rem;">
@@ -520,6 +538,12 @@
     <div class="workbench-section" style="margin-bottom:3rem;">
       <div class="workbench-top">
         <span class="workbench-label">Banco 2.4.5 · Simulador de Plan de Contingencia y Circuit Breaker</span>
+        <div class="workbench-actions">
+          <button class="btn-reset-sm" id="dr-btn-reset" title="Restablecer simulador de contingencia">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
+        </div>
       </div>
       <div style="padding:1.5rem;">
         <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.2rem;">
@@ -543,88 +567,258 @@
     <div class="module-header">
       <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Proyecto Integrador · Autoevaluación Final</div>
       <h2 class="module-title">Ejercicios Prácticos Oficiales de la Unidad 2.4</h2>
-      <p class="module-desc">Resuelve los 4 casos integradores de arquitectura, moderación y contingencia del temario oficial.</p>
+      <p class="module-desc">Resuelve los 4 casos integradores de arquitectura de producción, políticas de blindaje con Llama Guard, monitoreo y contingencia del temario oficial.</p>
     </div>
 
     <!-- EJERCICIO 1 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--meta-blue); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 1</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Diagrama de Arquitectura del Proyecto Integrador</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 1</span>
+        <h4 class="exercise-title">Diagrama de Arquitectura del Proyecto Integrador</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Dibuja el diagrama de flujo completo del agente integrando: WhatsApp Cloud API, servidor continuo, Llama Guard (entrada y salida), Llama 3, la base de datos externa y la llamada de respuesta. Señala los puntos donde el flujo puede bifurcarse por una regla fija o por una violación de seguridad.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(8,102,255,0.05); border-left:4px solid var(--meta-blue); border-radius:8px;">
-        <h5 style="color:var(--meta-blue); margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          <b>Topología del Pipeline:</b> <code>WhatsApp -&gt; NGINX (SSL) -&gt; FastAPI (HMAC + Redis Idempotencia) -&gt; Llama Guard 3 (Entrada) -&gt; [Bifurcación 1: Violación UNSAFE -&gt; Bloqueo] -&gt; Enrutador Híbrido [Bifurcación 2: Regla Fija -&gt; Transferencia Humana] -&gt; Inferencia Llama 3 (Tool Calling) -&gt; DB Externa -&gt; Inferencia Final Llama 3 -&gt; Llama Guard 3 (Salida) -&gt; Graph API WhatsApp</code>.
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Topología de Producción
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Dibuja el diagrama de flujo completo del agente integrando: WhatsApp Cloud API, servidor continuo, Llama Guard (entrada y salida), Llama 3, la base de datos externa y la llamada de respuesta. Señala los puntos donde el flujo puede bifurcarse por una regla fija o por una violación de seguridad.
         </p>
       </div>
+
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Topología End-to-End</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Secuencia del Pipeline en 7 Fases</h5>
+                <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  <code>1. WhatsApp Cloud API &rarr; 2. NGINX Reverse Proxy (SSL/TLS) &rarr; 3. FastAPI (Filtro HMAC + Idempotencia Redis) &rarr; 4. Llama Guard 3 Inbound &rarr; 5. Enrutador Híbrido &rarr; 6. Inferencia Llama 3 (Tool Use) + DB &rarr; 7. Llama Guard 3 Outbound &rarr; Graph API</code>.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-flow-item">
+              <div class="step-num-badge">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Puntos Críticos de Bifurcación en el Pipeline</h5>
+                <div class="table-responsive-wrapper" style="margin-top:0.4rem;">
+                  <table class="table-pro" style="font-size:0.85rem;">
+                    <thead>
+                      <tr>
+                        <th>Punto de Control</th>
+                        <th>Condición de Disparo</th>
+                        <th>Acción del Sistema</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><b>Bifurcación 1 (Llama Guard In)</b></td>
+                        <td>Inyección de prompt o contenido unsafe</td>
+                        <td><span class="status-pill-danger">Bloqueo Inmediato</span> &rarr; Emite mensaje de política y aborta inferencia.</td>
+                      </tr>
+                      <tr>
+                        <td><b>Bifurcación 2 (Enrutador)</b></td>
+                        <td>Petición determinista ("humano", "emergencia")</td>
+                        <td><span class="status-pill-safe">Desvío por Regla Fija</span> &rarr; Transfiere a humano o llama 911 sin tocar el LLM.</td>
+                      </tr>
+                      <tr>
+                        <td><b>Bifurcación 3 (Llama Guard Out)</b></td>
+                        <td>Alucinación con fuga de PII o contenido no seguro</td>
+                        <td><span class="status-pill-warning">Filtro de Salida</span> &rarr; Bloquea la respuesta y envía template seguro.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 2 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--accent-success); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 2</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Configuración de la Política de Seguridad con Llama Guard</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 2</span>
+        <h4 class="exercise-title">Configuración de la Política de Seguridad con Llama Guard</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Define qué categorías de Llama Guard deben bloquearse para un agente de atención a clientes en un comercio electrónico (por ejemplo, fraude, asesoramiento legal no autorizado o contenido violento) y redacta el mensaje de política que recibirá el usuario si activa un filtro de seguridad.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(16,185,129,0.05); border-left:4px solid var(--accent-success); border-radius:8px;">
-        <h5 style="color:var(--accent-success); margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          <b>Categorías Bloqueadas:</b> <code>S1 (Crimen Violento)</code>, <code>S2 (Sustancias Ilícitas)</code>, <code>S9 (Inyecciones de Prompt)</code>, <code>S14 (Extracción de PII Financiera)</code>.
-          <br><br>
-          <b>Mensaje Neutral de Política:</b> <i>"Por políticas de seguridad y privacidad de nuestra tienda, no puedo procesar este tipo de solicitudes. Si necesitas asistencia con un pedido o producto, con gusto te ayudo."</i>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Blindaje y Gobernanza
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Define qué categorías de Llama Guard deben bloquearse para un agente de atención a clientes en un comercio electrónico (por ejemplo, fraude, asesoramiento legal no autorizado o contenido violento) y redacta el mensaje de política que recibirá el usuario si activa un filtro de seguridad.
         </p>
       </div>
+
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Taxonomía de Riesgo</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Taxonomía de Categorías Bloqueadas en E-Commerce</h5>
+                <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>S1 (Violent Crimes):</b> Amenazas y violencia contra el personal.<br>
+                  • <b>S2 (Non-Violent Crimes):</b> Fraude, robo de tarjetas y lavado de dinero.<br>
+                  • <b>S9 (Prompt Injection):</b> Intentos de jailbreak para alterar precios o extraer la API Key.<br>
+                  • <b>S11 (Indiscriminate Weapons) &amp; S13 (Elections):</b> Contenido fuera del alcance de una tienda.<br>
+                  • <b>S14 (Financial PII Extraction):</b> Intento de extraer números de tarjeta de otros clientes.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+              <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Plantilla de Mensaje Institucional Seguro</h5>
+                <p style="margin:0 0 0.4rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  El mensaje debe ser neutro, cortés y no confrontacional:
+                </p>
+                <div class="code-box">
+                  <pre class="code-content"><code class="language-text">"Por políticas de seguridad y privacidad de nuestra tienda, no puedo procesar este tipo de solicitudes. Si necesitas asistencia con un pedido, rastreo de paquetería o catálogo de productos, con gusto te ayudo."</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 3 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--meta-purple); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 3</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Plan de Despliegue y Monitoreo para Producción</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 3</span>
+        <h4 class="exercise-title">Plan de Despliegue y Monitoreo para Producción</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Elabora una lista de verificación (checklist) con los pasos para pasar de ngrok a un servidor continuo: aprovisionamiento de VPS, configuración de NGINX, certificado SSL, variables de entorno seguras y configuración de alertas de latencia.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(139,92,246,0.05); border-left:4px solid var(--meta-purple); border-radius:8px;">
-        <h5 style="color:var(--meta-purple); margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          <b>Checklist de Producción:</b>
-          <br>1. VPS Ubuntu 24.04 LTS en AWS/GCP con IP estática fija.
-          <br>2. Dominio DNS apuntado con registro A y NGINX con Certbot SSL automático.
-          <br>3. Archivo <code>.env</code> fuera del control de versiones con permisos <code>chmod 600</code>.
-          <br>4. Uvicorn con 4 workers supervisados por Systemd con <code>Restart=always</code>.
-          <br>5. Dashboard Prometheus/Grafana con alertas a Slack si $p95 &gt; 3.5s$ durante 3 minutos consecutivos.
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Infraestructura &amp; SRE
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Elabora una lista de verificación (checklist) con los pasos para pasar de ngrok a un servidor continuo: aprovisionamiento de VPS, configuración de NGINX, certificado SSL, variables de entorno seguras y configuración de alertas de latencia.
         </p>
       </div>
+
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Checklist de Producción</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Checklist de Puesta en Producción (8 Hitos Clave)</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  <b>1. Aprovisionamiento VPS:</b> Servidor Linux Ubuntu 24.04 con IP pública estática fija.<br>
+                  <b>2. Configuración DNS:</b> Registro <code>A api.tutienda.com</code> apuntando a la IP pública.<br>
+                  <b>3. Reverse Proxy NGINX:</b> Enrutamiento seguro hacia <code>http://127.0.0.1:8000</code>.<br>
+                  <b>4. Certificado SSL Let's Encrypt:</b> Emisión automática con <code>certbot --nginx</code>.<br>
+                  <b>5. Gestión de Secretos:</b> Archivo <code>.env</code> fuera de git con permisos estrictos <code>chmod 600 .env</code>.<br>
+                  <b>6. Demonio Systemd / Docker:</b> Servicio configurado con <code>Restart=always</code> y 4 workers Uvicorn.<br>
+                  <b>7. Monitoreo Prometheus/Grafana:</b> Scraping de métricas de latencia ($p50$, $p95$, $p99$) y tasas de error.<br>
+                  <b>8. Alertas Automatizadas:</b> Notificación a Slack/PagerDuty si la tasa de error 5xx supera el 1%.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-flow-item">
+              <div class="step-num-badge">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Archivo de Unidad Systemd (<code>/etc/systemd/system/llama-agent.service</code>)</h5>
+                <div class="code-box" style="margin-top:0.4rem;">
+                  <pre class="code-content"><code class="language-ini">[Unit]
+Description=Llama 3 WhatsApp Production Agent
+After=network.target redis.service
+
+[Service]
+User=deploy
+WorkingDirectory=/var/www/llama_whatsapp
+ExecStart=/var/www/llama_whatsapp/venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000 --workers 4
+Restart=always
+RestartSec=5
+EnvironmentFile=/var/www/llama_whatsapp/.env
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 4 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:#f59e0b; color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 4</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Plan de Contingencia ante Fallas de la API de WhatsApp</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 4</span>
+        <h4 class="exercise-title">Plan de Contingencia ante Fallas de la API de WhatsApp</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Diseña el protocolo de contingencia si la Graph API de Meta sufre una interrupción de 15 minutos: qué responde el servidor al webhook para no saturar la cola, cómo se guardan los mensajes pendientes y cómo se procesan al reanudarse el servicio.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(245,158,11,0.05); border-left:4px solid #f59e0b; border-radius:8px;">
-        <h5 style="color:#f59e0b; margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          El webhook siempre responde <code>HTTP 200 OK</code> a Meta para evitar cancelaciones. Si el despacho de salida falla con error 5xx de Graph API, el mensaje procesado se guarda en una cola Redis (<code>LPUSH pending_outbox</code>). Un proceso Celery con retroceso exponencial reintenta el envío cada 30 segundos hasta que la Graph API se restablezca.
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Alta Disponibilidad &amp; Circuit Breaker
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Diseña el protocolo de contingencia si la Graph API de Meta sufre una interrupción de 15 minutos: qué responde el servidor al webhook para no saturar la cola, cómo se guardan los mensajes pendientes y cómo se procesan al reanudarse el servicio.
         </p>
       </div>
-    </article>
 
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Protocolo de Cola de Salida</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">1. Mantener HTTP 200 Incondicional en el Webhook</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  El endpoint del webhook de entrada <b>siempre debe retornar HTTP 200 OK a Meta</b> en menos de 50ms. Si retornara error, Meta deshabilitaría la suscripción del webhook tras múltiples fallos consecutivos.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-flow-item">
+              <div class="step-num-badge">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">2. Cola de Salida en Redis (Outbox Queue Pattern)</h5>
+                <p style="margin:0 0 0.4rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Si la llamada <code>POST /v20.0/{phone_id}/messages</code> falla con error 500/503 de Meta, el mensaje sintetizado no se pierde; se almacena en una lista Redis: <code>LPUSH whatsapp_pending_outbox {payload_json}</code>.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+              <div class="step-num-badge" style="background:var(--accent-success);">3</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">3. Proceso Worker con Backoff Exponencial</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Un worker en segundo plano reintenta enviar los mensajes pendientes cada $2^k$ segundos ($1	ext{s}, 2	ext{s}, 4	ext{s}, 8	ext{s}, 16	ext{s}$). En cuanto la Graph API de Meta se restablece, los mensajes se despachan en orden cronológico respetando la ventana de 24 horas.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </article>
   </section>
 
   <!-- ==========================================================================

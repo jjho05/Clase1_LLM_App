@@ -363,7 +363,7 @@ settings = WhatsAppSettings()</code></pre>
       <div class="tema-section-block" style="margin-top:2.5rem;">
         <h4 class="tema-subheading"><span class="tema-subheading-tag">5. Anti-patrones en Producción</span> Trampas Comunes al Iniciar con la Cloud API</h4>
         <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.2rem 0;">
-          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">⚠️ Trampa Crítica: Usar el Token Temporal de 24 Horas en Producción</strong>
+          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle; color:#ef4444; margin-right:6px;"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>Trampa Crítica: Usar el Token Temporal de 24 Horas en Producción</strong>
           <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
             El panel de pruebas de Meta genera un <i>Temporary Access Token</i> que expira exactamente tras 24 horas. Si despliegas tu bot con este token, tu agente dejará de responder al día siguiente. <b>Solución de Grado Industrial:</b> Crea un <i>Usuario del Sistema (System User)</i> en tu <b>Meta Business Manager</b> con rol de Administrador y genera un <b>Token de Acceso Permanente</b> con los permisos <code>whatsapp_business_messaging</code> y <code>whatsapp_business_management</code>.
           </p>
@@ -582,7 +582,7 @@ app = FastAPI(title=<span class="code-string">"WhatsApp AI Agent Core"</span>)
       <div class="tema-section-block" style="margin-top:2.5rem;">
         <h4 class="tema-subheading"><span class="tema-subheading-tag">5. Anti-patrones en Producción</span> Errores de Bloqueo Síncrono</h4>
         <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.2rem 0;">
-          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">⚠️ Anti-patrón Mortal: Usar <code>requests.post</code> Síncrono dentro del Endpoint</strong>
+          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle; color:#ef4444; margin-right:6px;"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>Anti-patrón Mortal: Usar <code>requests.post</code> Síncrono dentro del Endpoint</strong>
           <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
             Usar la librería <code>requests</code> clásica bloquea el hilo principal de ejecución de Uvicorn/FastAPI. Si 50 usuarios escriben al mismo tiempo, las peticiones se encolarán y superarán los 3 segundos de timeout, provocando que Meta envíe ráfagas de reintentos duplicados. <b>Regla de Oro:</b> Utiliza siempre <code>httpx.AsyncClient</code> con <code>async/await</code> y procesa la inferencia en <code>BackgroundTasks</code> o colas tipo Celery/Redis Queue.
           </p>
@@ -784,7 +784,7 @@ app = FastAPI(title=<span class="code-string">"WhatsApp AI Agent Core"</span>)
       <div class="tema-section-block" style="margin-top:2.5rem;">
         <h4 class="tema-subheading"><span class="tema-subheading-tag">5. Anti-patrones en Producción</span> Vulnerabilidad por Comparación Insegura de Cadenas</h4>
         <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.2rem 0;">
-          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">⚠️ Riesgo de Seguridad: Usar el Operador <code>==</code> en Lugar de <code>hmac.compare_digest</code></strong>
+          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle; color:#ef4444; margin-right:6px;"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>Riesgo de Seguridad: Usar el Operador <code>==</code> en Lugar de <code>hmac.compare_digest</code></strong>
           <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
             El operador <code>hash_esperado == firma_recibida</code> se interrumpe en el primer caracter que no coincide (tiempo variable). Un atacante con miles de peticiones automatizadas puede medir las diferencias de microsegundos para adivinar el hash byte a byte (<i>Timing Attack</i>). <b>Regla Criptográfica Mandatoria:</b> Utiliza siempre <code>hmac.compare_digest()</code> para garantizar que la comparación tome exactamente el mismo tiempo sin importar cuántos caracteres coincidan.
           </p>
@@ -914,7 +914,7 @@ ngrok http 8000
       <div class="tema-section-block" style="margin-top:2.5rem;">
         <h4 class="tema-subheading"><span class="tema-subheading-tag">4. Anti-patrones en Producción</span> ngrok es Exclusivo para Desarrollo Local</h4>
         <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.2rem 0;">
-          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">⚠️ Advertencia de Arquitectura: Jamás uses ngrok en Producción</strong>
+          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:middle; color:#ef4444; margin-right:6px;"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>Advertencia de Arquitectura: Jamás uses ngrok en Producción</strong>
           <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
             ngrok está diseñado para acelerar la iteración local. Si tu laptop entra en modo reposo, se desconecta del Wi-Fi o reinicias el proceso de ngrok, la URL cambia y tu bot quedará desconectado de WhatsApp. Para producción, despliega tu FastAPI en un contenedor Docker en un VPS (AWS EC2, DigitalOcean, Google Cloud Run) con un dominio estático y certificado SSL gestionado por Caddy, Traefik o Nginx.
           </p>
@@ -1282,11 +1282,11 @@ ngrok http 8000
         </div>
         <div class="workbench-actions">
           <select id="hs-case-preset-select" class="bench-select-clean" style="font-size:0.8rem; font-weight:700;">
-            <option value="success">✔ Caso 1: Handshake Oficial Exitoso (200 OK + Texto Plano)</option>
-            <option value="token_mismatch">❌ Caso 2: Token No Coincide (403 Forbidden)</option>
-            <option value="invalid_mode">❌ Caso 3: Modo Inválido (hub.mode != 'subscribe')</option>
-            <option value="json_error">⚠️ Caso 4: Error Clásico: Devolver JSON en vez de Texto Plano</option>
-            <option value="server_down">🔌 Caso 5: Servidor Apagado / Timeout (504 Gateway Timeout)</option>
+            <option value="success">Caso 1: Handshake Oficial Exitoso (200 OK + Texto Plano)</option>
+            <option value="token_mismatch">Caso 2: Token No Coincide (403 Forbidden)</option>
+            <option value="invalid_mode">Caso 3: Modo Inválido (hub.mode != 'subscribe')</option>
+            <option value="json_error">Caso 4: Error Clásico: Devolver JSON en vez de Texto Plano</option>
+            <option value="server_down">Caso 5: Servidor Apagado / Timeout (504 Gateway Timeout)</option>
           </select>
           <span class="bench-badge-status status-info" id="hs-status-pill">Esperando Verificación</span>
           <button class="btn-secondary" id="hs-btn-reset" style="font-size:0.8rem; padding:0.35rem 0.65rem; display:flex; align-items:center; gap:0.3rem;" title="Restablecer valores por defecto">↺ Reiniciar</button>
@@ -1396,7 +1396,7 @@ ngrok http 8000
 
             <!-- TARJETA DE ESTADO DE META EN VIVO -->
             <div class="handshake-result-card result-waiting" id="hs-result-visual-card">
-              <div style="font-size:1.4rem;" id="hs-result-icon">⏳</div>
+              <div style="font-size:1.2rem; color:var(--text-muted);" id="hs-result-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
               <div>
                 <strong style="display:block; margin-bottom:0.2rem;" id="hs-result-title">Esperando Verificación</strong>
                 <span style="font-size:0.82rem;" id="hs-result-desc">Presiona "Verificar y Guardar" para enviar la solicitud de comprobación de Meta a tu backend.</span>
@@ -1422,11 +1422,11 @@ ngrok http 8000
         </div>
         <div class="workbench-actions">
           <select id="json-preset-select" class="bench-select-clean" style="font-size:0.8rem; font-weight:700;">
-            <option value="text">📩 1. Mensaje de Texto (Pregunta de Pedido #45210)</option>
-            <option value="button_reply">🔘 2. Botón Interactivo (Respuesta Rápida)</option>
-            <option value="location">📍 3. Ubicación GPS en Tiempo Real</option>
-            <option value="audio">🎙️ 4. Mensaje de Voz / Audio (Media ID)</option>
-            <option value="status_read">👁️ 5. Notificación de Lectura (Status Callback)</option>
+            <option value="text">1. Mensaje de Texto (Pregunta de Pedido #45210)</option>
+            <option value="button_reply">2. Botón Interactivo (Respuesta Rápida)</option>
+            <option value="location">3. Ubicación GPS en Tiempo Real</option>
+            <option value="audio">4. Mensaje de Voz / Audio (Media ID)</option>
+            <option value="status_read">5. Notificación de Lectura (Status Callback)</option>
           </select>
           <button class="btn-secondary" id="json-btn-reset" style="font-size:0.8rem; padding:0.35rem 0.65rem; display:flex; align-items:center; gap:0.3rem;" title="Restablecer JSON original">↺ Restablecer</button>
         </div>
@@ -1484,7 +1484,7 @@ ngrok http 8000
               <!-- CAMPO 1: FROM -->
               <div class="parser-item-row">
                 <div class="parser-item-top">
-                  <span class="parser-item-label">📱 Remitente (from)</span>
+                  <span class="parser-item-label">Remitente (from)</span>
                   <span class="parser-item-path">messages[0].from</span>
                 </div>
                 <div class="parser-item-val" id="out-sender-num" style="color:var(--accent-success);">-</div>
@@ -1494,7 +1494,7 @@ ngrok http 8000
               <!-- CAMPO 2: NOMBRE DE PERFIL -->
               <div class="parser-item-row">
                 <div class="parser-item-top">
-                  <span class="parser-item-label">👤 Nombre de Perfil</span>
+                  <span class="parser-item-label">Nombre de Perfil</span>
                   <span class="parser-item-path">contacts[0].profile.name</span>
                 </div>
                 <div class="parser-item-val" id="out-sender-name">-</div>
@@ -1504,7 +1504,7 @@ ngrok http 8000
               <!-- CAMPO 3: CONTENIDO / BODY -->
               <div class="parser-item-row">
                 <div class="parser-item-top">
-                  <span class="parser-item-label">💬 Contenido del Mensaje</span>
+                  <span class="parser-item-label">Contenido del Mensaje</span>
                   <span class="parser-item-path" id="out-content-path">messages[0].text.body</span>
                 </div>
                 <div class="parser-item-val" id="out-msg-body" style="color:var(--meta-blue);">-</div>
@@ -1514,7 +1514,7 @@ ngrok http 8000
               <!-- CAMPO 4: WAMID -->
               <div class="parser-item-row">
                 <div class="parser-item-top">
-                  <span class="parser-item-label">🔑 ID del Mensaje (wamid)</span>
+                  <span class="parser-item-label">ID del Mensaje (wamid)</span>
                   <span class="parser-item-path">messages[0].id</span>
                 </div>
                 <div class="parser-item-val" id="out-msg-id" style="font-size:0.75rem; color:var(--text-muted);">-</div>
@@ -1524,7 +1524,7 @@ ngrok http 8000
               <!-- CAMPO 5: PHONE_NUMBER_ID -->
               <div class="parser-item-row">
                 <div class="parser-item-top">
-                  <span class="parser-item-label">🏢 Phone Number ID (Meta)</span>
+                  <span class="parser-item-label">Phone Number ID (Meta)</span>
                   <span class="parser-item-path">metadata.phone_number_id</span>
                 </div>
                 <div class="parser-item-val" id="out-phone-id">-</div>
@@ -1704,336 +1704,360 @@ Calcula la firma HMAC o verifica la cabecera...
     </div>
 
     <!-- EJERCICIO 1 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2.2rem; box-shadow:var(--shadow-sm);">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--meta-blue); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 1</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Comparativa Arquitectónica: API de Negocio On-Premises vs. Cloud API</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 1</span>
+        <h4 class="exercise-title">Comparativa Arquitectónica: API de Negocio On-Premises vs. Cloud API</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Dibuja un diagrama o contrasta en un cuadro las responsabilidades entre la API de negocio tradicional (On-Premises) y la Cloud API. Identifica quién —tu equipo o Meta— asume la responsabilidad del servidor, las actualizaciones de seguridad y la disponibilidad del servicio. Señala dónde reside la lógica del agente basado en Llama en ambos modelos y argumenta qué tipo de empresa se beneficia más de eliminar el servidor propio.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.4rem; padding:1.4rem; background:rgba(8,102,255,0.04); border-left:4px solid var(--meta-blue); border-radius:10px; border:1px solid var(--border-subtle);">
-        <h5 style="color:var(--meta-blue); margin-top:0; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          Solución de Ingeniería &amp; Diagrama de Arquitectura
-        </h5>
-        
-        <!-- DIAGRAMA VISUAL COMPARATIVO -->
-        <div class="exercise-diagram-box">
-          <strong style="font-size:0.88rem; color:var(--text-primary);">Diagrama de Topología de Infraestructura:</strong>
-          <div class="exercise-arch-grid">
-            <div class="exercise-arch-card" style="border-left:3px solid #ef4444;">
-              <div class="exercise-arch-header" style="color:#ef4444;">
-                <span>🔴 Modelo A: WhatsApp On-Premises (Tradicional)</span>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Arquitectura
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Dibuja un diagrama o contrasta en un cuadro las responsabilidades entre la API de negocio tradicional (On-Premises) y la Cloud API. Identifica quién —tu equipo o Meta— asume la responsabilidad del servidor, las actualizaciones de seguridad y la disponibilidad del servicio. Señala dónde reside la lógica del agente basado en Llama en ambos modelos y argumenta qué tipo de empresa se beneficia más de eliminar el servidor propio.
+        </p>
+      </div>
+
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Matriz de Responsabilidades</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Diagrama de Topología de Infraestructura</h5>
+                <p style="margin:0 0 0.6rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>Modelo On-Premises (Tradicional):</b> <code>[Usuario WhatsApp] &harr; [Meta Core] &harr; [Clúster Docker Propio (CoreApp + WebApp + MySQL + SSL)] &harr; [Backend FastAPI Llama 3]</code>. El equipo cliente gestiona servidores, balanceadores y parches OS.<br>
+                  • <b>Modelo Cloud API (Recomendado):</b> <code>[Usuario WhatsApp] &harr; [Meta Cloud Infrastructure (SLA 99.9% + CDN)] &harr; [Webhook HTTPS] &harr; [Backend FastAPI Llama 3]</code>. Meta asume el 100% de la red de mensajería.
+                </p>
               </div>
-              <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.5;">
-                <code>[Usuario WhatsApp]</code> &harr; <code>[Servidores Meta]</code> &harr; <b style="color:#ef4444;">[Tu Clúster Docker CoreApp + WebApp + MySQL + SSL + Parches OS]</b> &harr; <code>[Tu Backend FastAPI Llama 3]</code>
-              </div>
-              <span style="font-size:0.75rem; color:#ef4444; font-weight:700;">Tu equipo asume 100% de la infraestructura y DevOps 24/7.</span>
             </div>
 
-            <div class="exercise-arch-card" style="border-left:3px solid var(--accent-success);">
-              <div class="exercise-arch-header" style="color:var(--accent-success);">
-                <span>🟢 Modelo B: WhatsApp Cloud API (Moderno)</span>
+            <div class="step-flow-item">
+              <div class="step-num-badge">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Matriz de Responsabilidades &amp; SLAs</h5>
+                <div class="table-responsive-wrapper" style="margin-top:0.4rem;">
+                  <table class="table-pro" style="font-size:0.85rem;">
+                    <thead>
+                      <tr>
+                        <th>Dimensión</th>
+                        <th>WhatsApp On-Premises</th>
+                        <th>WhatsApp Cloud API</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><b>Servidor de Mensajería</b></td>
+                        <td><span class="status-pill-danger">Tu Equipo (Docker/EC2)</span></td>
+                        <td><span class="status-pill-safe">Meta (Centros Globales)</span></td>
+                      </tr>
+                      <tr>
+                        <td><b>Parches de Seguridad</b></td>
+                        <td><span class="status-pill-warning">Manuales cada 6 meses</span></td>
+                        <td><span class="status-pill-safe">Automáticos sin caídas</span></td>
+                      </tr>
+                      <tr>
+                        <td><b>Certificados SSL/TLS</b></td>
+                        <td><span class="status-pill-warning">Configuración propia</span></td>
+                        <td><span class="status-pill-safe">Gestionado por Meta</span></td>
+                      </tr>
+                      <tr>
+                        <td><b>Ubicación Llama 3</b></td>
+                        <td><b>En tu Servidor / GPU</b></td>
+                        <td><b>En tu Servidor / GPU</b></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
-              <div style="font-size:0.82rem; color:var(--text-secondary); line-height:1.5;">
-                <code>[Usuario WhatsApp]</code> &harr; <b style="color:var(--accent-success);">[Meta Cloud API (SLA 99.9% + CDN Cifrado TLS)]</b> &harr; <code>[Webhook HTTPS]</code> &harr; <code>[Tu Backend FastAPI Llama 3]</code>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+              <div class="step-num-badge" style="background:var(--accent-success);">3</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Soberanía de Datos &amp; Análisis de Negocio</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  En ambos modelos, la inteligencia de <b>Meta Llama 3 reside estrictamente en el backend del desarrollador</b> (servidor local o instancia cloud privada). Startups, PYMES y corporativos ágiles eliminan miles de dólares mensuales en costos fijos de mantenimiento DevOps al adoptar Cloud API, enfocando el presupuesto de ingeniería en la optimización de los prompts y adaptadores LoRA.
+                </p>
               </div>
-              <span style="font-size:0.75rem; color:var(--accent-success); font-weight:700;">Meta gestiona la mensajería; tú solo programas la IA.</span>
             </div>
           </div>
         </div>
-
-        <!-- TABLA COMPARATIVA DE RESPONSABILIDADES -->
-        <table class="exercise-comp-table">
-          <thead>
-            <tr>
-              <th>Dimensión de Arquitectura</th>
-              <th>WhatsApp On-Premises</th>
-              <th>WhatsApp Cloud API</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Servidor de Mensajería</b></td>
-              <td>🔴 Tu equipo (Docker / EC2 / K8s dedicado)</td>
-              <td>🟢 Meta (Centros de datos globales administrados)</td>
-            </tr>
-            <tr>
-              <td><b>Actualizaciones y Parches</b></td>
-              <td>🔴 Obligatorias manuales cada 6 meses o queda obsoleto</td>
-              <td>🟢 Automáticas y transparentes sin caídas</td>
-            </tr>
-            <tr>
-              <td><b>Certificados SSL / TLS</b></td>
-              <td>🔴 Renovación y configuración por tu equipo</td>
-              <td>🟢 Gestionado por Meta con cifrado extremo a extremo</td>
-            </tr>
-            <tr>
-              <td><b>Escalabilidad de Mensajes</b></td>
-              <td>🟡 Límite de ~250 msg/s por contenedor Docker</td>
-              <td>🟢 Escalado elástico hasta miles de msg/s</td>
-            </tr>
-            <tr>
-              <td><b>Ubicación del Agente Llama 3</b></td>
-              <td>🔵 <b>Siempre en tu backend</b></td>
-              <td>🔵 <b>Siempre en tu backend</b> (Meta nunca aloja tu IA)</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div style="font-size:0.9rem; color:var(--text-primary); line-height:1.6; margin-top:0.75rem;">
-          <b>Argumentación de Negocio:</b> Startups, PYMES y corporativos ágiles se benefician masivamente de la <b>Cloud API</b> al eliminar miles de dólares mensuales en servidores dedicados y guardias DevOps, enfocando sus recursos de ingeniería al 100% en la <b>inteligencia del agente con Llama 3</b>.
-        </div>
-      </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 2 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2.2rem; box-shadow:var(--shadow-sm);">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--accent-success); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 2</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Rastreo y Extracción Crítica del Payload JSON</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 2</span>
+        <h4 class="exercise-title">Rastreo y Extracción Crítica del Payload JSON</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Imagina que recibes un webhook entrante en tu servidor. Enumera y desglosa los <b>datos mínimos indispensables</b> que tu código necesita extraer del payload para: (a) saber quién envió el mensaje, (b) saber qué texto contiene, (c) tener la referencia para responderle al mismo número usando la Graph API y (d) prevenir responder dos veces al mismo mensaje (Idempotencia).
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.4rem; padding:1.4rem; background:rgba(16,185,129,0.04); border-left:4px solid var(--accent-success); border-radius:10px; border:1px solid var(--border-subtle);">
-        <h5 style="color:var(--accent-success); margin-top:0; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          Solución de Ingeniería &amp; Mapa de Rutas JSON
-        </h5>
-
-        <!-- RASTREO VISUAL DE RUTA -->
-        <div class="exercise-path-flow">
-          <span>Payload JSON</span>
-          <span style="color:var(--text-muted);">&rarr;</span>
-          <span class="exercise-path-node">entry[0]</span>
-          <span style="color:var(--text-muted);">&rarr;</span>
-          <span class="exercise-path-node">changes[0]</span>
-          <span style="color:var(--text-muted);">&rarr;</span>
-          <span class="exercise-path-node">value</span>
-          <span style="color:var(--text-muted);">&rarr;</span>
-          <span class="exercise-path-node" style="background:rgba(16,185,129,0.15); color:var(--accent-success);">messages[0]</span>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Integración
         </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Imagina que recibes un webhook entrante en tu servidor. Enumera y desglosa los datos mínimos indispensables que tu código necesita extraer del payload para: (a) saber quién envió el mensaje, (b) saber qué texto contiene, (c) tener la referencia para responderle al mismo número usando la Graph API y (d) prevenir responder dos veces al mismo mensaje (Idempotencia).
+        </p>
+      </div>
 
-        <!-- TABLA DETALLADA DE CAMPOS CRÍTICOS -->
-        <table class="exercise-comp-table">
-          <thead>
-            <tr>
-              <th>Dato Requerido</th>
-              <th>Ruta de Extracción (JSON Path)</th>
-              <th>Propósito en el Agente de Llama 3</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>(a) Remitente</b></td>
-              <td><code>entry[0].changes[0].value.messages[0].from</code></td>
-              <td>Número internacional (ej. <code>"5215587654321"</code>) usado como <code>"to"</code> para despachar la respuesta.</td>
-            </tr>
-            <tr>
-              <td><b>(b) Texto Recibido</b></td>
-              <td><code>entry[0].changes[0].value.messages[0].text.body</code></td>
-              <td>El mensaje del usuario que se inyecta como entrada (Prompt) al modelo Llama 3.</td>
-            </tr>
-            <tr>
-              <td><b>(c) Phone Number ID</b></td>
-              <td><code>entry[0].changes[0].value.metadata.phone_number_id</code></td>
-              <td>Identifica el canal empresarial en la URL <code>POST /v20.0/{phone_number_id}/messages</code>.</td>
-            </tr>
-            <tr>
-              <td><b>(d) ID del Mensaje (wamid)</b></td>
-              <td><code>entry[0].changes[0].value.messages[0].id</code></td>
-              <td><b>Idempotencia:</b> Guardar en Redis para evitar contestar 2 veces si Meta reintenta la petición por lentitud.</td>
-            </tr>
-          </tbody>
-        </table>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Extracción Defensiva</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Ruta de Extracción JSONPath</h5>
+                <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>(a) Remitente (wa_id):</b> <code>entry[0].changes[0].value.messages[0].from</code> (ej. <code>"5215587654321"</code>).<br>
+                  • <b>(b) Prompt del Usuario:</b> <code>entry[0].changes[0].value.messages[0].text.body</code>.<br>
+                  • <b>(c) Phone Number ID:</b> <code>entry[0].changes[0].value.metadata.phone_number_id</code>.<br>
+                  • <b>(d) ID del Mensaje (wamid):</b> <code>entry[0].changes[0].value.messages[0].id</code>.
+                </p>
+              </div>
+            </div>
 
-        <!-- SNIPPET DE EXTRACCIÓN PYTHON -->
-        <div class="code-box" style="margin-top:1rem;">
-          <div class="code-header">
-            <span class="code-lang">Python · Función de Extracción Defensiva</span>
-            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
-          </div>
-          <pre class="code-content"><code class="language-python"><span class="code-keyword">def</span> <span class="code-function">parsear_webhook_whatsapp</span>(payload: <span class="code-type">dict</span>) -> <span class="code-type">dict</span>:
-    <span class="code-keyword">try</span>:
-        val = payload[<span class="code-string">"entry"</span>][<span class="code-number">0</span>][<span class="code-string">"changes"</span>][<span class="code-number">0</span>][<span class="code-string">"value"</span>]
-        msg = val[<span class="code-string">"messages"</span>][<span class="code-number">0</span>]
-        <span class="code-keyword">return</span> {
-            <span class="code-property">"phone_id"</span>: val[<span class="code-string">"metadata"</span>][<span class="code-string">"phone_number_id"</span>],
-            <span class="code-property">"sender"</span>: msg[<span class="code-string">"from"</span>],
-            <span class="code-property">"text"</span>: msg[<span class="code-string">"text"</span>][<span class="code-string">"body"</span>],
-            <span class="code-property">"msg_id"</span>: msg[<span class="code-string">"id"</span>]
+            <div class="step-flow-item">
+              <div class="step-num-badge">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Snippet de Código Python con Extracción Defensiva</h5>
+                <div class="code-box" style="margin-top:0.4rem;">
+                  <div class="code-header">
+                    <span class="code-lang">Python 3.11 · Extractor Robusto</span>
+                    <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                  </div>
+                  <pre class="code-content"><code class="language-python"><span class="code-kw">def</span> <span class="code-fn">extraer_datos_mensaje</span>(payload: <span class="code-var">dict</span>) -&gt; <span class="code-var">dict</span> | <span class="code-var">None</span>:
+    <span class="code-kw">try</span>:
+        val = payload[<span class="code-str">"entry"</span>][<span class="code-num">0</span>][<span class="code-str">"changes"</span>][<span class="code-num">0</span>][<span class="code-str">"value"</span>]
+        <span class="code-kw">if</span> <span class="code-str">"messages"</span> <span class="code-kw">not in</span> val:
+            <span class="code-kw">return</span> <span class="code-kw">None</span>  <span class="code-cm"># Notificación de lectura (read status)</span>
+        msg = val[<span class="code-str">"messages"</span>][<span class="code-num">0</span>]
+        <span class="code-kw">return</span> {
+            <span class="code-str">"phone_id"</span>: val[<span class="code-str">"metadata"</span>][<span class="code-str">"phone_number_id"</span>],
+            <span class="code-str">"sender"</span>: msg[<span class="code-str">"from"</span>],
+            <span class="code-str">"text"</span>: msg.<span class="code-fn">get</span>(<span class="code-str">"text"</span>, {}).<span class="code-fn">get</span>(<span class="code-str">"body"</span>, <span class="code-str">""</span>),
+            <span class="code-str">"msg_id"</span>: msg[<span class="code-str">"id"</span>]
         }
-    <span class="code-keyword">except</span> (<span class="code-type">KeyError</span>, <span class="code-type">IndexError</span>):
-        <span class="code-keyword">return</span> <span class="code-bool">None</span>  <span class="code-comment"># Webhook de lectura u otro evento sin mensajes</span></code></pre>
+    <span class="code-kw">except</span> (<span class="code-var">KeyError</span>, <span class="code-var">IndexError</span>):
+        <span class="code-kw">return</span> <span class="code-kw">None</span></code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:var(--meta-blue); background:rgba(8,102,255,0.04);">
+              <div class="step-num-badge" style="background:var(--meta-blue);">3</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--meta-blue);">Mecanismo de Idempotencia en Redis</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Antes de invocar a Llama 3, se ejecuta <code>SETNX wamid:{msg_id} 1 EX 86400</code>. Si Redis retorna <code>0</code>, el mensaje ya está siendo procesado o fue respondido, abortando la inferencia duplicada y respondiendo <code>200 OK</code> a Meta de inmediato.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 3 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2.2rem; box-shadow:var(--shadow-sm);">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--meta-purple); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 3</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Simulación del Ciclo de Desarrollo y Mitigación de Riesgos</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 3</span>
+        <h4 class="exercise-title">Simulación del Ciclo de Desarrollo y Mitigación de Riesgos</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Ordena cronológicamente las siguientes acciones del caso práctico y justifica por qué conectar Llama 3 al final (Fase 5) reduce drásticamente el riesgo de errores en la integración:
-        <br>
-        (A) Exponer el servidor local con ngrok. &nbsp;|&nbsp; (B) Responder con texto fijo (Echo) validando el ciclo completo. &nbsp;|&nbsp; (C) Configurar el webhook en Meta for Developers. &nbsp;|&nbsp; (D) Integrar la generación de respuestas con Llama.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.4rem; padding:1.4rem; background:rgba(139,92,246,0.04); border-left:4px solid var(--meta-purple); border-radius:10px; border:1px solid var(--border-subtle);">
-        <h5 style="color:var(--meta-purple); margin-top:0; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          Solución de Ingeniería &amp; Cronología de Pipeline
-        </h5>
-
-        <!-- SECUENCIA CRONOLÓGICA VISUAL -->
-        <div class="exercise-path-flow">
-          <span class="exercise-path-node" style="background:rgba(139,92,246,0.15); color:var(--meta-purple);">1. (A) Túnel ngrok</span>
-          <span style="color:var(--text-muted);">&rarr;</span>
-          <span class="exercise-path-node" style="background:rgba(139,92,246,0.15); color:var(--meta-purple);">2. (C) Handshake en Meta</span>
-          <span style="color:var(--text-muted);">&rarr;</span>
-          <span class="exercise-path-node" style="background:rgba(139,92,246,0.15); color:var(--meta-purple);">3. (B) Echo Test Estático</span>
-          <span style="color:var(--text-muted);">&rarr;</span>
-          <span class="exercise-path-node" style="background:rgba(16,185,129,0.15); color:var(--accent-success);">4. (D) Llama 3 Final</span>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Pipeline de Desarrollo
         </div>
-
-        <div style="font-size:0.92rem; color:var(--text-primary); line-height:1.65; margin-top:0.75rem;">
-          <strong style="color:var(--meta-purple); display:block; margin-bottom:0.4rem;">Principio de Aislamiento de Capas en Arquitectura:</strong>
-          Si conectas el modelo Llama 3 desde el primer minuto y el bot no contesta, te enfrentas a <b>indeterminación total</b>:
-          <ul style="margin:0.4rem 0 0.8rem 1.2rem; color:var(--text-secondary);">
-            <li>¿Falló el token de autenticación de Meta?</li>
-            <li>¿ngrok cerró la conexión por timeout?</li>
-            <li>¿El payload JSON vino mal formateado?</li>
-            <li>¿O Llama 3 tardó 8 segundos en inferir y Meta canceló la petición?</li>
-          </ul>
-          Al validar primero con <b>Echo Test (Texto Fijo)</b>, certificas que el cableado de red de ida y vuelta tarda &lt; 500 ms. Cuando inyectas Llama 3 en la Fase 5, <b>cualquier anomalía será 100% atribuible a la lógica del modelo o al prompt</b>, reduciendo el tiempo de depuración de días a minutos.
-        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Ordena cronológicamente las siguientes acciones del caso práctico y justifica por qué conectar Llama 3 al final (Fase 5) reduce drásticamente el riesgo de errores en la integración: (A) Exponer el servidor local con ngrok, (B) Responder con texto fijo (Echo) validando el ciclo completo, (C) Configurar el webhook en Meta for Developers, (D) Integrar la generación de respuestas con Llama.
+        </p>
       </div>
+
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Aislamiento de Capas</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Secuencia Cronológica de Despliegue</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  <b>1. (A) Túnel Seguro:</b> Levantar ngrok en el puerto local (ej. <code>ngrok http 8000</code>).<br>
+                  <b>2. (C) Handshake Webhook:</b> Configurar Callback URL y Verify Token en Meta for Developers.<br>
+                  <b>3. (B) Echo Test Estático:</b> Enviar mensaje de prueba y verificar que el servidor responda texto fijo en &lt; 300 ms.<br>
+                  <b>4. (D) Inyección de Llama 3:</b> Sustituir el echo estático por la llamada a la inferencia del modelo de lenguaje.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:#8b5cf6; background:rgba(139,92,246,0.04);">
+              <div class="step-num-badge" style="background:#8b5cf6;">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:#8b5cf6;">Justificación Arquitectónica: Principio de Aislamiento de Capas</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Si se conecta el modelo Llama 3 desde el primer momento y el bot no responde, el diagnóstico es indeterminado (¿falló el token de Meta, el túnel ngrok, el schema JSON o el tiempo de inferencia de la GPU?). Al validar primero la red con <b>Echo Test</b>, se garantiza que la infraestructura de transporte funciona. Cualquier fallo posterior en la Fase 4 es 100% atribuible al modelo o a su prompt.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 4 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2.2rem; box-shadow:var(--shadow-sm);">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:#f59e0b; color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 4</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Filtrado de Idoneidad del Canal Conversacional</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 4</span>
+        <h4 class="exercise-title">Filtrado de Idoneidad del Canal Conversacional</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Describe dos escenarios donde WhatsApp sea un canal natural y fluido para un agente inteligente, y dos escenarios donde forzar la conversación por este medio sume fricción innecesaria. Considera la asincronía, la interacción en movilidad y la complejidad de los datos visuales.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.4rem; padding:1.4rem; background:rgba(245,158,11,0.04); border-left:4px solid #f59e0b; border-radius:10px; border:1px solid var(--border-subtle);">
-        <h5 style="color:#f59e0b; margin-top:0; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          Matriz de Idoneidad Conversacional (Cuándo Sí vs Cuándo No)
-        </h5>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de UX Conversacional
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Describe dos escenarios donde WhatsApp sea un canal natural y fluido para un agente inteligente, y dos escenarios donde forzar la conversación por este medio sume fricción innecesaria. Considera la asincronía, la interacción en movilidad y la complejidad de los datos visuales.
+        </p>
+      </div>
 
-        <div class="exercise-arch-grid">
-          <div class="exercise-arch-card" style="border-left:3px solid var(--accent-success);">
-            <div class="exercise-arch-header" style="color:var(--accent-success);">
-              <span>✔ Escenarios de Alta Idoneidad (Éxito Rotundo)</span>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Matriz de Idoneidad</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Escenarios de Alta Idoneidad (Éxito Rotundo)</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>1. Asistencia Vial y Reporte de Siniestros:</b> El usuario en carretera no descargará una app; envía fotos de daños, notas de voz y ubicación GPS con un clic.<br>
+                  • <b>2. Confirmación y Reagendamiento con Botones:</b> Notificaciones transaccionales con botones interactivos (<i>"Confirmar"</i> / <i>"Reprogramar"</i>) con tasas de apertura superiores al 95%.
+                </p>
+              </div>
             </div>
-            <div style="font-size:0.84rem; color:var(--text-secondary); line-height:1.5;">
-              <b>1. Siniestros y Asistencia Vial:</b> El usuario varado en la autopista no descargará una app pesada; envía fotos del impacto, nota de voz con el relato y ubicación GPS con 1 clic.<br><br>
-              <b>2. Reagendamiento de Citas con Botones:</b> Mensaje proactivo con botones rápidos (<i>"Confirmar"</i> / <i>"Mover a Mañana"</i>). Tasa de apertura &gt; 95%.
-            </div>
-          </div>
 
-          <div class="exercise-arch-card" style="border-left:3px solid #ef4444;">
-            <div class="exercise-arch-header" style="color:#ef4444;">
-              <span>❌ Anti-Patrones (Fricción Innecesaria)</span>
-            </div>
-            <div style="font-size:0.84rem; color:var(--text-secondary); line-height:1.5;">
-              <b>1. Declaración Anual de Impuestos:</b> Llenar 50 campos numéricos en un chat es frustrante y propenso a errores tipográficos. Una interfaz Web es superior.<br><br>
-              <b>2. Análisis de Gráficos Bursátiles en Vivo:</b> Requiere tablas dinámicas y zoom en velas financieras que un feed vertical de chat no puede renderizar.
+            <div class="step-flow-item" style="border-left-color:#ef4444; background:rgba(239,68,68,0.04);">
+              <div class="step-num-badge" style="background:#ef4444;">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:#ef4444;">Anti-Patrones de Canal (Fricción Innecesaria)</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>1. Declaración Anual de Impuestos:</b> Llenar formularios de 50 campos numéricos mediante preguntas sucesivas en chat es extenuante; una interfaz web con validación visual es superior.<br>
+                  • <b>2. Análisis de Velas Financieras / Trading:</b> Gráficos interactivos densos y zooms de mercado no pueden representarse ergonómicamente en un feed vertical de mensajería.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 5 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2.2rem; box-shadow:var(--shadow-sm);">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:#ef4444; color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 5</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Depuración y Diagnóstico de Fallas de Webhooks</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 5</span>
+        <h4 class="exercise-title">Depuración y Diagnóstico de Fallas de Webhooks</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Supón que Meta reporta que no puede entregar eventos a tu URL de webhook (Error <i>Webhook delivery failed</i>). Sin inventar herramientas externas, enumera y desglosa tres causas técnicas probables relacionadas con ngrok o con tu servidor local que deberías verificar antes de revisar tu código de inferencia de Llama.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.4rem; padding:1.4rem; background:rgba(239,68,68,0.04); border-left:4px solid #ef4444; border-radius:10px; border:1px solid var(--border-subtle);">
-        <h5 style="color:#ef4444; margin-top:0; font-size:1.05rem; display:flex; align-items:center; gap:0.5rem;">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-          Protocolo de Triage y Diagnóstico Técnico en Terminal
-        </h5>
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Triage MLOps
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Supón que Meta reporta que no puede entregar eventos a tu URL de webhook (Error <i>Webhook delivery failed</i>). Sin inventar herramientas externas, enumera y desglosa tres causas técnicas probables relacionadas con ngrok o con tu servidor local que deberías verificar antes de revisar tu código de inferencia de Llama.
+        </p>
+      </div>
 
-        <div class="exercise-triage-grid">
-          <div class="exercise-triage-card">
-            <div class="exercise-triage-step" style="color:#ef4444;">
-              <span>1. URL de ngrok Caducada</span>
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Protocolo de Triage</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Las 3 Causas Raíz Más Frecuentes</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>1. URL de ngrok Expirada:</b> En cuentas gratuitas, al reiniciar ngrok cambia el dominio público. Meta intenta entregar a la URL anterior devolviendo <code>504 Gateway Timeout</code>.<br>
+                  • <b>2. Uvicorn Caído o en Puerto Distinto:</b> El túnel apunta a <code>localhost:8000</code> pero el servidor FastAPI no está corriendo o escucha en otro puerto.<br>
+                  • <b>3. Bloqueo Síncrono (> 3.0s):</b> El endpoint ejecuta la inferencia de Llama de forma síncrona dentro del handler HTTP, provocando que Meta corte la conexión por timeout.
+                </p>
+              </div>
             </div>
-            <p style="margin:0; font-size:0.8rem; color:var(--text-secondary);">
-              <b>Causa:</b> La sesión gratuita de ngrok cambió la URL pública al reiniciar la terminal.<br>
-              <b>Solución:</b> Copiar la nueva URL y actualizar en el panel de Meta for Developers.
-            </p>
-          </div>
 
-          <div class="exercise-triage-card">
-            <div class="exercise-triage-step" style="color:#f59e0b;">
-              <span>2. Uvicorn Apagado / Puerto</span>
+            <div class="step-flow-item">
+              <div class="step-num-badge">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Tabla de Diagnóstico Rápido de Errores</h5>
+                <div class="table-responsive-wrapper" style="margin-top:0.4rem;">
+                  <table class="table-pro" style="font-size:0.85rem;">
+                    <thead>
+                      <tr>
+                        <th>Código HTTP</th>
+                        <th>Causa Técnica</th>
+                        <th>Acción Correctiva</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>504 Gateway Timeout</code></td>
+                        <td>ngrok no contacta al puerto local</td>
+                        <td>Ejecutar <code>uvicorn main:app --port 8000</code></td>
+                      </tr>
+                      <tr>
+                        <td><code>403 Forbidden</code></td>
+                        <td>Verify Token incorrecto</td>
+                        <td>Verificar <code>VERIFY_TOKEN</code> en el archivo <code>.env</code></td>
+                      </tr>
+                      <tr>
+                        <td><code>Delivery Timeout</code></td>
+                        <td>Handler tardó &gt; 3 segundos</td>
+                        <td>Usar <code>BackgroundTasks</code> para responder 200 OK en &lt; 50ms</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
-            <p style="margin:0; font-size:0.8rem; color:var(--text-secondary);">
-              <b>Causa:</b> Uvicorn no está corriendo en el puerto <code>8000</code> al que apunta ngrok.<br>
-              <b>Solución en Terminal:</b><br>
-              <code>uvicorn main:app --reload --port 8000</code>
-            </p>
-          </div>
 
-          <div class="exercise-triage-card">
-            <div class="exercise-triage-step" style="color:var(--meta-blue);">
-              <span>3. Timeout de Ejecución (> 3 seg)</span>
+            <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+              <div class="step-num-badge" style="background:var(--accent-success);">3</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Arquitectura Asíncrona Recomendada</h5>
+                <div class="code-box" style="margin-top:0.4rem;">
+                  <div class="code-header">
+                    <span class="code-lang">Python · FastAPI Desacoplado</span>
+                    <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                  </div>
+                  <pre class="code-content"><code class="language-python"><span class="code-kw">@app.post</span>(<span class="code-str">"/webhook"</span>)
+<span class="code-kw">async def</span> <span class="code-fn">recibir_webhook</span>(req: <span class="code-var">Request</span>, bg: <span class="code-var">BackgroundTasks</span>):
+    payload = <span class="code-kw">await</span> req.<span class="code-fn">json</span>()
+    bg.<span class="code-fn">add_task</span>(procesar_con_llama3, payload)
+    <span class="code-kw">return</span> {<span class="code-str">"status"</span>: <span class="code-str">"ok"</span>}  <span class="code-cm"># Responde a Meta en 15 ms</span></code></pre>
+                </div>
+              </div>
             </div>
-            <p style="margin:0; font-size:0.8rem; color:var(--text-secondary);">
-              <b>Causa:</b> Endpoint síncrono bloqueando a Meta mientras Llama 3 razona.<br>
-              <b>Solución:</b> Retornar <code>{"status": "ok"}</code> de inmediato y despachar Llama con <code>BackgroundTasks</code>.
-            </p>
           </div>
         </div>
-
-        <table class="exercise-comp-table" style="margin-top:0.75rem;">
-          <thead>
-            <tr>
-              <th>Código HTTP de Meta</th>
-              <th>Diagnóstico Técnico</th>
-              <th>Acción Correctiva Inmediata</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>504 Gateway Timeout</code></td>
-              <td>ngrok no puede contactar a <code>localhost:8000</code></td>
-              <td>Iniciar o reiniciar el proceso de Uvicorn en tu terminal local.</td>
-            </tr>
-            <tr>
-              <td><code>403 Forbidden</code></td>
-              <td>Token de verificación no coincide</td>
-              <td>Verificar que <code>hub.verify_token</code> sea idéntico al <code>VERIFY_TOKEN</code> de tu <code>.env</code>.</td>
-            </tr>
-            <tr>
-              <td><code>Delivery Timeout</code></td>
-              <td>El servidor tardó más de 3 segundos en responder</td>
-              <td>Desacoplar la inferencia del webhook mediante tareas en segundo plano.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      </details>
     </article>
-
   </section>
 
   <!-- ==========================================================================

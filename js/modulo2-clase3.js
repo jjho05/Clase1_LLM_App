@@ -117,6 +117,18 @@
         runToolExecution();
       });
     });
+
+    const btnResetFc = document.getElementById("fc-btn-reset");
+    if (btnResetFc) {
+      btnResetFc.addEventListener("click", () => {
+        if (window.SOUND) window.SOUND.playPop(300);
+        btnExecute.disabled = false;
+        stepCards.forEach(c => { if(c) c.className = "flow-step-tracker"; });
+        if (userMsgInput) userMsgInput.value = "Hola, quiero reservar una mesa para 4 personas este viernes a las 8 de la noche en la terraza";
+        if (logConsole) logConsole.textContent = "// Simulador listo. Haz clic en 'Ejecutar Ciclo de Function Calling' para iniciar.";
+        if (finalWhatsAppBubble) finalWhatsAppBubble.textContent = 'Haz clic en "Ejecutar Ciclo de Function Calling" para ver la respuesta en vivo...';
+      });
+    }
   }
 
   /* ==========================================================================
@@ -169,6 +181,19 @@
     if (paramNameInput) paramNameInput.addEventListener("input", renderSchema);
     if (paramTypeSelect) paramTypeSelect.addEventListener("change", renderSchema);
     if (paramRequiredCb) paramRequiredCb.addEventListener("change", renderSchema);
+
+    const btnResetSchema = document.getElementById("schema-btn-reset");
+    if (btnResetSchema) {
+      btnResetSchema.addEventListener("click", () => {
+        if (window.SOUND) window.SOUND.playPop(300);
+        if (fnNameInput) fnNameInput.value = "consultar_estatus_pedido";
+        if (fnDescInput) fnDescInput.value = "Consulta el estatus de un envío de e-commerce mediante su número de guía.";
+        if (paramNameInput) paramNameInput.value = "pedido_id";
+        if (paramTypeSelect) paramTypeSelect.value = "string";
+        if (paramRequiredCb) paramRequiredCb.checked = true;
+        renderSchema();
+      });
+    }
 
     renderSchema();
   }
@@ -228,6 +253,19 @@
       if (s) s.addEventListener("input", calculateLatency);
     });
 
+    const btnResetLat = document.getElementById("lat-btn-reset");
+    if (btnResetLat) {
+      btnResetLat.addEventListener("click", () => {
+        if (window.SOUND) window.SOUND.playPop(300);
+        if (sWebhook) sWebhook.value = 220;
+        if (sInf1) sInf1.value = 850;
+        if (sDb) sDb.value = 180;
+        if (sInf2) sInf2.value = 950;
+        if (sSend) sSend.value = 200;
+        calculateLatency();
+      });
+    }
+
     calculateLatency();
   }
 
@@ -259,7 +297,7 @@
       const wamid = `wamid.HBgLMjUyMTU1ODc2NTE2FQIAEhgg${counter}`;
       if (!processedMessages.has(wamid)) {
         processedMessages.add(wamid);
-        renderLog(`MENSAJE NUEVO RECIBIDO -> wamid: ${wamid}\n  ✔ Verificado en Redis (SETNX exitoso: LLAVE_CREADA)\n  ✔ Procesando inferencia Llama 3 y ejecutando acción. Retornando HTTP 200 OK.`, false);
+        renderLog(`MENSAJE NUEVO RECIBIDO -> wamid: ${wamid}\n  [OK] Verificado en Redis (SETNX exitoso: LLAVE_CREADA)\n  [OK] Procesando inferencia Llama 3 y ejecutando acción. Retornando HTTP 200 OK.`, false);
       }
     });
 
@@ -270,7 +308,7 @@
         processedMessages.add(wamid);
       }
       const existing = Array.from(processedMessages)[processedMessages.size - 1];
-      renderLog(`REINTENTO DUPLICADO DE META DETECTADO -> wamid: ${existing}\n  ⛔ Bloqueado por filtro de idempotencia (Llave ya existe en Redis)\n  ✔ Retornando HTTP 200 OK inmediato sin re-ejecutar la acción para evitar cobro doble.`, true);
+      renderLog(`REINTENTO DUPLICADO DE META DETECTADO -> wamid: ${existing}\n  [BLOQUEADO] Bloqueado por filtro de idempotencia (Llave ya existe en Redis)\n  [OK] Retornando HTTP 200 OK inmediato sin re-ejecutar la acción para evitar cobro doble.`, true);
     });
 
     if (btnResetCache) {
@@ -321,6 +359,16 @@
     }
 
     scenarioSelect.addEventListener("change", renderScenario);
+
+    const btnResetFb = document.getElementById("fb-btn-reset");
+    if (btnResetFb) {
+      btnResetFb.addEventListener("click", () => {
+        if (window.SOUND) window.SOUND.playPop(300);
+        if (scenarioSelect) scenarioSelect.value = "db_timeout";
+        renderScenario();
+      });
+    }
+
     renderScenario();
   }
 
@@ -372,17 +420,12 @@
   }
 
   /* ==========================================================================
-     7. CONTROLADOR DE EJERCICIOS PRÁCTICOS
+     7. CONTROLADOR DE EJERCICIOS PRÁCTICOS CON AUDIO FEEDBACK
      ========================================================================== */
   function initExerciseToggles() {
-    const toggles = document.querySelectorAll(".exercise-solution-toggle");
-    toggles.forEach(btn => {
-      btn.addEventListener("click", function(){
-        const content = btn.nextElementSibling;
-        if (!content) return;
-        const isHidden = content.style.display === "none" || !content.style.display;
-        content.style.display = isHidden ? "block" : "none";
-        btn.textContent = isHidden ? "Ocultar Solución Guiada" : "Ver Solución Guiada & Criterios de Evaluación";
+    const detailsList = document.querySelectorAll(".exercise-solution-details summary");
+    detailsList.forEach(summary => {
+      summary.addEventListener("click", function(){
         if (window.SOUND) window.SOUND.playPop(340);
       });
     });

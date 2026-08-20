@@ -424,6 +424,12 @@
     <div class="workbench-section" style="margin-bottom:3rem;">
       <div class="workbench-top">
         <span class="workbench-label">Banco 2.2.2 · Playground Llama Stack (Arquitectura Modular Estandarizada)</span>
+        <div class="workbench-actions">
+          <button class="btn-reset-sm" id="stack-btn-reset" title="Restablecer configuración Llama Stack">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
+        </div>
       </div>
       <div style="padding:1.5rem;">
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1.2rem; margin-bottom:1.5rem;">
@@ -471,6 +477,10 @@
         <span class="workbench-label">Banco 2.2.3 · Árbol de Decisión Híbrido (Reglas Fijas Deterministas vs Inferencia LLM)</span>
         <div class="workbench-actions">
           <span class="bench-badge-status status-info" id="hybrid-decision-pill">Esperando Frase</span>
+          <button class="btn-reset-sm" id="hybrid-btn-reset" title="Restablecer enrutador híbrido">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
         </div>
       </div>
       <div style="padding:1.5rem;">
@@ -500,6 +510,12 @@
     <div class="workbench-section" style="margin-bottom:3rem;">
       <div class="workbench-top">
         <span class="workbench-label">Banco 2.2.4 · Compresor de Historial &amp; Optimizador de Tokens (Sliding Window vs Summary)</span>
+        <div class="workbench-actions">
+          <button class="btn-reset-sm" id="comp-btn-reset" title="Restablecer compresor de tokens">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
+        </div>
       </div>
       <div style="padding:1.5rem;">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
@@ -539,6 +555,10 @@
             <option value="user_2">Paciente 2: Dra. Sofía Morales (+52 1 55 1234-5678)</option>
             <option value="user_3">Paciente 3: Ing. Carlos Mendoza (+52 1 55 9988-7766)</option>
           </select>
+          <button class="btn-reset-sm" id="multi-btn-reset" title="Restablecer sesiones de usuario">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+            <span>Restablecer</span>
+          </button>
         </div>
       </div>
       <div style="padding:1.5rem;">
@@ -556,77 +576,232 @@
   ========================================================================== -->
   <section class="module-block" id="ejercicios" style="margin-bottom: 4rem;">
     <div class="module-header">
-      <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Autoevaluación Práctica</div>
+      <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Autoevaluación Práctica &amp; Análisis de Sistemas</div>
       <h2 class="module-title">Ejercicios Prácticos Oficiales de la Unidad 2.2</h2>
-      <p class="module-desc">Resuelve los 3 desafíos de diseño de agentes y memoria de estado del temario oficial.</p>
+      <p class="module-desc">Resuelve los 3 desafíos de diseño de agentes y memoria de estado del temario oficial. Despliega cada solución para revisar el análisis paso a paso y los criterios de ingeniería.</p>
     </div>
 
     <!-- EJERCICIO 1 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--meta-blue); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 1</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Rastreo del Estado Paso a Paso en un Caso Clínico</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 1</span>
+        <h4 class="exercise-title">Rastreo del Estado Paso a Paso en un Caso Clínico</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Revisa la conversación de la clínica dental donde un paciente escribe: (1) <i>"quiero una cita dental"</i> y luego (2) <i>"¿tienen horario el sábado?"</i>. Indica qué datos específicos debe contener el estado en memoria después de cada mensaje, qué información nueva se añade y qué se reinyecta en la siguiente llamada a Llama.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(8,102,255,0.05); border-left:4px solid var(--meta-blue); border-radius:8px;">
-        <h5 style="color:var(--meta-blue); margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          <b>Turno 1:</b> Estado guarda <code>{servicio: "dental", etapa: "CONSULTANDO_HORARIOS"}</code>. Se reinyecta en el prompt del sistema.
-          <br><br>
-          <b>Turno 2:</b> Se añade <code>{dia_solicitado: "sabado"}</code> manteniendo <code>servicio: "dental"</code>. Al reenviarse a Llama, el modelo sabe que la pregunta sobre el sábado pertenece a una consulta dental, evitando preguntas redundantes.
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado del Flujo Conversacional
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Revisa la conversación de la clínica dental donde un paciente escribe: (1) <i>"quiero una cita dental"</i> y luego (2) <i>"¿tienen horario el sábado?"</i>. Indica qué datos específicos debe contener el estado en memoria después de cada mensaje, qué información nueva se añade y qué se reinyecta en la siguiente llamada a Llama 3.
         </p>
       </div>
+
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Diagrama de Estado</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Turno 1: Identificación de Intención y Apertura de Sesión</h5>
+                <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>Mensaje Usuario:</b> <i>"quiero una cita dental"</i>.<br>
+                  • <b>Extracción del Agente:</b> <code>intent: "agendar_cita"</code>, <code>servicio: "odontologia_general"</code>, <code>etapa: "SELECCIONANDO_FECHA"</code>.<br>
+                  • <b>Estado en Base de Datos (SQLite/Redis):</b>
+                </p>
+                <div class="code-box">
+                  <pre class="code-content"><code class="language-json">{
+  "wa_id": "5215587654321",
+  "etapa": "SELECCIONANDO_FECHA",
+  "slots": { "servicio": "odontologia_general", "fecha": null, "hora": null },
+  "created_at": 1787112000
+}</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-flow-item">
+              <div class="step-num-badge">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Turno 2: Enriquecimiento Incremental del Estado</h5>
+                <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>Mensaje Usuario:</b> <i>"¿tienen horario el sábado?"</i>.<br>
+                  • <b>Actualización de Slots:</b> Se preserva <code>servicio: "odontologia_general"</code> y se añade <code>dia_solicitado: "sabado"</code>.<br>
+                  • <b>Prompt Reinyectado a Llama 3:</b>
+                </p>
+                <div class="code-box">
+                  <pre class="code-content"><code class="language-markdown"># Contexto de Sesión del Paciente:
+- Servicio solicitado: Odontología General (confirmado previamente)
+- Preferencia de fecha: Sábado
+- Horarios disponibles en base de datos: 10:00 AM, 12:30 PM, 04:00 PM.
+Instrucción: Ofrece amablemente los 3 horarios del sábado para odontología sin volver a preguntar qué servicio necesita.</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+              <div class="step-num-badge" style="background:var(--accent-success);">3</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Criterio de Validación Productiva</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Al inyectar el estado resumido en lugar del historial completo sin estructurar, el modelo responde con precisión quirúrgica en menos de <b>80 tokens</b>, reduciendo la latencia de 1.8s a <b>420ms</b> y eliminando preguntas redundantes que frustran al usuario.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 2 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--accent-success); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 2</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Distinción entre Reglas Fijas y Flexibilidad del Modelo</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 2</span>
+        <h4 class="exercise-title">Distinción entre Reglas Fijas y Flexibilidad del Modelo</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Para cada una de las siguientes situaciones, decide si debe implementarse como una regla fija inquebrantable o como una decisión delegada a Llama 3:
-        <br>
-        (a) Un usuario escribe <i>"quiero hablar con un humano"</i>.
-        <br>
-        (b) Un usuario pregunta <i>"¿qué síntomas debo tener para una consulta de cardiología?"</i>.
-        <br>
-        (c) Un usuario intenta modificar la fecha de una cita ya confirmada.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(16,185,129,0.05); border-left:4px solid var(--accent-success); border-radius:8px;">
-        <h5 style="color:var(--accent-success); margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          <b>(a) Regla Fija:</b> Transferencia inmediata al conmutador humano.
-          <br>
-          <b>(b) Flexibilidad LLM:</b> Explicación en lenguaje natural basada en RAG con guías clínicas oficiales.
-          <br>
-          <b>(c) Flujo Híbrido:</b> El LLM interpreta la nueva fecha solicitada, pero la validación de disponibilidad y la modificación en la base de datos la ejecuta una regla transaccional estricta con bloqueo de concurrencia.
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Diseño de Enrutamiento Híbrido
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Para cada una de las siguientes situaciones, decide si debe implementarse como una regla fija inquebrantable o como una decisión delegada a Llama 3: (a) Un usuario escribe <i>"quiero hablar con un humano"</i>, (b) Un usuario pregunta <i>"¿qué síntomas debo tener para una consulta de cardiología?"</i>, (c) Un usuario intenta modificar la fecha de una cita ya confirmada.
         </p>
       </div>
+
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Matriz de Decisión</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Evaluación de los 3 Escenarios</h5>
+                <div class="table-responsive-wrapper" style="margin-top:0.4rem;">
+                  <table class="table-pro" style="font-size:0.85rem;">
+                    <thead>
+                      <tr>
+                        <th>Caso</th>
+                        <th>Clasificación Arquitectónica</th>
+                        <th>Justificación Técnica</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><b>(a) "Hablar con humano"</b></td>
+                        <td><span class="status-pill-safe">Regla Fija Determinista</span></td>
+                        <td>Protocolo obligatorio. No debe someterse a inferencia del LLM; el backend transfiere inmediatamente el ticket al conmutador humano.</td>
+                      </tr>
+                      <tr>
+                        <td><b>(b) Consulta de Síntomas</b></td>
+                        <td><span class="status-pill-safe">Flexibilidad LLM + RAG</span></td>
+                        <td>Requiere comprensión de lenguaje natural y síntesis explicativa basada en guías clínicas oficiales con descargo de responsabilidad.</td>
+                      </tr>
+                      <tr>
+                        <td><b>(c) Modificar Cita</b></td>
+                        <td><span class="status-pill-warning">Flujo Híbrido en Dos Fases</span></td>
+                        <td>Llama 3 extrae la nueva fecha deseada (NLU), pero la validación de cupo y la transacción SQL la ejecuta una regla fija con bloqueo de concurrencia.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-flow-item">
+              <div class="step-num-badge">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Implementación en Código Python del Enrutador Híbrido</h5>
+                <div class="code-box" style="margin-top:0.4rem;">
+                  <div class="code-header">
+                    <span class="code-lang">Python 3.11 · Enrutador Defensivo</span>
+                    <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                  </div>
+                  <pre class="code-content"><code class="language-python"><span class="code-kw">import</span> <span class="code-var">re</span>
+
+<span class="code-kw">def</span> <span class="code-fn">enrutar_mensaje</span>(texto: <span class="code-var">str</span>, wa_id: <span class="code-var">str</span>):
+    t_lower = texto.<span class="code-fn">lower</span>().<span class="code-fn">strip</span>()
+    <span class="code-cm"># 1. Regla Determinista de Transferencia</span>
+    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"(humano|asesor|agente|operador|persona)"</span>, t_lower):
+        <span class="code-kw">return</span> <span class="code-fn">transferir_a_humano</span>(wa_id)
+    
+    <span class="code-cm"># 2. Regla de Emergencia Médica</span>
+    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"(sangrado|infarto|emergencia|ambulancia|grave)"</span>, t_lower):
+        <span class="code-kw">return</span> <span class="code-fn">activar_protocolo_urgencias</span>(wa_id)
+        
+    <span class="code-cm"># 3. Delegación a Llama 3 para Consulta / NLU</span>
+    <span class="code-kw">return</span> <span class="code-fn">ejecutar_agente_llama3</span>(texto, wa_id)</code></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
     </article>
 
     <!-- EJERCICIO 3 -->
-    <article class="exercise-card" style="background:var(--card-surface); border:1px solid var(--border-subtle); border-radius:14px; padding:1.8rem; margin-bottom:2rem;">
-      <div class="exercise-header" style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
-        <span class="exercise-num-badge" style="background:var(--meta-purple); color:#fff; padding:0.25rem 0.75rem; border-radius:6px; font-weight:800; font-size:0.85rem;">Ejercicio 3</span>
-        <h4 class="exercise-title" style="margin:0; font-size:1.15rem; font-family:var(--font-disp);">Análisis de Costo y Saturación de la Ventana de Contexto</h4>
+    <article class="exercise-card">
+      <div class="exercise-header">
+        <span class="exercise-num-badge">Ejercicio 3</span>
+        <h4 class="exercise-title">Análisis de Costo y Saturación de la Ventana de Contexto</h4>
       </div>
-      <p class="exercise-prompt" style="color:var(--text-secondary); line-height:1.65; font-size:0.98rem;">
-        Explica por qué reenviar todo el historial completo en cada llamada afecta directamente el uso de la ventana de contexto y la latencia. Propón una estrategia de compresión para mantener la coherencia conversacional sin saturar el contexto.
-      </p>
-      <button class="exercise-solution-toggle btn-secondary" style="margin-top:1rem;">Ver Solución Guiada &amp; Criterios de Evaluación</button>
-      <div class="exercise-solution-content" style="display:none; margin-top:1.2rem; padding:1.2rem; background:rgba(139,92,246,0.05); border-left:4px solid var(--meta-purple); border-radius:8px;">
-        <h5 style="color:var(--meta-purple); margin-top:0; font-size:1rem;">Solución de Ingeniería:</h5>
-        <p style="font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
-          Reenviar todo el historial satura la memoria con saludos y datos obsoletos, elevando los costos de inferencia y la latencia en la fase de <i>Prefill</i> de la GPU. La estrategia óptima combina una <b>ventana deslizante</b> para los últimos 3 turnos y un <b>resumen incremental de entidades</b> almacenado en SQLite, reduciendo hasta un 70% el consumo de tokens.
+      <div class="exercise-context-box">
+        <div class="exercise-context-title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Enunciado de Optimización de Cómputo &amp; VRAM
+        </div>
+        <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+          Explica por qué reenviar todo el historial completo en cada llamada afecta directamente el uso de la ventana de contexto y la latencia. Propón una estrategia de compresión para mantener la coherencia conversacional sin saturar el contexto.
         </p>
       </div>
-    </article>
 
+      <details class="exercise-solution-details">
+        <summary class="exercise-solution-summary">
+          <span>Ver Solución de Ingeniería Paso a Paso &amp; Algoritmo de Compresión</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="exercise-solution-panel">
+          <div class="step-flow-list">
+            <div class="step-flow-item">
+              <div class="step-num-badge">1</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Fórmula del Crecimiento Cuadrático de Tokens</h5>
+                <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Si se reenvía el historial completo en una conversación de $N$ turnos con longitud promedio $ar{L}$, el consumo acumulado de tokens crece de forma cuadrática:
+                </p>
+                <div class="formula-card" style="margin:0.4rem 0;">
+                  <div class="formula-math-area">
+                    $$C_{	ext{total}} = \sum_{t=1}^{N} \left(T_{	ext{sys}} + 2 \cdot t \cdot ar{L}ight) = N \cdot T_{	ext{sys}} + N(N+1) \cdot ar{L}$$
+                  </div>
+                </div>
+                <p style="margin:0.4rem 0 0 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  Para una conversación de 15 turnos con $ar{L} = 50$ tokens y $T_{	ext{sys}} = 200$, el método ingenuo procesa <b>14,550 tokens</b>, elevando la latencia de la fase de <i>Prefill</i> en GPU y multiplicando el costo en APIs.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+              <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+              <div class="step-flow-content" style="flex:1; min-width:0;">
+                <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Estrategia de Compresión Híbrida (Sliding Window + Summary)</h5>
+                <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                  • <b>Ventana Deslizante Fija ($K=3$ turnos):</b> Conserva los últimos 3 intercambios verbatim para preservar la fluidez inmediata.<br>
+                  • <b>Resumen Incremental de Entidades:</b> Cada 5 turnos, un sub-proceso asíncrono actualiza un resumen estructurado en JSON (<i>"Usuario: Juan, busca: endodoncia, cita: sábado 10am"</i>).<br>
+                  • <b>Resultado en Producción:</b> Consumo constante de $pprox 450$ tokens por llamada independientemente de si la conversación dura 5 o 50 turnos, logrando un <b>ahorro de cómputo del 69%</b>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+    </article>
   </section>
 
   <!-- ==========================================================================

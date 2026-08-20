@@ -94,9 +94,9 @@
           log += `<span style="color:#94a3b8;">Content-Type: text/plain; charset=utf-8</span>\n`;
           log += `<span style="color:#94a3b8;">Content-Length: ${challenge.length}</span>\n\n`;
           log += `<span style="color:#38bdf8; font-weight:700;">${escapeHtml(challenge)}</span>\n\n`;
-          log += `<span style="color:#22c55e; font-weight:700;">[DIAGNÓSTICO META]:</span> "✔ Webhook validado y guardado exitosamente. Tu suscripción a eventos 'messages' está lista."`;
+          log += `<span style="color:#22c55e; font-weight:700;">[DIAGNÓSTICO META]:</span> "[OK] Webhook validado y guardado exitosamente. Tu suscripción a eventos 'messages' está lista."`;
 
-          updateResultUI("success", "✔ Webhook Verificado Exitosamente (200 OK)", "Meta for Developers recibió el hub.challenge en texto plano exacto y activó la suscripción a eventos.", "200 OK · Verificado", "bench-badge-status status-success");
+          updateResultUI("success", "Webhook Verificado Exitosamente (200 OK)", "Meta for Developers recibió el hub.challenge en texto plano exacto y activó la suscripción a eventos.", "200 OK · Verificado", "bench-badge-status status-success");
           if (window.SOUND) window.SOUND.playChime();
         } else if (format === "json") {
           log += `<span style="color:#f59e0b;">[ADVERTENCIA] Tu endpoint devolvió un JSON en vez de texto plano: '{"hub.challenge": "${challenge}"}'</span>\n\n`;
@@ -105,7 +105,7 @@
           log += `<span style="color:#f87171;">{"hub.challenge": "${escapeHtml(challenge)}"}</span>\n\n`;
           log += `<span style="color:#ef4444; font-weight:700;">[ERROR EN META]:</span> "The URL couldn't be validated. The challenge response was not returned as plain text."`;
 
-          updateResultUI("error", "⚠️ Fallo de Formato: Meta Espera Texto Plano", "Tu servidor devolvió código 200 pero en formato JSON. Meta requiere texto plano estricto: usa Response(content=hub_challenge, media_type='text/plain').", "Formato Inválido", "bench-badge-status status-warning");
+          updateResultUI("error", "Fallo de Formato: Meta Espera Texto Plano", "Tu servidor devolvió código 200 pero en formato JSON. Meta requiere texto plano estricto: usa Response(content=hub_challenge, media_type='text/plain').", "Formato Inválido", "bench-badge-status status-warning");
         } else if (format === "html") {
           log += `<span style="color:#f59e0b;">[ADVERTENCIA] Tu endpoint devolvió HTML en vez de texto plano</span>\n\n`;
           log += `<span style="color:#f59e0b; font-weight:700;">HTTP/1.1 200 OK</span>\n`;
@@ -113,7 +113,7 @@
           log += `<span style="color:#f87171;">&lt;html&gt;&lt;body&gt;${escapeHtml(challenge)}&lt;/body&gt;&lt;/html&gt;</span>\n\n`;
           log += `<span style="color:#ef4444; font-weight:700;">[ERROR EN META]:</span> "The URL couldn't be validated. Received HTML payload."`;
 
-          updateResultUI("error", "⚠️ Fallo de Formato HTML", "Meta no acepta etiquetas HTML en el challenge. Debe retornarse la cadena numérica en texto plano sin etiquetas.", "Formato Inválido", "bench-badge-status status-warning");
+          updateResultUI("error", "Fallo de Formato HTML", "Meta no acepta etiquetas HTML en el challenge. Debe retornarse la cadena numérica en texto plano sin etiquetas.", "Formato Inválido", "bench-badge-status status-warning");
         }
       } else {
         log += `<span style="color:#ef4444;">[FAIL] Fallo en la autenticación del handshake:</span>\n`;
@@ -128,7 +128,7 @@
         log += `<span style="color:#f87171;">{"detail": "Token de verificación inválido o modo incorrecto"}</span>\n\n`;
         log += `<span style="color:#ef4444; font-weight:700;">[DIAGNÓSTICO META]:</span> "The URL couldn't be validated. The server responded with HTTP 403 Forbidden."`;
 
-        updateResultUI("error", "❌ 403 Forbidden · Token Rechazado", "El token enviado por Meta no coincide con el VERIFY_TOKEN de tu backend. Comprueba que ambas cadenas sean idénticas.", "403 Forbidden · Rechazado", "bench-badge-status status-error");
+        updateResultUI("error", "403 Forbidden · Token Rechazado", "El token enviado por Meta no coincide con el VERIFY_TOKEN de tu backend. Comprueba que ambas cadenas sean idénticas.", "403 Forbidden · Rechazado", "bench-badge-status status-error");
       }
 
       outputConsole.innerHTML = log;
@@ -139,7 +139,7 @@
         resultVisualCard.className = `handshake-result-card result-${type}`;
       }
       if (resultIcon) {
-        resultIcon.textContent = type === "success" ? "✔" : (type === "warning" ? "⚠️" : "❌");
+        resultIcon.innerHTML = type === "success" ? "<span style=\"color:#22c55e; font-weight:800; font-size:1.2rem;\">[OK]</span>" : (type === "warning" ? "<span style=\"color:#f59e0b; font-weight:800; font-size:1.2rem;\">[WARN]</span>" : "<span style=\"color:#ef4444; font-weight:800; font-size:1.2rem;\">[ERROR]</span>");
       }
       if (resultTitle) resultTitle.textContent = title;
       if (resultDesc) resultDesc.textContent = desc;
@@ -268,7 +268,7 @@
                 "timestamp": "1724089500",
                 "interactive": {
                   "type": "button_reply",
-                  "button_reply": { "id": "btn_reagendar_cita", "title": "📅 Reagendar Cita para Mañana" }
+                  "button_reply": { "id": "btn_reagendar_cita", "title": "Reagendar Cita para Mañana" }
                 },
                 "type": "interactive"
               }]
@@ -364,11 +364,11 @@
           if (outSenderName) outSenderName.textContent = "(Notificación de lectura / entrega)";
           if (outMsgId) outMsgId.textContent = status.id || "N/A";
           if (outContentPath) outContentPath.textContent = "statuses[0].status";
-          if (outMsgBody) outMsgBody.textContent = `👁️ El usuario leyó el mensaje (Status: "${status.status}")`;
+          if (outMsgBody) outMsgBody.textContent = `El usuario leyó el mensaje (Status: "${status.status}")`;
           if (outPhoneId) outPhoneId.textContent = (metadata && metadata.phone_number_id) ? metadata.phone_number_id : "N/A";
 
           if (chatUserLabel) chatUserLabel.textContent = `Notificación de Meta (${status.recipient_id})`;
-          if (chatBubbleText) chatBubbleText.textContent = `✔✔ Mensaje leído por el destinatario (status: ${status.status})`;
+          if (chatBubbleText) chatBubbleText.textContent = `Mensaje leído por el destinatario (status: ${status.status})`;
 
           if (pythonCodeView) {
             pythonCodeView.innerHTML = `<span style="color:#64748b;"># Manejo de Status Callback en FastAPI:</span>
@@ -404,13 +404,13 @@
             bodyText = msg.text.body;
             pathText = "messages[0].text.body";
           } else if (msg.type === "interactive" && msg.interactive) {
-            bodyText = `🔘 [ID: ${msg.interactive.button_reply.id}] ${msg.interactive.button_reply.title}`;
+            bodyText = `[ID: ${msg.interactive.button_reply.id}] ${msg.interactive.button_reply.title}`;
             pathText = "messages[0].interactive.button_reply.title";
           } else if (msg.type === "location" && msg.location) {
-            bodyText = `📍 Lat: ${msg.location.latitude}, Long: ${msg.location.longitude} (${msg.location.name || 'Ubicación'})`;
+            bodyText = `Lat: ${msg.location.latitude}, Long: ${msg.location.longitude} (${msg.location.name || 'Ubicación'})`;
             pathText = "messages[0].location.latitude, longitude";
           } else if (msg.type === "audio" && msg.audio) {
-            bodyText = `🎙️ Nota de Voz (Media ID: ${msg.audio.id}) [${msg.audio.mime_type}]`;
+            bodyText = `Nota de Voz (Media ID: ${msg.audio.id}) [${msg.audio.mime_type}]`;
             pathText = "messages[0].audio.id";
           } else {
             bodyText = JSON.stringify(msg[msg.type] || msg);
@@ -449,13 +449,13 @@
         }
 
         if (parseStatus) {
-          parseStatus.textContent = "✔ Payload desempaquetado y mapeado exitosamente a variables limpias.";
+          parseStatus.textContent = "Payload desempaquetado y mapeado exitosamente a variables limpias.";
           parseStatus.style.color = "var(--accent-success)";
         }
         if (window.SOUND) window.SOUND.playPop(520);
       } catch (err) {
         if (parseStatus) {
-          parseStatus.textContent = "❌ Error al parsear JSON: " + err.message;
+          parseStatus.textContent = "Error al parsear JSON: " + err.message;
           parseStatus.style.color = "#ef4444";
         }
       }
@@ -621,7 +621,7 @@
       const msgDiv = document.createElement("div");
       msgDiv.className = sender === "user" ? "chat-bubble user-bubble" : "chat-bubble bot-bubble";
       const timeStr = new Date().toLocaleTimeString("es-MX", { hour: '2-digit', minute: '2-digit' });
-      msgDiv.innerHTML = `<div class="bubble-text">${escapeHtml(msg)}</div><div class="bubble-time">${timeStr} · ${sender === "user" ? "✓✓" : "Meta AI"}</div>`;
+      msgDiv.innerHTML = `<div class="bubble-text">${escapeHtml(msg)}</div><div class="bubble-time">${timeStr} · ${sender === "user" ? "[Entregado]" : "Meta AI"}</div>`;
       chatContainer.appendChild(msgDiv);
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
@@ -841,10 +841,10 @@ PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
           log += `Calculada:  <span style="color:#38bdf8;">${calculated}</span>\n\n`;
 
           if (sig === calculated) {
-            log += `<span style="color:#22c55e; font-weight:700;">✓ FIRMA VÁLIDA (HTTP 200 OK): El mensaje proviene legítimamente de Meta.</span>`;
+            log += `<span style="color:#22c55e; font-weight:700;">[OK] FIRMA VÁLIDA (HTTP 200 OK): El mensaje proviene legítimamente de Meta.</span>`;
             if (window.SOUND) window.SOUND.playChime();
           } else {
-            log += `<span style="color:#ef4444; font-weight:700;">✗ FIRMA INVÁLIDA (HTTP 401 Unauthorized): Posible ataque de suplantación o clave secreta incorrecta.</span>`;
+            log += `<span style="color:#ef4444; font-weight:700;">[ERROR] FIRMA INVÁLIDA (HTTP 401 Unauthorized): Posible ataque de suplantación o clave secreta incorrecta.</span>`;
             if (window.SOUND) window.SOUND.playPop(220);
           }
           outputConsole.innerHTML = log;
@@ -914,17 +914,12 @@ PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
   }
 
   /* ==========================================================================
-     7. CONTROLADOR DE EJERCICIOS PRÁCTICOS (CURSO.MD)
+     7. CONTROLADOR DE EJERCICIOS PRÁCTICOS CON AUDIO FEEDBACK
      ========================================================================== */
   function initExerciseToggles() {
-    const toggles = document.querySelectorAll(".exercise-solution-toggle");
-    toggles.forEach(btn => {
-      btn.addEventListener("click", function(){
-        const content = btn.nextElementSibling;
-        if (!content) return;
-        const isHidden = content.style.display === "none" || !content.style.display;
-        content.style.display = isHidden ? "block" : "none";
-        btn.textContent = isHidden ? "Ocultar Solución Guiada" : "Ver Solución Guiada & Criterios de Evaluación";
+    const detailsList = document.querySelectorAll(".exercise-solution-details summary");
+    detailsList.forEach(summary => {
+      summary.addEventListener("click", function(){
         if (window.SOUND) window.SOUND.playPop(340);
       });
     });
@@ -1102,7 +1097,7 @@ PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
         out += `<span style="color:#e2e8f0;">{"messaging_product":"whatsapp","to":"5215587654321","type":"template","template":{"name":"hello_world"}}</span>\n\n`;
         out += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span>\n`;
         out += `<span style="color:#22c55e;">{"messages":[{"id":"wamid.HBgLMjUyMTU1ODc4NDk..."}]}</span>\n`;
-        out += `<span style="color:#38bdf8;">✔ FASE 1 CERTIFICADA: Plantilla recibida en WhatsApp Sandbox.</span>`;
+        out += `<span style="color:#38bdf8;">[OK] FASE 1 CERTIFICADA: Plantilla recibida en WhatsApp Sandbox.</span>`;
       }
       else if (currentPhase === "2") {
         out += `<span style="color:#64748b;">[${now}] === FASE 2: SERVIDOR LOCAL & TÚNEL NGROK ===</span>\n`;
@@ -1116,7 +1111,7 @@ PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
         out += `Region             United States (us)\n`;
         out += `Forwarding         https://a3f8-55-12.ngrok-free.app -> http://localhost:8000\n`;
         out += `Web Interface      http://127.0.0.1:4040</span>\n\n`;
-        out += `<span style="color:#38bdf8;">✔ FASE 2 CERTIFICADA: Túnel TLS activo y listo para recibir peticiones de Meta.</span>`;
+        out += `<span style="color:#38bdf8;">[OK] FASE 2 CERTIFICADA: Túnel TLS activo y listo para recibir peticiones de Meta.</span>`;
       }
       else if (currentPhase === "3") {
         out += `<span style="color:#64748b;">[${now}] === FASE 3: HANDSHAKE GET DE VERIFICACIÓN ===</span>\n`;
@@ -1124,7 +1119,7 @@ PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
         out += `<span style="color:#22c55e;">[AUTH] Token coincide con VERIFY_TOKEN del entorno.</span>\n`;
         out += `<span style="color:#22c55e;">[RESP] Devolviendo hub.challenge='1158201444' (Content-Type: text/plain)</span>\n\n`;
         out += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span> (24ms)\n`;
-        out += `<span style="color:#38bdf8;">✔ FASE 3 CERTIFICADA: Meta for Developers validó el webhook exitosamente (Checkmark Verde).</span>`;
+        out += `<span style="color:#38bdf8;">[OK] FASE 3 CERTIFICADA: Meta for Developers validó el webhook exitosamente (Checkmark Verde).</span>`;
       }
       else if (currentPhase === "4") {
         out += `<span style="color:#64748b;">[${now}] === FASE 4: VALIDACIÓN CON RESPUESTA FIJA (ECHO TEST) ===</span>\n`;
@@ -1134,7 +1129,7 @@ PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
         out += `<span style="color:#f59e0b;">[DISPATCH ECHO]</span> Enviando respuesta estática a Graph API...\n`;
         out += `<span style="color:#e2e8f0;">Mensaje: " Echo Servidor: Hemos recibido tu consulta '${escapeHtml(userText)}' correctamente."</span>\n`;
         out += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span> (Meta Graph API)\n`;
-        out += `<span style="color:#38bdf8;">✔ FASE 4 CERTIFICADA: Cableado 100% probado. Si falla después, el error es del LLM, no de red.</span>`;
+        out += `<span style="color:#38bdf8;">[OK] FASE 4 CERTIFICADA: Cableado 100% probado. Si falla después, el error es del LLM, no de red.</span>`;
       }
       else if (currentPhase === "5") {
         const orderMatch = userText.match(/#?(\d{5})/);
@@ -1151,7 +1146,7 @@ PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
         out += `<span style="color:#a78bfa; font-weight:700;">"¡Hola Lic. Jesús!  Tu pedido #${orderId} va en camino con DHL Express (Guía: DHL-9921). La entrega estimada es hoy a las 4:30 PM. ¿Deseas que te enviemos una notificación en cuanto el repartidor esté a 5 minutos de tu domicilio?"</span>\n\n`;
         out += `<span style="color:#38bdf8;">[GRAPH API DISPATCH]</span> POST https://graph.facebook.com/v20.0/109823746592831/messages\n`;
         out += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span> (Entregado al chat de WhatsApp en 420ms totales)\n`;
-        out += `<span style="color:#22c55e;">✔ FASE 5 CERTIFICADA: Agente de IA Llama 3 operando en producción con arquitectura sólida.</span>`;
+        out += `<span style="color:#22c55e;">[OK] FASE 5 CERTIFICADA: Agente de IA Llama 3 operando en producción con arquitectura sólida.</span>`;
       }
 
       consoleLog.innerHTML = out;

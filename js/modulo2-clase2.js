@@ -61,7 +61,7 @@
         conversationHistory.forEach(item => {
           const div = document.createElement("div");
           div.className = item.role === "user" ? "chat-bubble user-bubble" : "chat-bubble bot-bubble";
-          div.innerHTML = `<div class="bubble-text">${escapeHtml(item.content)}</div><div class="bubble-time">${item.time} · ${item.role === "user" ? "✓✓" : "Meta AI"}</div>`;
+          div.innerHTML = `<div class="bubble-text">${escapeHtml(item.content)}</div><div class="bubble-time">${item.time} · ${item.role === "user" ? "[Entregado]" : "Meta AI"}</div>`;
           chatContainer.appendChild(div);
         });
       }
@@ -223,6 +223,17 @@ agent = client.agents.create(
     if (safetySelect) safetySelect.addEventListener("change", generateStackSpec);
     toolCheckboxes.forEach(cb => cb.addEventListener("change", generateStackSpec));
 
+    const btnResetStack = document.getElementById("stack-btn-reset");
+    if (btnResetStack) {
+      btnResetStack.addEventListener("click", () => {
+        if (window.SOUND) window.SOUND.playPop(300);
+        if (memorySelect) memorySelect.value = "sqlite";
+        if (safetySelect) safetySelect.value = "llama_guard_3";
+        toolCheckboxes.forEach((cb, idx) => { cb.checked = idx < 2; });
+        generateStackSpec();
+      });
+    }
+
     generateStackSpec();
   }
 
@@ -281,6 +292,15 @@ agent = client.agents.create(
         evaluateRoute();
       });
     });
+
+    const btnResetHybrid = document.getElementById("hybrid-btn-reset");
+    if (btnResetHybrid) {
+      btnResetHybrid.addEventListener("click", () => {
+        if (window.SOUND) window.SOUND.playPop(300);
+        if (inputMsg) inputMsg.value = "Quiero hablar con un asesor humano";
+        evaluateRoute();
+      });
+    }
   }
 
   /* ==========================================================================
@@ -334,6 +354,16 @@ agent = client.agents.create(
 
     turnsSlider.addEventListener("input", calculateCompression);
     strategySelect.addEventListener("change", calculateCompression);
+
+    const btnResetComp = document.getElementById("comp-btn-reset");
+    if (btnResetComp) {
+      btnResetComp.addEventListener("click", () => {
+        if (window.SOUND) window.SOUND.playPop(300);
+        turnsSlider.value = 12;
+        strategySelect.value = "summary";
+        calculateCompression();
+      });
+    }
 
     calculateCompression();
   }
@@ -390,6 +420,16 @@ agent = client.agents.create(
     }
 
     userSelect.addEventListener("change", renderSession);
+
+    const btnResetMulti = document.getElementById("multi-btn-reset");
+    if (btnResetMulti) {
+      btnResetMulti.addEventListener("click", () => {
+        if (window.SOUND) window.SOUND.playPop(300);
+        userSelect.value = "user_1";
+        renderSession();
+      });
+    }
+
     renderSession();
   }
 
@@ -441,17 +481,12 @@ agent = client.agents.create(
   }
 
   /* ==========================================================================
-     7. CONTROLADOR DE EJERCICIOS PRÁCTICOS
+     7. CONTROLADOR DE EJERCICIOS PRÁCTICOS CON AUDIO FEEDBACK
      ========================================================================== */
   function initExerciseToggles() {
-    const toggles = document.querySelectorAll(".exercise-solution-toggle");
-    toggles.forEach(btn => {
-      btn.addEventListener("click", function(){
-        const content = btn.nextElementSibling;
-        if (!content) return;
-        const isHidden = content.style.display === "none" || !content.style.display;
-        content.style.display = isHidden ? "block" : "none";
-        btn.textContent = isHidden ? "Ocultar Solución Guiada" : "Ver Solución Guiada & Criterios de Evaluación";
+    const detailsList = document.querySelectorAll(".exercise-solution-details summary");
+    detailsList.forEach(summary => {
+      summary.addEventListener("click", function(){
         if (window.SOUND) window.SOUND.playPop(340);
       });
     });
