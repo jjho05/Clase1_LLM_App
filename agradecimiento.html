@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agradecimiento · Sitio Web de Inteligencia Artificial con Meta Llama 3</title>
-<meta name="description" content="Página de agradecimiento y cierre del sitio web del curso de Inteligencia Artificial Aplicada con Meta Llama 3, creado por Ing. Jesús Javier Hernandez Olvera.">
+<meta name="description" content="Página de agradecimiento, manifiesto y cierre del sitio web de Inteligencia Artificial Aplicada con Meta Llama 3, creado por Ing. Jesús Javier Hernandez Olvera.">
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,14 +25,14 @@
 
 <style>
 /* ============================================================
-   ESTILOS ESPECÍFICOS DE AGRADECIMIENTO
+   ESTILOS PREMIUM DE AGRADECIMIENTO Y CIERRE
    ============================================================ */
 
 /* Hero central */
 .agr-hero {
   text-align: center;
-  padding: 5rem 1.5rem 4rem;
-  max-width: 820px;
+  padding: 4.5rem 1.5rem 3.5rem;
+  max-width: 860px;
   margin: 0 auto;
 }
 
@@ -40,23 +40,24 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.38rem 1rem;
+  padding: 0.4rem 1.1rem;
   border-radius: 9999px;
   background: var(--meta-blue-subtle);
   border: 1px solid var(--meta-blue-border);
   color: var(--meta-blue);
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin-bottom: 1.8rem;
   letter-spacing: 0.04em;
+  box-shadow: var(--shadow-sm);
 }
 
 .agr-hero-title {
   font-family: var(--font-disp);
-  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
   font-weight: 900;
-  line-height: 1.18;
+  line-height: 1.16;
   color: var(--text-primary);
   margin-bottom: 1.4rem;
   letter-spacing: -0.025em;
@@ -70,108 +71,49 @@
 }
 
 .agr-hero-lead {
-  font-size: 1.12rem;
+  font-size: 1.14rem;
   line-height: 1.72;
   color: var(--text-secondary);
-  max-width: 68ch;
-  margin: 0 auto 2.5rem;
+  max-width: 70ch;
+  margin: 0 auto 2.2rem;
 }
 
-/* Firma del creador */
-.agr-author-block {
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
-  background: var(--card-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 1rem 1.5rem;
-  box-shadow: var(--shadow-sm);
-  margin-top: 1rem;
-}
-
-.agr-author-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--meta-blue), var(--meta-purple));
+/* Barra de acciones de utilidad */
+.agr-utility-bar {
   display: flex;
-  align-items: center;
+  gap: 0.85rem;
   justify-content: center;
-  flex-shrink: 0;
-  color: #fff;
-  font-family: var(--font-disp);
-  font-weight: 900;
-  font-size: 1.1rem;
-}
-
-.agr-author-name {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--text-primary);
-  line-height: 1.3;
-}
-
-.agr-author-role {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-}
-
-/* Separador decorativo */
-.agr-divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 3.5rem auto;
-  max-width: 600px;
-  color: var(--border-subtle);
-}
-
-.agr-divider::before,
-.agr-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--border-subtle);
-}
-
-.agr-divider-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  flex-wrap: wrap;
+  margin: 2rem 0 3rem;
 }
 
 /* Métricas del sitio */
 .agr-metrics-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 1.2rem;
-  max-width: 900px;
-  margin: 0 auto 4.5rem;
+  max-width: 960px;
+  margin: 0 auto 4rem;
 }
 
 .agr-metric {
   background: var(--card-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 14px;
-  padding: 1.4rem 1rem;
+  border-radius: 16px;
+  padding: 1.6rem 1rem;
   text-align: center;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 }
 
 .agr-metric:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   border-color: var(--meta-blue);
 }
 
 .agr-counter-val {
   font-family: var(--font-disp);
-  font-size: 2.2rem;
+  font-size: 2.3rem;
   font-weight: 900;
   color: var(--meta-blue);
   line-height: 1;
@@ -187,13 +129,13 @@
   letter-spacing: 0.06em;
 }
 
-/* Carta personal */
+/* Carta personal editorial */
 .agr-letter-card {
   background: var(--card-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 20px;
-  padding: 3rem 3rem 2.8rem;
-  max-width: 860px;
+  border-radius: 22px;
+  padding: 3.2rem 3.2rem 3rem;
+  max-width: 900px;
   margin: 0 auto 4.5rem;
   box-shadow: var(--shadow-card);
   position: relative;
@@ -209,20 +151,20 @@
 }
 
 .agr-letter-quote {
-  font-size: 1.1rem;
+  font-size: 1.18rem;
   font-style: italic;
   line-height: 1.78;
   color: var(--text-primary);
-  border-left: 3px solid var(--meta-blue);
-  padding-left: 1.4rem;
-  margin: 0 0 2rem;
+  border-left: 4px solid var(--meta-blue);
+  padding-left: 1.5rem;
+  margin: 0 0 2.2rem;
 }
 
 .agr-letter-body {
-  font-size: 0.98rem;
-  line-height: 1.78;
+  font-size: 1.02rem;
+  line-height: 1.8;
   color: var(--text-secondary);
-  margin-bottom: 1.4rem;
+  margin-bottom: 1.5rem;
 }
 
 .agr-letter-body strong {
@@ -236,52 +178,217 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   border-top: 1px solid var(--border-subtle);
-  padding-top: 1.8rem;
-  margin-top: 2rem;
+  padding-top: 2rem;
+  margin-top: 2.2rem;
 }
 
-.agr-letter-signature strong {
-  display: block;
-  font-size: 1rem;
+.agr-author-box {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.agr-author-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--meta-blue), var(--meta-purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  font-family: var(--font-disp);
+  font-weight: 900;
+  font-size: 1.25rem;
+  box-shadow: 0 4px 12px rgba(8,102,255,0.25);
+}
+
+.agr-author-name {
+  font-family: var(--font-disp);
+  font-weight: 800;
+  font-size: 1.05rem;
   color: var(--text-primary);
-  margin-bottom: 0.2rem;
+  line-height: 1.3;
 }
 
-.agr-letter-signature span {
-  font-size: 0.82rem;
+.agr-author-role {
+  font-size: 0.8rem;
   color: var(--text-muted);
   font-family: var(--font-mono);
 }
 
-/* Mapa del sitio (resumen de módulos) */
+/* Manifiesto de 4 Pilares */
+.agr-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  max-width: 960px;
+  margin: 0 auto 4.5rem;
+}
+
+.agr-pillar-card {
+  background: var(--card-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 1.8rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.agr-pillar-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--meta-blue);
+}
+
+.agr-pillar-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: var(--meta-blue-subtle);
+  border: 1px solid var(--meta-blue-border);
+  color: var(--meta-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.2rem;
+}
+
+.agr-pillar-title {
+  font-family: var(--font-head);
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.6rem;
+}
+
+.agr-pillar-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.62;
+}
+
+/* Stack Tecnológico Dominado */
+.agr-stack-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  max-width: 900px;
+  margin: 1.5rem auto 4.5rem;
+}
+
+.agr-stack-pill {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 8px;
+  background: var(--card-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.agr-stack-pill:hover {
+  border-color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+  color: var(--meta-blue);
+  transform: translateY(-2px);
+}
+
+.agr-stack-pill svg {
+  color: var(--accent-success);
+}
+
+/* Ruta de Próximos Pasos */
+.agr-nextsteps-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 900px;
+  margin: 0 auto 4.5rem;
+}
+
+.agr-nextstep-item {
+  background: var(--card-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.5rem 1.8rem;
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 1.2rem;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease;
+}
+
+.agr-nextstep-item:hover {
+  transform: translateX(4px);
+  border-color: var(--meta-blue);
+}
+
+.agr-nextstep-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--meta-blue-subtle);
+  border: 1px solid var(--meta-blue-border);
+  color: var(--meta-blue);
+  font-family: var(--font-disp);
+  font-size: 1.3rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.agr-nextstep-title {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.agr-nextstep-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* Mapa del sitio */
 .agr-sitemap-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 1.8rem;
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto 4.5rem;
 }
 
 .agr-module-card {
   background: var(--card-surface);
   border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 1.8rem;
+  border-radius: 18px;
+  padding: 2rem;
   box-shadow: var(--shadow-card);
 }
 
 .agr-module-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.2rem;
-  padding-bottom: 1rem;
+  gap: 0.85rem;
+  margin-bottom: 1.4rem;
+  padding-bottom: 1.2rem;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .agr-module-badge {
   font-family: var(--font-disp);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 900;
   color: var(--meta-blue);
   line-height: 1;
@@ -289,7 +396,7 @@
 
 .agr-module-title {
   font-family: var(--font-head);
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1.3;
@@ -299,20 +406,20 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .agr-topic-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.65rem;
-  font-size: 0.9rem;
+  gap: 0.75rem;
+  font-size: 0.92rem;
 }
 
 .agr-topic-item svg {
   color: var(--accent-success);
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 .agr-topic-item a {
@@ -327,26 +434,66 @@
 }
 
 .agr-topic-desc {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  margin-top: 0.15rem;
+  margin-top: 0.18rem;
 }
 
-/* Botones de acción final */
-.agr-cta-row {
+/* Toast de Copiado */
+.agr-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--meta-blue);
+  color: var(--text-primary);
+  padding: 0.85rem 1.4rem;
+  border-radius: 10px;
+  box-shadow: var(--shadow-elevated);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 600;
   display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
 
-@media (max-width: 600px) {
+.agr-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Estilos de Impresión */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .top-header, .header-controls, .course-pagination-nav, .agr-utility-bar, #bg-canvas, .course-footer, .btn-primary, .btn-secondary, #progress-bar {
+    display: none !important;
+  }
+  .agr-letter-card, .agr-metric, .agr-pillar-card, .agr-module-card {
+    box-shadow: none !important;
+    border: 1px solid #000000 !important;
+    page-break-inside: avoid;
+  }
+}
+
+@media (max-width: 650px) {
   .agr-letter-card {
-    padding: 2rem 1.5rem;
+    padding: 2.2rem 1.5rem;
   }
   .agr-hero {
-    padding: 3.5rem 1.25rem 3rem;
+    padding: 3.5rem 1.25rem 2.8rem;
+  }
+  .agr-nextstep-item {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
   }
 }
 </style>
@@ -356,7 +503,7 @@
 <!-- Canvas de Fondo con Partículas -->
 <canvas id="bg-canvas"></canvas>
 
-<!-- Header Principal -->
+<!-- Header Principal Homogéneo -->
 <header class="top-header">
   <div class="header-inner">
     <a href="index.html" class="brand-wrapper" title="Volver al Portal Principal">
@@ -369,6 +516,9 @@
     <nav class="nav-links">
       <a href="modulo2-tema4.html" class="nav-link-item" style="color: var(--meta-blue); font-weight: 700;">&larr; Unidad 2.4</a>
       <a href="#carta" class="nav-link-item">Mensaje</a>
+      <a href="#manifiesto" class="nav-link-item">Manifiesto</a>
+      <a href="#stack" class="nav-link-item">Stack</a>
+      <a href="#proximos-pasos" class="nav-link-item">Ruta</a>
       <a href="#modulos" class="nav-link-item">Contenido</a>
       <a href="index.html" class="nav-link-item" style="color: var(--accent-success); font-weight: 700;">Portal &rarr;</a>
     </nav>
@@ -383,7 +533,7 @@
 
       <button id="theme-btn" class="btn-icon" title="Alternar Modo Claro / Oscuro">
         <span id="theme-icon-container">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 000-1.41l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
         </span>
         <span class="btn-text-label" id="theme-label">Modo Claro</span>
       </button>
@@ -414,10 +564,13 @@
     <a href="modulo1-tema1.html" class="mobile-drawer-link">Módulo 1 &middot; Fundamentos LLM</a>
     <a href="modulo2-tema1.html" class="mobile-drawer-link">Módulo 2 &middot; WhatsApp Cloud</a>
     <a href="#carta" class="mobile-drawer-link">Mensaje del Creador</a>
+    <a href="#manifiesto" class="mobile-drawer-link">Manifiesto</a>
+    <a href="#stack" class="mobile-drawer-link">Stack Tecnológico</a>
+    <a href="#proximos-pasos" class="mobile-drawer-link">Próximos Pasos</a>
   </nav>
   <div class="mobile-drawer-footer">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Agradecimiento · Meta AI</span>
+      <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Agradecimiento &middot; Meta AI</span>
       <a href="index.html" style="font-size:0.75rem; color:var(--meta-blue); font-weight:700; text-decoration:none;">Portal &rarr;</a>
     </div>
   </div>
@@ -433,7 +586,7 @@
   <section class="agr-hero" id="overview">
     <div class="agr-eyebrow">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      <span>Gracias por estar aquí</span>
+      <span>Mensaje de Cierre &middot; Meta AI Llama 3</span>
     </div>
 
     <h1 class="agr-hero-title">
@@ -441,22 +594,32 @@
     </h1>
 
     <p class="agr-hero-lead">
-      Si llegaste hasta aquí es porque recorriste el contenido, interactuaste con los laboratorios y te tomaste el tiempo de entender cómo funcionan los modelos de lenguaje de Meta AI a fondo. <strong>Eso es lo que más importa.</strong>
+      Si llegaste hasta aquí es porque recorriste cada tema, experimentaste con los simuladores interactivos y te tomaste el tiempo de entender la ingeniería real detrás de los modelos abiertos de Meta AI. <strong>Gracias por tu compromiso con el aprendizaje técnico riguroso.</strong>
     </p>
 
-    <div class="agr-author-block">
-      <div class="agr-author-avatar">JO</div>
-      <div>
-        <div class="agr-author-name">Ing. Jesús Javier Hernandez Olvera</div>
-        <div class="agr-author-role">Creador del sitio &middot; Meta AI &middot; Llama 3</div>
-      </div>
+    <!-- Barra de Acciones de Utilidad -->
+    <div class="agr-utility-bar">
+      <button class="btn-primary" id="btn-confetti-trigger">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span>Celebrar Fin de Curso (Confeti)</span>
+      </button>
+
+      <button class="btn-secondary" id="btn-copy-summary">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span>Copiar Resumen para LinkedIn / CV</span>
+      </button>
+
+      <button class="btn-secondary" id="btn-print-summary">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span>Imprimir Resumen del Programa</span>
+      </button>
     </div>
   </section>
 
   <!-- ================================================================
     MÉTRICAS DEL SITIO
     ================================================================ -->
-  <section id="contenido" style="padding: 0 1.5rem;">
+  <section id="metricas">
     <div class="agr-metrics-row">
       <div class="agr-metric">
         <span class="agr-counter-val" data-target="2" data-suffix="">0</span>
@@ -471,8 +634,8 @@
         <div class="agr-counter-lbl">Simuladores Interactivos</div>
       </div>
       <div class="agr-metric">
-        <span class="agr-counter-val" data-target="27" data-suffix="+">0</span>
-        <div class="agr-counter-lbl">Ejercicios Prácticos</div>
+        <span class="agr-counter-val" data-target="32" data-suffix="+">0</span>
+        <div class="agr-counter-lbl">Ejercicios de Producción</div>
       </div>
       <div class="agr-metric">
         <span class="agr-counter-val" data-target="100" data-suffix="%">0</span>
@@ -484,32 +647,35 @@
   <!-- ================================================================
     CARTA PERSONAL DEL CREADOR
     ================================================================ -->
-  <section id="carta" style="padding: 0 1.5rem;">
+  <section id="carta" style="margin-bottom: 4.5rem;">
     <div class="agr-letter-card">
-      <div class="tema-eyebrow" style="margin-bottom:1rem;">Unas palabras del creador</div>
+      <div class="tema-eyebrow" style="margin-bottom:1.2rem;">Reflexión Editorial del Autor</div>
 
       <div class="agr-letter-quote">
-        "La inteligencia artificial open-source no debería ser exclusiva de los que tienen acceso a los recursos de las grandes empresas. Por eso construí esto: para que cualquier profesional con ganas de aprender pueda entender, experimentar y construir con herramientas de primer nivel."
+        "La inteligencia artificial de código abierto no debería ser exclusiva de quienes cuentan con supercómputo corporativo. Este sitio existe para que cualquier ingeniero o profesional con determinación pueda dominar, auditar e implementar modelos soberanos de primer nivel con rigor matemático y solvencia técnica."
       </div>
 
       <p class="agr-letter-body">
-        Este sitio nació de la necesidad de tener un recurso técnico real, interactivo y en español sobre <strong>Meta Llama 3</strong> aplicado a casos de uso concretos, sin rodeos ni abstracciones innecesarias. Desde los fundamentos matemáticos de los Transformers hasta el despliegue de un agente conversacional completo conectado a WhatsApp Cloud API.
+        Este sitio nació con una meta clara: <strong>eliminar la brecha entre la teoría académica y el despliegue industrial real</strong>. En el ecosistema hispanohablante hacía falta un recurso exhaustivo, interactivo y 100% práctico que desglosara desde la física de la atención $O(N^2)$, RoPE y GQA, hasta la orquestación de agentes conversacionales multi-tenant conectados a WhatsApp Cloud API con Function Calling y blindaje con Llama Guard 3.
       </p>
 
       <p class="agr-letter-body">
-        Cada simulador, cada fórmula y cada bloque de código fue pensado para que no solo leas, sino para que <strong>experimentes y entiendas de verdad cómo funciona</strong>. Si interactuaste con los laboratorios, cambiaste parámetros y viste cómo cambian los resultados, el sitio cumplió su propósito.
+        Cada uno de los 32 simuladores fue programado desde cero para que pudieras mover parámetros, inducir errores, medir latencias y observar en tiempo real cómo responde la arquitectura. Si interactuaste con los laboratorios, analizaste las fórmulas y ejecutaste los scripts, <strong>has adquirido un entendimiento que muy pocos desarrolladores en la industria dominan hoy en día</strong>.
       </p>
 
       <p class="agr-letter-body">
-        Gracias por tomarte el tiempo. El ecosistema de IA de código abierto crece con personas como tú que se toman en serio entender las herramientas que construyen el futuro.
+        El ecosistema de código abierto impulsado por <strong>Meta AI</strong> nos otorga la soberanía de construir soluciones privadas, seguras y de alto impacto sin depender de APIs propietarias. Lo que hagas con este conocimiento ahora depende de ti.
       </p>
 
       <div class="agr-letter-footer">
-        <div class="agr-letter-signature">
-          <strong>Ing. Jesús Javier Hernandez Olvera</strong>
-          <span>Creador del sitio &middot; Especialista en Arquitectura de IA &middot; 2026</span>
+        <div class="agr-author-box">
+          <div class="agr-author-avatar">JO</div>
+          <div>
+            <div class="agr-author-name">Ing. Jesús Javier Hernandez Olvera</div>
+            <div class="agr-author-role">Autor &middot; Arquitectura de IA &middot; Meta Llama 3 &middot; 2026</div>
+          </div>
         </div>
-        <div class="agr-cta-row" style="margin-top: 0;">
+        <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
           <a href="index.html" class="btn-primary" style="text-decoration:none;">Volver al Portal</a>
           <a href="modulo1-tema1.html" class="btn-secondary" style="text-decoration:none;">Repasar Módulo 1</a>
         </div>
@@ -518,13 +684,141 @@
   </section>
 
   <!-- ================================================================
+    MANIFIESTO DE LA IA SOBERANA (4 PILARES)
+    ================================================================ -->
+  <section id="manifiesto" style="margin-bottom: 4.5rem;">
+    <div style="text-align:center; margin-bottom: 2.5rem;">
+      <div class="tema-eyebrow" style="display:inline-block; margin-bottom:0.8rem;">Filosofía de Ingeniería</div>
+      <h2 style="font-family:var(--font-disp); font-size: clamp(1.8rem, 3.5vw, 2.4rem); font-weight:900; color:var(--text-primary); letter-spacing:-0.02em;">El Manifiesto de la IA Soberana</h2>
+      <p style="font-size:1rem; color:var(--text-secondary); max-width:64ch; margin: 0.8rem auto 0; line-height:1.65;">Los 4 pilares fundamentales con los que se diseñó cada unidad y cada simulador de este sitio web.</p>
+    </div>
+
+    <div class="agr-pillars-grid">
+      <!-- Pilar 1 -->
+      <div class="agr-pillar-card">
+        <div class="agr-pillar-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3 class="agr-pillar-title">1. Soberanía &amp; Privacidad Total</h3>
+        <p class="agr-pillar-desc">Los datos del usuario y la lógica de negocio nunca deben ser rehenes de nubes cerradas. El cómputo local y los modelos abiertos devuelven el control a quien construye el sistema.</p>
+      </div>
+
+      <!-- Pilar 2 -->
+      <div class="agr-pillar-card">
+        <div class="agr-pillar-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3m.08 4h.01"/></svg>
+        </div>
+        <h3 class="agr-pillar-title">2. Cero Cajas Negras</h3>
+        <p class="agr-pillar-desc">No basta con hacer un `import` y cruzar los dedos. Un verdadero ingeniero de IA comprende la atención matemática, la cuantización de bajo nivel y la distribución de memoria VRAM.</p>
+      </div>
+
+      <!-- Pilar 3 -->
+      <div class="agr-pillar-card">
+        <div class="agr-pillar-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3 class="agr-pillar-title">3. Resiliencia de Grado Industrial</h3>
+        <p class="agr-pillar-desc">Un bot que colapsa con 10 usuarios no es un sistema productivo. La idempotencia con `wamid`, los circuit breakers, los SLAs y la moderación defensiva son innegociables.</p>
+      </div>
+
+      <!-- Pilar 4 -->
+      <div class="agr-pillar-card">
+        <div class="agr-pillar-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="agr-pillar-title">4. Impacto Real en el Mundo</h3>
+        <p class="agr-pillar-desc">La IA generativa cobra verdadero valor cuando automatiza procesos reales, conecta con bases de datos transaccionales y resuelve problemas concretos para las personas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+    STACK TECNOLÓGICO DOMINADO
+    ================================================================ -->
+  <section id="stack" style="margin-bottom: 4.5rem;">
+    <div style="text-align:center; margin-bottom: 1.8rem;">
+      <div class="tema-eyebrow" style="display:inline-block; margin-bottom:0.8rem;">Ecosistema Integral</div>
+      <h2 style="font-family:var(--font-disp); font-size: clamp(1.8rem, 3.5vw, 2.4rem); font-weight:900; color:var(--text-primary); letter-spacing:-0.02em;">Stack Tecnológico de la Especialización</h2>
+      <p style="font-size:0.98rem; color:var(--text-secondary); max-width:64ch; margin: 0.8rem auto 0; line-height:1.65;">Las tecnologías, librerías y estándares oficiales que has explorado y dominado a lo largo del sitio web.</p>
+    </div>
+
+    <div class="agr-stack-cloud">
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Meta Llama 3.1 (8B / 70B)</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Llama Stack SDK &amp; Spec</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> WhatsApp Cloud Graph API v20.0</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> vLLM &amp; PagedAttention</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> PyTorch 2.4 &amp; Hugging Face</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Unsloth LoRA / QLoRA 4-bit</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> FastAPI &amp; Uvicorn Async</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Redis Multi-Tenant Sessions</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> PostgreSQL &amp; asyncpg Pool</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Llama Guard 3 (Dual-Shield)</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Prompt Guard 86M (mDeBERTa)</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Docker Compose Multi-Stage</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> NGINX SSL &amp; Reverse Proxy</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Prometheus &amp; Grafana SRE</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> RoPE &amp; GQA Attention</span>
+      <span class="agr-stack-pill"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> JSON Schema Draft 2020-12</span>
+    </div>
+  </section>
+
+  <!-- ================================================================
+    ¿HACIA DÓNDE IR AHORA? PRÓXIMOS PASOS
+    ================================================================ -->
+  <section id="proximos-pasos" style="margin-bottom: 4.5rem;">
+    <div style="text-align:center; margin-bottom: 2.5rem;">
+      <div class="tema-eyebrow" style="display:inline-block; margin-bottom:0.8rem;">Hoja de Ruta Profesional</div>
+      <h2 style="font-family:var(--font-disp); font-size: clamp(1.8rem, 3.5vw, 2.4rem); font-weight:900; color:var(--text-primary); letter-spacing:-0.02em;">¿Hacia Dónde Ir Ahora?</h2>
+      <p style="font-size:0.98rem; color:var(--text-secondary); max-width:64ch; margin: 0.8rem auto 0; line-height:1.65;">4 pasos estratégicos para consolidar lo aprendido y llevar tus agentes a producción real.</p>
+    </div>
+
+    <div class="agr-nextsteps-stack">
+      <!-- Paso 1 -->
+      <div class="agr-nextstep-item">
+        <div class="agr-nextstep-num">1</div>
+        <div>
+          <h3 class="agr-nextstep-title">Despliega tu Primer Agente Soberano 24/7</h3>
+          <p class="agr-nextstep-desc">Levanta tu propio servidor en la nube o en hardware local utilizando Docker Compose, NGINX con SSL de Let's Encrypt y FastAPI. Conéctalo a un número de prueba en Meta for Developers y valida el ciclo E2E con mensajes reales.</p>
+        </div>
+      </div>
+
+      <!-- Paso 2 -->
+      <div class="agr-nextstep-item">
+        <div class="agr-nextstep-num">2</div>
+        <div>
+          <h3 class="agr-nextstep-title">Integra Herramientas Operativas a tus Bases de Datos</h3>
+          <p class="agr-nextstep-desc">Diseña esquemas JSON Schema con Pydantic para tus sistemas actuales (agendas, catálogos, sistemas de pago o ERPs). Pon en práctica la inferencia en dos pasos y el control de idempotencia con <code>wamid</code>.</p>
+        </div>
+      </div>
+
+      <!-- Paso 3 -->
+      <div class="agr-nextstep-item">
+        <div class="agr-nextstep-num">3</div>
+        <div>
+          <h3 class="agr-nextstep-title">Experimenta con Fine-Tuning de Dominio</h3>
+          <p class="agr-nextstep-desc">Utiliza Unsloth para ajustar Llama 3.1 8B en un dataset específico de tu empresa o industria (médico, legal, atención al cliente) y evalúa la reducción en el consumo de tokens frente al Prompt Engineering tradicional.</p>
+        </div>
+      </div>
+
+      <!-- Paso 4 -->
+      <div class="agr-nextstep-item">
+        <div class="agr-nextstep-num">4</div>
+        <div>
+          <h3 class="agr-nextstep-title">Comparte tu Conocimiento &amp; Colabora</h3>
+          <p class="agr-nextstep-desc">El código abierto crece cuando compartimos lo que aprendemos. Publica tus proyectos, contribuye en GitHub al ecosistema de Llama Stack y ayuda a otros ingenieros a construir IA soberana.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
     MAPA DEL CONTENIDO DEL SITIO
     ================================================================ -->
-  <section id="modulos" style="padding: 0 1.5rem;">
+  <section id="modulos" style="margin-bottom: 4.5rem;">
     <div style="text-align:center; margin-bottom: 2.5rem;">
-      <div class="tema-eyebrow" style="display:inline-block; margin-bottom:0.8rem;">Lo que encontrarás en este sitio</div>
-      <h2 style="font-family:var(--font-disp); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight:900; color:var(--text-primary); letter-spacing:-0.02em;">2 Módulos &middot; 8 Temas &middot; Todo Interactivo</h2>
-      <p style="font-size:0.95rem; color:var(--text-secondary); max-width:60ch; margin: 0.8rem auto 0; line-height:1.65;">Navega de vuelta a cualquier sección desde aquí. Todos los temas tienen simuladores en vivo, fórmulas matemáticas y ejercicios prácticos.</p>
+      <div class="tema-eyebrow" style="display:inline-block; margin-bottom:0.8rem;">Índice General de Estudio</div>
+      <h2 style="font-family:var(--font-disp); font-size: clamp(1.8rem, 3.5vw, 2.4rem); font-weight:900; color:var(--text-primary); letter-spacing:-0.02em;">2 Módulos &middot; 8 Temas &middot; Todo Interactivo</h2>
+      <p style="font-size:0.98rem; color:var(--text-secondary); max-width:64ch; margin: 0.8rem auto 0; line-height:1.65;">Regresa en cualquier momento a repasar conceptos, experimentar con los bancos interactivos o resolver los ejercicios de producción.</p>
     </div>
 
     <div class="agr-sitemap-grid">
@@ -546,21 +840,21 @@
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             <div>
               <a href="modulo1-tema2.html">Tema 1.2 &middot; Prompt Engineering &amp; Optimización</a>
-              <div class="agr-topic-desc">CoT, Few-Shot, delimitadores especiales y alucinaciones</div>
+              <div class="agr-topic-desc">CoT, Few-Shot, delimitadores especiales y mitigación de alucinaciones</div>
             </div>
           </li>
           <li class="agr-topic-item">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             <div>
               <a href="modulo1-tema3.html">Tema 1.3 &middot; Embeddings, Vectores &amp; RAG</a>
-              <div class="agr-topic-desc">Búsqueda híbrida BM25 + Dense, coseno y re-ranking</div>
+              <div class="agr-topic-desc">Búsqueda híbrida BM25 + Dense, similitud coseno y re-ranking</div>
             </div>
           </li>
           <li class="agr-topic-item">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             <div>
               <a href="modulo1-tema4.html">Tema 1.4 &middot; Fine-Tuning LoRA / QLoRA &amp; Cuantización</a>
-              <div class="agr-topic-desc">Matrices $\Delta W = B \cdot A$, NF4 y Unsloth</div>
+              <div class="agr-topic-desc">Matrices $\Delta W = B \cdot A$, cuantización NF4 y Unsloth</div>
             </div>
           </li>
         </ul>
@@ -577,92 +871,84 @@
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             <div>
               <a href="modulo2-tema1.html">Tema 2.1 &middot; WhatsApp Cloud API &amp; Webhooks</a>
-              <div class="agr-topic-desc">Handshake GET, parseo de payloads y HMAC SHA-256</div>
+              <div class="agr-topic-desc">Handshake GET, parseo de payloads y seguridad HMAC SHA-256</div>
             </div>
           </li>
           <li class="agr-topic-item">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             <div>
               <a href="modulo2-tema2.html">Tema 2.2 &middot; Agentes Conversacionales &amp; Memoria</a>
-              <div class="agr-topic-desc">Memoria de sesión en Redis, Stateful vs Stateless</div>
+              <div class="agr-topic-desc">Memoria de sesión en Redis, Stateful vs Stateless y Llama Stack</div>
             </div>
           </li>
           <li class="agr-topic-item">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             <div>
               <a href="modulo2-tema3.html">Tema 2.3 &middot; Function Calling &amp; Herramientas</a>
-              <div class="agr-topic-desc">Ciclo de dos pasos, JSON Schema y validación Pydantic</div>
+              <div class="agr-topic-desc">Inferencia en dos pasos, JSON Schema y validación Pydantic</div>
             </div>
           </li>
           <li class="agr-topic-item">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             <div>
               <a href="modulo2-tema4.html">Tema 2.4 &middot; Producción &amp; Llama Guard 3</a>
-              <div class="agr-topic-desc">Docker, Systemd, NGINX SSL y blindaje de 14 categorías</div>
+              <div class="agr-topic-desc">Docker Compose, NGINX SSL, telemetría P95 y blindaje de seguridad</div>
             </div>
           </li>
         </ul>
       </div>
     </div>
-
-    <!-- CTA final -->
-    <div style="text-align:center; padding: 1rem 0 4rem;">
-      <div class="agr-cta-row">
-        <a href="index.html" class="btn-primary" style="text-decoration:none;">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Volver al Portal Principal
-        </a>
-        <a href="modulo1-tema1.html" class="btn-secondary" style="text-decoration:none;">Empezar desde el Principio</a>
-      </div>
-    </div>
   </section>
 
-
-    <!-- ==========================================================================
-      PAGINACIÓN INFERIOR — CIERRE DEL CURSO
-      ========================================================================== -->
-    <nav class="course-pagination-nav" aria-label="Navegación del Curso">
-      <a href="modulo2-tema4.html" class="pagination-link pagination-link--prev">
-        <div class="pagination-link__sublabel">
-          <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-          <span>Tema Anterior</span>
-        </div>
-        <div class="pagination-link__label">
-          <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          <span>Unidad 2.4 &middot; Producción &amp; Llama Guard</span>
-        </div>
-      </a>
-
-      <a href="index.html" class="pagination-link pagination-link--next" style="border-color:var(--meta-blue);">
-        <div class="pagination-link__sublabel">
-          <span style="color:var(--meta-blue); font-weight:700;">Portal Principal</span>
-          <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-        </div>
-        <div class="pagination-link__label">
-          <span style="color:var(--meta-blue); font-weight:800;">Volver al Portal Principal</span>
-          <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-    </nav>
-
-  </main>
-
   <!-- ==========================================================================
-    FOOTER CON AUTORÍA OFICIAL
-  ========================================================================== -->
-  <footer class="course-footer">
-    <div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem;">
-      <h2 style="font-size: 1.85rem; font-family: var(--font-disp); margin-bottom: 0.8rem; color: var(--text-primary);">Gracias por recorrer este sitio</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 1.6rem; font-size: 1.05rem;">Hecho con detalle técnico y con el objetivo de que la IA de código abierto sea accesible para todos los que quieran aprenderla a fondo.</p>
-      <a href="index.html" class="btn-primary" style="text-decoration:none; display:inline-block; margin-bottom:1.5rem;">Volver al Portal Principal &rarr;</a>
-      <div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; gap: 0.35rem;">
-        <p style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">
-          Sitio creado por <span style="color: var(--text-primary); font-weight: 700;">Ing. Jesús Javier Hernandez Olvera</span>
-        </p>
-        <p style="font-size: 0.82rem; color: var(--text-muted);">Meta AI &middot; Inteligencia Artificial Aplicada con Llama 3 &middot; 2026</p>
+    PAGINACIÓN INFERIOR — CIERRE DEL CURSO
+    ========================================================================== -->
+  <nav class="course-pagination-nav" aria-label="Navegación del Curso">
+    <a href="modulo2-tema4.html" class="pagination-link pagination-link--prev">
+      <div class="pagination-link__sublabel">
+        <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <span>Tema Anterior</span>
       </div>
+      <div class="pagination-link__label">
+        <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span>Unidad 2.4 &middot; Producción &amp; Llama Guard</span>
+      </div>
+    </a>
+
+    <a href="index.html" class="pagination-link pagination-link--next" style="border-color:var(--meta-blue);">
+      <div class="pagination-link__sublabel">
+        <span style="color:var(--meta-blue); font-weight:700;">Portal Principal</span>
+        <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+      </div>
+      <div class="pagination-link__label">
+        <span style="color:var(--meta-blue); font-weight:800;">Volver al Portal Principal</span>
+        <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+  </nav>
+
+</main>
+
+<!-- Toast de Notificación Flotante -->
+<div class="agr-toast" id="agr-toast" role="alert" aria-live="polite">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--accent-success)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="agr-toast-msg">Resumen copiado al portapapeles</span>
+</div>
+
+<!-- FOOTER CON AUTORÍA OFICIAL -->
+<footer class="course-footer">
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem;">
+    <h2 style="font-size: 1.85rem; font-family: var(--font-disp); margin-bottom: 0.8rem; color: var(--text-primary);">Gracias por recorrer este sitio</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1.6rem; font-size: 1.05rem;">Hecho con detalle técnico y con el objetivo de que la IA de código abierto sea accesible para todos los que quieran aprenderla a fondo.</p>
+    <a href="index.html" class="btn-primary" style="text-decoration:none; display:inline-block; margin-bottom:1.5rem;">Volver al Portal Principal &rarr;</a>
+    <div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; gap: 0.35rem;">
+      <p style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">
+        Sitio creado por <span style="color: var(--text-primary); font-weight: 700;">Ing. Jesús Javier Hernandez Olvera</span>
+      </p>
+      <p style="font-size: 0.82rem; color: var(--text-muted);">Meta AI &middot; Inteligencia Artificial Aplicada con Llama 3 &middot; 2026</p>
     </div>
-  </footer>
+  </div>
+</footer>
 
 </body>
 </html>
