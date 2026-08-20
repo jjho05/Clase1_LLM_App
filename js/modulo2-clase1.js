@@ -26,87 +26,158 @@
   });
 
   /* ==========================================================================
-     1. BANCO 2.1.1: SIMULADOR DE HANDSHAKE DE VERIFICACIÓN (GET /webhook)
+     1. BANCO 2.1.1: SIMULADOR VISUAL DE HANDSHAKE (META VS SERVIDOR)
      ========================================================================== */
   function initHandshakeSimulator() {
-    const modeInput = document.getElementById("hs-mode");
+    const callbackUrlInput = document.getElementById("hs-callback-url");
     const tokenInput = document.getElementById("hs-token");
+    const modeInput = document.getElementById("hs-mode");
     const challengeInput = document.getElementById("hs-challenge");
     const serverTokenInput = document.getElementById("hs-server-token");
+    const responseFormatSelect = document.getElementById("hs-response-format");
+    const casePresetSelect = document.getElementById("hs-case-preset-select");
     const btnTest = document.getElementById("hs-btn-test");
-    const btnPresetSuccess = document.getElementById("hs-preset-success");
-    const btnPresetFail = document.getElementById("hs-preset-fail");
     const outputConsole = document.getElementById("hs-console");
     const statusPill = document.getElementById("hs-status-pill");
+    const resultVisualCard = document.getElementById("hs-result-visual-card");
+    const resultIcon = document.getElementById("hs-result-icon");
+    const resultTitle = document.getElementById("hs-result-title");
+    const resultDesc = document.getElementById("hs-result-desc");
 
     if (!btnTest || !outputConsole) return;
 
     function runVerification() {
       if (window.SOUND) window.SOUND.playPop(420);
+      const url = callbackUrlInput ? callbackUrlInput.value.trim() : "https://a3f8-55-12.ngrok-free.app/webhook";
       const mode = modeInput ? modeInput.value.trim() : "subscribe";
       const token = tokenInput ? tokenInput.value.trim() : "";
       const challenge = challengeInput ? challengeInput.value.trim() : "1158201444";
       const serverToken = serverTokenInput ? serverTokenInput.value.trim() : "MI_TOKEN_SECRETO_2026";
+      const format = responseFormatSelect ? responseFormatSelect.value : "plain";
 
       let log = "";
-      log += `<span style="color:#64748b;">// 1. Solicitud entrante desde servidores de Meta (Facebook Graph API)</span>\n`;
-      log += `<span style="color:#38bdf8;">GET</span> /webhook?hub.mode=${encodeURIComponent(mode)}&hub.verify_token=${encodeURIComponent(token)}&hub.challenge=${encodeURIComponent(challenge)} HTTP/1.1\n`;
-      log += `<span style="color:#64748b;">Host:</span> api.mi-empresa.com\n`;
-      log += `<span style="color:#64748b;">User-Agent:</span> FacebookPlatform/1.0 (+http://developers.facebook.com)\n\n`;
+      const timestamp = new Date().toLocaleTimeString();
 
-      log += `<span style="color:#64748b;">// 2. Procesamiento en backend FastAPI</span>\n`;
-      if (mode === "subscribe" && token === serverToken) {
-        log += `<span style="color:#22c55e;">[OK] Modo verificado: '${mode}' === 'subscribe'</span>\n`;
-        log += `<span style="color:#22c55e;">[OK] Token verificado: '${token}' === server_secret_token</span>\n`;
-        log += `<span style="color:#22c55e;">[OK] Retornando hub.challenge como texto plano: '${challenge}'</span>\n\n`;
-        log += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span>\n`;
-        log += `Content-Type: text/plain; charset=utf-8\n`;
-        log += `Content-Length: ${challenge.length}\n\n`;
-        log += `<span style="color:#38bdf8; font-weight:700;">${challenge}</span>`;
+      log += `<span style="color:#64748b;">// [${timestamp}] 1. PETICIÓN HTTP GET DISPARADA POR META FOR DEVELOPERS</span>\n`;
+      log += `<span style="color:#38bdf8; font-weight:700;">GET</span> ${escapeHtml(url)}?hub.mode=${encodeURIComponent(mode)}&hub.verify_token=${encodeURIComponent(token)}&hub.challenge=${encodeURIComponent(challenge)} HTTP/1.1\n`;
+      log += `<span style="color:#64748b;">Host:</span> a3f8-55-12.ngrok-free.app\n`;
+      log += `<span style="color:#64748b;">User-Agent:</span> FacebookPlatform/1.0 (+http://developers.facebook.com)\n`;
+      log += `<span style="color:#64748b;">Accept:</span> */*\n\n`;
 
-        if (statusPill) {
-          statusPill.textContent = "200 OK · Webhook Verificado";
-          statusPill.className = "bench-badge-status status-success";
+      log += `<span style="color:#64748b;">// 2. PROCESAMIENTO Y EVALUACIÓN EN TU ENDPOINT FASTAPI</span>\n`;
+
+      // CASO: Servidor Apagado
+      if (format === "server_down") {
+        log += `<span style="color:#ef4444;">[ERROR DE RED] No se pudo establecer conexión con http://localhost:8000</span>\n`;
+        log += `<span style="color:#ef4444;">[NGROK] Error 502 Bad Gateway / 504 Gateway Timeout (Servidor Uvicorn no iniciado o caído)</span>\n\n`;
+        log += `<span style="color:#ef4444; font-weight:700;">HTTP/1.1 504 Gateway Timeout</span>\n`;
+        log += `Content-Type: text/html\n\n`;
+        log += `<span style="color:#f87171;">&lt;html&gt;&lt;body&gt;ngrok: Gateway Timeout&lt;/body&gt;&lt;/html&gt;</span>\n\n`;
+        log += `<span style="color:#ef4444; font-weight:700;">[DIAGNÓSTICO META]:</span> "The URL couldn't be validated. The server did not respond in time."`;
+
+        updateResultUI("error", "Error 504 Gateway Timeout", "Meta no pudo contactar a tu servidor local. Inicia tu backend con 'uvicorn main:app --port 8000'.", "504 Gateway Timeout", "bench-badge-status status-error");
+        outputConsole.innerHTML = log;
+        return;
+      }
+
+      // Validación de modo y token
+      const isModeValid = (mode === "subscribe");
+      const isTokenValid = (token === serverToken && token !== "");
+
+      if (isModeValid && isTokenValid) {
+        log += `<span style="color:#22c55e;">[OK] hub.mode validado con éxito: '${mode}' === 'subscribe'</span>\n`;
+        log += `<span style="color:#22c55e;">[OK] hub.verify_token validado: '${token}' coincide con VERIFY_TOKEN de tu entorno</span>\n`;
+
+        if (format === "plain") {
+          log += `<span style="color:#22c55e;">[OK] Retornando hub.challenge en texto plano (PlainTextResponse)</span>\n\n`;
+          log += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span>\n`;
+          log += `<span style="color:#94a3b8;">Content-Type: text/plain; charset=utf-8</span>\n`;
+          log += `<span style="color:#94a3b8;">Content-Length: ${challenge.length}</span>\n\n`;
+          log += `<span style="color:#38bdf8; font-weight:700;">${escapeHtml(challenge)}</span>\n\n`;
+          log += `<span style="color:#22c55e; font-weight:700;">[DIAGNÓSTICO META]:</span> "✔ Webhook validado y guardado exitosamente. Tu suscripción a eventos 'messages' está lista."`;
+
+          updateResultUI("success", "✔ Webhook Verificado Exitosamente (200 OK)", "Meta for Developers recibió el hub.challenge en texto plano exacto y activó la suscripción a eventos.", "200 OK · Verificado", "bench-badge-status status-success");
+          if (window.SOUND) window.SOUND.playChime();
+        } else if (format === "json") {
+          log += `<span style="color:#f59e0b;">[ADVERTENCIA] Tu endpoint devolvió un JSON en vez de texto plano: '{"hub.challenge": "${challenge}"}'</span>\n\n`;
+          log += `<span style="color:#f59e0b; font-weight:700;">HTTP/1.1 200 OK</span>\n`;
+          log += `<span style="color:#94a3b8;">Content-Type: application/json</span>\n\n`;
+          log += `<span style="color:#f87171;">{"hub.challenge": "${escapeHtml(challenge)}"}</span>\n\n`;
+          log += `<span style="color:#ef4444; font-weight:700;">[ERROR EN META]:</span> "The URL couldn't be validated. The challenge response was not returned as plain text."`;
+
+          updateResultUI("error", "⚠️ Fallo de Formato: Meta Espera Texto Plano", "Tu servidor devolvió código 200 pero en formato JSON. Meta requiere texto plano estricto: usa Response(content=hub_challenge, media_type='text/plain').", "Formato Inválido", "bench-badge-status status-warning");
+        } else if (format === "html") {
+          log += `<span style="color:#f59e0b;">[ADVERTENCIA] Tu endpoint devolvió HTML en vez de texto plano</span>\n\n`;
+          log += `<span style="color:#f59e0b; font-weight:700;">HTTP/1.1 200 OK</span>\n`;
+          log += `<span style="color:#94a3b8;">Content-Type: text/html</span>\n\n`;
+          log += `<span style="color:#f87171;">&lt;html&gt;&lt;body&gt;${escapeHtml(challenge)}&lt;/body&gt;&lt;/html&gt;</span>\n\n`;
+          log += `<span style="color:#ef4444; font-weight:700;">[ERROR EN META]:</span> "The URL couldn't be validated. Received HTML payload."`;
+
+          updateResultUI("error", "⚠️ Fallo de Formato HTML", "Meta no acepta etiquetas HTML en el challenge. Debe retornarse la cadena numérica en texto plano sin etiquetas.", "Formato Inválido", "bench-badge-status status-warning");
         }
-        if (window.SOUND) window.SOUND.playChime();
       } else {
         log += `<span style="color:#ef4444;">[FAIL] Fallo en la autenticación del handshake:</span>\n`;
-        if (mode !== "subscribe") log += `<span style="color:#ef4444;">  - hub.mode inválido: esperado 'subscribe', recibido '${mode}'</span>\n`;
-        if (token !== serverToken) log += `<span style="color:#ef4444;">  - hub.verify_token incorrecto: recibido '${token}', esperado '${serverToken}'</span>\n`;
-        log += `\n<span style="color:#ef4444; font-weight:700;">HTTP/1.1 403 Forbidden</span>\n`;
-        log += `Content-Type: application/json\n\n`;
-        log += `<span style="color:#f87171;">{"error": "Verification token mismatch or invalid mode"}</span>`;
-
-        if (statusPill) {
-          statusPill.textContent = "403 Forbidden · Rechazado";
-          statusPill.className = "bench-badge-status status-error";
+        if (!isModeValid) {
+          log += `<span style="color:#ef4444;">  - hub.mode inválido: esperado 'subscribe', recibido '${escapeHtml(mode)}'</span>\n`;
         }
+        if (!isTokenValid) {
+          log += `<span style="color:#ef4444;">  - hub.verify_token incorrecto: recibido '${escapeHtml(token)}', esperado '${escapeHtml(serverToken)}'</span>\n`;
+        }
+        log += `\n<span style="color:#ef4444; font-weight:700;">HTTP/1.1 403 Forbidden</span>\n`;
+        log += `<span style="color:#94a3b8;">Content-Type: application/json</span>\n\n`;
+        log += `<span style="color:#f87171;">{"detail": "Token de verificación inválido o modo incorrecto"}</span>\n\n`;
+        log += `<span style="color:#ef4444; font-weight:700;">[DIAGNÓSTICO META]:</span> "The URL couldn't be validated. The server responded with HTTP 403 Forbidden."`;
+
+        updateResultUI("error", "❌ 403 Forbidden · Token Rechazado", "El token enviado por Meta no coincide con el VERIFY_TOKEN de tu backend. Comprueba que ambas cadenas sean idénticas.", "403 Forbidden · Rechazado", "bench-badge-status status-error");
       }
 
       outputConsole.innerHTML = log;
     }
 
+    function updateResultUI(type, title, desc, pillText, pillClass) {
+      if (resultVisualCard) {
+        resultVisualCard.className = `handshake-result-card result-${type}`;
+      }
+      if (resultIcon) {
+        resultIcon.textContent = type === "success" ? "✔" : (type === "warning" ? "⚠️" : "❌");
+      }
+      if (resultTitle) resultTitle.textContent = title;
+      if (resultDesc) resultDesc.textContent = desc;
+      if (statusPill) {
+        statusPill.textContent = pillText;
+        statusPill.className = pillClass;
+      }
+    }
+
+    if (casePresetSelect) {
+      casePresetSelect.addEventListener("change", function(){
+        const val = this.value;
+        if (modeInput) modeInput.value = "subscribe";
+        if (challengeInput) challengeInput.value = "1158201444";
+        if (serverTokenInput) serverTokenInput.value = "MI_TOKEN_SECRETO_2026";
+
+        if (val === "success") {
+          if (tokenInput) tokenInput.value = "MI_TOKEN_SECRETO_2026";
+          if (responseFormatSelect) responseFormatSelect.value = "plain";
+        } else if (val === "token_mismatch") {
+          if (tokenInput) tokenInput.value = "TOKEN_ERRONEO_XYZ_99";
+          if (responseFormatSelect) responseFormatSelect.value = "plain";
+        } else if (val === "invalid_mode") {
+          if (modeInput) modeInput.value = "publish";
+          if (tokenInput) tokenInput.value = "MI_TOKEN_SECRETO_2026";
+          if (responseFormatSelect) responseFormatSelect.value = "plain";
+        } else if (val === "json_error") {
+          if (tokenInput) tokenInput.value = "MI_TOKEN_SECRETO_2026";
+          if (responseFormatSelect) responseFormatSelect.value = "json";
+        } else if (val === "server_down") {
+          if (tokenInput) tokenInput.value = "MI_TOKEN_SECRETO_2026";
+          if (responseFormatSelect) responseFormatSelect.value = "server_down";
+        }
+        runVerification();
+      });
+    }
+
     btnTest.addEventListener("click", runVerification);
-
-    if (btnPresetSuccess) {
-      btnPresetSuccess.addEventListener("click", function(){
-        if (modeInput) modeInput.value = "subscribe";
-        if (tokenInput) tokenInput.value = "MI_TOKEN_SECRETO_2026";
-        if (challengeInput) challengeInput.value = "1158201444";
-        if (serverTokenInput) serverTokenInput.value = "MI_TOKEN_SECRETO_2026";
-        runVerification();
-      });
-    }
-
-    if (btnPresetFail) {
-      btnPresetFail.addEventListener("click", function(){
-        if (modeInput) modeInput.value = "subscribe";
-        if (tokenInput) tokenInput.value = "TOKEN_EQUIVOCADO_XYZ";
-        if (challengeInput) challengeInput.value = "1158201444";
-        if (serverTokenInput) serverTokenInput.value = "MI_TOKEN_SECRETO_2026";
-        runVerification();
-      });
-    }
   }
 
   /* ==========================================================================

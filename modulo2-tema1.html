@@ -920,45 +920,141 @@ ngrok http 8000
       <p style="color:var(--text-secondary); max-width:70ch; margin:0 auto; font-size:1.05rem;">Prueba en tiempo real el handshake de verificación, inspecciona estructuras JSON de Meta, simula el ciclo bidireccional y valida firmas HMAC SHA-256.</p>
     </div>
 
-    <!-- BANCO 1: SIMULADOR DE HANDSHAKE -->
-    <div class="workbench-section" style="margin-bottom:3rem;">
+    <!-- BANCO 1: SIMULADOR DE HANDSHAKE AVANZADO -->
+    <div class="workbench-section" id="banco-handshake-section" style="margin-bottom:3.5rem;">
       <div class="workbench-top">
-        <span class="workbench-label">Banco 2.1.1 · Simulador de Handshake de Verificación (GET /webhook)</span>
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--meta-blue)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="workbench-label">Banco 2.1.1 · Simulador Visual de Handshake (Meta Developers vs FastAPI Backend)</span>
+        </div>
         <div class="workbench-actions">
-          <span class="bench-badge-status status-info" id="hs-status-pill">Esperando Prueba</span>
+          <select id="hs-case-preset-select" class="bench-select-clean" style="font-size:0.8rem; font-weight:700;">
+            <option value="success">✔ Caso 1: Handshake Oficial Exitoso (200 OK + Texto Plano)</option>
+            <option value="token_mismatch">❌ Caso 2: Token No Coincide (403 Forbidden)</option>
+            <option value="invalid_mode">❌ Caso 3: Modo Inválido (hub.mode != 'subscribe')</option>
+            <option value="json_error">⚠️ Caso 4: Error Clásico: Devolver JSON en vez de Texto Plano</option>
+            <option value="server_down">🔌 Caso 5: Servidor Apagado / Timeout (504 Gateway Timeout)</option>
+          </select>
+          <span class="bench-badge-status status-info" id="hs-status-pill">Esperando Verificación</span>
         </div>
       </div>
-      <div style="padding:1.5rem;">
-        <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1.2rem;">
-          Prueba cómo tu backend debe validar los parámetros <code>hub.mode</code> y <code>hub.verify_token</code> enviados por Meta y responder con <code>hub.challenge</code> en texto plano.
+
+      <div style="padding:1.6rem;">
+        <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1.2rem; line-height:1.6;">
+          Experimenta cómo interactúan en tiempo real el <b>Panel de Meta for Developers</b> y tu <b>Backend FastAPI</b> durante el apretón de manos inicial. Modifica los parámetros de ambos lados o selecciona un caso de estudio para analizar las trazas de red y la respuesta de Meta.
         </p>
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; margin-bottom:1.2rem;">
-          <div>
-            <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary);">hub.mode (Enviado por Meta):</label>
-            <input type="text" id="hs-mode" class="bench-input-clean" value="subscribe" style="width:100%; margin-top:0.3rem;">
+
+        <!-- DIAGRAMA VISUAL DEL APRETÓN DE MANOS -->
+        <div class="handshake-live-diagram">
+          <div style="display:flex; align-items:center; gap:0.4rem; color:var(--meta-blue);">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            <span>1. Meta for Developers (California)</span>
           </div>
-          <div>
-            <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary);">hub.verify_token (Enviado por Meta):</label>
-            <input type="text" id="hs-token" class="bench-input-clean" value="MI_TOKEN_SECRETO_2026" style="width:100%; margin-top:0.3rem;">
+          <span style="color:var(--text-muted); font-size:1.1rem;">&rarr;</span>
+          <div style="display:flex; align-items:center; gap:0.4rem; color:var(--meta-purple);">
+            <span>2. Túnel HTTPS TLS (ngrok)</span>
           </div>
-          <div>
-            <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary);">hub.challenge (Token aleatorio):</label>
-            <input type="text" id="hs-challenge" class="bench-input-clean" value="1158201444" style="width:100%; margin-top:0.3rem;">
-          </div>
-          <div>
-            <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary);">VERIFY_TOKEN (Tu Servidor):</label>
-            <input type="text" id="hs-server-token" class="bench-input-clean" value="MI_TOKEN_SECRETO_2026" style="width:100%; margin-top:0.3rem;">
+          <span style="color:var(--text-muted); font-size:1.1rem;">&rarr;</span>
+          <div style="display:flex; align-items:center; gap:0.4rem; color:var(--accent-success);">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M4 6h16v12H4z"/></svg>
+            <span>3. Servidor Local (FastAPI :8000)</span>
           </div>
         </div>
 
-        <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.2rem;">
-          <button class="btn-primary" id="hs-btn-test">Ejecutar Handshake GET</button>
-          <button class="btn-secondary" id="hs-preset-success">Cargar Caso Exitoso (200 OK)</button>
-          <button class="btn-secondary" id="hs-preset-fail">Cargar Token Inválido (403 Forbidden)</button>
+        <!-- REJILLA DIVIDIDA: META VS SERVIDOR -->
+        <div class="handshake-split-grid">
+          
+          <!-- ACTOR 1: PANEL DE META FOR DEVELOPERS -->
+          <div class="handshake-actor-card">
+            <div class="handshake-actor-header">
+              <div class="handshake-actor-title" style="color:var(--meta-blue);">
+                <svg viewBox="0 0 36 24" style="width:20px;height:14px;" fill="currentColor"><path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"/></svg>
+                <span>Meta for Developers (Modal de Configuración)</span>
+              </div>
+              <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">CLIENTE HTTP</span>
+            </div>
+
+            <div class="handshake-field-group">
+              <label class="handshake-field-label">
+                <span>Callback URL (URL de devolución de llamada):</span>
+              </label>
+              <input type="text" id="hs-callback-url" class="bench-input-clean" value="https://a3f8-55-12.ngrok-free.app/webhook" style="font-family:var(--font-mono); font-size:0.82rem;">
+            </div>
+
+            <div class="handshake-field-group">
+              <label class="handshake-field-label">
+                <span>Token de Verificación (hub.verify_token):</span>
+                <span class="handshake-field-hint">Definido por ti en Meta</span>
+              </label>
+              <input type="text" id="hs-token" class="bench-input-clean" value="MI_TOKEN_SECRETO_2026" style="font-family:var(--font-mono); font-size:0.82rem;">
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+              <div class="handshake-field-group">
+                <label class="handshake-field-label">
+                  <span>hub.mode:</span>
+                </label>
+                <input type="text" id="hs-mode" class="bench-input-clean" value="subscribe" style="font-family:var(--font-mono); font-size:0.82rem;">
+              </div>
+              <div class="handshake-field-group">
+                <label class="handshake-field-label">
+                  <span>hub.challenge:</span>
+                  <span class="handshake-field-hint">Aleatorio</span>
+                </label>
+                <input type="text" id="hs-challenge" class="bench-input-clean" value="1158201444" style="font-family:var(--font-mono); font-size:0.82rem;">
+              </div>
+            </div>
+
+            <button class="handshake-meta-btn" id="hs-btn-test">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              <span>Verificar y Guardar (Disparar GET /webhook)</span>
+            </button>
+          </div>
+
+          <!-- ACTOR 2: SERVIDOR FASTAPI (BACKEND) -->
+          <div class="handshake-actor-card">
+            <div class="handshake-actor-header">
+              <div class="handshake-actor-title" style="color:var(--accent-success);">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                <span>Servidor Backend (FastAPI en Localhost)</span>
+              </div>
+              <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">SERVIDOR HTTP</span>
+            </div>
+
+            <div class="handshake-field-group">
+              <label class="handshake-field-label">
+                <span>Variable de Entorno VERIFY_TOKEN (.env):</span>
+                <span class="handshake-field-hint">En tu servidor</span>
+              </label>
+              <input type="text" id="hs-server-token" class="bench-input-clean" value="MI_TOKEN_SECRETO_2026" style="font-family:var(--font-mono); font-size:0.82rem;">
+            </div>
+
+            <div class="handshake-field-group">
+              <label class="handshake-field-label">
+                <span>Formato de Respuesta de tu Endpoint:</span>
+              </label>
+              <select id="hs-response-format" class="bench-select-clean" style="font-size:0.82rem;">
+                <option value="plain">PlainTextResponse (Correcto: '1158201444' en texto plano)</option>
+                <option value="json">JSONResponse (Incorrecto: {"hub.challenge": 1158201444})</option>
+                <option value="html">HTMLResponse (Incorrecto: &lt;html&gt;1158201444&lt;/html&gt;)</option>
+              </select>
+            </div>
+
+            <!-- TARJETA DE ESTADO DE META EN VIVO -->
+            <div class="handshake-result-card result-waiting" id="hs-result-visual-card">
+              <div style="font-size:1.4rem;" id="hs-result-icon">⏳</div>
+              <div>
+                <strong style="display:block; margin-bottom:0.2rem;" id="hs-result-title">Esperando Verificación</strong>
+                <span style="font-size:0.82rem;" id="hs-result-desc">Presiona "Verificar y Guardar" para enviar la solicitud de comprobación de Meta a tu backend.</span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <div style="background:#0f172a; color:#f8fafc; padding:1.2rem; border-radius:10px; font-family:var(--font-mono, monospace); font-size:0.85rem; line-height:1.6; min-height:140px; white-space:pre-wrap;" id="hs-console">
-Haz clic en "Ejecutar Handshake GET" para simular la petición de Meta for Developers...
+        <!-- CONSOLA DE INSPECCIÓN HTTP EN VIVO -->
+        <div style="background:#050811; color:#f8fafc; padding:1.2rem; border-radius:10px; font-family:var(--font-mono, monospace); font-size:0.83rem; line-height:1.65; max-height:300px; overflow-y:auto; border:1px solid rgba(255,255,255,0.08);" id="hs-console">
+// Selecciona un preset o presiona "Verificar y Guardar" para inspeccionar las trazas HTTP de red en tiempo real...
         </div>
       </div>
     </div>
