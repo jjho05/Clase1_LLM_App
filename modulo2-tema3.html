@@ -180,6 +180,54 @@
           </p>
         </div>
 
+        <!-- FÓRMULA FORMAL DE TRANSICIÓN OPERATIVA -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\Delta_{\text{action}}: (S_t, u_{t+1}) \xrightarrow{\text{NLU / Llama 3}} \mathcal{T}_{\text{call}}(\text{fn\_name}, \mathbf{x}_{\text{args}}) \xrightarrow{\text{Backend SQL}} \text{Resultado}(\mathcal{R}) \longrightarrow S_{t+1}$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose Matemático de la Transición Operativa</span>
+                <span class="breakdown-count-tag">5 fases</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$(S_t, u_{t+1})$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Par Estado Actual y Mensaje Entrante:</strong> Vector de contexto previo más el nuevo requerimiento expresado en lenguaje natural por el usuario en WhatsApp.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathcal{T}_{\text{call}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Estructura Tipada de Tool Call:</strong> Objeto JSON generado por Llama 3 conteniendo el nombre exacto de la función registrada y el mapa de argumentos clave-valor.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Resultado}(\mathcal{R})$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Respuesta del Backend:</strong> Datos crudos devueltos por la base de datos (ej. <code>{"mesa_id": 14, "confirmada": true, "folio": "M-8891"}</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$S_{t+1}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Nuevo Estado Consolidado:</strong> Memoria de sesión enriquecida con la acción completada para que turnos posteriores recuerden la reserva.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
         <!-- ANALOGÍA FÁCIL -->
         <div class="easy-explainer-box">
           <div class="easy-header">
@@ -386,6 +434,48 @@
           <p class="prose-p">
             Al iniciar la inferencia, tu backend adjunta en el payload de la API un arreglo llamado <code>tools</code>. Cada herramienta define su <b>nombre</b>, una <b>descripción inequívoca</b> y un esquema tipado de <b>parámetros</b>:
           </p>
+        </div>
+
+        <!-- FÓRMULA DE CONFORMIDAD DE ESQUEMA -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$P(\text{ValidSchema} \mid \text{Prompt}, \mathcal{T}_{\text{schema}}) = \prod_{k \in \text{required}} \mathbb{I}(k \in \text{args}) \times \prod_{i} \mathbb{I}\Big(\text{type}(\text{args}[k_i]) = \tau_i\Big)$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose Matemático de Conformidad de Esquema</span>
+                <span class="breakdown-count-tag">3 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathbb{I}(k \in \text{args})$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Función Indicadora de Presencia:</strong> Vale 1 si el campo obligatorio (<code>required</code>) está presente en el JSON emitido por el modelo, y 0 si fue omitido.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{type}(\text{args}[k_i]) = \tau_i$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Verificación de Tipos Estrictos:</strong> Confirma que cada variable corresponda con su tipo formal (ej. <code>personas</code> es de tipo <code>integer</code> y no <code>string</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$P(\text{ValidSchema}) = 1.0$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Criterio de Validación Productiva:</strong> Solo si todos los campos requeridos y tipos son válidos, el backend procede a ejecutar la consulta SQL.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
 
         <!-- ESQUEMA JSON SCHEMA DE PRODUCCIÓN -->
