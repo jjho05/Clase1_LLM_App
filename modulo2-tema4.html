@@ -747,7 +747,7 @@ WantedBy=multi-user.target</code></pre>
 <div class="step-flow-content" style="flex:1; min-width:0;">
 <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">3. Proceso Worker con Backoff Exponencial</h5>
 <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  Un worker en segundo plano reintenta enviar los mensajes pendientes cada $2^k$ segundos ($1	ext{s}, 2	ext{s}, 4	ext{s}, 8	ext{s}, 16	ext{s}$). En cuanto la Graph API de Meta se restablece, los mensajes se despachan en orden cronológico respetando la ventana de 24 horas.
+                  Un worker en segundo plano reintenta enviar los mensajes pendientes cada $2^k$ segundos ($1\text{s}, 2\text{s}, 4\text{s}, 8\text{s}, 16\text{s}$). En cuanto la Graph API de Meta se restablece, los mensajes se despachan en orden cronológico respetando la ventana de 24 horas.
                 </p>
 </div>
 </div>

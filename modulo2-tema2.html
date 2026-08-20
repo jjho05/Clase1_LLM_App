@@ -201,39 +201,59 @@
         <!-- FÓRMULA MATEMÁTICA FORMAL -->
         <div class="formula-card">
           <div class="formula-math-area">
-            $$	ext{Estado}(S_t) = \Big\langle 	ext{wa\_id}, \quad \mathcal{H}_t = ig[(u_1, a_1), \dots, (u_t, a_t)ig], \quad \mathcal{E}_t = \{k_i \mapsto v_i\}, \quad \sigma_t \in \Sigma \Bigangle$$
-            $$	ext{Prompt}_{	ext{Llama}}(S_t, u_{t+1}) = 	ext{SystemPrompt} \oplus 	ext{Serializar}(\mathcal{E}_t) \oplus \mathcal{W}_K(\mathcal{H}_t) \oplus 	ext{FormatearUser}(u_{t+1})$$
+            $$\text{Estado}(S_t) = \Big\langle \text{wa\_id}, \quad \mathcal{H}_t = \big[(u_1, a_1), \dots, (u_t, a_t)\big], \quad \mathcal{E}_t = \{k_i \mapsto v_i\}, \quad \sigma_t \in \Sigma \Big\rangle$$
+            $$\text{Prompt}_{\text{Llama}}(S_t, u_{t+1}) = \text{SystemPrompt} \oplus \text{Serializar}(\mathcal{E}_t) \oplus \mathcal{W}_K(\mathcal{H}_t) \oplus \text{FormatearUser}(u_{t+1})$$
           </div>
 
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
-              <span>Ver Desglose Matemático &amp; Significado de Variables</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose Matemático del Vector de Estado</span>
+                <span class="breakdown-count-tag">6 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
             </summary>
-            <div class="formula-breakdown-content">
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(S_t\)</span>
-                <div class="formula-var-desc"><b>Vector de Estado en el Turno \(t\):</b> Tupla multidimensional que contiene toda la información de contexto necesaria para interpretar el siguiente mensaje sin requerir reentrenamiento del modelo.</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(	ext{wa\_id}\)</span>
-                <div class="formula-var-desc"><b>Clave Primaria de Sesión:</b> Número telefónico internacional normalizado (E.164) que actúa como clave de indexación en Redis (<code>session:5215587654321</code>).</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(\mathcal{H}_t\)</span>
-                <div class="formula-var-desc"><b>Historial Conversacional:</b> Secuencia ordenada de pares mensaje de usuario (\(u_i\)) y respuesta del asistente (\(a_i\)).</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(\mathcal{E}_t = \{k_i \mapsto v_i\}\)</span>
-                <div class="formula-var-desc"><b>Diccionario de Entidades Extraídas (Slots):</b> Mapeo clave-valor con variables de negocio (ej. <code>servicio: "Odontología"</code>, <code>fecha: "2026-08-23"</code>).</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(\sigma_t \in \Sigma\)</span>
-                <div class="formula-var-desc"><b>Estado de la FSM (Finite State Machine):</b> Etapa determinista del flujo (ej. <code>INIT</code>, <code>SELECTING_DATE</code>, <code>AWAITING_CONFIRMATION</code>, <code>COMPLETED</code>).</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(\mathcal{W}_K(\cdot)\)</span>
-                <div class="formula-var-desc"><b>Operador de Ventana Deslizante (Sliding Window):</b> Función que trunca el historial reteniendo únicamente los últimos \(K\) turnos relevantes para acotar la latencia y los tokens consumidos.</div>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$S_t$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Vector de Estado en el Turno $t$:</strong> Tupla multidimensional que contiene toda la información de contexto necesaria para interpretar el siguiente mensaje sin requerir reentrenamiento del modelo.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{wa\_id}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Clave Primaria de Sesión:</strong> Número telefónico internacional normalizado (E.164) que actúa como clave de indexación en Redis (<code>session:5215587654321</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathcal{H}_t$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Historial Conversacional:</strong> Secuencia ordenada de pares mensaje de usuario ($u_i$) y respuesta del asistente ($a_i$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathcal{E}_t = \{k_i \mapsto v_i\}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Diccionario de Entidades Extraídas (Slots):</strong> Mapeo clave-valor con variables de negocio (ej. <code>servicio: "Odontología"</code>, <code>fecha: "2026-08-23"</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\sigma_t \in \Sigma$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Estado de la FSM (Finite State Machine):</strong> Etapa determinista del flujo (ej. <code>INIT</code>, <code>SELECTING_DATE</code>, <code>AWAITING_CONFIRMATION</code>, <code>COMPLETED</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathcal{W}_K(\cdot)$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Operador de Ventana Deslizante (Sliding Window):</strong> Función que trunca el historial reteniendo únicamente los últimos $K$ turnos relevantes para acotar la latencia y los tokens consumidos.
+                  </div>
+                </div>
               </div>
             </div>
           </details>
@@ -355,34 +375,52 @@
         <!-- FÓRMULA DE LATENCIA EN PIPELINE LLAMA STACK -->
         <div class="formula-card">
           <div class="formula-math-area">
-            $$T_{	ext{Total}} = T_{	ext{Shield\_In}} + T_{	ext{Redis\_Fetch}} + T_{	ext{Prefill}}(	ext{Tokens}_{	ext{in}}) + T_{	ext{Decode}}(	ext{Tokens}_{	ext{out}}) + T_{	ext{Tool\_Exec}} + T_{	ext{Shield\_Out}} \le 3.0\,	ext{s}$$
+            $$T_{\text{Total}} = T_{\text{Shield\_In}} + T_{\text{Redis\_Fetch}} + T_{\text{Prefill}}(\text{Tokens}_{\text{in}}) + T_{\text{Decode}}(\text{Tokens}_{\text{out}}) + T_{\text{Tool\_Exec}} + T_{\text{Shield\_Out}} \le 3.0\,\text{s}$$
           </div>
 
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
-              <span>Ver Desglose de Latencia &amp; Presupuesto de SLA</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Latencia &amp; Presupuesto de SLA</span>
+                <span class="breakdown-count-tag">5 fases</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
             </summary>
-            <div class="formula-breakdown-content">
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(T_{	ext{Shield\_In}}\)</span>
-                <div class="formula-var-desc"><b>Evaluación de Entrada Llama Guard 3:</b> Tiempo para verificar que el mensaje entrante es seguro (\(pprox 80	ext{ms}\)).</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(T_{	ext{Redis\_Fetch}}\)</span>
-                <div class="formula-var-desc"><b>Recuperación de Estado en RAM:</b> Latencia de lectura en base de datos en memoria (\(pprox 2	ext{ms}\) a \(5	ext{ms}\)).</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(T_{	ext{Prefill}} + T_{	ext{Decode}}\)</span>
-                <div class="formula-var-desc"><b>Inferencia GPU con Llama 3 8B:</b> Fase de procesamiento de prompt y generación token por token (\(pprox 400	ext{ms}\) - \(800	ext{ms}\)).</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(T_{	ext{Tool\_Exec}}\)</span>
-                <div class="formula-var-desc"><b>Ejecución de API Externa:</b> Consulta SQL a base de citas médicas o CRM (\(pprox 150	ext{ms}\)).</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(3.0\,	ext{s}\)</span>
-                <div class="formula-var-desc"><b>SLA Máximo de WhatsApp:</b> Umbral de calidad percibida por el usuario antes de considerar la experiencia como lenta.</div>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Shield\_In}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Evaluación de Entrada Llama Guard 3:</strong> Tiempo para verificar que el mensaje entrante es seguro ($\approx 80\text{ms}$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Redis\_Fetch}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Recuperación de Estado en RAM:</strong> Latencia de lectura en base de datos en memoria ($\approx 2\text{ms}$ a $5\text{ms}$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Prefill}} + T_{\text{Decode}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Inferencia GPU con Llama 3 8B:</strong> Fase de procesamiento de prompt y generación token por token ($\approx 400\text{ms}$ - $800\text{ms}$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Tool\_Exec}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Ejecución de API Externa:</strong> Consulta SQL a base de citas médicas o CRM ($\approx 150\text{ms}$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\le 3.0\,\text{s}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>SLA Máximo de WhatsApp:</strong> Umbral de calidad percibida por el usuario antes de considerar la experiencia como lenta.
+                  </div>
+                </div>
               </div>
             </div>
           </details>
@@ -497,31 +535,45 @@
         <!-- FÓRMULA DE ENRUTAMIENTO HÍBRIDO -->
         <div class="formula-card">
           <div class="formula-math-area">
-            $$\delta(S_t, u_{t+1}) = egin{cases} 
-            	ext{Protocolo}_{	ext{Humano}}(u_{t+1}), & 	ext{si } 	ext{Regex}_{	ext{Human}}(u_{t+1}) = 	ext{true} \
-            	ext{Protocolo}_{	ext{ARCO}}(u_{t+1}), & 	ext{si } 	ext{Intent}_{	ext{Legal}}(u_{t+1}) = 	ext{true} \
-            	ext{Protocolo}_{	ext{911\_Emergencia}}(u_{t+1}), & 	ext{si } 	ext{Triage}_{	ext{Emergency}}(u_{t+1}) = 	ext{true} \
-            rg\max_y P(y \mid 	ext{Prompt}(S_t, u_{t+1}); 	heta), & 	ext{en cualquier otro caso (LLM)}
+            $$\delta(S_t, u_{t+1}) = \begin{cases} 
+            \text{Protocolo}_{\text{Humano}}(u_{t+1}), & \text{si } \text{Regex}_{\text{Human}}(u_{t+1}) = \text{true} \\
+            \text{Protocolo}_{\text{ARCO}}(u_{t+1}), & \text{si } \text{Intent}_{\text{Legal}}(u_{t+1}) = \text{true} \\
+            \text{Protocolo}_{\text{911\_Emergencia}}(u_{t+1}), & \text{si } \text{Triage}_{\text{Emergency}}(u_{t+1}) = \text{true} \\
+            \arg\max_y P(y \mid \text{Prompt}(S_t, u_{t+1}); \theta), & \text{en cualquier otro caso (LLM)}
             \end{cases}$$
           </div>
 
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
-              <span>Ver Desglose de la Función de Transición Híbrida</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de la Función de Transición Híbrida</span>
+                <span class="breakdown-count-tag">3 caminos</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
             </summary>
-            <div class="formula-breakdown-content">
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(\delta(S_t, u_{t+1})\)</span>
-                <div class="formula-var-desc"><b>Función de Transición de Estado Híbrida:</b> Mapea el estado actual y el mensaje entrante a una acción de sistema o a una inferencia generativa.</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(	ext{Regex}_{	ext{Human}}\)</span>
-                <div class="formula-var-desc"><b>Patrones Compilados Inquebrantables:</b> Filtro ultra-rápido (\(\lt 1	ext{ms}\)) que captura intenciones de transferencia sin consumir GPU.</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(rg\max_y P(y \mid \dots)\)</span>
-                <div class="formula-var-desc"><b>Inferencia Probabilística con Llama 3:</b> Se ejecuta únicamente cuando el mensaje pasa los filtros de seguridad y requiere comprensión de lenguaje natural.</div>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\delta(S_t, u_{t+1})$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Función de Transición de Estado Híbrida:</strong> Mapea el estado actual y el mensaje entrante a una acción de sistema o a una inferencia generativa.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Regex}_{\text{Human}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Patrones Compilados Inquebrantables:</strong> Filtro ultra-rápido ($< 1\text{ms}$) que captura intenciones de transferencia sin consumir GPU.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\arg\max_y P(y \mid \dots)$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Inferencia Probabilística con Llama 3:</strong> Se ejecuta únicamente cuando el mensaje pasa los filtros de seguridad y requiere comprensión de lenguaje natural.
+                  </div>
+                </div>
               </div>
             </div>
           </details>
@@ -555,9 +607,9 @@
 <span class="code-kw">from</span> <span class="code-var">typing</span> <span class="code-kw">import</span> <span class="code-type">Dict</span>, <span class="code-type">Any</span>
 
 <span class="code-cm"># 1. Compilación de patrones regex de alta prioridad</span>
-<span class="code-var">HUMAN_REGEX</span> = <span class="code-var">re</span>.<span class="code-fn">compile</span>(<span class="code-str">r"(humano|asesor|agente|operador|persona real)"</span>, <span class="code-var">re</span>.<span class="code-type">IGNORECASE</span>)
-<span class="code-var">EMERGENCY_REGEX</span> = <span class="code-var">re</span>.<span class="code-fn">compile</span>(<span class="code-str">r"(sangrado|infarto|emergencia|ambulancia|grave|asfixia)"</span>, <span class="code-var">re</span>.<span class="code-type">IGNORECASE</span>)
-<span class="code-var">PRIVACY_REGEX</span> = <span class="code-var">re</span>.<span class="code-fn">compile</span>(<span class="code-str">r"(eliminar mis datos|borrar cuenta|derecho arco|cancelar servicio)"</span>, <span class="code-var">re</span>.<span class="code-type">IGNORECASE</span>)
+<span class="code-var">HUMAN_REGEX</span> = <span class="code-var">re</span>.<span class="code-fn">compile</span>(<span class="code-str">r"\b(humano|asesor|agente|operador|persona real)\b"</span>, <span class="code-var">re</span>.<span class="code-type">IGNORECASE</span>)
+<span class="code-var">EMERGENCY_REGEX</span> = <span class="code-var">re</span>.<span class="code-fn">compile</span>(<span class="code-str">r"\b(sangrado|infarto|emergencia|ambulancia|grave|asfixia)\b"</span>, <span class="code-var">re</span>.<span class="code-type">IGNORECASE</span>)
+<span class="code-var">PRIVACY_REGEX</span> = <span class="code-var">re</span>.<span class="code-fn">compile</span>(<span class="code-str">r"\b(eliminar mis datos|borrar cuenta|derecho arco|cancelar servicio)\b"</span>, <span class="code-var">re</span>.<span class="code-type">IGNORECASE</span>)
 
 <span class="code-kw">async def</span> <span class="code-fn">enrutar_mensaje_hibrido</span>(<span class="code-var">texto</span>: <span class="code-type">str</span>, <span class="code-var">wa_id</span>: <span class="code-type">str</span>, <span class="code-var">estado</span>: <span class="code-type">Dict</span>[<span class="code-type">str</span>, <span class="code-type">Any</span>]) -> <span class="code-type">str</span>:
     <span class="code-var">t</span> = <span class="code-var">texto</span>.<span class="code-fn">strip</span>()
@@ -613,7 +665,7 @@
           <div class="stat-grid-clean" style="grid-template-columns: 1fr 1fr; margin-top:1rem;">
             <div class="stat-card-clean">
               <div style="font-family:var(--font-disp); font-weight:800; color:var(--accent-info); margin-bottom:0.4rem;">Ventana Deslizante (Sliding Window K)</div>
-              <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">Conserva intactos únicamente los últimos \(K\) turnos (ej. los últimos 4 mensajes) y descarta los turnos antiguos. Mantiene la latencia estrictamente constante \(O(K)\).</p>
+              <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">Conserva intactos únicamente los últimos $K$ turnos (ej. los últimos 4 mensajes) y descarta los turnos antiguos. Mantiene la latencia estrictamente constante $O(K)$.</p>
             </div>
             <div class="stat-card-clean">
               <div style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); margin-bottom:0.4rem;">Memoria con Resumen Jerárquico</div>
@@ -625,27 +677,41 @@
         <!-- FÓRMULA DE CRECIMIENTO CUADRÁTICO -->
         <div class="formula-card">
           <div class="formula-math-area">
-            $$C_{	ext{total}}(N) = \sum_{t=1}^{N} \Big( T_{	ext{sys}} + 2 \cdot t \cdot ar{L} \Big) = N \cdot T_{	ext{sys}} + N(N+1) \cdot ar{L}$$
-            $$M_{	ext{KV\_Cache}}(N) = 2 \cdot L_{	ext{layers}} \cdot H_{	ext{KV}} \cdot d_{	ext{head}} \cdot N \cdot b_{	ext{bytes}}$$
+            $$C_{\text{total}}(N) = \sum_{t=1}^{N} \Big( T_{\text{sys}} + 2 \cdot t \cdot \bar{L} \Big) = N \cdot T_{\text{sys}} + N(N+1) \cdot \bar{L}$$
+            $$M_{\text{KV\_Cache}}(N) = 2 \cdot L_{\text{layers}} \cdot H_{\text{KV}} \cdot d_{\text{head}} \cdot N \cdot b_{\text{bytes}}$$
           </div>
 
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
-              <span>Ver Desglose Matemático de Crecimiento Cuadrático y VRAM</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose Matemático de Crecimiento Cuadrático y VRAM</span>
+                <span class="breakdown-count-tag">3 componentes</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
             </summary>
-            <div class="formula-breakdown-content">
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(N\)</span>
-                <div class="formula-var-desc"><b>Número Total de Turnos:</b> Cantidad de intercambios pregunta-respuesta que han ocurrido en la conversación.</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(ar{L}\)</span>
-                <div class="formula-var-desc"><b>Longitud Promedio por Mensaje:</b> Típicamente \(pprox 50\) tokens en mensajes de WhatsApp.</div>
-              </div>
-              <div class="formula-variable-row">
-                <span class="formula-var-symbol">\(N(N+1)ar{L}\)</span>
-                <div class="formula-var-desc"><b>Término Cuadrático Peligroso:</b> Explica por qué para \(N=15\) turnos el método ingenuo procesa <b>14,550 tokens</b> acumulados, mientras que con Sliding Window (\(K=4\)) procesa solo <b>4,500 tokens</b> (69% de reducción).</div>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$N$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Número Total de Turnos:</strong> Cantidad de intercambios pregunta-respuesta que han ocurrido en la conversación.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\bar{L}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Longitud Promedio por Mensaje:</strong> Típicamente $\approx 50$ tokens en mensajes de WhatsApp.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$N(N+1)\bar{L}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Término Cuadrático Peligroso:</strong> Explica por qué para $N=15$ turnos el método ingenuo procesa <b>14,550 tokens</b> acumulados, mientras que con Sliding Window ($K=4$) procesa solo <b>4,500 tokens</b> (69% de reducción).
+                  </div>
+                </div>
               </div>
             </div>
           </details>
@@ -685,21 +751,15 @@
     <span class="code-cm"># 1. Si la conversación es corta, conservamos el historial sin truncar</span>
     <span class="code-kw">if len</span>(<span class="code-var">historial_completo</span>) <= <span class="code-var">k_turnos</span> * <span class="code-num">2</span>:
         <span class="code-var">lineas</span> = [<span class="code-str">f"{m['role'].upper()}: {m['content']}"</span> <span class="code-kw">for</span> <span class="code-var">m</span> <span class="code-kw">in</span> <span class="code-var">historial_completo</span>]
-        <span class="code-kw">return</span> <span class="code-str">"
-"</span>.<span class="code-fn">join</span>(<span class="code-var">lineas</span>)
+        <span class="code-kw">return</span> <span class="code-str">"\n"</span>.<span class="code-fn">join</span>(<span class="code-var">lineas</span>)
 
     <span class="code-cm"># 2. Aplicamos Sliding Window sobre los últimos K turnos recientes</span>
     <span class="code-var">turnos_recientes</span> = <span class="code-var">historial_completo</span>[-(<span class="code-var">k_turnos</span> * <span class="code-num">2</span>):]
     
     <span class="code-cm"># 3. Ensamblamos el resumen consolidado + ventana reciente</span>
-    <span class="code-var">prompt_memoria</span> = <span class="code-str">f"RESUMEN DE HECHOS PREVIOS:
-{resumen_previo}
-
-ÚLTIMOS MENSAJES RECIENTES:
-"</span>
+    <span class="code-var">prompt_memoria</span> = <span class="code-str">f"RESUMEN DE HECHOS PREVIOS:\n{resumen_previo}\n\nÚLTIMOS MENSAJES RECIENTES:\n"</span>
     <span class="code-kw">for</span> <span class="code-var">m</span> <span class="code-kw">in</span> <span class="code-var">turnos_recientes</span>:
-        <span class="code-var">prompt_memoria</span> += <span class="code-str">f"{m['role'].upper()}: {m['content']}
-"</span>
+        <span class="code-var">prompt_memoria</span> += <span class="code-str">f"{m['role'].upper()}: {m['content']}\n"</span>
 
     <span class="code-kw">return</span> <span class="code-var">prompt_memoria</span></code></pre>
           </div>
@@ -1111,11 +1171,11 @@ Instrucción: Ofrece amablemente los 3 horarios del sábado para odontología si
 <span class="code-kw">def</span> <span class="code-fn">enrutar_mensaje</span>(<span class="code-var">texto</span>: <span class="code-type">str</span>, <span class="code-var">wa_id</span>: <span class="code-type">str</span>):
     <span class="code-var">t_lower</span> = <span class="code-var">texto</span>.<span class="code-fn">lower</span>().<span class="code-fn">strip</span>()
     <span class="code-cm"># 1. Regla Determinista de Transferencia</span>
-    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"(humano|asesor|agente|operador|persona)"</span>, <span class="code-var">t_lower</span>):
+    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"\b(humano|asesor|agente|operador|persona)\b"</span>, <span class="code-var">t_lower</span>):
         <span class="code-kw">return</span> <span class="code-fn">transferir_a_humano</span>(<span class="code-var">wa_id</span>)
     
     <span class="code-cm"># 2. Regla de Emergencia Médica</span>
-    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"(sangrado|infarto|emergencia|ambulancia|grave)"</span>, <span class="code-var">t_lower</span>):
+    <span class="code-kw">if</span> <span class="code-var">re</span>.<span class="code-fn">search</span>(<span class="code-str">r"\b(sangrado|infarto|emergencia|ambulancia|grave)\b"</span>, <span class="code-var">t_lower</span>):
         <span class="code-kw">return</span> <span class="code-fn">activar_protocolo_urgencias</span>(<span class="code-var">wa_id</span>)
         
     <span class="code-cm"># 3. Delegación a Llama 3 para Consulta / NLU</span>
@@ -1156,15 +1216,15 @@ Instrucción: Ofrece amablemente los 3 horarios del sábado para odontología si
                 <div class="step-flow-content" style="flex:1; min-width:0;">
                   <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Fórmula del Crecimiento Cuadrático de Tokens</h5>
                   <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                    Si se reenvía el historial completo en una conversación de \(N\) turnos con longitud promedio \(ar{L}\), el consumo acumulado de tokens crece de forma cuadrática:
+                    Si se reenvía el historial completo en una conversación de $N$ turnos con longitud promedio $\bar{L}$, el consumo acumulado de tokens crece de forma cuadrática:
                   </p>
                   <div class="formula-card" style="margin:0.4rem 0;">
                     <div class="formula-math-area">
-                      $$C_{	ext{total}} = \sum_{t=1}^{N} \Big( T_{	ext{sys}} + 2 \cdot t \cdot ar{L} \Big) = N \cdot T_{	ext{sys}} + N(N+1) \cdot ar{L}$$
+                      $$C_{\text{total}} = \sum_{t=1}^{N} \Big( T_{\text{sys}} + 2 \cdot t \cdot \bar{L} \Big) = N \cdot T_{\text{sys}} + N(N+1) \cdot \bar{L}$$
                     </div>
                   </div>
                   <p style="margin:0.4rem 0 0 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                    Para una conversación de 15 turnos con \(ar{L} = 50\) tokens y \(T_{	ext{sys}} = 200\), el método ingenuo procesa <b>14,550 tokens</b>, elevando la latencia de la fase de <i>Prefill</i> en GPU y multiplicando el costo en APIs.
+                    Para una conversación de 15 turnos con $\bar{L} = 50$ tokens y $T_{\text{sys}} = 200$, el método ingenuo procesa <b>14,550 tokens</b>, elevando la latencia de la fase de <i>Prefill</i> en GPU y multiplicando el costo en APIs.
                   </p>
                 </div>
               </div>
@@ -1174,9 +1234,9 @@ Instrucción: Ofrece amablemente los 3 horarios del sábado para odontología si
                 <div class="step-flow-content" style="flex:1; min-width:0;">
                   <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Estrategia de Compresión Híbrida (Sliding Window + Summary)</h5>
                   <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                    • <b>Ventana Deslizante Fija (\(K=3\) turnos):</b> Conserva los últimos 3 intercambios verbatim para preservar la fluidez inmediata.<br/>
+                    • <b>Ventana Deslizante Fija ($K=3$ turnos):</b> Conserva los últimos 3 intercambios verbatim para preservar la fluidez inmediata.<br/>
                     • <b>Resumen Incremental de Entidades:</b> Cada 5 turnos, un sub-proceso asíncrono actualiza un resumen estructurado en JSON (<i>"Usuario: Juan, busca: endodoncia, cita: sábado 10am"</i>).<br/>
-                    • <b>Resultado en Producción:</b> Consumo constante de \(pprox 450\) tokens por llamada independientemente de si la conversación dura 5 o 50 turnos, logrando un <b>ahorro de cómputo del 69%</b>.
+                    • <b>Resultado en Producción:</b> Consumo constante de $\approx 450$ tokens por llamada independientemente de si la conversación dura 5 o 50 turnos, logrando un <b>ahorro de cómputo del 69%</b>.
                   </p>
                 </div>
               </div>

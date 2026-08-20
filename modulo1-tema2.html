@@ -1443,7 +1443,7 @@ Sentimiento:</code></pre>
 <span class="glossary-term-name">Reciprocal Rank Fusion (RRF)</span>
 </div>
 <div class="glossary-row-right">
-<p class="glossary-term-desc">Algoritmo no paramétrico para combinar listas clasificadas de diferentes motores de búsqueda sumando las inversas de sus posiciones: $	ext{RRF}(d) = \sum rac{1}{60 + r(d)}$.</p>
+<p class="glossary-term-desc">Algoritmo no paramétrico para combinar listas clasificadas de diferentes motores de búsqueda sumando las inversas de sus posiciones: $\text{RRF}(d) = \sum \frac{1}{60 + r(d)}$.</p>
 <div class="glossary-term-note">Aplicación: Fusión óptima de BM25 y búsqueda vectorial sin requerir calibración de pesos.</div>
 </div>
 </div>
@@ -1589,7 +1589,7 @@ Salida:</code></pre>
                   Al forzar la directiva <i>"Razona paso a paso antes de emitir la respuesta"</i>, el modelo genera tokens intermedios en el contexto que sirven como memoria de trabajo para los siguientes pasos de atención:<br/>
                   • <b>Paso 1:</b> Pasajeros iniciales = $120$.<br/>
                   • <b>Paso 2:</b> Bajan $15$ en la parada 1 → $120 - 15 = 105$ pasajeros restantes.<br/>
-                  • <b>Paso 3:</b> Suben el doble de los que bajaron en la parada 2 → $2 	imes 15 = 30$ pasajeros nuevos.<br/>
+                  • <b>Paso 3:</b> Suben el doble de los que bajaron en la parada 2 → $2 \times 15 = 30$ pasajeros nuevos.<br/>
                   • <b>Paso 4:</b> Total acumulado → $105 + 30 = 135$ pasajeros al final.<br/>
 <b>Resultado:</b> La autoatención sobre los cálculos intermedios garantiza 100% de precisión lógica.
                 </p>
@@ -1626,7 +1626,7 @@ Salida:</code></pre>
 <div class="step-flow-content" style="flex:1; min-width:0;">
 <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Fase 1: Indexación y Chunking</h5>
 <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  Cada mes, las circulares de la autoridad sanitaria se dividen en fragmentos de $512	ext{ tokens}$ con solapamiento de $64	ext{ tokens}$. Un modelo como <code>bge-base-en-v1.5</code> genera vectores densos de $768	ext{ dimensiones}$ que se indexan en ChromaDB con metadatos de medicamento y fecha.
+                  Cada mes, las circulares de la autoridad sanitaria se dividen en fragmentos de $512\text{ tokens}$ con solapamiento de $64\text{ tokens}$. Un modelo como <code>bge-base-en-v1.5</code> genera vectores densos de $768\text{ dimensiones}$ que se indexan en ChromaDB con metadatos de medicamento y fecha.
                 </p>
 </div>
 </div>
