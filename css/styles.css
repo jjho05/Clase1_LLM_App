@@ -2594,6 +2594,7 @@ a.step-flow-item:hover {
 .text-gradient {
   background: linear-gradient(135deg, var(--meta-blue) 0%, #0052cc 50%, var(--accent-easy) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -3653,6 +3654,7 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
 [data-theme="dark"] .hero-title {
   background: linear-gradient(135deg, #ffffff 30%, #bfdbfe 75%, #60a5fa 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 4px 24px rgba(59, 130, 246, 0.25));
 }
