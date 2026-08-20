@@ -6167,3 +6167,58 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
+
+/* Tarjetas de flujo visual en columnas independientes */
+.flow-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 1.8rem 0;
+}
+
+.flow-card-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.flow-card-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--meta-blue);
+  box-shadow: var(--shadow-card);
+}
+
+.flow-card-title {
+  font-family: var(--font-disp);
+  font-weight: 800;
+  font-size: 1.25rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.3;
+  width: 100%;
+}
+
+.flow-card-badge {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.85rem;
+  display: block;
+  width: 100%;
+}
+
+.flow-card-desc {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0;
+  width: 100%;
+}
+

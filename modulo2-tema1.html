@@ -252,27 +252,27 @@
       </div>
 
       <!-- DIAGRAMA VISUAL DEL FLUJO EN 3 PASOS -->
-      <div class="step-flow-container" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin:1.8rem 0;">
-        <div class="step-flow-item" style="background:var(--card-surface); padding:1.5rem; border-radius:14px; border:1px solid var(--border-subtle);">
-          <div style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.3rem; margin-bottom:0.5rem;">Paso 1: Meta te avisa</div>
-          <div style="font-size:0.85rem; color:var(--text-muted); font-weight:700; margin-bottom:0.75rem;">WEBHOOK INCOMING (HTTP POST)</div>
-          <p style="font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+      <div class="flow-card-grid">
+        <div class="flow-card-item">
+          <div class="flow-card-title" style="color:var(--meta-blue);">Paso 1: Meta te avisa</div>
+          <span class="flow-card-badge">WEBHOOK INCOMING (HTTP POST)</span>
+          <p class="flow-card-desc">
             Meta envía un payload JSON a tu URL de webhook configurada con el remitente (<code>from</code>), ID del mensaje (<code>wamid</code>) y el texto exacto.
           </p>
         </div>
 
-        <div class="step-flow-item" style="background:var(--card-surface); padding:1.5rem; border-radius:14px; border:1px solid var(--border-subtle);">
-          <div style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.3rem; margin-bottom:0.5rem;">Paso 2: Tu servidor procesa</div>
-          <div style="font-size:0.85rem; color:var(--text-muted); font-weight:700; margin-bottom:0.75rem;">LLAMA 3 / LOGIC ENGINE</div>
-          <p style="font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+        <div class="flow-card-item">
+          <div class="flow-card-title" style="color:var(--accent-success);">Paso 2: Tu servidor procesa</div>
+          <span class="flow-card-badge">LLAMA 3 / LOGIC ENGINE</span>
+          <p class="flow-card-desc">
             FastAPI valida la firma criptográfica HMAC, recupera la memoria de conversación, consulta herramientas y genera la respuesta final con Llama.
           </p>
         </div>
 
-        <div class="step-flow-item" style="background:var(--card-surface); padding:1.5rem; border-radius:14px; border:1px solid var(--border-subtle);">
-          <div style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.3rem; margin-bottom:0.5rem;">Paso 3: Tú respondes</div>
-          <div style="font-size:0.85rem; color:var(--text-muted); font-weight:700; margin-bottom:0.75rem;">GRAPH API DISPATCH (POST /messages)</div>
-          <p style="font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+        <div class="flow-card-item">
+          <div class="flow-card-title" style="color:var(--meta-purple);">Paso 3: Tú respondes</div>
+          <span class="flow-card-badge">GRAPH API DISPATCH (POST /messages)</span>
+          <p class="flow-card-desc">
             Tu sistema envía una petición autenticada con Bearer Token a <code>https://graph.facebook.com/v20.0/{PHONE_ID}/messages</code> para entregar el mensaje al chat.
           </p>
         </div>
