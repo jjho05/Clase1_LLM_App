@@ -175,13 +175,21 @@
       </div>
 
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Intuición &amp; Analogía</span> Central Telefónica Propia vs. Telefonía en la Nube</h4>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Intuición &amp; Analogía</span> Central Telefónica en el Sótano vs. Telefonía Gestionada en la Nube</h4>
         <p class="prose-p">
-          Antes, integrar WhatsApp a nivel de negocio era como tener que <b>construir y mantener tu propia central telefónica en el sótano de la empresa</b>: necesitabas desplegar contenedores Docker del <i>WhatsApp Business On-Premises Client</i>, configurar bases de datos MySQL dedicadas, renovar certificados SSL cada mes y asumir los costos de caída de servicio.
+          Para comprender la revolución de la <b>WhatsApp Cloud API</b>, imagina la diferencia entre tener que <b>instalar una centralita telefónica física con cables de cobre en el sótano de tu empresa</b> o contratar un servicio moderno de telefonía digital en la nube:
         </p>
-        <p class="prose-p">
-          La <b>WhatsApp Cloud API</b> es el equivalente a contratar telefonía gestionada: Meta aloja los clústeres, gestiona el cifrado de extremo a extremo, escala los servidores automáticamente y te entrega un endpoint HTTPS en <code>graph.facebook.com</code>. Tu equipo ya no administra servidores de mensajería; solo programa la lógica de negocio y el agente de IA.
-        </p>
+        <ul class="clean-bullet-list" style="margin: 1rem 0 1.5rem 1.5rem; line-height: 1.8; color: var(--text-secondary);">
+          <li><strong>El Modelo Antiguo (On-Premises):</strong> Exigía levantar clústeres de contenedores Docker con el <i>WhatsApp Business Client</i>, aprovisionar bases de datos MySQL dedicadas, configurar balanceadores de carga, renovar certificados SSL cada mes y aplicar parches de seguridad obligatorios cada 180 días bajo pena de corte de servicio. Si tus servidores colapsaban a las 3:00 AM, tus clientes se quedaban sin servicio y tu equipo de DevOps debía resolverlo.</li>
+          <li><strong>El Modelo Moderno (Cloud API):</strong> Meta asume el 100% de la infraestructura física, el cifrado de extremo a extremo, la redundancia en centros de datos globales y la escalabilidad elástica. Tu equipo se conecta a una URL HTTPS estándar en <code>graph.facebook.com</code> mediante llamadas REST sencillas y webhooks.</li>
+        </ul>
+
+        <div class="callout-box" style="background: rgba(8, 102, 255, 0.06); border-left: 4px solid var(--meta-blue); padding: 1.25rem 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+          <strong style="color: var(--meta-blue); font-size: 1rem; display: block; margin-bottom: 0.35rem;">¿Dónde reside la Inteligencia Artificial (Llama 3)?</strong>
+          <p style="margin: 0; font-size: 0.93rem; color: var(--text-primary); line-height: 1.6;">
+            <b>Meta aloja la mensajería, pero NUNCA tu modelo de IA.</b> La lógica conversacional, el razonamiento con Llama 3, la memoria de sesión y las consultas a bases de datos residen siempre en tu propio backend (servidor FastAPI/Python). La Cloud API actúa exclusivamente como el <b>puente de transporte de datos</b> seguro y confiable.
+          </p>
+        </div>
       </div>
 
       <div class="table-responsive-wrapper">
@@ -195,29 +203,29 @@
           </thead>
           <tbody>
             <tr>
-              <td><strong>Alojamiento del Servidor</strong></td>
+              <td><strong>Alojamiento de Mensajería</strong></td>
               <td>Servidores propios (AWS EC2, GCP Compute, Docker local).</td>
-              <td>Infraestructura global de Meta (Facebook Cloud).</td>
+              <td>Infraestructura global distribuida de Meta.</td>
             </tr>
             <tr>
               <td><strong>Mantenimiento y Parches</strong></td>
               <td>Manual: Actualizaciones obligatorias de contenedores cada 6 meses.</td>
-              <td>Automático: Sin parches ni interrupciones de servicio.</td>
+              <td>Automático: Cero mantenimiento de infraestructura de mensajería.</td>
             </tr>
             <tr>
-              <td><strong>Costo Operativo de Servidores</strong></td>
-              <td>Alto ($150 - $600 USD/mes solo en cómputo e infraestructura).</td>
-              <td>$0 USD en servidores de mensajería (Solo pagas por conversación consumida).</td>
+              <td><strong>Costo Fijo de Servidores</strong></td>
+              <td>Alto ($150 - $600 USD/mes solo en cómputo e infraestructura base).</td>
+              <td>$0 USD en servidores de mensajería (Solo pagas por conversación activa).</td>
             </tr>
             <tr>
-              <td><strong>Disponibilidad &amp; SLA</strong></td>
-              <td>Responsabilidad exclusiva del equipo de DevOps interno.</td>
-              <td>Garantizado por los centros de datos distribuidos de Meta.</td>
+              <td><strong>Modelo de Facturación Meta</strong></td>
+              <td>Por conversación iniciada (Marketing, Utilidad, Servicio).</td>
+              <td>Mismo esquema oficial de Meta (1,000 conversaciones de servicio gratuitas al mes).</td>
             </tr>
             <tr>
-              <td><strong>Responsabilidad de la IA</strong></td>
-              <td>Tu equipo construye la lógica del agente.</td>
-              <td>Tu equipo construye la lógica del agente (Llama 3).</td>
+              <td><strong>SLA y Disponibilidad</strong></td>
+              <td>Responsabilidad exclusiva del equipo de infraestructura interno.</td>
+              <td>Garantizado por los centros de datos de Meta (99.95%+).</td>
             </tr>
           </tbody>
         </table>
@@ -241,13 +249,16 @@
     <article class="tema-card" id="tema-2-1-2">
       <div class="tema-header">
         <div class="tema-eyebrow">Tema 2.1.2 · Topología Conversacional</div>
-        <h3 class="tema-title">El Flujo de un Mensaje: El Ciclo Bidireccional Ping-Pong</h3>
+        <h3 class="tema-title">El Flujo de un Mensaje: El Ciclo Bidireccional Ping-Pong y la Regla de los 3 Segundos</h3>
       </div>
 
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Ciclo Obligatorio</span> De WhatsApp a tu Servidor y de Regreso</h4>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Ciclo Obligatorio</span> Dos Canales Asíncronos Desacoplados</h4>
         <p class="prose-p">
-          Imagina una <b>partida de ping-pong sincronizada</b>. El usuario saca el servicio al enviar un mensaje de texto. Meta recibe el paquete en su infraestructura de mensajería y devuelve la bola hacia tu campo mediante un <b>Webhook HTTP POST</b>. Tu servidor recibe la notificación, valida los datos, ejecuta el razonamiento con Llama 3 y efectúa el contraataque: una llamada HTTP POST a la <b>Graph API de Meta</b> para entregar la respuesta al usuario.
+          Una duda frecuente al comenzar es: <i>"¿Puedo responder al usuario de WhatsApp retornando texto en la respuesta HTTP del webhook?"</i>. La respuesta es <b>NO</b>. La arquitectura de WhatsApp es estrictamente <b>asíncrona y desacoplada</b>:
+        </p>
+        <p class="prose-p">
+          Imagina una <b>partida de ping-pong sincronizada</b>. El usuario saca el servicio al enviar un mensaje desde su app de WhatsApp. Meta recibe el mensaje y lanza la bola hacia tu backend mediante una notificación <b>Webhook HTTP POST</b>. Tu servidor debe confirmar de inmediato que recibió la bola retornando un código <code>HTTP 200 OK</code> en menos de 3 segundos. Posteriormente, tu servidor procesa la inferencia con Llama 3 y ejecuta el remate: envía la respuesta mediante una petición separada a la <b>Graph API de Meta</b>.
         </p>
       </div>
 
@@ -257,15 +268,15 @@
           <div class="flow-card-title" style="color:var(--meta-blue);">Paso 1: Meta te avisa</div>
           <span class="flow-card-badge">WEBHOOK INCOMING (HTTP POST)</span>
           <p class="flow-card-desc">
-            Meta envía un payload JSON a tu URL de webhook configurada con el remitente (<code>from</code>), ID del mensaje (<code>wamid</code>) y el texto exacto.
+            Cuando el usuario escribe, Meta contacta a tu URL de webhook con el payload JSON: número del remitente (<code>from</code>), ID único (<code>wamid</code>) y el texto exacto. Tu servidor responde <code>HTTP 200 OK</code> inmediatamente.
           </p>
         </div>
 
         <div class="flow-card-item">
           <div class="flow-card-title" style="color:var(--accent-success);">Paso 2: Tu servidor procesa</div>
-          <span class="flow-card-badge">LLAMA 3 / LOGIC ENGINE</span>
+          <span class="flow-card-badge">LLAMA 3 / LOGIC ENGINE (ASÍNCRONO)</span>
           <p class="flow-card-desc">
-            FastAPI valida la firma criptográfica HMAC, recupera la memoria de conversación, consulta herramientas y genera la respuesta final con Llama.
+            En una tarea en segundo plano (<code>BackgroundTasks</code>), FastAPI valida la firma criptográfica HMAC, recupera la memoria de conversación, consulta herramientas en base de datos y genera la respuesta final con Llama 3.
           </p>
         </div>
 
@@ -273,15 +284,15 @@
           <div class="flow-card-title" style="color:var(--meta-purple);">Paso 3: Tú respondes</div>
           <span class="flow-card-badge">GRAPH API DISPATCH (POST /messages)</span>
           <p class="flow-card-desc">
-            Tu sistema envía una petición autenticada con Bearer Token a <code>https://graph.facebook.com/v20.0/{PHONE_ID}/messages</code> para entregar el mensaje al chat.
+            Tu backend envía una petición HTTP autenticada con Bearer Token al endpoint <code>https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages</code>. Meta recibe la orden y entrega el mensaje al chat del usuario.
           </p>
         </div>
       </div>
 
-      <div class="callout-box" style="background:rgba(8, 102, 255, 0.08); border-left:4px solid var(--meta-blue); padding:1.2rem; border-radius:8px; margin-top:1.5rem;">
-        <strong style="color:var(--meta-blue); font-size:1rem;">Principio Arquitectónico Fundamental:</strong>
-        <p style="margin:0.4rem 0 0; font-size:0.95rem; color:var(--text-primary);">
-          <b>Sin el webhook no hay entrada; sin la llamada a la API de envío no hay salida.</b> Ambos canales son asíncronos y desacoplados. Tu backend debe responder <code>HTTP 200 OK</code> al webhook en menos de 3 segundos para evitar que Meta reintente el envío por timeout.
+      <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.5rem 0;">
+        <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">La Regla Crítica del Timeout de 3 Segundos:</strong>
+        <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
+          Si tu endpoint de webhook tarda más de <b>3 segundos</b> en responder <code>HTTP 200 OK</code> (por ejemplo, si bloqueas la ejecución esperando una inferencia lenta de Llama o una consulta pesada a base de datos), Meta asumirá que tu servidor se cayó y <b>reenviará el mismo webhook múltiples veces</b>, provocando tormentas de peticiones duplicadas y respuestas repetidas al usuario. La solución arquitectónica es procesar la inferencia en segundo plano (<i>BackgroundTasks</i>).
         </p>
       </div>
 
@@ -302,31 +313,178 @@
     <!-- SUBTEMA 2.1.3 -->
     <article class="tema-card" id="tema-2-1-3">
       <div class="tema-header">
-        <div class="tema-eyebrow">Tema 2.1.3 · Webhooks, Handshake &amp; Seguridad</div>
-        <h3 class="tema-title">Webhooks a Fondo: Handshake GET, Payloads JSON y Validación HMAC</h3>
+        <div class="tema-eyebrow">Tema 2.1.3 · Webhooks, Handshake &amp; Seguridad Criptográfica</div>
+        <h3 class="tema-title">Webhooks a Fondo: El Handshake GET, la Estructura JSON y la Validación HMAC SHA-256</h3>
       </div>
 
+      <!-- SECCIÓN 1: EL HANDSHAKE GET -->
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Handshake</span> Validación Inicial con <code>hub.challenge</code></h4>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Handshake Inicial</span> El Salvoconducto Secreto de Verificación (GET /webhook)</h4>
         <p class="prose-p">
-          Configurar un webhook en <b>Meta for Developers</b> no es solo pegar una URL. Meta ejecuta un <i>handshake</i> enviando una petición <code>GET</code> a tu servidor con 3 parámetros obligatorios:
+          Antes de que Meta envíe el primer mensaje de un usuario a tu servidor, debe comprobar que tú eres el propietario legítimo de la URL configurada. Para ello, Meta for Developers ejecuta una <b>verificación de apretón de manos (Handshake GET)</b> enviando una petición HTTP GET a tu endpoint con 3 parámetros de consulta (Query Parameters):
         </p>
-        <ul class="clean-bullet-list" style="margin-left:1.5rem; line-height:1.8; color:var(--text-secondary);">
-          <li><code>hub.mode</code>: Debe ser exactamente la cadena <code>"subscribe"</code>.</li>
-          <li><code>hub.verify_token</code>: Cadena secreta configurada por ti en el panel de Meta. Si coincide con tu variable de entorno, autorizas la conexión.</li>
-          <li><code>hub.challenge</code>: Un número aleatorio en texto plano generado por Meta. Tu servidor <b>debe retornar este valor exacto con código HTTP 200 en texto plano</b>.</li>
-        </ul>
+
+        <div class="table-responsive-wrapper">
+          <table class="table-pro">
+            <thead>
+              <tr>
+                <th>Parámetro Query</th>
+                <th>Valor Enviado por Meta</th>
+                <th>Propósito y Acción de tu Backend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>hub.mode</code></td>
+                <td><code>"subscribe"</code></td>
+                <td>Indica que Meta solicita suscribir esta URL a eventos de WhatsApp.</td>
+              </tr>
+              <tr>
+                <td><code>hub.verify_token</code></td>
+                <td>Cadena secreta configurada por ti</td>
+                <td><b>Validación de seguridad:</b> Tu servidor debe comparar este valor con su variable de entorno <code>VERIFY_TOKEN</code>. Si no coinciden, debes rechazar con <code>HTTP 403 Forbidden</code>.</td>
+              </tr>
+              <tr>
+                <td><code>hub.challenge</code></td>
+                <td>Número aleatorio en texto plano (ej. <code>1158201444</code>)</td>
+                <td><b>Desafío criptográfico:</b> Si el token es correcto, tu backend <b>debe devolver exactamente este número en texto plano con código HTTP 200</b>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="prose-p" style="margin-top: 1rem;">
+          Así se programa el endpoint de verificación en <b>FastAPI (Python)</b>:
+        </p>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">Python · FastAPI (GET /webhook)</span>
+            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <pre class="code-content"><code class="language-python"><span class="code-keyword">from</span> fastapi <span class="code-keyword">import</span> FastAPI, Query, HTTPException, Response
+<span class="code-keyword">import</span> os
+
+app = FastAPI()
+VERIFY_TOKEN = os.getenv(<span class="code-string">"VERIFY_TOKEN"</span>, <span class="code-string">"MI_TOKEN_SECRETO_2026"</span>)
+
+<span class="code-decorator">@app.get</span>(<span class="code-string">"/webhook"</span>)
+<span class="code-keyword">def</span> <span class="code-function">verificar_webhook</span>(
+    hub_mode: str = Query(<span class="code-keyword">None</span>, alias=<span class="code-string">"hub.mode"</span>),
+    hub_verify_token: str = Query(<span class="code-keyword">None</span>, alias=<span class="code-string">"hub.verify_token"</span>),
+    hub_challenge: str = Query(<span class="code-keyword">None</span>, alias=<span class="code-string">"hub.challenge"</span>)
+):
+    <span class="code-comment"># 1. Validar que el modo sea 'subscribe' y el token coincida con el secreto</span>
+    <span class="code-keyword">if</span> hub_mode == <span class="code-string">"subscribe"</span> <span class="code-keyword">and</span> hub_verify_token == VERIFY_TOKEN:
+        <span class="code-comment"># 2. Retornar el challenge exacto en texto plano con HTTP 200</span>
+        <span class="code-keyword">return</span> Response(content=hub_challenge, media_type=<span class="code-string">"text/plain"</span>, status_code=<span class="code-number">200</span>)
+    
+    <span class="code-comment"># 3. Si el token no coincide, denegar el acceso</span>
+    <span class="code-keyword">raise</span> HTTPException(status_code=<span class="code-number">403</span>, detail=<span class="code-string">"Token de verificación inválido"</span>)</code></pre>
+        </div>
       </div>
 
-      <div class="formula-card">
-        <div class="formula-math-area">
-          $$\text{Validación: } \text{Si } (\text{mode} = \text{"subscribe"}) \land (\text{verify\_token} = \text{SECRET\_TOKEN}) \implies \text{HTTP 200 (Body: } \text{hub.challenge})$$
-          $$\text{Firma Criptográfica: } \text{HMAC-SHA256}(\text{Raw Payload}, \text{APP\_SECRET}) \stackrel{?}{=} \text{X-Hub-Signature-256}$$
+      <!-- SECCIÓN 2: LA ESTRUCTURA JSON DE META -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Anatomía del Webhook POST</span> Estructura y Extracción de Datos Críticos</h4>
+        <p class="prose-p">
+          Cuando un usuario real envía un mensaje en WhatsApp, Meta envía una petición <code>POST /webhook</code> con un payload JSON anidado. La jerarquía estandarizada sigue esta ruta:
+        </p>
+
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{Payload} \longrightarrow \text{entry}[0] \longrightarrow \text{changes}[0] \longrightarrow \text{value} \longrightarrow \text{messages}[0]$$
+          </div>
+        </div>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">JSON · Estructura Oficial de Webhook Entrante</span>
+            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <pre class="code-content"><code class="language-json">{
+  <span class="code-comment">"object"</span>: <span class="code-string">"whatsapp_business_account"</span>,
+  <span class="code-comment">"entry"</span>: [{
+    <span class="code-comment">"id"</span>: <span class="code-string">"104928374659281"</span>,
+    <span class="code-comment">"changes"</span>: [{
+      <span class="code-comment">"value"</span>: {
+        <span class="code-comment">"messaging_product"</span>: <span class="code-string">"whatsapp"</span>,
+        <span class="code-comment">"metadata"</span>: {
+          <span class="code-comment">"display_phone_number"</span>: <span class="code-string">"15551234567"</span>,
+          <span class="code-comment">"phone_number_id"</span>: <span class="code-string">"109823746592831"</span>  <span class="code-comment">// &lt;-- ID para responder</span>
+        },
+        <span class="code-comment">"contacts"</span>: [{
+          <span class="code-comment">"profile"</span>: { <span class="code-comment">"name"</span>: <span class="code-string">"Lic. Jesús Olvera"</span> },
+          <span class="code-comment">"wa_id"</span>: <span class="code-string">"5215587654321"</span>
+        }],
+        <span class="code-comment">"messages"</span>: [{
+          <span class="code-comment">"from"</span>: <span class="code-string">"5215587654321"</span>,              <span class="code-comment">// &lt;-- Número del usuario</span>
+          <span class="code-comment">"id"</span>: <span class="code-string">"wamid.HBgLMjUyMTU1ODc..."</span>,       <span class="code-comment">// &lt;-- ID único para idempotencia</span>
+          <span class="code-comment">"timestamp"</span>: <span class="code-string">"1724109823"</span>,
+          <span class="code-comment">"type"</span>: <span class="code-string">"text"</span>,
+          <span class="code-comment">"text"</span>: {
+            <span class="code-comment">"body"</span>: <span class="code-string">"¿Cuál es el estatus de mi pedido #45210?"</span>
+          }
+        }]
+      },
+      <span class="code-comment">"field"</span>: <span class="code-string">"messages"</span>
+    }]
+  }]
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3: VALIDACIÓN CRIPTOGRÁFICA HMAC -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Blindaje Criptográfico</span> Validación de Firmas con HMAC SHA-256</h4>
+        <p class="prose-p">
+          Dado que tu URL de webhook está expuesta en internet, <b>cualquier persona que descubra tu dominio podría enviar peticiones POST falsas con cURL simulando ser Meta</b>.
+        </p>
+        <p class="prose-p">
+          Para evitar ataques de denegación de servicio, inyecciones maliciosas o suplantación de identidad, Meta firma cada petición enviando la cabecera <code>X-Hub-Signature-256</code>. El proceso de verificación criptográfica funciona así:
+        </p>
+
+        <div class="step-flow-container" style="display:flex; flex-direction:column; gap:0.85rem; margin:1.2rem 0;">
+          <div style="background:var(--card-surface); padding:1rem; border-left:4px solid var(--meta-blue); border-radius:8px; font-size:0.92rem;">
+            <strong>Paso A:</strong> Meta calcula el hash <code>HMAC-SHA256</code> utilizando el cuerpo crudo de la petición (<i>Raw Bytes</i>) y el <b>App Secret</b> de tu aplicación como clave secreta, adjuntándolo como <code>sha256=&lt;hash_hex&gt;</code>.
+          </div>
+          <div style="background:var(--card-surface); padding:1rem; border-left:4px solid var(--accent-success); border-radius:8px; font-size:0.92rem;">
+            <strong>Paso B:</strong> Tu servidor recibe el cuerpo crudo y recalcula el hash con su propio <code>APP_SECRET</code>.
+          </div>
+          <div style="background:var(--card-surface); padding:1rem; border-left:4px solid var(--meta-purple); border-radius:8px; font-size:0.92rem;">
+            <strong>Paso C:</strong> Se comparan los hashes usando <code>hmac.compare_digest()</code> (función de tiempo constante que protege contra ataques de temporización). Si coinciden, el webhook es 100% auténtico de Meta.
+          </div>
+        </div>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">Python · Verificador de Firmas HMAC SHA-256</span>
+            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <pre class="code-content"><code class="language-python"><span class="code-keyword">import</span> hmac
+<span class="code-keyword">import</span> hashlib
+
+<span class="code-keyword">def</span> <span class="code-function">validar_firma_meta</span>(raw_payload: bytes, signature_header: str, app_secret: str) -> bool:
+    <span class="code-keyword">if</span> <span class="code-keyword">not</span> signature_header <span class="code-keyword">or</span> <span class="code-keyword">not</span> signature_header.startswith(<span class="code-string">"sha256="</span>):
+        <span class="code-keyword">return</span> <span class="code-keyword">False</span>
+    
+    <span class="code-comment"># 1. Extraer el hash recibido descartando el prefijo 'sha256='</span>
+    firma_recibida = signature_header.split(<span class="code-string">"sha256="</span>)[<span class="code-number">1</span>]
+    
+    <span class="code-comment"># 2. Recalcular el hash esperado con el App Secret y los bytes crudos</span>
+    hash_calculado = hmac.new(
+        key=app_secret.encode(<span class="code-string">"utf-8"</span>),
+        msg=raw_payload,
+        digestmod=hashlib.sha256
+    ).hexdigest()
+    
+    <span class="code-comment"># 3. Comparación segura en tiempo constante</span>
+    <span class="code-keyword">return</span> hmac.compare_digest(hash_calculado, firma_recibida)</code></pre>
         </div>
       </div>
 
       <!-- QUIZ 3 -->
-      <div class="quiz-box">
+      <div class="quiz-box" style="margin-top:2rem;">
         <div class="quiz-header">
           <span class="quiz-tag">Autoevaluación 2.1.3</span>
         </div>
@@ -342,34 +500,34 @@
     <!-- SUBTEMA 2.1.4 -->
     <article class="tema-card" id="tema-2-1-4">
       <div class="tema-header">
-        <div class="tema-eyebrow">Tema 2.1.4 · Entorno de Desarrollo</div>
-        <h3 class="tema-title">Túneles de Desarrollo Seguro con ngrok</h3>
+        <div class="tema-eyebrow">Tema 2.1.4 · Entorno de Desarrollo Local</div>
+        <h3 class="tema-title">Túneles de Desarrollo Seguro con ngrok: Cómo Exponer tu Servidor Local</h3>
       </div>
 
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Problema Local</span> Tu Laptop no tiene IP Pública</h4>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Problema Local</span> Tu Laptop no Tiene IP Pública ni Certificado SSL Válido</h4>
         <p class="prose-p">
-          Cuando programas en tu computadora, tu servidor corre en <code>http://localhost:8000</code>. Los servidores de Meta en California no pueden alcanzar esa dirección privada.
+          Cuando programas en tu máquina local, tu servidor de FastAPI corre en <code>http://localhost:8000</code>. Los servidores de Meta en la nube no tienen forma de conectarse a la dirección privada de tu computadora y, además, Meta <b>prohíbe el uso de HTTP plano</b> (exige obligatoriamente HTTPS con cifrado TLS).
         </p>
         <p class="prose-p">
-          <b>ngrok</b> actúa como un túnel seguro con cifrado TLS: abre una conexión reversa y te asigna una URL pública temporal (por ejemplo <code>https://a3f8-55-12.ngrok-free.app</code>) que reenvía instantáneamente todas las peticiones a tu <code>localhost:8000</code>.
+          <b>ngrok</b> resuelve este obstáculo actuando como un túnel seguro: abre una conexión reversa y te asigna una URL pública temporal con certificado SSL (por ejemplo <code>https://a3f8-55-12.ngrok-free.app</code>) que reenvía instantáneamente todo el tráfico que recibe hacia tu puerto local <code>8000</code>.
         </p>
       </div>
 
       <div class="code-box">
         <div class="code-header">
-          <span class="code-lang">Bash · Terminal</span>
+          <span class="code-lang">Bash · Flujo de Trabajo en Terminal</span>
           <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
         </div>
-        <pre class="code-content"><code class="language-bash"><span class="code-comment"># 1. Iniciar servidor FastAPI en el puerto 8000</span>
+        <pre class="code-content"><code class="language-bash"><span class="code-comment"># Paso 1: Iniciar servidor FastAPI en el puerto 8000</span>
 uvicorn main:app --reload --port 8000
 
-<span class="code-comment"># 2. En otra terminal, abrir el túnel seguro de ngrok</span>
+<span class="code-comment"># Paso 2: En una segunda terminal, abrir el túnel seguro con ngrok</span>
 ngrok http 8000
 
-<span class="code-comment"># Salida esperada de ngrok:</span>
-<span class="code-comment"># Forwarding https://a3f8-55-12.ngrok-free.app -> http://localhost:8000</span>
-<span class="code-comment"># Configura en Meta: https://a3f8-55-12.ngrok-free.app/webhook</span></code></pre>
+<span class="code-comment"># Salida generada por ngrok en pantalla:</span>
+<span class="code-comment"># Forwarding: https://a3f8-55-12.ngrok-free.app -> http://localhost:8000</span>
+<span class="code-comment"># Configurar en Meta for Developers: https://a3f8-55-12.ngrok-free.app/webhook</span></code></pre>
       </div>
 
       <!-- QUIZ 4 -->
@@ -390,30 +548,33 @@ ngrok http 8000
     <article class="tema-card" id="tema-2-1-5">
       <div class="tema-header">
         <div class="tema-eyebrow">Tema 2.1.5 · Metodología de Validación</div>
-        <h3 class="tema-title">Caso Práctico: Las 5 Fases Rigurosas del Asistente de Pedidos</h3>
+        <h3 class="tema-title">Caso Práctico: Las 5 Fases Rigurosas del Asistente de Estatus de Pedidos</h3>
       </div>
 
       <div class="tema-section-block">
         <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Disciplina de Ingeniería</span> Validar la Infraestructura ANTES de la Inteligencia</h4>
         <p class="prose-p">
-          Un equipo de e-commerce desea que sus clientes consulten el estatus de sus envíos en WhatsApp con Llama 3. En vez de conectar el LLM en el día 1 y depurar errores a ciegas, aplican la secuencia metodológica oficial:
+          Imagina que un e-commerce te contrata para crear un agente de WhatsApp que consulte el estado de envíos mediante Llama 3. El error más común de un programador novato es conectar el modelo de lenguaje en el día 1: si algo falla, no sabrá si fue por un token expirado de Meta, un problema de túnel en ngrok, un error de parseo JSON o una excepción en el prompt de IA.
+        </p>
+        <p class="prose-p">
+          La metodología profesional establece <b>5 fases incrementales de certificación</b>:
         </p>
 
         <div class="step-flow-container" style="display:flex; flex-direction:column; gap:1rem; margin:1.5rem 0;">
           <div style="background:var(--card-surface); padding:1.2rem; border-left:4px solid var(--meta-blue); border-radius:8px;">
-            <strong>Fase 1: Registro en Meta for Developers</strong> &mdash; Creación de App empresarial, WABA y obtención de <code>PHONE_NUMBER_ID</code> y token temporal.
+            <strong>Fase 1: Registro en Meta for Developers</strong> &mdash; Creación de la App empresarial, vinculación de WABA y obtención de <code>PHONE_NUMBER_ID</code> y token temporal de prueba.
           </div>
           <div style="background:var(--card-surface); padding:1.2rem; border-left:4px solid var(--accent-success); border-radius:8px;">
-            <strong>Fase 2: Webhook Local con ngrok</strong> &mdash; Servidor FastAPI local expuesto a internet mediante túnel TLS.
+            <strong>Fase 2: Webhook Local con ngrok</strong> &mdash; Levantamiento del servidor FastAPI local y exposición a internet mediante túnel seguro TLS.
           </div>
           <div style="background:var(--card-surface); padding:1.2rem; border-left:4px solid var(--meta-purple); border-radius:8px;">
-            <strong>Fase 3: Verificación del Handshake GET</strong> &mdash; Retorno de <code>hub.challenge</code> validando la suscripción a eventos <code>messages</code>.
+            <strong>Fase 3: Verificación del Handshake GET</strong> &mdash; Validación de <code>hub.verify_token</code> y retorno de <code>hub.challenge</code>, activando la suscripción a eventos <code>messages</code>.
           </div>
           <div style="background:var(--card-surface); padding:1.2rem; border-left:4px solid #f59e0b; border-radius:8px;">
-            <strong>Fase 4: Validación del Ciclo con Respuesta Fija (Echo)</strong> &mdash; Se recibe el mensaje y se responde <i>"Recibido pedido..."</i> sin invocar a Llama. Si esto falla, el problema es de red/tokens, no de IA.
+            <strong>Fase 4: Validación del Ciclo con Respuesta Fija (Echo Test)</strong> &mdash; Se recibe el mensaje del usuario y se responde de inmediato con un texto estático: <i>"Recibido tu mensaje en nuestro servidor..."</i>. Si esto funciona, <b>el puente de transporte está 100% certificado</b>.
           </div>
           <div style="background:var(--card-surface); padding:1.2rem; border-left:4px solid #ec4899; border-radius:8px;">
-            <strong>Fase 5: Inyección del Modelo Llama 3</strong> &mdash; Con el puente 100% certificado, se conecta la inferencia y el prompt con contexto dinámico.
+            <strong>Fase 5: Inyección del Modelo Llama 3</strong> &mdash; Sobre el puente certificado, se conecta la llamada a la inferencia de Llama 3, el prompt del sistema y las herramientas de base de datos.
           </div>
         </div>
       </div>
@@ -440,24 +601,25 @@ ngrok http 8000
       </div>
 
       <div class="tema-section-block">
-        <div class="stat-grid-clean" style="grid-template-columns: 1fr 1fr; gap:1.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Criterios de Decisión</span> Cuándo WhatsApp es el Canal Óptimo</h4>
+        <div class="stat-grid-clean" style="grid-template-columns: 1fr 1fr; gap:1.5rem; margin-top:1rem;">
           <div class="stat-card-clean" style="border-top:4px solid var(--accent-success);">
             <div style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.1rem; margin-bottom:0.6rem;">Casos Idóneos para WhatsApp</div>
             <ul style="font-size:0.9rem; color:var(--text-secondary); line-height:1.7; padding-left:1.2rem;">
-              <li>Atención asíncrona donde el usuario ya reside (90%+ de apertura).</li>
-              <li>Notificaciones transaccionales (guías de envío, confirmación de vuelos).</li>
-              <li>Soporte con imágenes/audios (fotos de tickets, recibos, recetas médicas).</li>
-              <li>Reagendamiento y citas médicas rápidas.</li>
+              <li><strong>Interacción Asíncrona:</strong> El usuario responde cuando tiene tiempo libre (tasa de apertura &gt;90%).</li>
+              <li><strong>Notificaciones Transaccionales:</strong> Guías de paquetería, pases de abordar, confirmaciones de pago.</li>
+              <li><strong>Soporte Multimodal Rápido:</strong> El usuario envía fotos de recibos, audios explicativos o ubicación GPS.</li>
+              <li><strong>Reagendamiento y Recordatorios:</strong> Citas médicas o reservas de restaurantes con confirmación en lenguaje natural.</li>
             </ul>
           </div>
 
           <div class="stat-card-clean" style="border-top:4px solid #ef4444;">
             <div style="font-family:var(--font-disp); font-weight:800; color:#ef4444; font-size:1.1rem; margin-bottom:0.6rem;">Casos Inadecuados (Fricción Alta)</div>
             <ul style="font-size:0.9rem; color:var(--text-secondary); line-height:1.7; padding-left:1.2rem;">
-              <li>Formularios masivos con más de 20 campos de captura técnica.</li>
-              <li>Edición colaborativa de documentos o código denso.</li>
-              <li>Dashboards con gráficos interactivos complejos y tablas de 50 columnas.</li>
-              <li>Flujos que exigen privacidad total sin almacenamiento en dispositivos móviles.</li>
+              <li><strong>Formularios Complejos:</strong> Trámites con más de 15 campos numéricos o fiscales densos (mejor una Web App).</li>
+              <li><strong>Edición de Documentos o Código:</strong> Tareas que requieren pantalla grande y cursores de edición.</li>
+              <li><strong>Dashboards con Múltiples Tablas:</strong> Análisis financiero de 50 columnas con mapas de calor.</li>
+              <li><strong>Alta Sensibilidad sin Almacenamiento Local:</strong> Datos ultra-confidenciales que no deben quedar en el historial del teléfono.</li>
             </ul>
           </div>
         </div>
