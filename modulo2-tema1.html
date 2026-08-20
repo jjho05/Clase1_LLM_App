@@ -40,10 +40,10 @@
       <a href="modulo1-tema4.html" class="nav-link-item" style="color: var(--meta-blue); font-weight: 700;">&larr; Unidad 1.4</a>
       <a href="#intro-modulo" class="nav-link-item">Visión</a>
       <a href="#subtemas-principales" class="nav-link-item">Subtemas</a>
-      <a href="#simuladores" class="nav-link-item">Laboratorios</a>
-      <a href="#codigo-produccion" class="nav-link-item">Código FastAPI</a>
+      <a href="#simuladores" class="nav-link-item">Simuladores</a>
       <a href="#ejercicios" class="nav-link-item">Ejercicios</a>
       <a href="#glosario" class="nav-link-item">Glosario</a>
+      <a href="#fuentes-oficiales" class="nav-link-item">Fuentes</a>
       <a href="modulo2-tema2.html" class="nav-link-item" style="color: var(--accent-success); font-weight: 700;">Unidad 2.2 &rarr;</a>
     </nav>
 
@@ -913,11 +913,11 @@ ngrok http 8000
   <!-- ==========================================================================
   BANCOS INTERACTIVOS & LABORATORIOS EN VIVO (5 SIMULADORES)
   ========================================================================== -->
-  <section id="simuladores" style="margin-top:4rem;">
-    <div style="text-align:center; margin-bottom:2.5rem;">
-      <div class="tema-eyebrow" style="justify-content:center; margin-bottom:0.6rem;">Laboratorios Prácticos en Vivo</div>
-      <h2 style="font-size:2.2rem; font-family:var(--font-disp); font-weight:800; color:var(--text-primary); margin:0 0 0.8rem;">Bancos Interactivos de la Unidad 2.1</h2>
-      <p style="color:var(--text-secondary); max-width:70ch; margin:0 auto; font-size:1.05rem;">Prueba en tiempo real el handshake de verificación, inspecciona estructuras JSON de Meta, simula el ciclo bidireccional y valida firmas HMAC SHA-256.</p>
+  <section class="module-block" id="simuladores" style="margin-top:4rem; margin-bottom:4rem;">
+    <div class="module-header">
+      <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Laboratorios Prácticos en Vivo</div>
+      <h2 class="module-title">Bancos Interactivos de la Unidad 2.1</h2>
+      <p class="module-desc">Prueba en tiempo real el handshake de verificación, inspecciona estructuras JSON de Meta, simula el ciclo bidireccional y valida firmas HMAC SHA-256.</p>
     </div>
 
     <!-- BANCO 1: SIMULADOR DE HANDSHAKE AVANZADO -->
@@ -1748,36 +1748,143 @@ Calcula la firma HMAC o verifica la cabecera...
   <!-- ==========================================================================
   FUENTES OFICIALES & BIBLIOGRAFÍA
   ========================================================================== -->
-  <section id="fuentes-oficiales" style="margin-bottom: 4rem;">
+  <section id="fuentes-oficiales" class="module-block" style="margin-bottom: 4rem;">
     <div class="module-header">
-      <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Papers</div>
-      <h2 class="module-title">Fuentes de Referencia de la Unidad 2.1</h2>
+      <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Referencias de Ingeniería</div>
+      <h2 class="module-title">Fuentes de Referencia Oficiales · Unidad 2.1</h2>
+      <p class="module-desc">Manuales técnicos, estándares RFC, guías de seguridad criptográfica y especificaciones oficiales para el desarrollo de agentes con Meta Llama 3 en WhatsApp.</p>
     </div>
 
-    <div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+    <div class="sources-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.4rem;">
+      
+      <!-- Card 1: Meta Cloud API -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">Meta for Developers</span>
+          <span class="source-tag">Meta for Developers · 2024</span>
           <span class="source-type-pill">Documentación Oficial</span>
         </div>
-        <h4 class="source-title">WhatsApp Cloud API Reference</h4>
-        <p class="source-desc">Guía completa de endpoints, tipos de mensajes interactivos, plantillas y rate limits de la Graph API de WhatsApp.</p>
+        <h4 class="source-title">WhatsApp Business Platform: Cloud API Reference</h4>
+        <p class="source-desc">
+          Guía integral de endpoints Graph API v20.0, contratos de datos para mensajes de texto, respuestas interactivas con botones (Interactive Messages), plantillas HSM y políticas de límites de tasa (Rate Limiting).
+        </p>
         <a href="https://developers.facebook.com/docs/whatsapp/cloud-api" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-          <span>developers.facebook.com &rarr;</span>
+          <span>Consultar en Meta for Developers</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
         </a>
       </div>
 
+      <!-- Card 2: Webhooks & Criptografía -->
       <div class="source-card">
         <div class="source-card-header">
-          <span class="source-tag">Meta Webhooks</span>
-          <span class="source-type-pill">Seguridad &amp; Handshake</span>
+          <span class="source-tag">Meta Security Standards · 2024</span>
+          <span class="source-type-pill">Criptografía &amp; Seguridad</span>
         </div>
-        <h4 class="source-title">Validating Webhook Signatures</h4>
-        <p class="source-desc">Especificación técnica de validación criptográfica de firmas HMAC SHA-256 y verificación de tokens en Meta Graph API.</p>
+        <h4 class="source-title">Webhooks: Signature Validation &amp; Verification Handshake</h4>
+        <p class="source-desc">
+          Especificación oficial del protocolo de handshake GET con <code>hub.challenge</code> y validación de autenticidad criptográfica mediante la cabecera <code>X-Hub-Signature-256</code> con secretos de aplicación (App Secret).
+        </p>
         <a href="https://developers.facebook.com/docs/graph-api/webhooks/getting-started" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-          <span>Guía de Webhooks &rarr;</span>
+          <span>Consultar Guía de Webhooks</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
         </a>
       </div>
+
+      <!-- Card 3: FastAPI Async Framework -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Tiangolo / FastAPI · 2024</span>
+          <span class="source-type-pill">Framework de Microservicios</span>
+        </div>
+        <h4 class="source-title">FastAPI: Asynchronous Web Framework for Python</h4>
+        <p class="source-desc">
+          Documentación técnica sobre endpoints concurrentes con <code>async / await</code>, manejo de tareas en segundo plano con <code>BackgroundTasks</code> y extracción estricta de Query Parameters con alias.
+        </p>
+        <a href="https://fastapi.tiangolo.com/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar Documentación de FastAPI</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 4: RFC 2104 HMAC -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">IETF RFC 2104 · 1997</span>
+          <span class="source-type-pill">Estándar Criptográfico</span>
+        </div>
+        <h4 class="source-title">HMAC: Keyed-Hashing for Message Authentication</h4>
+        <p class="source-desc">
+          Krawczyk, Bellare y Canetti definen la construcción matemática HMAC para verificación de integridad de datos y autenticidad de origen, base del blindaje de webhooks en Meta y GitHub.
+        </p>
+        <a href="https://datatracker.ietf.org/doc/html/rfc2104" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar Paper RFC 2104</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 5: ngrok Tunnels -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">ngrok Inc. · 2024</span>
+          <span class="source-type-pill">Túneles de Red &amp; TLS</span>
+        </div>
+        <h4 class="source-title">ngrok: Secure Ingress &amp; Tunneling Documentation</h4>
+        <p class="source-desc">
+          Manual de configuración de túneles inversos TLS seguros para exponer servidores locales en puertos como <code>:8000</code> hacia internet, permitiendo la depuración e inspección de peticiones webhook entrantes.
+        </p>
+        <a href="https://ngrok.com/docs" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar Documentación de ngrok</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 6: Uvicorn ASGI Server -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Encode OSS · 2024</span>
+          <span class="source-type-pill">Servidor ASGI</span>
+        </div>
+        <h4 class="source-title">Uvicorn: The Lightning-Fast ASGI Server for Python</h4>
+        <p class="source-desc">
+          Servidor ASGI basado en uvloop y httptools diseñado para gestionar miles de conexiones HTTP concurrentes con baja latencia para servicios de mensajería conversacional en tiempo real.
+        </p>
+        <a href="https://www.uvicorn.org/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar en Uvicorn.org</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 7: Pydantic v2 -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Pydantic Community · 2024</span>
+          <span class="source-type-pill">Validación de Esquemas</span>
+        </div>
+        <h4 class="source-title">Pydantic V2: Ultra-Fast Data Validation with Rust Core</h4>
+        <p class="source-desc">
+          Librería de tipado y validación de estructuras JSON complejas para mapear con seguridad defensiva los modelos de eventos de WhatsApp evitando excepciones en tiempo de ejecución.
+        </p>
+        <a href="https://docs.pydantic.dev/latest/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar Documentación Pydantic</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
+      <!-- Card 8: Migración On-Premises a Cloud API -->
+      <div class="source-card">
+        <div class="source-card-header">
+          <span class="source-tag">Meta Business Engineering · 2024</span>
+          <span class="source-type-pill">Guía de Migración</span>
+        </div>
+        <h4 class="source-title">Migrating from On-Premises API to Cloud API</h4>
+        <p class="source-desc">
+          Directrices y mejores prácticas para la transición de arquitecturas auto-hospedadas con Docker hacia la Cloud API oficial de Meta, reduciendo costos de mantenimiento y optimizando la latencia de entrega.
+        </p>
+        <a href="https://developers.facebook.com/docs/whatsapp/cloud-api/overview" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+          <span>Consultar Resumen de Migración</span>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+        </a>
+      </div>
+
     </div>
   </section>
 
