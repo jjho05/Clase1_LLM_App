@@ -609,95 +609,95 @@
     let activeLang = "python";
 
     function updateCode() {
-      const phoneId = phoneIdInput ? phoneIdInput.value.trim() : "109823746592831";
-      const to = recipientInput ? recipientInput.value.trim() : "5215587654321";
-      const token = tokenInput ? tokenInput.value.trim() : "EAAG...TU_TOKEN_DE_ACCESO";
-      const body = messageInput ? messageInput.value.trim() : "¡Hola desde Meta Llama 3!";
+      const phoneId = escapeHtml(phoneIdInput ? phoneIdInput.value.trim() : "109823746592831");
+      const to = escapeHtml(recipientInput ? recipientInput.value.trim() : "5215587654321");
+      const token = escapeHtml(tokenInput ? tokenInput.value.trim() : "EAAG...TU_TOKEN_DE_ACCESO");
+      const body = escapeHtml(messageInput ? messageInput.value.trim() : "¡Hola desde Meta Llama 3!");
 
-      let code = "";
+      let html = "";
       if (activeLang === "python") {
-        code = `import httpx
-import asyncio
+        html = `<span class="code-keyword">import</span> httpx
+<span class="code-keyword">import</span> asyncio
 
-async def send_whatsapp_message(to_number: str, text_content: str):
-    url = "https://graph.facebook.com/v20.0/${phoneId}/messages"
+<span class="code-keyword">async def</span> <span class="code-function">send_whatsapp_message</span>(to_number: <span class="code-type">str</span>, text_content: <span class="code-type">str</span>):
+    url = <span class="code-string">f"https://graph.facebook.com/v20.0/${phoneId}/messages"</span>
     headers = {
-        "Authorization": "Bearer ${token}",
-        "Content-Type": "application/json"
+        <span class="code-string">"Authorization"</span>: <span class="code-string">"Bearer ${token}"</span>,
+        <span class="code-string">"Content-Type"</span>: <span class="code-string">"application/json"</span>
     }
     payload = {
-        "messaging_product": "whatsapp",
-        "recipient_type": "individual",
-        "to": "${to}",
-        "type": "text",
-        "text": {
-            "preview_url": False,
-            "body": """${body}"""
+        <span class="code-string">"messaging_product"</span>: <span class="code-string">"whatsapp"</span>,
+        <span class="code-string">"recipient_type"</span>: <span class="code-string">"individual"</span>,
+        <span class="code-string">"to"</span>: <span class="code-string">"${to}"</span>,
+        <span class="code-string">"type"</span>: <span class="code-string">"text"</span>,
+        <span class="code-string">"text"</span>: {
+            <span class="code-string">"preview_url"</span>: <span class="code-bool">False</span>,
+            <span class="code-string">"body"</span>: <span class="code-string">"""${body}"""</span>
         }
     }
     
-    async with httpx.AsyncClient(timeout=10.0) as client:
-        response = await client.post(url, json=payload, headers=headers)
+    <span class="code-keyword">async with</span> httpx.AsyncClient(timeout=<span class="code-number">10.0</span>) <span class="code-keyword">as</span> client:
+        response = <span class="code-keyword">await</span> client.post(url, json=payload, headers=headers)
         response.raise_for_status()
-        return response.json()
+        <span class="code-keyword">return</span> response.json()
 
-# Ejecución asíncrona en FastAPI
-# resultado = asyncio.run(send_whatsapp_message("${to}", "${body}"))`;
+<span class="code-comment"># Ejecución asíncrona en FastAPI:</span>
+<span class="code-comment"># resultado = asyncio.run(send_whatsapp_message("${to}", "${body}"))</span>`;
       } else if (activeLang === "curl") {
-        code = `curl -X POST "https://graph.facebook.com/v20.0/${phoneId}/messages" \\
-  -H "Authorization: Bearer ${token}" \\
-  -H "Content-Type: application/json" \\
-  -d '{
+        html = `<span class="code-function">curl</span> -X POST <span class="code-string">"https://graph.facebook.com/v20.0/${phoneId}/messages"</span> \\
+  -H <span class="code-string">"Authorization: Bearer ${token}"</span> \\
+  -H <span class="code-string">"Content-Type: application/json"</span> \\
+  -d <span class="code-string">'{
     "messaging_product": "whatsapp",
     "recipient_type": "individual",
     "to": "${to}",
     "type": "text",
     "text": {
       "preview_url": false,
-      "body": "${body.replace(/"/g, '\\"')}"
+      "body": "${body}"
     }
-  }'`;
+  }'</span>`;
       } else if (activeLang === "fastapi") {
-        code = `from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
-import httpx
+        html = `<span class="code-keyword">from</span> fastapi <span class="code-keyword">import</span> <span class="code-type">FastAPI</span>, <span class="code-type">Request</span>, <span class="code-type">HTTPException</span>, <span class="code-type">BackgroundTasks</span>
+<span class="code-keyword">import</span> httpx
 
-app = FastAPI(title="WhatsApp Agent Microservice")
+app = <span class="code-type">FastAPI</span>(title=<span class="code-string">"WhatsApp Agent Microservice"</span>)
 
-WHATSAPP_TOKEN = "${token}"
-PHONE_NUMBER_ID = "${phoneId}"
+WHATSAPP_TOKEN = <span class="code-string">"${token}"</span>
+PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
 
-@app.post("/webhook")
-async def receive_webhook(request: Request, background_tasks: BackgroundTasks):
-    data = await request.json()
-    try:
-        msg = data["entry"][0]["changes"][0]["value"]["messages"][0]
-        sender_phone = msg["from"]
-        incoming_text = msg["text"]["body"]
+<span class="code-decorator">@app.post</span>(<span class="code-string">"/webhook"</span>)
+<span class="code-keyword">async def</span> <span class="code-function">receive_webhook</span>(request: <span class="code-type">Request</span>, background_tasks: <span class="code-type">BackgroundTasks</span>):
+    data = <span class="code-keyword">await</span> request.json()
+    <span class="code-keyword">try</span>:
+        msg = data[<span class="code-string">"entry"</span>][<span class="code-number">0</span>][<span class="code-string">"changes"</span>][<span class="code-number">0</span>][<span class="code-string">"value"</span>][<span class="code-string">"messages"</span>][<span class="code-number">0</span>]
+        sender_phone = msg[<span class="code-string">"from"</span>]
+        incoming_text = msg[<span class="code-string">"text"</span>][<span class="code-string">"body"</span>]
         
-        # Procesar con Llama 3 en segundo plano (para no bloquear el webhook < 3s)
+        <span class="code-comment"># Procesar con Llama 3 en segundo plano (para responder a Meta en &lt; 3 seg)</span>
         background_tasks.add_task(process_with_llama_and_reply, sender_phone, incoming_text)
-        return {"status": "received"}
-    except (KeyError, IndexError):
-        return {"status": "event_ignored"}
+        <span class="code-keyword">return</span> {<span class="code-string">"status"</span>: <span class="code-string">"received"</span>}
+    <span class="code-keyword">except</span> (KeyError, IndexError):
+        <span class="code-keyword">return</span> {<span class="code-string">"status"</span>: <span class="code-string">"event_ignored"</span>}
 
-async def process_with_llama_and_reply(sender: str, text: str):
-    # 1. Inferencia con Llama 3
-    reply_text = f"Procesado con Llama 3: {text}"
+<span class="code-keyword">async def</span> <span class="code-function">process_with_llama_and_reply</span>(sender: <span class="code-type">str</span>, text: <span class="code-type">str</span>):
+    <span class="code-comment"># 1. Inferencia con Llama 3</span>
+    reply_text = <span class="code-string">f"Procesado con Llama 3: {text}"</span>
     
-    # 2. Despachar a WhatsApp
-    url = f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"
-    headers = {"Authorization": f"Bearer {WHATSAPP_TOKEN}"}
+    <span class="code-comment"># 2. Despachar a WhatsApp Cloud API</span>
+    url = <span class="code-string">f"https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages"</span>
+    headers = {<span class="code-string">"Authorization"</span>: <span class="code-string">f"Bearer {WHATSAPP_TOKEN}"</span>}
     payload = {
-        "messaging_product": "whatsapp",
-        "to": sender,
-        "type": "text",
-        "text": {"body": reply_text}
+        <span class="code-string">"messaging_product"</span>: <span class="code-string">"whatsapp"</span>,
+        <span class="code-string">"to"</span>: sender,
+        <span class="code-string">"type"</span>: <span class="code-string">"text"</span>,
+        <span class="code-string">"text"</span>: {<span class="code-string">"body"</span>: reply_text}
     }
-    async with httpx.AsyncClient() as client:
-        await client.post(url, json=payload, headers=headers)`;
+    <span class="code-keyword">async with</span> httpx.AsyncClient() <span class="code-keyword">as</span> client:
+        <span class="code-keyword">await</span> client.post(url, json=payload, headers=headers)`;
       }
 
-      codeDisplay.textContent = code;
+      codeDisplay.innerHTML = html;
     }
 
     [phoneIdInput, recipientInput, tokenInput, messageInput].forEach(el => {

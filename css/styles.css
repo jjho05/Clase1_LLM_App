@@ -1971,47 +1971,68 @@ a.step-flow-item:hover {
   }
 }
 
-/* Colores de Sintaxis de VS Code */
-.code-kw {
-  color: #c586c0;
+/* ==========================================================================
+   PALETA COMPLETA DE SINTAXIS DE CÓDIGO (ESTILO VS CODE DARK PRO)
+   ========================================================================== */
+.code-kw,
+.code-keyword {
+  color: #c586c0 !important;
   font-weight: 600;
-}
+} /* import, from, def, return, with, as, for, in, if, raise, async, await */
 
-/* import, from, def, return, with, as, for, in, if, True */
-.code-fn {
-  color: #dcdcaa;
-}
+.code-fn,
+.code-function {
+  color: #dcdcaa !important;
+  font-weight: 600;
+} /* funciones y llamadas a métodos */
 
-/* funciones: AutoTokenizer, from_pretrained, sample_next_token, print */
-.code-str {
-  color: #ce9178;
-}
+.code-str,
+.code-string {
+  color: #ce9178 !important;
+} /* strings y textos */
 
-/* strings: "meta-llama/Meta-Llama-3-8B" */
-.code-cm {
-  color: #6a9955;
+.code-cm,
+.code-comment {
+  color: #6a9955 !important;
   font-style: italic;
-}
+} /* comentarios (# ...) */
 
-/* comentarios: # ... */
-.code-num {
-  color: #b5cea8;
-}
+.code-num,
+.code-number {
+  color: #b5cea8 !important;
+} /* números y constantes */
 
-/* números: 128256, 4096, 0.7 */
-.code-var {
-  color: #9cdcfe;
-}
+.code-var,
+.code-variable {
+  color: #9cdcfe !important;
+} /* variables y parámetros */
 
-/* variables y parámetros */
-.code-type {
-  color: #4ec9b0;
-}
+.code-type,
+.code-class {
+  color: #4ec9b0 !important;
+  font-weight: 600;
+} /* tipos: FastAPI, str, int, dict, bool */
 
-/* tipos: torch.Tensor, float, int, str */
-.code-op {
-  color: #d4d4d4;
-}
+.code-decorator {
+  color: #dcdcaa !important;
+  font-weight: 600;
+} /* decoradores: @app.get, @app.post */
+
+.code-prop,
+.code-property {
+  color: #9cdcfe !important;
+} /* claves de JSON / diccionarios */
+
+.code-bool {
+  color: #569cd6 !important;
+  font-weight: 600;
+} /* booleanos: True, False, None, null */
+
+.code-op,
+.code-operator {
+  color: #d4d4d4 !important;
+} /* operadores matemáticos y lógicos */
+
 
 /* ==========================================================================
    FORMULA CARD WITH COLLAPSIBLE VARIABLES BREAKDOWN (ACCORDION SYSTEM)
