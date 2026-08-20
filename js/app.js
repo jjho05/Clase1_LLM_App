@@ -462,6 +462,39 @@
     }
   });
 
+
+  /* 6. BOTONES FLOTANTES DE NAVEGACIÓN RÁPIDA (ARRIBA / ABAJO) */
+  function initFloatingScrollNav(){
+    var nav = document.querySelector(".floating-scroll-nav");
+    if(!nav){
+      nav = document.createElement("aside");
+      nav.className = "floating-scroll-nav";
+      nav.setAttribute("aria-label", "Navegación rápida");
+      nav.innerHTML = '<button class="btn-floating-scroll" id="scroll-top-btn" title="Ir al inicio" aria-label="Ir al inicio"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg></button><button class="btn-floating-scroll" id="scroll-bottom-btn" title="Ir al final" aria-label="Ir al final"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>';
+      document.body.appendChild(nav);
+    }
+    
+    var btnTop = document.getElementById("scroll-top-btn");
+    var btnBottom = document.getElementById("scroll-bottom-btn");
+    
+    if(btnTop){
+      btnTop.onclick = function(){
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+    }
+    if(btnBottom){
+      btnBottom.onclick = function(){
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+      };
+    }
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", initFloatingScrollNav);
+  } else {
+    initFloatingScrollNav();
+  }
+
 })();
 
 /* 7. GESTOR Y ACCIONES DE BLOQUES DE CÓDIGO (COPIAR & DESCARGAR) */

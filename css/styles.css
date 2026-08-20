@@ -7122,3 +7122,76 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
 
 
 
+
+
+/* ==========================================================================
+   BOTONES FLOTANTES DE NAVEGACIÓN RÁPIDA (SCROLL TOP / BOTTOM)
+   ========================================================================== */
+.unit-item-row {
+  cursor: default !important;
+}
+
+.floating-scroll-nav {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  z-index: 999;
+}
+
+.btn-floating-scroll {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--bg-surface-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-floating-scroll:hover {
+  border-color: var(--meta-blue);
+  color: var(--meta-blue);
+  background: var(--bg-surface);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(8, 102, 255, 0.22);
+}
+
+.btn-floating-scroll:active {
+  transform: scale(0.95);
+}
+
+[data-theme="dark"] .btn-floating-scroll {
+  background: rgba(17, 24, 39, 0.85);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .btn-floating-scroll:hover {
+  border-color: #60a5fa;
+  color: #60a5fa;
+  background: rgba(30, 41, 59, 0.95);
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.35);
+}
+
+@media (max-width: 768px) {
+  .floating-scroll-nav {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    gap: 0.45rem;
+  }
+  .btn-floating-scroll {
+    width: 38px;
+    height: 38px;
+  }
+}
