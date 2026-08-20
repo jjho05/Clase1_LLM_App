@@ -19,6 +19,7 @@
     initBidirectionalSimulator();
     initApiDispatcher();
     initHmacVerifier();
+    initPipelineSimulator();
     initQuizEngine();
     initExerciseToggles();
     initGlossaryFilter();
@@ -712,8 +713,201 @@ async def process_with_llama_and_reply(sender: str, text: str):
     });
   }
 
+  /* ==========================================================================
+     8. SIMULADOR DE PIPELINE DE LAS 5 FASES (LABORATORIO 2.1.5)
+     ========================================================================== */
+  function initPipelineSimulator() {
+    const container = document.getElementById("pipeline-simulator-lab");
+    if (!container) return;
+
+    const navBtns = container.querySelectorAll(".pipeline-nav-btn");
+    const statusBadge = document.getElementById("pipeline-status-badge");
+    const panelName = document.getElementById("pipeline-panel-name");
+    const panelMode = document.getElementById("pipeline-panel-mode");
+    const explanationBox = document.getElementById("pipeline-explanation-box");
+    const userMsgInput = document.getElementById("pipeline-user-msg");
+    const btnRun = document.getElementById("pipeline-btn-run");
+    const btnPresetEcho = document.getElementById("pipeline-btn-preset-echo");
+    const btnPresetLlama = document.getElementById("pipeline-btn-preset-llama");
+    const btnClear = document.getElementById("pipeline-btn-clear");
+    const consoleLog = document.getElementById("pipeline-console-log");
+
+    let currentPhase = "4";
+
+    const phaseConfig = {
+      "1": {
+        name: "Fase 1: Meta App & Credenciales WABA",
+        mode: "Aprovisionamiento",
+        status: "Fase 1: Credenciales en Meta",
+        badgeClass: "bench-badge-status status-info",
+        explanation: "<strong>Objetivo de esta fase:</strong> Dar de alta la App en Meta for Developers, configurar WhatsApp Cloud API y obtener el PHONE_NUMBER_ID, WABA_ID y Token de acceso.",
+        defaultMsg: "cURL POST /messages (hello_world template)"
+      },
+      "2": {
+        name: "Fase 2: Servidor FastAPI Local & ngrok",
+        mode: "Túnel Seguro TLS",
+        status: "Fase 2: Túnel ngrok Activo",
+        badgeClass: "bench-badge-status status-success",
+        explanation: "<strong>Objetivo de esta fase:</strong> Exponer tu servidor local (http://localhost:8000) a internet con cifrado HTTPS obligatorio mediante el túnel seguro de ngrok.",
+        defaultMsg: "ngrok http 8000 -> https://a3f8-55-12.ngrok-free.app"
+      },
+      "3": {
+        name: "Fase 3: Handshake GET de Verificación",
+        mode: "Suscripción Webhook",
+        status: "Fase 3: Handshake GET Certificado",
+        badgeClass: "bench-badge-status status-info",
+        explanation: "<strong>Objetivo de esta fase:</strong> Validar el apretón de manos con Meta. Tu backend compara hub.verify_token y devuelve hub.challenge en texto plano con HTTP 200.",
+        defaultMsg: "GET /webhook?hub.mode=subscribe&hub.challenge=1158201444"
+      },
+      "4": {
+        name: "Fase 4: Test de Respuesta Fija (Echo)",
+        mode: "Aislamiento de Transporte",
+        status: "Fase 4: Modo Echo Activo",
+        badgeClass: "bench-badge-status status-warning",
+        explanation: "<strong>Objetivo de esta fase:</strong> Certificar el ciclo bidireccional completo respondiendo texto fijo sin IA. Si esto funciona, el cableado de red está 100% garantizado.",
+        defaultMsg: "¿Cuál es el estatus de mi pedido #45210?"
+      },
+      "5": {
+        name: "Fase 5: Inyección de Llama 3 con Base de Datos",
+        mode: "Inteligencia Generativa",
+        status: "Fase 5: Llama 3 Agent en Vivo",
+        badgeClass: "bench-badge-status status-success",
+        explanation: "<strong>Objetivo de esta fase:</strong> Conectar Llama 3 en segundo plano (BackgroundTasks). El modelo razona, consulta la base de datos de envíos y genera una respuesta personalizada.",
+        defaultMsg: "¿Dónde viene mi pedido #45210?"
+      }
+    };
+
+    function selectPhase(phaseKey) {
+      if (window.SOUND) window.SOUND.playPop(380);
+      currentPhase = String(phaseKey);
+      navBtns.forEach(btn => {
+        btn.classList.toggle("active", btn.getAttribute("data-phase") === currentPhase);
+      });
+
+      const conf = phaseConfig[currentPhase];
+      if (conf) {
+        if (panelName) panelName.textContent = conf.name;
+        if (panelMode) panelMode.textContent = `Modo: ${conf.mode}`;
+        if (statusBadge) {
+          statusBadge.textContent = conf.status;
+          statusBadge.className = conf.badgeClass;
+        }
+        if (explanationBox) explanationBox.innerHTML = conf.explanation;
+        if (userMsgInput && !userMsgInput.value) userMsgInput.value = conf.defaultMsg;
+      }
+    }
+
+    navBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        selectPhase(btn.getAttribute("data-phase"));
+      });
+    });
+
+    if (btnPresetEcho) {
+      btnPresetEcho.addEventListener("click", () => {
+        if (userMsgInput) userMsgInput.value = "Hola, probando conexión del servidor";
+        selectPhase("4");
+        runSimulation();
+      });
+    }
+
+    if (btnPresetLlama) {
+      btnPresetLlama.addEventListener("click", () => {
+        if (userMsgInput) userMsgInput.value = "¿Cuál es el estatus de mi pedido #45210?";
+        selectPhase("5");
+        runSimulation();
+      });
+    }
+
+    if (btnClear && consoleLog) {
+      btnClear.addEventListener("click", () => {
+        if (window.SOUND) window.SOUND.playPop(280);
+        consoleLog.innerHTML = `<span style="color:#64748b;">// Consola reiniciada. Selecciona una fase y presiona "Ejecutar Simulación de Fase".</span>`;
+      });
+    }
+
+    function runSimulation() {
+      if (window.SOUND) window.SOUND.playPop(480);
+      if (!consoleLog) return;
+
+      const userText = userMsgInput ? userMsgInput.value.trim() : "¿Dónde está mi pedido #45210?";
+      let out = "";
+      const now = new Date().toLocaleTimeString();
+
+      if (currentPhase === "1") {
+        out += `<span style="color:#64748b;">[${now}] === FASE 1: APROVISIONAMIENTO EN META FOR DEVELOPERS ===</span>\n`;
+        out += `<span style="color:#38bdf8;">[INIT]</span> Cargando variables desde .env local...\n`;
+        out += `<span style="color:#22c55e;">[OK] PHONE_NUMBER_ID: 109823746592831</span>\n`;
+        out += `<span style="color:#22c55e;">[OK] WABA_ID: 104928374659281</span>\n`;
+        out += `<span style="color:#22c55e;">[OK] META_ACCESS_TOKEN: EAAQZ... (Validado con Graph API)</span>\n\n`;
+        out += `<span style="color:#38bdf8;">[HTTP POST]</span> https://graph.facebook.com/v20.0/109823746592831/messages\n`;
+        out += `<span style="color:#e2e8f0;">{"messaging_product":"whatsapp","to":"5215587654321","type":"template","template":{"name":"hello_world"}}</span>\n\n`;
+        out += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span>\n`;
+        out += `<span style="color:#22c55e;">{"messages":[{"id":"wamid.HBgLMjUyMTU1ODc4NDk..."}]}</span>\n`;
+        out += `<span style="color:#38bdf8;">✔ FASE 1 CERTIFICADA: Plantilla recibida en WhatsApp Sandbox.</span>`;
+      }
+      else if (currentPhase === "2") {
+        out += `<span style="color:#64748b;">[${now}] === FASE 2: SERVIDOR LOCAL & TÚNEL NGROK ===</span>\n`;
+        out += `<span style="color:#38bdf8;">$ uvicorn main:app --port 8000 --reload</span>\n`;
+        out += `<span style="color:#22c55e;">INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)</span>\n\n`;
+        out += `<span style="color:#38bdf8;">$ ngrok http 8000</span>\n`;
+        out += `<span style="color:#e2e8f0;">ngrok by @inconshreve                    (Ctrl+C to quit)\n`;
+        out += `Session Status     online\n`;
+        out += `Account            Lic. Jesús Olvera (Plan: Free)\n`;
+        out += `Version            3.8.0\n`;
+        out += `Region             United States (us)\n`;
+        out += `Forwarding         https://a3f8-55-12.ngrok-free.app -> http://localhost:8000\n`;
+        out += `Web Interface      http://127.0.0.1:4040</span>\n\n`;
+        out += `<span style="color:#38bdf8;">✔ FASE 2 CERTIFICADA: Túnel TLS activo y listo para recibir peticiones de Meta.</span>`;
+      }
+      else if (currentPhase === "3") {
+        out += `<span style="color:#64748b;">[${now}] === FASE 3: HANDSHAKE GET DE VERIFICACIÓN ===</span>\n`;
+        out += `<span style="color:#38bdf8;">[INCOMING GET]</span> /webhook?hub.mode=subscribe&hub.verify_token=MI_TOKEN_SECRETO_2026&hub.challenge=1158201444\n`;
+        out += `<span style="color:#22c55e;">[AUTH] Token coincide con VERIFY_TOKEN del entorno.</span>\n`;
+        out += `<span style="color:#22c55e;">[RESP] Devolviendo hub.challenge='1158201444' (Content-Type: text/plain)</span>\n\n`;
+        out += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span> (24ms)\n`;
+        out += `<span style="color:#38bdf8;">✔ FASE 3 CERTIFICADA: Meta for Developers validó el webhook exitosamente (Checkmark Verde).</span>`;
+      }
+      else if (currentPhase === "4") {
+        out += `<span style="color:#64748b;">[${now}] === FASE 4: VALIDACIÓN CON RESPUESTA FIJA (ECHO TEST) ===</span>\n`;
+        out += `<span style="color:#f59e0b;">[WEBHOOK POST]</span> Mensaje entrante de +52 1 55 8765 4321\n`;
+        out += `<span style="color:#e2e8f0;">Texto: "${escapeHtml(userText)}" | wamid: wamid.HBgL...</span>\n`;
+        out += `<span style="color:#22c55e;">[FASTAPI] Retornando HTTP 200 OK a Meta en 38ms (Timeout Evitado)</span>\n\n`;
+        out += `<span style="color:#f59e0b;">[DISPATCH ECHO]</span> Enviando respuesta estática a Graph API...\n`;
+        out += `<span style="color:#e2e8f0;">Mensaje: " Echo Servidor: Hemos recibido tu consulta '${escapeHtml(userText)}' correctamente."</span>\n`;
+        out += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span> (Meta Graph API)\n`;
+        out += `<span style="color:#38bdf8;">✔ FASE 4 CERTIFICADA: Cableado 100% probado. Si falla después, el error es del LLM, no de red.</span>`;
+      }
+      else if (currentPhase === "5") {
+        const orderMatch = userText.match(/#?(\d{5})/);
+        const orderId = orderMatch ? orderMatch[1] : "45210";
+
+        out += `<span style="color:#64748b;">[${now}] === FASE 5: INYECCIÓN DE LLAMA 3 + BASE DE DATOS E-COMMERCE ===</span>\n`;
+        out += `<span style="color:#ec4899;">[WEBHOOK POST]</span> Mensaje de +52 1 55 8765 4321\n`;
+        out += `<span style="color:#e2e8f0;">Texto: "${escapeHtml(userText)}"</span>\n`;
+        out += `<span style="color:#22c55e;">[FASTAPI] HTTP 200 OK enviado a Meta en 32ms. Delegando a BackgroundTasks...</span>\n\n`;
+        out += `<span style="color:#38bdf8;">[DATABASE]</span> Consultando pedido #${orderId} en base de datos PostgreSQL...\n`;
+        out += `<span style="color:#e2e8f0;">DB Result: {"id":"${orderId}","estado":"En reparto","paqueteria":"DHL Express","guia":"DHL-9921","hora_estimada":"16:30 hrs"}</span>\n\n`;
+        out += `<span style="color:#ec4899;">[LLAMA 3 INFERENCE]</span> Modelo: Meta-Llama-3.3-70B-Instruct (Prompt inyectado con datos reales)\n`;
+        out += `<span style="color:#e2e8f0;">Respuesta generada (210ms):</span>\n`;
+        out += `<span style="color:#a78bfa; font-weight:700;">"¡Hola Lic. Jesús!  Tu pedido #${orderId} va en camino con DHL Express (Guía: DHL-9921). La entrega estimada es hoy a las 4:30 PM. ¿Deseas que te enviemos una notificación en cuanto el repartidor esté a 5 minutos de tu domicilio?"</span>\n\n`;
+        out += `<span style="color:#38bdf8;">[GRAPH API DISPATCH]</span> POST https://graph.facebook.com/v20.0/109823746592831/messages\n`;
+        out += `<span style="color:#22c55e; font-weight:700;">HTTP/1.1 200 OK</span> (Entregado al chat de WhatsApp en 420ms totales)\n`;
+        out += `<span style="color:#22c55e;">✔ FASE 5 CERTIFICADA: Agente de IA Llama 3 operando en producción con arquitectura sólida.</span>`;
+      }
+
+      consoleLog.innerHTML = out;
+      if (window.SOUND) window.SOUND.playChime();
+    }
+
+    if (btnRun) {
+      btnRun.addEventListener("click", runSimulation);
+    }
+  }
+
   function escapeHtml(str) {
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
 })();
+

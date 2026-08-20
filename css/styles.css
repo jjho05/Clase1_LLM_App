@@ -23,6 +23,10 @@
   --meta-blue-hover: #0052cc;
   --meta-blue-subtle: rgba(8, 102, 255, 0.08);
   --meta-blue-border: rgba(8, 102, 255, 0.22);
+  --meta-purple: #8b5cf6;
+  --meta-orange: #f59e0b;
+  --meta-pink: #ec4899;
+  --card-surface: #ffffff;
 
   --accent-success: #059669;
   --accent-warning: #d97706;
@@ -60,6 +64,10 @@
   --meta-blue-hover: #60a5fa;
   --meta-blue-subtle: rgba(59, 130, 246, 0.14);
   --meta-blue-border: rgba(96, 165, 250, 0.32);
+  --meta-purple: #a78bfa;
+  --meta-orange: #fbbf24;
+  --meta-pink: #f472b6;
+  --card-surface: #0c1222;
 
   --accent-success: #10b981;
   --accent-warning: #f59e0b;
@@ -6241,5 +6249,265 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   PIPELINE DE LAS 5 FASES - ESTILOS ESTRUCTURADOS & COMPONENTES
+   ========================================================================== */
+.phase-pipeline-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.phase-card-expanded {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.6rem 1.8rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.phase-card-expanded:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+.phase-card-expanded::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+}
+
+.phase-card-expanded.phase-1::before { background: var(--meta-blue); }
+.phase-card-expanded.phase-2::before { background: var(--accent-success); }
+.phase-card-expanded.phase-3::before { background: var(--meta-purple); }
+.phase-card-expanded.phase-4::before { background: var(--meta-orange); }
+.phase-card-expanded.phase-5::before { background: var(--meta-pink); }
+
+.phase-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.phase-card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.phase-num-badge {
+  font-family: var(--font-disp);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.phase-1 .phase-num-badge { background: var(--meta-blue); }
+.phase-2 .phase-num-badge { background: var(--accent-success); }
+.phase-3 .phase-num-badge { background: var(--meta-purple); }
+.phase-4 .phase-num-badge { background: var(--meta-orange); }
+.phase-5 .phase-num-badge { background: var(--meta-pink); }
+
+.phase-card-title {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.phase-deliverable-tag {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-subtle);
+  padding: 0.3rem 0.65rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-subtle);
+}
+
+.phase-card-body {
+  font-size: 0.94rem;
+  color: var(--text-secondary);
+  line-height: 1.68;
+}
+
+.phase-deliverable-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 1.2rem 0;
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.phase-deliverable-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.phase-deliverable-text {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.55;
+}
+
+/* Simulador Interactivo de Pipeline de 5 Fases */
+.pipeline-sim-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 2.5rem 0;
+  box-shadow: var(--shadow-card);
+}
+
+.pipeline-sim-header {
+  background: var(--bg-subtle-alt);
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.pipeline-sim-title {
+  font-family: var(--font-disp);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pipeline-step-nav {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+@media (max-width: 800px) {
+  .pipeline-step-nav {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pipeline-nav-btn {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 0.75rem 0.6rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.pipeline-nav-btn:hover {
+  border-color: var(--meta-blue);
+  background: var(--bg-subtle-alt);
+}
+
+.pipeline-nav-btn.active {
+  border-color: var(--meta-blue);
+  background: var(--meta-blue-subtle);
+  box-shadow: 0 0 0 2px var(--meta-blue);
+}
+
+.pipeline-nav-num {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.pipeline-nav-btn.active .pipeline-nav-num {
+  color: var(--meta-blue);
+}
+
+.pipeline-nav-name {
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.pipeline-sim-workspace {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .pipeline-sim-workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pipeline-panel-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pipeline-panel-title {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pipeline-terminal {
+  background: #050811;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.83rem;
+  color: #e2e8f0;
+  line-height: 1.6;
+  max-height: 320px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
 
 
