@@ -1340,37 +1340,66 @@
       </div>
     </section>
 
-    <!-- ==========================================================================
+        <!-- ==========================================================================
       FUENTES OFICIALES & BIBLIOGRAFÍA
       ========================================================================== -->
-    <section id="fuentes-oficiales" style="margin-bottom: 4rem;">
+    <section class="module-block" id="fuentes-oficiales" style="margin-bottom: 4rem;">
       <div class="module-header">
-        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Guías Técnicas</div>
-        <h2 class="module-title">Fuentes de Referencia de la Unidad 2.3</h2>
+        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Referencias de Ingeniería</div>
+        <h2 class="module-title">Fuentes de Referencia Oficiales · Unidad 2.3</h2>
+        <p class="module-desc">Estándares JSON Schema, especificaciones de invocación de herramientas en Meta Llama 3 y validación de tipos con Pydantic V2.</p>
       </div>
 
-      <div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="sources-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.4rem;">
         <div class="source-card">
           <div class="source-card-header">
-            <span class="source-tag">Meta Llama 3</span>
-            <span class="source-type-pill">Documentación de Modelos</span>
+            <span class="source-tag">JSON Schema Org · 2024</span>
+            <span class="source-type-pill">Estándar IETF</span>
           </div>
-          <h4 class="source-title">Llama 3 Tool Use &amp; Function Calling</h4>
-          <p class="source-desc">Guía oficial sobre tokens especiales de herramientas y formatos JSON compatibles con OpenAI API.</p>
-          <a href="https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3_1/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-            <span>llama.meta.com/docs &rarr;</span>
+          <h4 class="source-title">JSON Schema Specification (Draft 2020-12)</h4>
+          <p class="source-desc">Especificación técnica del estándar de validación de objetos, tipos primitivos, campos obligatorios y enums para Function Calling.</p>
+          <a href="https://json-schema.org/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar json-schema.org</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>
 
         <div class="source-card">
           <div class="source-card-header">
-            <span class="source-tag">JSON Schema Org</span>
-            <span class="source-type-pill">Estándar Abierto</span>
+            <span class="source-tag">Meta AI · 2024</span>
+            <span class="source-type-pill">Guía de Inferencia</span>
           </div>
-          <h4 class="source-title">JSON Schema Specification Draft 2020-12</h4>
-          <p class="source-desc">Especificación técnica del estándar de validación de objetos y tipos de datos utilizado por los ecosistemas de LLMs.</p>
-          <a href="https://json-schema.org/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-            <span>json-schema.org &rarr;</span>
+          <h4 class="source-title">Meta Llama 3: Tool Use &amp; Function Calling Format</h4>
+          <p class="source-desc">Guía oficial de sintaxis para inyección de esquemas de funciones y procesamiento de tokens especiales del entorno de ejecución ipython.</p>
+          <a href="https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3_1/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Llama 3 Prompt Formats</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Pydantic · 2024</span>
+            <span class="source-type-pill">Validación Tipada</span>
+          </div>
+          <h4 class="source-title">Pydantic V2: Tool Schema Generation &amp; Type Coercion</h4>
+          <p class="source-desc">Generación automática de esquemas JSON compatibles con OpenAPI a partir de clases BaseModel y validación defensiva en microsegundos.</p>
+          <a href="https://docs.pydantic.dev/latest/concepts/json_schema/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Docs Pydantic Schema</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">PostgreSQL Global Group</span>
+            <span class="source-type-pill">Base de Datos</span>
+          </div>
+          <h4 class="source-title">asyncpg: High-Performance Asynchronous PostgreSQL Pool</h4>
+          <p class="source-desc">Driver de conexión asíncrona de alto rendimiento para ejecución de consultas parametrizadas en milisegundos bajo alta concurrencia.</p>
+          <a href="https://magicstack.github.io/asyncpg/current/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Documentación asyncpg</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>
       </div>

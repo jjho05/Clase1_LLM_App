@@ -1369,37 +1369,66 @@ Instrucción: Ofrece amablemente los 3 horarios del sábado para odontología si
       </div>
     </section>
 
-    <!-- ==========================================================================
+        <!-- ==========================================================================
       FUENTES OFICIALES & BIBLIOGRAFÍA
       ========================================================================== -->
-    <section id="fuentes-oficiales" style="margin-bottom: 4rem;">
+    <section class="module-block" id="fuentes-oficiales" style="margin-bottom: 4rem;">
       <div class="module-header">
-        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Repositorios</div>
-        <h2 class="module-title">Fuentes de Referencia de la Unidad 2.2</h2>
+        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Referencias de Ingeniería</div>
+        <h2 class="module-title">Fuentes de Referencia Oficiales · Unidad 2.2</h2>
+        <p class="module-desc">Especificaciones técnicas de memoria conversacional, arquitecturas de sesión distribuida con Redis y guías de desarrollo con Llama Stack.</p>
       </div>
 
-      <div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="sources-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.4rem;">
         <div class="source-card">
           <div class="source-card-header">
-            <span class="source-tag">Meta AI</span>
-            <span class="source-type-pill">Repositorio Oficial</span>
+            <span class="source-tag">Meta AI · 2024</span>
+            <span class="source-type-pill">Especificación Abierta</span>
           </div>
-          <h4 class="source-title">Llama Stack Specification &amp; SDK</h4>
-          <p class="source-desc">Especificación técnica abierta de APIs estandarizadas para memoria, herramientas, evaluación y despliegue de agentes Llama.</p>
+          <h4 class="source-title">Llama Stack Specification &amp; Distribution Architecture</h4>
+          <p class="source-desc">Arquitectura unificada de APIs para memoria, herramientas, evaluación y orquestación de agentes con modelos Meta Llama 3.</p>
           <a href="https://github.com/meta-llama/llama-stack" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-            <span>github.com/meta-llama/llama-stack &rarr;</span>
+            <span>Consultar Llama Stack en GitHub</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>
 
         <div class="source-card">
           <div class="source-card-header">
-            <span class="source-tag">Meta AI Research</span>
+            <span class="source-tag">Meta AI Research · 2024</span>
             <span class="source-type-pill">Paper Científico</span>
           </div>
-          <h4 class="source-title">The Llama 3 Herd of Models</h4>
-          <p class="source-desc">Detalles sobre la ventana de contexto de 128k tokens, Grouped-Query Attention y capacidades avanzadas de razonamiento conversacional.</p>
+          <h4 class="source-title">The Llama 3 Herd of Models (Context &amp; Reasoning)</h4>
+          <p class="source-desc">Paper técnico oficial con el análisis de atención agrupada (GQA), ventana nativa de 128k tokens y formateo con delimitadores de turnos especiales.</p>
           <a href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-            <span>ai.meta.com/research &rarr;</span>
+            <span>Leer Paper en Meta AI Research</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Redis Ltd. · 2024</span>
+            <span class="source-type-pill">Guía de Arquitectura</span>
+          </div>
+          <h4 class="source-title">Session Management &amp; State Caching with Redis</h4>
+          <p class="source-desc">Patrones de persistencia en memoria, expiración de claves TTL para sesiones de mensajería y concurrencia asíncrona con redis-py.</p>
+          <a href="https://redis.io/docs/latest/develop/use/session-management/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Documentación de Redis</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Python Software Foundation</span>
+            <span class="source-type-pill">Estándar Asíncrono</span>
+          </div>
+          <h4 class="source-title">asyncio: Asynchronous I/O &amp; Event Loop Architecture</h4>
+          <p class="source-desc">Documentación del motor de corrutinas en Python para coordinar peticiones concurrentes de WhatsApp sin bloquear el hilo del servidor.</p>
+          <a href="https://docs.python.org/3/library/asyncio.html" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Python Docs asyncio</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>
       </div>

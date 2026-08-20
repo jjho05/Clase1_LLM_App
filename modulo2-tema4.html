@@ -1250,37 +1250,66 @@
       </div>
     </section>
 
-    <!-- ==========================================================================
+        <!-- ==========================================================================
       FUENTES OFICIALES & BIBLIOGRAFÍA
       ========================================================================== -->
-    <section id="fuentes-oficiales" style="margin-bottom: 4rem;">
+    <section class="module-block" id="fuentes-oficiales" style="margin-bottom: 4rem;">
       <div class="module-header">
-        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Guías Técnicas</div>
-        <h2 class="module-title">Fuentes de Referencia de la Unidad 2.4</h2>
+        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Referencias de Ingeniería</div>
+        <h2 class="module-title">Fuentes de Referencia Oficiales · Unidad 2.4</h2>
+        <p class="module-desc">Taxonomía de seguridad de Meta Llama Guard 3, normativas de mitigación OWASP para LLMs y guías de despliegue industrial con Docker y NGINX.</p>
       </div>
 
-      <div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div class="sources-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.4rem;">
         <div class="source-card">
           <div class="source-card-header">
-            <span class="source-tag">Meta AI</span>
-            <span class="source-type-pill">Ciberseguridad</span>
+            <span class="source-tag">Meta AI · 2024</span>
+            <span class="source-type-pill">Seguridad &amp; Guardrails</span>
           </div>
-          <h4 class="source-title">Llama Guard 3 &amp; Prompt Guard Models</h4>
-          <p class="source-desc">Documentación técnica oficial sobre arquitectura, pesos y benchmarks de seguridad de Meta AI.</p>
-          <a href="https://llama.meta.com/docs/model-cards-and-prompt-formats/llama-guard-3/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-            <span>llama.meta.com/docs/llama-guard &rarr;</span>
+          <h4 class="source-title">Llama Guard 3: 8B &amp; 1B Trust &amp; Safety Taxonomies</h4>
+          <p class="source-desc">Documentación oficial del modelo de clasificación de seguridad, definición de las 14 categorías de riesgo y formateo del prompt de moderación.</p>
+          <a href="https://llama.meta.com/docs/model-cards-and-prompt-formats/llama-guard-3-8b/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Llama Guard 3 en Meta</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>
 
         <div class="source-card">
           <div class="source-card-header">
-            <span class="source-tag">Docker Docs</span>
-            <span class="source-type-pill">Infraestructura</span>
+            <span class="source-tag">Meta AI · 2024</span>
+            <span class="source-type-pill">Protección de Entrada</span>
           </div>
-          <h4 class="source-title">Docker Compose Production Best Practices</h4>
-          <p class="source-desc">Guías de arquitectura y despliegue inmutable para servicios contenerizados en entornos Linux.</p>
-          <a href="https://docs.docker.com/compose/production/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
-            <span>docs.docker.com/compose &rarr;</span>
+          <h4 class="source-title">Prompt Guard 86M: Classifier for Jailbreak &amp; Injection</h4>
+          <p class="source-desc">Especificación técnica del clasificador ligero para interceptar ataques de inyección indirecta y evasión de reglas en menos de 10ms.</p>
+          <a href="https://llama.meta.com/docs/model-cards-and-prompt-formats/prompt-guard-86m/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Prompt Guard en Meta</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">OWASP Foundation · 2024</span>
+            <span class="source-type-pill">Estándar Global de Seguridad</span>
+          </div>
+          <h4 class="source-title">OWASP Top 10 for Large Language Model Applications</h4>
+          <p class="source-desc">Marco de gobernanza y mitigación de las 10 vulnerabilidades críticas más frecuentes en sistemas impulsados por modelos de lenguaje.</p>
+          <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Proyecto OWASP LLM</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Docker &amp; NGINX · 2024</span>
+            <span class="source-type-pill">Infraestructura &amp; SRE</span>
+          </div>
+          <h4 class="source-title">Containerized Production Deployment &amp; SSL Reverse Proxy</h4>
+          <p class="source-desc">Patrones de orquestación con Docker Compose, certificados Let's Encrypt automatizados y terminación SSL segura para microservicios de IA.</p>
+          <a href="https://docs.docker.com/compose/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Guía Docker Compose</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>
       </div>
@@ -1315,15 +1344,14 @@
 
   </main>
 
-  <!-- ==========================================================================
+    <!-- ==========================================================================
    FOOTER CON AUTORÍA OFICIAL
   ========================================================================== -->
   <footer class="course-footer">
     <div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem;">
       <h2 style="font-size: 1.85rem; font-family: var(--font-disp); margin-bottom: 0.8rem; color: var(--text-primary);">Proyecto Integrador Finalizado</h2>
-      <p style="color: var(--text-secondary); margin-bottom: 1.6rem; font-size: 1.05rem;">Has concluido satisfactoriamente todos los módulos teóricos y prácticos de Inteligencia Artificial Aplicada con Meta Llama 3.</p>
-      <a href="agradecimiento.html" class="btn-primary" style="background:var(--accent-success); border-color:var(--accent-success); color:#ffffff; font-weight:700; padding:0.75rem 1.8rem; border-radius:8px; text-decoration:none; display:inline-block; margin-bottom:1.5rem;">Ver Mensaje de Agradecimiento &amp; Graduación &rarr;</a>
-      <div><a href="#overview" class="btn-secondary">Volver arriba</a></div>
+      <p style="color: var(--text-secondary); margin-bottom: 1.6rem; font-size: 1.05rem;">Has concluido satisfactoriamente todos los módulos de Inteligencia Artificial Aplicada con Meta Llama 3. Avanza al cierre de agradecimiento o repasa los laboratorios.</p>
+      <a href="#overview" class="btn-secondary">Volver arriba</a>
       <div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; gap: 0.35rem;">
         <p style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">
           Página creada por <span style="color: var(--text-primary); font-weight: 700;">Ing. Jesús Javier Hernandez Olvera</span>
