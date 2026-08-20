@@ -367,10 +367,10 @@
     </a>
 
     <nav class="nav-links">
-      <a href="index.html" class="nav-link-item">&larr; Portal Principal</a>
-      <a href="#contenido" class="nav-link-item">El Sitio</a>
-      <a href="#carta" class="nav-link-item">Mensaje Personal</a>
+      <a href="modulo2-tema4.html" class="nav-link-item" style="color: var(--meta-blue); font-weight: 700;">&larr; Unidad 2.4</a>
+      <a href="#carta" class="nav-link-item">Mensaje</a>
       <a href="#modulos" class="nav-link-item">Contenido</a>
+      <a href="index.html" class="nav-link-item" style="color: var(--accent-success); font-weight: 700;">Portal &rarr;</a>
     </nav>
 
     <div class="header-controls">
@@ -417,8 +417,8 @@
   </nav>
   <div class="mobile-drawer-footer">
     <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Meta AI &middot; Jesús Olvera</span>
-      <span style="font-size:0.75rem; color:var(--meta-blue); font-weight:700;">2 Módulos &middot; 8 Temas</span>
+      <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Agradecimiento · Meta AI</span>
+      <a href="index.html" style="font-size:0.75rem; color:var(--meta-blue); font-weight:700; text-decoration:none;">Portal &rarr;</a>
     </div>
   </div>
 </div>
@@ -617,21 +617,52 @@
     </div>
   </section>
 
-</main>
 
-<!-- Footer -->
-<footer class="course-footer">
-  <div style="max-width: 700px; margin: 0 auto; padding: 0 1.5rem; text-align:center;">
-    <h2 style="font-size: 1.7rem; font-family: var(--font-disp); margin-bottom: 0.6rem; color: var(--text-primary);">Gracias por recorrer este sitio</h2>
-    <p style="color: var(--text-secondary); font-size: 1rem; line-height:1.65;">Hecho con detalle técnico y con el objetivo de que la IA de código abierto sea accesible para todos.</p>
-    <div style="margin-top: 2rem; padding-top: 1.4rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; gap: 0.3rem;">
-      <p style="font-size: 0.92rem; color: var(--text-secondary); font-weight: 500;">
-        Sitio creado por <span style="color: var(--text-primary); font-weight: 700;">Ing. Jesús Javier Hernandez Olvera</span>
-      </p>
-      <p style="font-size: 0.8rem; color: var(--text-muted);">Meta AI &middot; Inteligencia Artificial Aplicada con Llama 3 &middot; 2026</p>
+    <!-- ==========================================================================
+      PAGINACIÓN INFERIOR — CIERRE DEL CURSO
+      ========================================================================== -->
+    <nav class="course-pagination-nav" aria-label="Navegación del Curso">
+      <a href="modulo2-tema4.html" class="pagination-link pagination-link--prev">
+        <div class="pagination-link__sublabel">
+          <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          <span>Tema Anterior</span>
+        </div>
+        <div class="pagination-link__label">
+          <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Unidad 2.4 &middot; Producción &amp; Llama Guard</span>
+        </div>
+      </a>
+
+      <a href="index.html" class="pagination-link pagination-link--next" style="border-color:var(--meta-blue);">
+        <div class="pagination-link__sublabel">
+          <span style="color:var(--meta-blue); font-weight:700;">Portal Principal</span>
+          <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+        </div>
+        <div class="pagination-link__label">
+          <span style="color:var(--meta-blue); font-weight:800;">Volver al Portal Principal</span>
+          <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </nav>
+
+  </main>
+
+  <!-- ==========================================================================
+    FOOTER CON AUTORÍA OFICIAL
+  ========================================================================== -->
+  <footer class="course-footer">
+    <div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem;">
+      <h2 style="font-size: 1.85rem; font-family: var(--font-disp); margin-bottom: 0.8rem; color: var(--text-primary);">Gracias por recorrer este sitio</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1.6rem; font-size: 1.05rem;">Hecho con detalle técnico y con el objetivo de que la IA de código abierto sea accesible para todos los que quieran aprenderla a fondo.</p>
+      <a href="index.html" class="btn-primary" style="text-decoration:none; display:inline-block; margin-bottom:1.5rem;">Volver al Portal Principal &rarr;</a>
+      <div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; gap: 0.35rem;">
+        <p style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">
+          Sitio creado por <span style="color: var(--text-primary); font-weight: 700;">Ing. Jesús Javier Hernandez Olvera</span>
+        </p>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Meta AI &middot; Inteligencia Artificial Aplicada con Llama 3 &middot; 2026</p>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
 </body>
 </html>
