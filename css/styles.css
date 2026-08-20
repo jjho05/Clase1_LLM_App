@@ -931,8 +931,14 @@ a.step-flow-item:hover {
   background: rgba(124, 58, 237, 0.05);
   border: 1.5px solid rgba(124, 58, 237, 0.22);
   border-radius: 14px;
-  padding: 1.8rem 2rem;
-  margin: 2.2rem 0;
+  padding: 1.6rem 1.8rem;
+  margin: 1.8rem 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.easy-explainer-box:hover {
+  border-color: rgba(124, 58, 237, 0.45);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.08);
 }
 
 [data-theme="dark"] .easy-explainer-box {
@@ -951,11 +957,104 @@ a.step-flow-item:hover {
   font-family: var(--font-head);
 }
 
+[data-theme="dark"] .easy-header {
+  color: #a78bfa;
+}
+
 .easy-text {
   font-size: 0.93rem;
   color: var(--text-primary);
   line-height: 1.7;
 }
+
+/* CAJA DE CONSEJO PRO / TIP DE PRODUCCIÓN */
+.pro-tip-box {
+  background: rgba(5, 150, 105, 0.05);
+  border: 1.5px solid rgba(5, 150, 105, 0.25);
+  border-left: 5px solid var(--accent-success);
+  border-radius: 14px;
+  padding: 1.5rem 1.8rem;
+  margin: 1.8rem 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pro-tip-box:hover {
+  border-color: rgba(5, 150, 105, 0.5);
+  box-shadow: 0 8px 24px rgba(5, 150, 105, 0.08);
+}
+
+[data-theme="dark"] .pro-tip-box {
+  background: rgba(5, 150, 105, 0.1);
+  border-color: rgba(5, 150, 105, 0.4);
+  border-left-color: #10b981;
+}
+
+.pro-tip-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #059669;
+  margin-bottom: 0.65rem;
+  font-family: var(--font-head);
+}
+
+[data-theme="dark"] .pro-tip-header {
+  color: #34d399;
+}
+
+.pro-tip-text {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* CAJA DE ADVERTENCIA / PELIGRO EN PRODUCCIÓN */
+.warning-callout-box {
+  background: rgba(245, 158, 11, 0.06);
+  border: 1.5px solid rgba(245, 158, 11, 0.28);
+  border-left: 5px solid #f59e0b;
+  border-radius: 14px;
+  padding: 1.5rem 1.8rem;
+  margin: 1.8rem 0;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.warning-callout-box:hover {
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.08);
+}
+
+[data-theme="dark"] .warning-callout-box {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.45);
+  border-left-color: #fbbf24;
+}
+
+.warning-callout-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #d97706;
+  margin-bottom: 0.65rem;
+  font-family: var(--font-head);
+}
+
+[data-theme="dark"] .warning-callout-header {
+  color: #fbbf24;
+}
+
+.warning-callout-text {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  line-height: 1.7;
+  margin: 0;
+}
+
 
 /* ==========================================================================
    BANCO DE PRUEBAS / LABORATORIO INTERACTIVO

@@ -140,6 +140,17 @@
 </div>
 <!-- TEMA 1.1.1 -->
 <article class="tema-card" id="tema-1-1-1">
+
+<div class="pro-tip-box">
+  <div class="pro-tip-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+    <span>Consejo Pro: Selección Óptima de Temperatura según el Caso de Uso</span>
+  </div>
+  <p class="pro-tip-text">
+    Para tareas de <b>extracción de datos, JSON o generación de código SQL</b>, usa siempre $T \le 0.1$ para forzar respuestas deterministas y exactas. Para <b>chatbots de atención a clientes</b>, usa $T=0.6$ a $0.7$ para mantener fluidez empática sin alucinaciones. Para <b>redacción creativa o lluvia de ideas</b>, usa $T \ge 1.0$ con $\text{Top-}p=0.9$.
+  </p>
+</div>
+
 <div class="tema-header">
 <div class="tema-eyebrow">Tema 1.1.1 · Modelos Probabilísticos &amp; Generación</div>
 <h3 class="tema-title">Modelado de Lenguaje Autoregresivo &amp; Muestreo (Sampling)</h3>
@@ -430,6 +441,17 @@
 </div>
 </article>
 <!-- TEMA 1.1.2 -->
+
+<div class="warning-callout-box">
+  <div class="warning-callout-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"/></svg>
+    <span>Advertencia Crítica: Complejidad Cuadrática $O(N^2)$ en Atención Estándar</span>
+  </div>
+  <p class="warning-callout-text">
+    En atención Multi-Head estándar (MHA), duplicar el tamaño del prompt cuadruplica ($4\times$) el costo computacional y la memoria de activación. En Llama 3 se mitiga con <b>Grouped-Query Attention (GQA)</b>, pero siempre debes limitar y condensar el historial para evitar saturación de la memoria KV Cache en GPU.
+  </p>
+</div>
+
 <article class="tema-card" id="tema-1-1-2">
 <div class="tema-header">
 <div class="tema-eyebrow">Tema 1.1.2 · Álgebra y Representación</div>

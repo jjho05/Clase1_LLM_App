@@ -172,6 +172,27 @@
 </div>
 <!-- SUBTEMA 1.4.1 -->
 <article class="tema-card" id="tema-1-4-1">
+
+<div class="easy-explainer-box">
+  <div class="easy-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+    <span>¿No entendiste? Te lo explico fácil: El juez del concurso de cocina</span>
+  </div>
+  <p class="easy-text">
+    Evaluar con métricas automáticas antiguas como BLEU o ROUGE es como calificar un platillo gourmet pesando los gramos de sal con una báscula. <b>LLM-as-a-Judge</b> es como tener a un <b>chef con estrella Michelin (Llama 3 70B)</b> que prueba el platillo, evalúa el sabor, la textura, la presentación y te da una rúbrica profesional del 1 al 5 justificando cada calificación.
+  </p>
+</div>
+
+<div class="pro-tip-box">
+  <div class="pro-tip-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+    <span>Consejo Pro: Mitigación del Sesgo de Posición en Evaluación</span>
+  </div>
+  <p class="pro-tip-text">
+    Cuando uses un LLM para comparar dos respuestas (Modelo A vs Modelo B), realiza siempre <b>dos pasadas intercambiando el orden</b>: en la primera pasada evalúa [A, B] y en la segunda [B, A]. Los modelos tienden a favorecer la primera opción que leen hasta en un 18% de los casos.
+  </p>
+</div>
+
 <div class="tema-header">
 <div class="tema-eyebrow">Tema 1.4.1 · El Abismo del Prototipo</div>
 <h3 class="tema-title">Notebook vs Producción: El Abismo entre Prototipo y Servicio</h3>
@@ -281,6 +302,17 @@
 </div>
 </article>
 <!-- SUBTEMA 1.4.2 -->
+
+<div class="warning-callout-box">
+  <div class="warning-callout-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"/></svg>
+    <span>Advertencia Crítica: No Desactives la Moderación de Salida</span>
+  </div>
+  <p class="warning-callout-text">
+    Muchos desarrolladores cometen el error de moderar únicamente el mensaje de entrada del usuario para ahorrar tiempo. Sin embargo, un ataque de <b>inyección indirecta</b> (oculto en un PDF recuperado por RAG) puede forzar al modelo principal a emitir datos privados de otros clientes. <b>Llama Guard 3 debe auditar tanto la entrada como la salida</b>.
+  </p>
+</div>
+
 <article class="tema-card" id="tema-1-4-2">
 <div class="tema-header">
 <div class="tema-eyebrow">Tema 1.4.2 · Ciclo de Vida MLOps</div>

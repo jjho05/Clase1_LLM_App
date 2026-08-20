@@ -140,6 +140,27 @@
 </div>
 <!-- TEMA 1.3.1 -->
 <article class="tema-card" id="tema-1-3-1">
+
+<div class="easy-explainer-box">
+  <div class="easy-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+    <span>¿No entendiste? Te lo explico fácil: Las notas adhesivas en una enciclopedia</span>
+  </div>
+  <p class="easy-text">
+    Hacer un <b>Full Fine-Tuning</b> es como reescribir e imprimir de nuevo los 30 tomos de una enciclopedia cada vez que quieres corregir un dato (cuesta millones de pesos y tarda semanas). <b>LoRA</b> es como pegar <b>pequeñas notas adhesivas transparentes (Post-its)</b> sobre las páginas clave con tus correcciones. La enciclopedia original queda intacta, el libro pesa exactamente lo mismo y solo gastaste unos cuantos centavos en las notas adhesivas.
+  </p>
+</div>
+
+<div class="pro-tip-box">
+  <div class="pro-tip-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+    <span>Consejo Pro: Configuración Óptima de Rango LoRA ($r=16, \alpha=32$)</span>
+  </div>
+  <p class="pro-tip-text">
+    En la gran mayoría de casos de uso empresariales (atención a clientes, extracción de JSON, clasificación médica), un rango $r=16$ con factor de escala $\alpha=32$ y dropout de $0.05$ adaptando los módulos <code>q_proj, k_proj, v_proj, o_proj</code> logra el <b>99.2% del rendimiento de un Full Fine-Tuning</b> con menos de 12 GB de VRAM.
+  </p>
+</div>
+
 <div class="tema-header">
 <div class="tema-eyebrow">Tema 1.3.1 · Paradigmas de Adaptación</div>
 <h3 class="tema-title">Matriz de Decisión: ¿Cuándo Fine-Tuning vs RAG vs Prompting?</h3>
@@ -372,6 +393,17 @@
 </div>
 </article>
 <!-- TEMA 1.3.2 -->
+
+<div class="warning-callout-box">
+  <div class="warning-callout-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"/></svg>
+    <span>Advertencia Crítica: Olvido Catastrófico por Sobreentrenamiento</span>
+  </div>
+  <p class="warning-callout-text">
+    Si entrenas a Llama 3 con más de 5 épocas sobre un dataset muy pequeño o con un Learning Rate superior a $5\times 10^{-4}$, el modelo sufrirá <b>olvido catastrófico</b>: aprenderá de memoria las respuestas de tu dataset pero perderá su capacidad de razonar, hablar en español correcto o seguir instrucciones generales. Mantén siempre entre 2 y 3 épocas con $3\%$ de Warmup.
+  </p>
+</div>
+
 <article class="tema-card" id="tema-1-3-2">
 <div class="tema-header">
 <div class="tema-eyebrow">Tema 1.3.2 · Matemática de PEFT</div>

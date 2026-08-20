@@ -183,6 +183,17 @@
 
       <!-- SUBTEMA 2.2.1 -->
       <article class="tema-card" id="tema-2-2-1">
+
+<div class="pro-tip-box">
+  <div class="pro-tip-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+    <span>Consejo Pro: Serialización de Estado en JSON Compacto</span>
+  </div>
+  <p class="pro-tip-text">
+    Cuando inyectes el estado estructurado de la conversación en el prompt de Llama 3, no reenvíes cadenas de texto redundantes. Usa un JSON compacto con claves cortas (ej. <code>{"srv":"dental","dt":"2026-08-23","stg":"time_sel"}</code>). Esto ahorra hasta un <b>40% de tokens de entrada</b> en cada turno.
+  </p>
+</div>
+
         <div class="tema-header">
           <div class="tema-eyebrow">Tema 2.2.1 · Gestión de Estado</div>
           <h3 class="tema-title">De Responder Mensajes Aislados a Sostener una Conversación</h3>
@@ -338,7 +349,18 @@
       </article>
 
       <!-- SUBTEMA 2.2.2 -->
-      <article class="tema-card" id="tema-2-2-2">
+      
+<div class="warning-callout-box">
+  <div class="warning-callout-header">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"/></svg>
+    <span>Advertencia Crítica: Riesgo de Condiciones de Carrera en Mensajes Simultáneos</span>
+  </div>
+  <p class="warning-callout-text">
+    Si un usuario en WhatsApp envía 3 mensajes de audio o texto en ráfaga en menos de 2 segundos, tu servidor recibirá 3 webhooks simultáneos. Si no aplicas un <b>bloqueo distribuido (Distributed Lock con Redlock en Redis)</b> sobre el <code>wa_id</code>, los 3 procesos competirán por el estado y sobrescribirán variables de forma caótica.
+  </p>
+</div>
+
+<article class="tema-card" id="tema-2-2-2">
         <div class="tema-header">
           <div class="tema-eyebrow">Tema 2.2.2 · Estandarización de Infraestructura</div>
           <h3 class="tema-title">Llama Stack: Piezas Estándar para no Reinventar la Arquitectura</h3>

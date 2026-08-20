@@ -1,911 +1,1336 @@
 <!DOCTYPE html>
-
-<html data-theme="light" lang="es-MX">
+<html lang="es-MX" data-theme="light">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Unidad 2.3: Integración Llama + WhatsApp | Del Texto a las Acciones</title>
-<meta content="Guía profunda e interactiva sobre Function Calling con Meta Llama 3, esquemas JSON Schema de herramientas, idempotencia con wamid, cálculo de latencia de ciclo completo y manejo de excepciones en WhatsApp Cloud API." name="description"/>
-<!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, Fira Code -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600;700;800&amp;family=Outfit:wght@500;600;700;800;900&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<!-- KaTeX para renderizado matemático perfecto -->
-<link href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" rel="stylesheet"/>
-<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-<script defer="" src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
-<!-- Estilos Modulares Externos -->
-<link href="css/styles.css" rel="stylesheet"/>
-<!-- Scripts Modulares Externos -->
-<script defer="" src="js/app.js"></script>
-<script defer="" src="js/modulo2-clase3.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unidad 2.3: Integración Llama + WhatsApp | Del Texto a las Acciones</title>
+  <meta name="description" content="Guía profunda e interactiva sobre Function Calling con Meta Llama 3, esquemas JSON Schema de herramientas, idempotencia con wamid, cálculo de latencia de ciclo completo y manejo de excepciones en WhatsApp Cloud API." />
+  
+  <!-- Google Fonts: Inter, Outfit, Plus Jakarta Sans, Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- KaTeX para renderizado matemático perfecto -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Estilos Modulares Externos -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Scripts Modulares Externos -->
+  <script defer src="js/app.js"></script>
+  <script defer src="js/modulo2-clase3.js"></script>
 </head>
 <body>
-<!-- Header Principal Limpio & Unificado con Iconos Vectoriales SVG -->
-<header class="top-header">
-<div class="header-inner">
-<a class="brand-wrapper" href="index.html" title="Volver al Portal Principal">
-<svg class="meta-logo-svg" viewbox="0 0 36 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"></path>
-</svg>
-<span class="brand-text">Meta AI</span>
-</a>
-<nav class="nav-links">
-<a class="nav-link-item" href="modulo2-tema2.html" style="color: var(--meta-blue); font-weight: 700;">← Unidad 2.2</a>
-<a class="nav-link-item" href="#intro-modulo">Visión</a>
-<a class="nav-link-item" href="#subtemas-principales">Subtemas</a>
-<a class="nav-link-item" href="#simuladores">Laboratorios</a>
-<a class="nav-link-item" href="#ejercicios">Ejercicios</a>
-<a class="nav-link-item" href="#glosario">Glosario</a>
-<a class="nav-link-item" href="modulo2-tema4.html" style="color: var(--accent-success); font-weight: 700;">Unidad 2.4 →</a>
-</nav>
-<div class="header-controls">
-<!-- Botón de Audio con Icono SVG Vectorial -->
-<button class="btn-icon" id="sound-btn" title="Alternar Audio">
-<span id="sound-icon-container">
-<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
-</span>
-<span class="btn-text-label" id="sound-label">Audio ON</span>
-</button>
-<!-- Botón de Tema con Icono SVG Vectorial -->
-<button class="btn-icon" id="theme-btn" title="Alternar Modo Claro / Oscuro">
-<span id="theme-icon-container">
-<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"></path></svg>
-</span>
-<span class="btn-text-label" id="theme-label">Modo Claro</span>
-</button>
-<!-- Botón Menú Hamburguesa para Móviles -->
-<button aria-expanded="false" aria-label="Abrir menú de navegación" class="btn-menu-toggle" id="menu-toggle-btn">
-<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="20">
-<line x1="3" x2="21" y1="6" y2="6"></line>
-<line x1="3" x2="21" y1="12" y2="12"></line>
-<line x1="3" x2="21" y1="18" y2="18"></line>
-</svg>
-</button>
-</div>
-</div>
-</header>
-<!-- Backdrop & Drawer de Navegación Móvil -->
-<div aria-hidden="true" class="mobile-backdrop" id="mobile-backdrop"></div>
-<div aria-label="Menú de Navegación" aria-modal="true" class="mobile-drawer" id="mobile-drawer" role="dialog">
-<div class="mobile-drawer-header">
-<div class="mobile-drawer-title">
-<svg class="meta-logo-svg" style="width:24px;height:16px;" viewbox="0 0 36 24">
-<path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"></path>
-</svg>
-<span>Navegación Tema 2.3</span>
-</div>
-<button aria-label="Cerrar menú" class="mobile-drawer-close" id="mobile-drawer-close">
-<svg fill="none" height="18" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24" width="18"><path d="M18 6L6 18M6 6l12 12"></path></svg>
-</button>
-</div>
-<nav class="mobile-drawer-nav" id="mobile-drawer-nav">
-<!-- Poblado automáticamente por js/app.js -->
-</nav>
-<div class="mobile-drawer-footer">
-<div style="display:flex; justify-content:space-between; align-items:center;">
-<span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Unidad 2.3 · Meta Llama 3</span>
-<a href="modulo2-tema4.html" style="font-size:0.75rem; color:var(--meta-blue); font-weight:700; text-decoration:none;">Unidad 2.4 →</a>
-</div>
-</div>
-</div>
-<div id="progress-bar"></div>
-<main class="main-container">
-<!-- ==========================================================================
-  HERO PRINCIPAL DEL MÓDULO 2 · TEMA 2.3
-  ========================================================================== -->
-<section class="course-hero" id="overview">
-<div class="hero-badge-pill">
-<span class="hero-badge-num">MÓDULO 2</span>
-<span class="hero-badge-divider"></span>
-<span class="hero-badge-label">TEMA 3 · FUNCTION CALLING &amp; HERRAMIENTAS OPERATIVAS</span>
-</div>
-<h1 class="hero-title">Integración Llama + WhatsApp</h1>
-<p class="hero-subtitle"><b>Del texto pasivo a las acciones en el mundo real</b>. Convierte a tu modelo en un agente ejecutor mediante Function Calling, define esquemas rigurosos de herramientas en JSON Schema, controla la latencia del ciclo completo por debajo de 3 segundos y blinda tu backend con filtros de idempotencia y reintentos tolerantes a fallos.</p>
-</section>
-<!-- ==========================================================================
-  RESUMEN EJECUTIVO (TL;DR) & VISIÓN
-  ========================================================================== -->
-<article class="tema-card" id="intro-modulo" style="border-left: 5px solid var(--meta-blue); margin-bottom: 3.5rem;">
-<div class="tema-header">
-<div class="tema-eyebrow">Guía de Inicio · Visión de la Unidad 2.3</div>
-<h3 class="tema-title">Resumen Ejecutivo (TL;DR) &amp; Filosofía de Acción</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. Resumen Ejecutivo</span> El Modelo no Ejecuta Código: Devuelve Intenciones</h4>
-<p class="prose-p">
-        Un LLM jamás debe tener acceso directo a la consola del servidor ni a credenciales de bases de datos. <b>Llamadas a funciones (Function Calling / Tool Calling)</b> es el mecanismo estándar donde Llama 3 analiza el mensaje de WhatsApp y, si detecta una intención operativa (ej. reservar mesa o verificar stock), devuelve una estructura estructurada en <b>JSON con el nombre de la función y sus argumentos tipados</b>.
-      </p>
-<p class="prose-p">
-        Tu backend en Python/FastAPI recibe ese JSON, ejecuta la consulta real contra la base de datos y le reenvía el resultado al modelo para que redacte la respuesta final. Para que esta experiencia en WhatsApp sea impecable, la latencia de todo el ciclo debe mantenerse <b>por debajo de 3-4 segundos</b>, aplicando <b>idempotencia sobre el <code>wamid</code></b> para descartar reintentos duplicados de Meta y evitar cobros o reservas duplicadas.
-      </p>
-</div>
-<div class="easy-explainer-box">
-<div class="easy-header">
-<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"></path></svg>
-<span>El Ciclo de 4 Pasos de Function Calling</span>
-</div>
-<div class="learning-grid-4">
-<div class="stat-card-clean">
-<div class="stat-num-clean" style="color:var(--meta-blue); font-size:1.3rem;">1. Detección</div>
-<div class="stat-label-clean">Llama 3 lee el mensaje y genera un JSON con la función a invocar y sus parámetros.</div>
-</div>
-<div class="stat-card-clean">
-<div class="stat-num-clean" style="color:var(--accent-success); font-size:1.3rem;">2. Ejecución Backend</div>
-<div class="stat-label-clean">FastAPI ejecuta la consulta segura en SQLite/PostgreSQL o APIs externas.</div>
-</div>
-<div class="stat-card-clean">
-<div class="stat-num-clean" style="color:var(--meta-purple); font-size:1.3rem;">3. Síntesis Final</div>
-<div class="stat-label-clean">Llama 3 recibe los datos crudos y redacta una respuesta conversacional y empática.</div>
-</div>
-<div class="stat-card-clean">
-<div class="stat-num-clean" style="color:#f59e0b; font-size:1.3rem;">4. Despacho &amp; Idempotencia</div>
-<div class="stat-label-clean">Envío por Graph API registrando el <code>wamid</code> para bloquear duplicados.</div>
-</div>
-</div>
-</div>
-</article>
-<!-- ==========================================================================
-  DESARROLLO TEMÁTICO RIGUROSO
-  ========================================================================== -->
-<section id="subtemas-principales">
-<!-- SUBTEMA 2.3.1 -->
-<article class="tema-card" id="tema-2-3-1">
-<div class="tema-header">
-<div class="tema-eyebrow">Tema 2.3.1 · Evolución del Agente</div>
-<h3 class="tema-title">Del Chat Informativo a las Acciones en el Mundo Real</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Límite del Chat Pasivo</span> Responder Texto no Resuelve Problemas</h4>
-<p class="prose-p">
-          Un chatbot tradicional que únicamente responde <i>"Nuestro horario de restaurante es de 13:00 a 23:00 y puedes reservar en nuestro sitio web"</i> traslada toda la fricción al usuario.
-        </p>
-<p class="prose-p">
-          Un <b>agente conversacional moderno basado en Llama 3</b> opera como un recepcionista humano con acceso a la libreta de reservas: interpreta la intención en lenguaje natural, consulta la base de datos en tiempo real, bloquea la mesa disponible y entrega un número de confirmación directamente en WhatsApp.
-        </p>
-</div>
-<!-- QUIZ 1 -->
-<div class="quiz-box">
-<div class="quiz-header">
-<span class="quiz-tag">Autoevaluación 2.3.1</span>
-</div>
-<div class="quiz-question">¿Cuál es la diferencia fundamental entre un chatbot puramente informativo y un agente con capacidad de Function Calling?</div>
-<button class="quiz-option" data-correct="false">A) Que el agente informativo usa más emojis en sus respuestas.</button>
-<button class="quiz-option" data-correct="true">B) Que el agente con Function Calling puede consultar y modificar sistemas reales (bases de datos, calendarios, pagos) mediante la invocación estructurada de herramientas.</button>
-<button class="quiz-option" data-correct="false">C) Que el agente informativo solo funciona en computadoras y no en móviles.</button>
-<button class="quiz-option" data-correct="false">D) Que Function Calling solo está permitido para empresas bancarias.</button>
-<div class="quiz-feedback"></div>
-</div>
-</article>
-<!-- SUBTEMA 2.3.2 -->
-<article class="tema-card" id="tema-2-3-2">
-<div class="tema-header">
-<div class="tema-eyebrow">Tema 2.3.2 · Arquitectura de Dos Pasos</div>
-<h3 class="tema-title">Llamadas a Funciones en Profundidad: El Ciclo de Dos Invocaciones</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Protocolo Estandarizado</span> Por qué el LLM no Ejecuta Código Directo</h4>
-<p class="prose-p">
-          Si permitiéramos que un LLM ejecute código en el servidor, un atacante podría manipular el modelo con inyecciones de prompt para borrar tablas completas (<code>DROP TABLE usuarios</code>).
-        </p>
-<p class="prose-p">
-          El protocolo de <b>Tool Calling</b> separa el razonamiento de la ejecución mediante un ciclo en dos pasos:
-        </p>
-</div>
-<div class="formula-card">
-<div class="formula-math-area">
-          $$\text{Inferencia 1: } \mathcal{M}(\text{Mensaje}, \text{ToolsSchema}) \longrightarrow \text{tool\_calls: } [\{\text{name}, \text{args}\}]$$
-          $$\text{Ejecución Backend: } \text{Resultado} = \text{Funciones}[\text{name}](**\text{args})$$
-          $$\text{Inferencia 2: } \mathcal{M}(\text{Historial}, \text{Resultado}) \longrightarrow \text{Respuesta Conversacional WhatsApp}$$
-        </div>
-</div>
-<!-- QUIZ 2 -->
-<div class="quiz-box">
-<div class="quiz-header">
-<span class="quiz-tag">Autoevaluación 2.3.2</span>
-</div>
-<div class="quiz-question">¿Quién ejecuta materialmente la consulta a la base de datos cuando se utiliza Function Calling con Llama 3?</div>
-<button class="quiz-option" data-correct="false">A) La red neuronal de Llama 3 ejecutando instrucciones SQL en sus capas de atención.</button>
-<button class="quiz-option" data-correct="true">B) Tu servidor backend (FastAPI/Python), el cual recibe el JSON generado por el modelo, valida los parámetros y ejecuta la función de manera segura.</button>
-<button class="quiz-option" data-correct="false">C) La aplicación móvil de WhatsApp en el teléfono del usuario.</button>
-<button class="quiz-option" data-correct="false">D) Los servidores de red de Meta for Developers.</button>
-<div class="quiz-feedback"></div>
-</div>
-</article>
-<!-- SUBTEMA 2.3.3 -->
-<article class="tema-card" id="tema-2-3-3">
-<div class="tema-header">
-<div class="tema-eyebrow">Tema 2.3.3 · Especificación Técnica</div>
-<h3 class="tema-title">Diseño de Esquemas de Herramientas (Tool Schema) con JSON Schema</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. Declaración Rigurosa</span> Cómo Sabe el Modelo Qué Herramientas Existen</h4>
-<p class="prose-p">
-          Al iniciar la inferencia, tu backend adjunta en el payload de la API un arreglo llamado <code>tools</code>. Cada herramienta define su <b>nombre</b>, una <b>descripción inequívoca</b> y un esquema tipado de <b>parámetros</b>:
-        </p>
-<div class="code-box">
-<div class="code-header">
-<span class="code-lang">Python · JSON Schema</span>
 
-<div class="code-actions"><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button><button class="btn-download-code" onclick="downloadCode(this)">Descargar</button></div></div>
-<pre class="code-content"><code class="language-python">{
-  <span class="code-comment">"type"</span>: <span class="code-string">"function"</span>,
-  <span class="code-comment">"function"</span>: {
-    <span class="code-comment">"name"</span>: <span class="code-string">"consultar_disponibilidad_restaurante"</span>,
-    <span class="code-comment">"description"</span>: <span class="code-string">"Verifica si hay mesas disponibles en el restaurante para una fecha, hora y número de comensales."</span>,
-    <span class="code-comment">"parameters"</span>: {
-      <span class="code-comment">"type"</span>: <span class="code-string">"object"</span>,
-      <span class="code-comment">"properties"</span>: {
-        <span class="code-comment">"personas"</span>: { <span class="code-comment">"type"</span>: <span class="code-string">"integer"</span>, <span class="code-comment">"description"</span>: <span class="code-string">"Número de comensales (1 a 12)"</span> },
-        <span class="code-comment">"fecha"</span>: { <span class="code-comment">"type"</span>: <span class="code-string">"string"</span>, <span class="code-comment">"description"</span>: <span class="code-string">"Fecha en formato YYYY-MM-DD"</span> },
-        <span class="code-comment">"hora"</span>: { <span class="code-comment">"type"</span>: <span class="code-string">"string"</span>, <span class="code-comment">"description"</span>: <span class="code-string">"Hora en formato HH:MM militar"</span> }
+  <!-- Header Principal Limpio & Unificado con Iconos Vectoriales SVG -->
+  <header class="top-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand-wrapper" title="Volver al Portal Principal">
+        <svg class="meta-logo-svg" viewBox="0 0 36 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"/>
+        </svg>
+        <span class="brand-text">Meta AI</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="modulo2-tema2.html" class="nav-link-item" style="color: var(--meta-blue); font-weight: 700;">&larr; Unidad 2.2</a>
+        <a href="#intro-modulo" class="nav-link-item">Visión</a>
+        <a href="#subtemas-principales" class="nav-link-item">Subtemas</a>
+        <a href="#simuladores" class="nav-link-item">Laboratorios</a>
+        <a href="#ejercicios" class="nav-link-item">Ejercicios</a>
+        <a href="#glosario" class="nav-link-item">Glosario</a>
+        <a href="modulo2-tema4.html" class="nav-link-item" style="color: var(--accent-success); font-weight: 700;">Unidad 2.4 &rarr;</a>
+      </nav>
+
+      <div class="header-controls">
+        <!-- Botón de Audio con Icono SVG Vectorial -->
+        <button id="sound-btn" class="btn-icon" title="Alternar Audio">
+          <span id="sound-icon-container">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          </span>
+          <span class="btn-text-label" id="sound-label">Audio ON</span>
+        </button>
+
+        <!-- Botón de Tema con Icono SVG Vectorial -->
+        <button id="theme-btn" class="btn-icon" title="Alternar Modo Claro / Oscuro">
+          <span id="theme-icon-container">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 000-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+          </span>
+          <span class="btn-text-label" id="theme-label">Modo Claro</span>
+        </button>
+
+        <!-- Botón Menú Hamburguesa para Móviles -->
+        <button id="menu-toggle-btn" class="btn-menu-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Backdrop & Drawer de Navegación Móvil -->
+  <div id="mobile-backdrop" class="mobile-backdrop" aria-hidden="true"></div>
+  <div id="mobile-drawer" class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Menú de Navegación">
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-title">
+        <svg class="meta-logo-svg" viewBox="0 0 36 24" style="width:24px;height:16px;">
+          <path d="M18 13.9C16.2 11.2 13.7 9.4 10.7 9.4C5.9 9.4 2 13.3 2 18.1C2 22.9 5.9 26.8 10.7 26.8C13.7 26.8 16.2 25 18 22.3C19.8 25 22.3 26.8 25.3 26.8C30.1 26.8 34 22.9 34 18.1C34 13.3 30.1 9.4 25.3 9.4C22.3 9.4 19.8 11.2 18 13.9ZM10.7 22.8C8.1 22.8 6 20.7 6 18.1C6 15.5 8.1 13.4 10.7 13.4C12.7 13.4 14.5 14.7 15.8 16.7C15 18.8 13.8 20.7 12.3 22.1C11.8 22.6 11.3 22.8 10.7 22.8ZM25.3 22.8C24.7 22.8 24.2 22.6 23.7 22.1C22.2 20.7 21 18.8 20.2 16.7C21.5 14.7 23.3 13.4 25.3 13.4C27.9 13.4 30 15.5 30 18.1C30 20.7 27.9 22.8 25.3 22.8Z" transform="translate(0, -6)"/>
+        </svg>
+        <span>Navegación Tema 2.3</span>
+      </div>
+      <button id="mobile-drawer-close" class="mobile-drawer-close" aria-label="Cerrar menú">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <nav id="mobile-drawer-nav" class="mobile-drawer-nav">
+      <!-- Poblado automáticamente por js/app.js -->
+    </nav>
+    <div class="mobile-drawer-footer">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">Unidad 2.3 · Meta Llama 3</span>
+        <a href="modulo2-tema4.html" style="font-size:0.75rem; color:var(--meta-blue); font-weight:700; text-decoration:none;">Unidad 2.4 &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="progress-bar"></div>
+
+  <main class="main-container">
+
+    <!-- ==========================================================================
+      HERO PRINCIPAL DEL MÓDULO 2 · TEMA 2.3
+      ========================================================================== -->
+    <section class="course-hero" id="overview">
+      <div class="hero-badge-pill">
+        <span class="hero-badge-num">MÓDULO 2</span>
+        <span class="hero-badge-divider"></span>
+        <span class="hero-badge-label">TEMA 3 · FUNCTION CALLING &amp; HERRAMIENTAS OPERATIVAS</span>
+      </div>
+      <h1 class="hero-title">Integración Llama + WhatsApp</h1>
+      <p class="hero-subtitle"><b>Del texto pasivo a las acciones en el mundo real</b>. Convierte a tu modelo en un agente ejecutor mediante Function Calling, define esquemas rigurosos de herramientas en JSON Schema, controla la latencia del ciclo completo por debajo de 3 segundos y blinda tu backend con filtros de idempotencia y reintentos tolerantes a fallos.</p>
+    </section>
+
+    <!-- ==========================================================================
+      RESUMEN EJECUTIVO (TL;DR) & VISIÓN
+      ========================================================================== -->
+    <article class="tema-card" id="intro-modulo" style="border-left: 5px solid var(--meta-blue); margin-bottom: 3.5rem;">
+      <div class="tema-header">
+        <div class="tema-eyebrow">Guía de Inicio · Visión de la Unidad 2.3</div>
+        <h3 class="tema-title">Resumen Ejecutivo (TL;DR) &amp; Filosofía de Acción</h3>
+      </div>
+
+      <div class="tema-section-block">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Resumen Ejecutivo</span> El Modelo no Ejecuta Código: Devuelve Intenciones Estructuradas</h4>
+        <p class="prose-p">
+          Un LLM jamás debe tener acceso directo a la consola del servidor ni a credenciales de bases de datos. <b>Llamadas a funciones (Function Calling / Tool Calling)</b> es el mecanismo estándar donde Llama 3 analiza el mensaje de WhatsApp y, si detecta una intención operativa (ej. reservar mesa o verificar stock), devuelve una estructura estructurada en <b>JSON con el nombre de la función y sus argumentos tipados</b>.
+        </p>
+        <p class="prose-p">
+          Tu backend en Python/FastAPI recibe ese JSON, ejecuta la consulta real contra la base de datos y le reenvía el resultado al modelo para que redacte la respuesta final. Para que esta experiencia en WhatsApp sea impecable, la latencia de todo el ciclo debe mantenerse <b>por debajo de 3-4 segundos</b>, aplicando <b>idempotencia sobre el <code>wamid</code></b> para descartar reintentos duplicados de Meta y evitar cobros o reservas duplicadas.
+        </p>
+      </div>
+
+      <!-- ANALOGÍA FÁCIL -->
+      <div class="easy-explainer-box">
+        <div class="easy-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+          <span>¿No entendiste? Te lo explico fácil: La comanda del mesero y el cocinero</span>
+        </div>
+        <p class="easy-text">
+          Imagina que vas a un restaurante. Tú eres el cliente en WhatsApp, el mesero es Llama 3 y el cocinero con la estufa es tu base de datos en Python. <b>El mesero no cocina la comida</b>; toma tu orden en lenguaje natural (<i>"quiero unos chilaquiles verdes con huevo bien cocido"</i>), la traduce a una <b>comanda estandarizada</b> (<code>{ "platillo": "chilaquiles", "salsa": "verde", "extra": "huevo_bien_cocido" }</code>) y se la entrega al cocinero. El cocinero prepara el platillo real y se lo devuelve al mesero, quien te lo sirve con una sonrisa y te explica los detalles amablemente.
+        </p>
+      </div>
+
+      <!-- CONSEJO PRO -->
+      <div class="pro-tip-box">
+        <div class="pro-tip-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+          <span>Consejo Pro de Producción: Seguridad Zero-Trust con Tool Calling</span>
+        </div>
+        <p class="pro-tip-text">
+          Jamás construyas consultas SQL dinámicas concatenando los argumentos del JSON de Llama (ej. <code>f"SELECT * FROM users WHERE id={args['id']}"</code>). Valida siempre los argumentos con <b>Pydantic V2</b> y ejecuta sentencias parametrizadas (Prepared Statements) con ORMs o <code>asyncpg</code> para blindar tu base de datos contra inyecciones SQL indirectas.
+        </p>
+      </div>
+    </article>
+
+    <!-- ==========================================================================
+      DESARROLLO TEMÁTICO RIGUROSO (5 SUBTEMAS COMPLETOS)
+      ========================================================================== -->
+    <section id="subtemas-principales">
+
+      <!-- SUBTEMA 2.3.1 -->
+      <article class="tema-card" id="tema-2-3-1">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.3.1 · Evolución del Agente</div>
+          <h3 class="tema-title">Del Chat Informativo a las Acciones en el Mundo Real</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Límite del Chat Pasivo</span> Responder Texto no Resuelve Problemas</h4>
+          <p class="prose-p">
+            Un chatbot tradicional que únicamente responde <i>"Nuestro horario de restaurante es de 13:00 a 23:00 y puedes reservar en nuestro sitio web"</i> traslada toda la fricción al usuario.
+          </p>
+          <p class="prose-p">
+            Un <b>agente conversacional moderno basado en Llama 3</b> opera como un recepcionista humano con acceso a la libreta de reservas: interpreta la intención en lenguaje natural, consulta la base de datos en tiempo real, bloquea la mesa disponible y entrega un número de confirmación directamente en WhatsApp.
+          </p>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil: La diferencia entre un folleto y un mayordomo</span>
+          </div>
+          <p class="easy-text">
+            Un chatbot pasivo es como un <b>folleto de papel</b>: solo te muestra texto estático y te dice <i>"llama al número o ve a la página"</i>. Un agente con Function Calling es como un <b>asistente personal ejecutivo</b>: le dices <i>"cancela mi vuelo y cámbialo para el martes temprano"</i>, y él mismo entra al sistema de la aerolínea, valida si hay asientos, ejecuta el cambio y te envía el nuevo boleto de abordaje.
+          </p>
+        </div>
+
+        <!-- CONSEJO PRO -->
+        <div class="pro-tip-box">
+          <div class="pro-tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+            <span>Consejo Pro: Nombres de Funciones Autodescriptivos</span>
+          </div>
+          <p class="pro-tip-text">
+            Elige nombres de funciones con verbos claros en infinitivo y contexto explícito (ej. <code>consultar_saldo_bancario_cuenta</code> en lugar de <code>get_data</code> o <code>check</code>). Llama 3 utiliza la semántica del nombre para decidir si invoca la herramienta.
+          </p>
+        </div>
+
+        <!-- QUIZ 1 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.3.1</span>
+          </div>
+          <div class="quiz-question">¿Cuál es la diferencia fundamental entre un chatbot puramente informativo y un agente con capacidad de Function Calling?</div>
+          <button class="quiz-option" data-correct="false">A) Que el agente informativo usa más emojis en sus respuestas.</button>
+          <button class="quiz-option" data-correct="true">B) Que el agente con Function Calling puede consultar y modificar sistemas reales (bases de datos, calendarios, pagos) mediante la invocación estructurada de herramientas.</button>
+          <button class="quiz-option" data-correct="false">C) Que el agente informativo solo funciona en computadoras y no en móviles.</button>
+          <button class="quiz-option" data-correct="false">D) Que Function Calling solo está permitido para empresas bancarias.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
+
+      <!-- SUBTEMA 2.3.2 -->
+      <article class="tema-card" id="tema-2-3-2">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.3.2 · Arquitectura de Dos Pasos</div>
+          <h3 class="tema-title">Llamadas a Funciones en Profundidad: El Ciclo de Dos Invocaciones</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Protocolo Estandarizado</span> Por qué el LLM no Ejecuta Código Directo</h4>
+          <p class="prose-p">
+            Si permitiéramos que un LLM ejecute código en el servidor, un atacante podría manipular el modelo con inyecciones de prompt para borrar tablas completas (<code>DROP TABLE usuarios</code>).
+          </p>
+          <p class="prose-p">
+            El protocolo de <b>Tool Calling</b> separa el razonamiento de la ejecución mediante un ciclo en dos pasos:
+          </p>
+        </div>
+
+        <!-- FÓRMULA MATEMÁTICA CON ACORDEÓN KATEX HOMOLOGADO -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{Inferencia 1: } \mathcal{M}(\text{Mensaje}, \text{ToolsSchema}) \longrightarrow \text{tool\_calls: } [\{\text{name}, \text{args}\}]$$
+            $$\text{Ejecución Backend: } \text{Resultado} = \text{Funciones}[\text{name}](**\text{args})$$
+            $$\text{Inferencia 2: } \mathcal{M}(\text{Historial} \oplus \text{Resultado}) \longrightarrow \text{Respuesta Conversacional WhatsApp}$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose Matemático del Pipeline de Invocación en 2 Pasos</span>
+                <span class="breakdown-count-tag">4 fases</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Inferencia 1}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Detección y Extracción de Argumentos:</strong> Llama 3 recibe el mensaje del usuario junto con las definiciones JSON Schema y emite tokens especiales de llamada a herramienta (<code>&lt;|start_header_id|&gt;ipython&lt;|end_header_id|&gt;</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Ejecución Backend}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Ejecución Segura Fuera del Modelo:</strong> FastAPI valida los argumentos con Pydantic, consulta la base de datos SQL o API externa y obtiene el payload de respuesta en JSON.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Inferencia 2}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Síntesis Conversacional Empática:</strong> Llama 3 recibe el resultado de la función bajo el rol <code>tool</code> y redacta una respuesta en lenguaje natural adaptada a WhatsApp.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\mathcal{M}(\text{Historial} \oplus \text{Resultado})$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Preservación de Coherencia:</strong> Ambos turnos se registran en el historial de sesión para que en mensajes posteriores el modelo recuerde qué función ejecutó y qué datos arrojó.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil: El cajero que consulta el saldo</span>
+          </div>
+          <p class="easy-text">
+            Cuando vas al banco y pides tu saldo, el cajero de la ventanilla no tiene tu dinero guardado en su bolsillo ni sabe de memoria cuántos pesos tienes. El cajero teclea tu número de cuenta en su computadora (Paso 1), la pantalla le muestra <i>"$15,400 pesos"</i> (Paso 2), y el cajero te dice amablemente: <i>"Señor Olvera, su saldo disponible es de quince mil cuatrocientos pesos"</i> (Paso 3).
+          </p>
+        </div>
+
+        <!-- ADVERTENCIA EN PRODUCCIÓN -->
+        <div class="warning-callout-box">
+          <div class="warning-callout-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4m0 4h.01"/></svg>
+            <span>Advertencia Crítica: Cuidado con las Dobles Inferencias Innecesarias</span>
+          </div>
+          <p class="warning-callout-text">
+            Si la respuesta de la base de datos es un valor simple o una plantilla fija (ej. confirmación de cancelación con código numérico), puedes formatear la respuesta directamente en Python y enviarla a WhatsApp, <b>saltándote la Inferencia 2</b>. Esto ahorra 1.2 segundos de latencia y la mitad del costo de GPU.
+          </p>
+        </div>
+
+        <!-- CÓDIGO PYTHON PIPELINE 2 PASOS -->
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">Código de Producción</span> Pipeline Asíncrono de Invocación de Herramientas</h4>
+          <p class="prose-p">Implementación completa del ciclo en dos turnos con cliente OpenAI-compatible (vLLM / Llama Stack):</p>
+
+          <div class="code-box">
+            <div class="code-header">
+              <span class="code-lang">Python 3.11 · tool_calling_pipeline.py</span>
+              <div class="code-actions">
+                <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+              </div>
+            </div>
+            <pre class="code-content"><code class="language-python"><span class="code-kw">import</span> <span class="code-var">json</span>
+<span class="code-kw">from</span> <span class="code-var">openai</span> <span class="code-kw">import</span> <span class="code-type">AsyncOpenAI</span>
+
+<span class="code-var">client</span> = <span class="code-type">AsyncOpenAI</span>(<span class="code-var">base_url</span>=<span class="code-str">"http://localhost:8000/v1"</span>, <span class="code-var">api_key</span>=<span class="code-str">"local"</span>)
+
+<span class="code-kw">async def</span> <span class="code-fn">ejecutar_ciclo_tool_calling</span>(<span class="code-var">mensajes</span>: <span class="code-type">list</span>, <span class="code-var">tools</span>: <span class="code-type">list</span>) -> <span class="code-type">str</span>:
+    <span class="code-cm"># 1. INFERENCIA 1: El modelo decide si llama a una función</span>
+    <span class="code-var">resp_1</span> = <span class="code-kw">await</span> <span class="code-var">client</span>.<span class="code-var">chat</span>.<span class="code-var">completions</span>.<span class="code-fn">create</span>(
+        <span class="code-var">model</span>=<span class="code-str">"meta-llama/Llama-3.1-8B-Instruct"</span>,
+        <span class="code-var">messages</span>=<span class="code-var">mensajes</span>,
+        <span class="code-var">tools</span>=<span class="code-var">tools</span>,
+        <span class="code-var">tool_choice</span>=<span class="code-str">"auto"</span>
+    )
+    
+    <span class="code-var">msg_1</span> = <span class="code-var">resp_1</span>.<span class="code-var">choices</span>[<span class="code-num">0</span>].<span class="code-var">message</span>
+    <span class="code-kw">if not</span> <span class="code-var">msg_1</span>.<span class="code-var">tool_calls</span>:
+        <span class="code-kw">return</span> <span class="code-var">msg_1</span>.<span class="code-var">content</span>  <span class="code-cm"># Respuesta directa sin herramientas</span>
+
+    <span class="code-cm"># 2. EJECUCIÓN EN BACKEND: Procesamos cada tool_call</span>
+    <span class="code-var">mensajes</span>.<span class="code-fn">append</span>(<span class="code-var">msg_1</span>)
+    <span class="code-kw">for</span> <span class="code-var">tc</span> <span class="code-kw">in</span> <span class="code-var">msg_1</span>.<span class="code-var">tool_calls</span>:
+        <span class="code-var">args</span> = <span class="code-var">json</span>.<span class="code-fn">loads</span>(<span class="code-var">tc</span>.<span class="code-var">function</span>.<span class="code-var">arguments</span>)
+        <span class="code-cm"># Ejecutamos la función de base de datos correspondiente</span>
+        <span class="code-kw">if</span> <span class="code-var">tc</span>.<span class="code-var">function</span>.<span class="code-var">name</span> == <span class="code-str">"consultar_disponibilidad_restaurante"</span>:
+            <span class="code-var">resultado</span> = <span class="code-kw">await</span> <span class="code-fn">consultar_db_mesas</span>(<span class="code-var">args</span>[<span class="code-str">"personas"</span>], <span class="code-var">args</span>[<span class="code-str">"fecha"</span>], <span class="code-var">args</span>[<span class="code-str">"hora"</span>])
+        
+        <span class="code-cm"># Inyectamos el resultado en el historial con role='tool'</span>
+        <span class="code-var">mensajes</span>.<span class="code-fn">append</span>({
+            <span class="code-str">"role"</span>: <span class="code-str">"tool"</span>,
+            <span class="code-str">"tool_call_id"</span>: <span class="code-var">tc</span>.<span class="code-var">id</span>,
+            <span class="code-str">"content"</span>: <span class="code-var">json</span>.<span class="code-fn">dumps</span>(<span class="code-var">resultado</span>)
+        })
+
+    <span class="code-cm"># 3. INFERENCIA 2: Llama 3 sintetiza la respuesta conversacional</span>
+    <span class="code-var">resp_2</span> = <span class="code-kw">await</span> <span class="code-var">client</span>.<span class="code-var">chat</span>.<span class="code-var">completions</span>.<span class="code-fn">create</span>(
+        <span class="code-var">model</span>=<span class="code-str">"meta-llama/Llama-3.1-8B-Instruct"</span>,
+        <span class="code-var">messages</span>=<span class="code-var">mensajes</span>
+    )
+    <span class="code-kw">return</span> <span class="code-var">resp_2</span>.<span class="code-var">choices</span>[<span class="code-num">0</span>].<span class="code-var">message</span>.<span class="code-var">content</span></code></pre>
+          </div>
+        </div>
+
+        <!-- QUIZ 2 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.3.2</span>
+          </div>
+          <div class="quiz-question">¿Quién ejecuta materialmente la consulta a la base de datos cuando se utiliza Function Calling con Llama 3?</div>
+          <button class="quiz-option" data-correct="false">A) La red neuronal de Llama 3 ejecutando instrucciones SQL en sus capas de atención.</button>
+          <button class="quiz-option" data-correct="true">B) Tu servidor backend (FastAPI/Python), el cual recibe el JSON generado por el modelo, valida los parámetros y ejecuta la función de manera segura.</button>
+          <button class="quiz-option" data-correct="false">C) La aplicación móvil de WhatsApp en el teléfono del usuario.</button>
+          <button class="quiz-option" data-correct="false">D) Los servidores de red de Meta for Developers.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
+
+      <!-- SUBTEMA 2.3.3 -->
+      <article class="tema-card" id="tema-2-3-3">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.3.3 · Especificación Técnica</div>
+          <h3 class="tema-title">Diseño de Esquemas de Herramientas (Tool Schema) con JSON Schema</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Declaración Rigurosa</span> Cómo Sabe el Modelo Qué Herramientas Existen</h4>
+          <p class="prose-p">
+            Al iniciar la inferencia, tu backend adjunta en el payload de la API un arreglo llamado <code>tools</code>. Cada herramienta define su <b>nombre</b>, una <b>descripción inequívoca</b> y un esquema tipado de <b>parámetros</b>:
+          </p>
+        </div>
+
+        <!-- ESQUEMA JSON SCHEMA DE PRODUCCIÓN -->
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">JSON Schema · tool_definitions.json</span>
+            <div class="code-actions">
+              <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+              <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+            </div>
+          </div>
+          <pre class="code-content"><code class="language-json">{
+  "type": "function",
+  "function": {
+    "name": "consultar_disponibilidad_restaurante",
+    "description": "Verifica si hay mesas disponibles en el restaurante para una fecha, hora y número de comensales.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "personas": { "type": "integer", "description": "Número de comensales (1 a 12)" },
+        "fecha": { "type": "string", "description": "Fecha en formato YYYY-MM-DD" },
+        "hora": { "type": "string", "description": "Hora en formato HH:MM militar (ej. 20:00)" }
       },
-      <span class="code-comment">"required"</span>: [<span class="code-string">"personas"</span>, <span class="code-string">"fecha"</span>, <span class="code-string">"hora"</span>]
+      "required": ["personas", "fecha", "hora"]
     }
   }
 }</code></pre>
-</div>
-</div>
-<!-- QUIZ 3 -->
-<div class="quiz-box">
-<div class="quiz-header">
-<span class="quiz-tag">Autoevaluación 2.3.3</span>
-</div>
-<div class="quiz-question">¿Por qué la propiedad 'description' dentro del esquema de una función es tan crítica para el éxito del Tool Calling?</div>
-<button class="quiz-option" data-correct="false">A) Porque Meta la imprime en los reportes mensuales de facturación.</button>
-<button class="quiz-option" data-correct="true">B) Porque Llama 3 utiliza esa descripción en lenguaje natural para razonar y decidir si el mensaje del usuario amerita o no invocar esa herramienta específica.</button>
-<button class="quiz-option" data-correct="false">C) Porque define el color del botón en la aplicación de WhatsApp.</button>
-<button class="quiz-option" data-correct="false">D) Porque es obligatoria para compilar el código en C++.</button>
-<div class="quiz-feedback"></div>
-</div>
-</article>
-<!-- SUBTEMA 2.3.4 -->
-<article class="tema-card" id="tema-2-3-4">
-<div class="tema-header">
-<div class="tema-eyebrow">Tema 2.3.4 · Rendimiento y Latencia</div>
-<h3 class="tema-title">Latencia del Ciclo Completo: El Desafío de los 3 Segundos</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Presupuesto de Tiempo</span> La Suma de Cada Milisegundo</h4>
-<p class="prose-p">
-          En WhatsApp, un retraso superior a 5 segundos provoca que el usuario envíe signos de interrogación o abandone la conversación. La latencia total del ciclo de Function Calling es una cascada:
-        </p>
-<div class="table-responsive-wrapper">
-<table class="table-pro">
-<thead>
-<tr>
-<th>Etapa de la Cascada</th>
-<th>Tiempo Promedio</th>
-<th>Estrategia de Optimización</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>1. Webhook de Meta a tu Backend</strong></td>
-<td>150 - 300 ms</td>
-<td>Servidor cercano a los centros de datos de Meta (US-East / US-West).</td>
-</tr>
-<tr>
-<td><strong>2. Inferencia 1 (Detección de Tool Call)</strong></td>
-<td>600 - 1,200 ms</td>
-<td>Uso de modelos optimizados (Llama 3.1 8B Instruct cuantizado con vLLM o TensorRT-LLM).</td>
-</tr>
-<tr>
-<td><strong>3. Ejecución de Base de Datos / API Externa</strong></td>
-<td>100 - 400 ms</td>
-<td>Índices en bases de datos relacionales y pools de conexiones asíncronas con <code>asyncpg</code>.</td>
-</tr>
-<tr>
-<td><strong>4. Inferencia 2 (Síntesis de Respuesta)</strong></td>
-<td>800 - 1,400 ms</td>
-<td>Prompts concisos con límite de tokens de salida (<code>max_tokens: 150</code>).</td>
-</tr>
-<tr>
-<td><strong>5. Despacho a WhatsApp Graph API</strong></td>
-<td>150 - 300 ms</td>
-<td>Uso de clientes HTTP asíncronos persistentes (<code>httpx.AsyncClient</code>).</td>
-</tr>
-<tr>
-<td><strong>TOTAL CICLO COMPLETO</strong></td>
-<td><strong>1.8s - 3.6s</strong></td>
-<td><strong>Experiencia fluida y profesional.</strong></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<!-- QUIZ 4 -->
-<div class="quiz-box">
-<div class="quiz-header">
-<span class="quiz-tag">Autoevaluación 2.3.4</span>
-</div>
-<div class="quiz-question">Si una consulta a un sistema legacy externo tarda 6 segundos en responder, ¿qué técnica de experiencia de usuario en WhatsApp debe aplicarse?</div>
-<button class="quiz-option" data-correct="false">A) Dejar al usuario esperando en silencio hasta que termine.</button>
-<button class="quiz-option" data-correct="true">B) Enviar un mensaje de estado intermedio rápido (ej. 'Consultando disponibilidad en el sistema, un momento por favor...') y luego despachar la respuesta definitiva cuando la API termine.</button>
-<button class="quiz-option" data-correct="false">C) Cancelar la petición y bloquear al usuario.</button>
-<button class="quiz-option" data-correct="false">D) Reiniciar el servidor de WhatsApp.</button>
-<div class="quiz-feedback"></div>
-</div>
-</article>
-<!-- SUBTEMA 2.3.5 -->
-<article class="tema-card" id="tema-2-3-5">
-<div class="tema-header">
-<div class="tema-eyebrow">Tema 2.3.5 · Resiliencia e Idempotencia</div>
-<h3 class="tema-title">Idempotencia con <code>wamid</code> y Tolerancia a Fallos</h3>
-</div>
-<div class="tema-section-block">
-<h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Problema de los Reintentos de Meta</span> Evitar Cobros o Reservas Dobles</h4>
-<p class="prose-p">
-          Si tu backend tarda más de 3 segundos en responder <code>HTTP 200</code> a Meta, los servidores de WhatsApp asumirán que el paquete se perdió y <b>reenviarán exactamente el mismo webhook 2 o 3 veces</b>.
-        </p>
-<p class="prose-p">
-          La <b>idempotencia</b> garantiza que una misma operación ejecutada múltiples veces produzca exactamente el mismo resultado sin efectos secundarios duplicados. Cada mensaje de WhatsApp posee un identificador global único: <code>wamid</code>.
-        </p>
-</div>
-<div class="formula-card">
-<div class="formula-math-area">
-          $$\text{Filtro en Redis: } \text{SETNX}(\text{"processed:"} + \text{wamid}, \text{"OK"}, \text{EX}=86400)$$
-          $$\text{Si Llave Ya Existe} \implies \text{Retornar HTTP 200 OK Inmediato (Sin re-ejecutar la función)}$$
         </div>
-</div>
-<!-- QUIZ 5 -->
-<div class="quiz-box">
-<div class="quiz-header">
-<span class="quiz-tag">Autoevaluación 2.3.5</span>
-</div>
-<div class="quiz-question">¿Por qué es obligatorio almacenar el 'wamid' en una caché rápida como Redis al recibir un webhook en WhatsApp?</div>
-<button class="quiz-option" data-correct="false">A) Para rastrear la ubicación GPS del usuario.</button>
-<button class="quiz-option" data-correct="true">B) Para implementar idempotencia: si Meta reintenta el webhook por un micro-retraso de red, tu backend detecta el wamid existente y descarta la duplicación sin ejecutar dos veces la reserva o el cobro.</button>
-<button class="quiz-option" data-correct="false">C) Para convertir el audio de WhatsApp a texto.</button>
-<button class="quiz-option" data-correct="false">D) Para pagar menos comisiones por mensaje a Meta.</button>
-<div class="quiz-feedback"></div>
-</div>
-</article>
-</section>
-<!-- ==========================================================================
-  BANCOS INTERACTIVOS & LABORATORIOS EN VIVO (5 SIMULADORES)
-  ========================================================================== -->
-<section id="simuladores" style="margin-top:4rem;">
-<div style="text-align:center; margin-bottom:2.5rem;">
-<div class="tema-eyebrow" style="justify-content:center; margin-bottom:0.6rem;">Laboratorios Prácticos en Vivo</div>
-<h2 style="font-size:2.2rem; font-family:var(--font-disp); font-weight:800; color:var(--text-primary); margin:0 0 0.8rem;">Bancos Interactivos de la Unidad 2.3</h2>
-<p style="color:var(--text-secondary); max-width:70ch; margin:0 auto; font-size:1.05rem;">Prueba la ejecución de Function Calling en 4 etapas, diseña esquemas JSON Schema, calcula latencias E2E y simula filtros de idempotencia.</p>
-</div>
-<!-- BANCO 1: SIMULADOR VISUAL DE FUNCTION CALLING -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.3.1 · Simulador Visual de Function Calling en Vivo (Llama 3 Tool Dispatcher)</span>
-<div class="workbench-actions">
-<button class="btn-reset-sm" id="fc-btn-reset" title="Restablecer simulador de Function Calling">
-<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"></path></svg>
-<span>Restablecer</span>
-</button>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.2rem;">
-<button class="glossary-filter-pill fc-preset-pill" data-text="Hola, quiero reservar una mesa para 4 personas este viernes a las 8 de la noche en la terraza">Preset 1: Mesa para 4 en Terraza (Viernes 20:00)</button>
-<button class="glossary-filter-pill fc-preset-pill" data-text="Buenas tardes, somos 2 personas para cenar mañana a las 9pm">Preset 2: Pareja para cenar (21:00)</button>
-<button class="glossary-filter-pill fc-preset-pill" data-text="Necesito una mesa grande para 8 personas el sábado a las 2pm">Preset 3: Grupo grande de 8 personas</button>
-</div>
-<div style="display:flex; gap:0.5rem; margin-bottom:1.5rem;">
-<input class="bench-input-clean" id="fc-user-input" placeholder="Escribe tu petición de reserva..." style="flex:1;" type="text" value="Hola, quiero reservar una mesa para 4 personas este viernes a las 8 de la noche en la terraza"/>
-<button class="btn-primary" id="fc-btn-execute">Ejecutar Ciclo de Function Calling</button>
-</div>
-<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem; margin-bottom:1.2rem;">
-<div class="flow-step-tracker" id="fc-step-1">1. Webhook Entrante</div>
-<div class="flow-step-tracker" id="fc-step-2">2. Inferencia 1 (Tool JSON)</div>
-<div class="flow-step-tracker" id="fc-step-3">3. Backend DB Execution</div>
-<div class="flow-step-tracker" id="fc-step-4">4. Inferencia 2 &amp; Despacho</div>
-</div>
-<div style="display:grid; grid-template-columns:1.2fr 1fr; gap:1.2rem;">
-<pre id="fc-console-log" style="background:#0f172a; color:#f8fafc; padding:1rem; border-radius:8px; font-family:var(--font-mono); font-size:0.78rem; height:240px; overflow-y:auto; white-space:pre-wrap;"></pre>
-<div style="background:#0b141a; border-radius:12px; padding:1rem; display:flex; flex-direction:column; justify-content:space-between; height:240px; box-sizing:border-box;">
-<div style="color:#e9edef; font-weight:700; font-size:0.85rem; border-bottom:1px solid #202c33; padding-bottom:0.4rem;">Respuesta Entregada en WhatsApp:</div>
-<div class="chat-bubble bot-bubble" style="max-width:100%; margin-top:0.5rem;">
-<div class="bubble-text" id="fc-final-reply">Haz clic en "Ejecutar Ciclo de Function Calling" para ver la respuesta en vivo...</div>
-<div class="bubble-time">10:00 AM · Meta AI</div>
-</div>
-<div style="font-size:0.72rem; color:#00a884; text-align:right;">Entregado vía Graph API</div>
-</div>
-</div>
-</div>
-</div>
-<!-- BANCO 2: DISEÑADOR JSON SCHEMA -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.3.2 · Diseñador &amp; Validador de Esquemas JSON Schema para Herramientas</span>
-<div class="workbench-actions">
-<button class="btn-reset-sm" id="schema-btn-reset" title="Restablecer diseñador de esquema">
-<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"></path></svg>
-<span>Restablecer</span>
-</button>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<div style="display:grid; grid-template-columns:1.1fr 1.3fr; gap:1.5rem;">
-<div>
-<label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.3rem;">Nombre de la Función:</label>
-<input class="bench-input-clean" id="schema-fn-name" style="width:100%; margin-bottom:0.75rem;" type="text" value="consultar_estatus_pedido"/>
-<label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.3rem;">Descripción para Llama 3:</label>
-<textarea class="bench-input-clean" id="schema-fn-desc" style="width:100%; height:65px; margin-bottom:0.75rem;">Consulta el estatus de un envío de e-commerce mediante su número de guía.</textarea>
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
-<div>
-<label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.3rem;">Parámetro Clave:</label>
-<input class="bench-input-clean" id="schema-param-name" style="width:100%;" type="text" value="pedido_id"/>
-</div>
-<div>
-<label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.3rem;">Tipo de Dato:</label>
-<select class="bench-select-clean" id="schema-param-type" style="width:100%;">
-<option value="string">string (Texto)</option>
-<option value="integer">integer (Número)</option>
-<option value="boolean">boolean (Verdadero/Falso)</option>
-</select>
-</div>
-</div>
-<label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:0.4rem;">
-<input checked="" id="schema-param-required" type="checkbox"/> Marcar como parámetro obligatorio (required)
-            </label>
-</div>
-<div class="code-box">
-<div class="code-header">
-<span class="code-lang">JSON Schema Generado en Tiempo Real</span>
 
-<div class="code-actions"><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button><button class="btn-download-code" onclick="downloadCode(this)">Descargar</button></div></div>
-<pre class="code-content"><code class="language-json" id="schema-code-output"># Generando JSON Schema...</code></pre>
-</div>
-</div>
-</div>
-</div>
-<!-- BANCO 3: CALCULADORA DE LATENCIA WATERFALL -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.3.3 · Desglosador y Calculador de Latencia Waterfall E2E</span>
-<div class="workbench-actions">
-<span class="bench-badge-status status-success" id="lat-status-pill">ÓPTIMO</span>
-<button class="btn-reset-sm" id="lat-btn-reset" title="Restablecer latencias por defecto">
-<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"></path></svg>
-<span>Restablecer</span>
-</button>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<div style="display:grid; grid-template-columns:1.2fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
-<div style="display:flex; flex-direction:column; gap:0.75rem;">
-<div>
-<label style="font-size:0.78rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between;">
-<span>1. Webhook Red Meta:</span>
-<span id="lat-val-webhook">220 ms</span>
-</label>
-<input id="lat-webhook" max="800" min="50" step="10" style="width:100%;" type="range" value="220"/>
-</div>
-<div>
-<label style="font-size:0.78rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between;">
-<span>2. Inferencia 1 (Tool Calling Llama):</span>
-<span id="lat-val-inf1">850 ms</span>
-</label>
-<input id="lat-inf1" max="2500" min="200" step="50" style="width:100%;" type="range" value="850"/>
-</div>
-<div>
-<label style="font-size:0.78rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between;">
-<span>3. Ejecución Backend / Base de Datos:</span>
-<span id="lat-val-db">180 ms</span>
-</label>
-<input id="lat-db" max="1500" min="20" step="20" style="width:100%;" type="range" value="180"/>
-</div>
-<div>
-<label style="font-size:0.78rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between;">
-<span>4. Inferencia 2 (Síntesis Final Llama):</span>
-<span id="lat-val-inf2">950 ms</span>
-</label>
-<input id="lat-inf2" max="2500" min="200" step="50" style="width:100%;" type="range" value="950"/>
-</div>
-<div>
-<label style="font-size:0.78rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between;">
-<span>5. Despacho WhatsApp Graph API:</span>
-<span id="lat-val-send">200 ms</span>
-</label>
-<input id="lat-send" max="800" min="50" step="10" style="width:100%;" type="range" value="200"/>
-</div>
-</div>
-<div style="background:var(--card-surface); padding:1.2rem; border-radius:12px; border:1px solid var(--border-subtle); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
-<div style="font-size:0.82rem; color:var(--text-muted); font-weight:700; margin-bottom:0.4rem;">TIEMPO TOTAL PERCIBIDO POR EL USUARIO:</div>
-<div id="lat-total-time" style="font-family:var(--font-disp); font-size:2.4rem; font-weight:800; color:var(--meta-blue);">2400 ms (2.40s)</div>
-<p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.5rem; max-width:28ch;">
-              Métricas dentro del umbral recomendado (&lt;3s) para mensajería en vivo.
-            </p>
-</div>
-</div>
-<!-- Barra Waterfall Visual -->
-<div style="width:100%; height:14px; background:var(--bg-subtle); border-radius:7px; overflow:hidden; display:flex;">
-<div id="lat-bar-webhook" style="height:100%; background:#3b82f6;" title="Webhook"></div>
-<div id="lat-bar-inf1" style="height:100%; background:#8b5cf6;" title="Inferencia 1"></div>
-<div id="lat-bar-db" style="height:100%; background:#10b981;" title="Base de Datos"></div>
-<div id="lat-bar-inf2" style="height:100%; background:#ec4899;" title="Inferencia 2"></div>
-<div id="lat-bar-send" style="height:100%; background:#f59e0b;" title="Envío WhatsApp"></div>
-</div>
-</div>
-</div>
-<!-- BANCO 4: SIMULADOR DE IDEMPOTENCIA -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.3.4 · Simulador de Idempotencia &amp; Deduplicación de Webhooks (wamid)</span>
-<div class="workbench-actions">
-<span class="bench-badge-status status-info" id="idem-cache-count">0 wamid en caché</span>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1.2rem;">
-          Prueba cómo el filtro de Redis previene la duplicación de órdenes ante micro-cortes o reintentos automáticos de Meta.
-        </p>
-<div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.2rem;">
-<button class="btn-primary" id="idem-btn-send-unique">1. Recibir Mensaje Legítimo (Nuevo wamid)</button>
-<button class="btn-secondary" id="idem-btn-send-duplicate">2. Simular Reintento Duplicado de Meta (Mismo wamid)</button>
-<button class="btn-secondary" id="idem-btn-reset">Limpiar Caché Redis</button>
-</div>
-<pre id="idem-console-log" style="background:#0f172a; color:#f8fafc; padding:1rem; border-radius:8px; font-family:var(--font-mono); font-size:0.8rem; height:180px; overflow-y:auto; white-space:pre-wrap;">// Esperando recepción de eventos de webhook...</pre>
-</div>
-</div>
-<!-- BANCO 5: LABORATORIO DE FALLBACKS -->
-<div class="workbench-section" style="margin-bottom:3rem;">
-<div class="workbench-top">
-<span class="workbench-label">Banco 2.3.5 · Laboratorio de Manejo de Excepciones y Graceful Fallbacks</span>
-<div class="workbench-actions">
-<button class="btn-reset-sm" id="fb-btn-reset" title="Restablecer laboratorio de fallbacks">
-<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"></path></svg>
-<span>Restablecer</span>
-</button>
-</div>
-</div>
-<div style="padding:1.5rem;">
-<div style="margin-bottom:1.2rem;">
-<label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.4rem;">Seleccionar Escenario de Falla:</label>
-<select class="bench-select-clean" id="fb-scenario-select" style="width:100%; max-width:480px;">
-<option value="db_timeout">Escenario A: Timeout en Base de Datos de Reservas (&gt;3000ms)</option>
-<option value="invalid_params">Escenario B: Parámetros Inválidos (Fecha inexistente ej. 30 de febrero)</option>
-<option value="no_availability">Escenario C: Capacidad Agotada (Sin mesas para el grupo)</option>
-</select>
-</div>
-<pre id="fb-console-output" style="background:#0f172a; color:#f8fafc; padding:1.2rem; border-radius:10px; font-family:var(--font-mono); font-size:0.82rem; line-height:1.6; white-space:pre-wrap;"></pre>
-</div>
-</div>
-</section>
-<!-- ==========================================================================
-  EJERCICIOS PRÁCTICOS OFICIALES (CURSO.MD)
-  ========================================================================== -->
-<section class="module-block" id="ejercicios" style="margin-bottom: 4rem;">
-<div class="module-header">
-<div class="tema-eyebrow" style="margin-bottom:0.6rem;">Autoevaluación Práctica &amp; Análisis de Sistemas</div>
-<h2 class="module-title">Ejercicios Prácticos Oficiales de la Unidad 2.3</h2>
-<p class="module-desc">Resuelve los 3 ejercicios de Function Calling, presupuestos de latencia y contratos de tipado del temario oficial.</p>
-</div>
-<!-- EJERCICIO 1 -->
-<article class="exercise-card">
-<div class="exercise-header">
-<span class="exercise-num-badge">Ejercicio 1</span>
-<h4 class="exercise-title">Diseño del Esquema de Herramienta para Reserva de Mesa</h4>
-</div>
-<div class="exercise-context-box">
-<div class="exercise-context-title">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4m0-4h.01"></path></svg>
-          Enunciado de Contrato de API
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil: El formulario de aduanas con casillas fijas</span>
+          </div>
+          <p class="easy-text">
+            Un esquema JSON Schema es como un <b>formulario oficial de aduanas</b>. En lugar de dejar una hoja en blanco donde cualquiera escribe garabatos confusos, el formulario tiene casillas cuadradas estrictas: <i>"Edad (solo números)"</i>, <i>"Fecha de nacimiento (AAAA-MM-DD)"</i> y <i>"¿Lleva alimentos? (Sí/No)"</i>. Si Llama 3 intenta escribir letras donde va un número, el sistema de validación lo detecta al instante antes de enviar el paquete.
+          </p>
         </div>
-<p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
-          Escribe la especificación completa en JSON Schema para una herramienta llamada <code>confirmar_reserva</code> que requiera obligatoriamente: <code>nombre_cliente</code>, <code>telefono</code>, <code>personas</code> y <code>fecha_hora</code>. Justifica por qué los tipos de datos deben ser estrictos y cómo previene fallos en bases de datos relacionales.
-        </p>
-</div>
-<details class="exercise-solution-details">
-<summary class="exercise-solution-summary">
-<span>Ver Solución de Ingeniería Paso a Paso &amp; JSON Schema Formal</span>
-<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6"></path></svg>
-</summary>
-<div class="exercise-solution-panel">
-<div class="step-flow-list">
-<div class="step-flow-item">
-<div class="step-num-badge">1</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Especificación JSON Schema Estandarizada</h5>
-<div class="code-box" style="margin-top:0.4rem;">
-<div class="code-header">
-<span class="code-lang">JSON Schema · Llama 3 Compatible</span>
 
-<div class="code-actions"><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button><button class="btn-download-code" onclick="downloadCode(this)">Descargar</button></div></div>
-<pre class="code-content"><code class="language-json">{
-  "name": "confirmar_reserva",
-  "description": "Registra una reservación de mesa formal en el sistema de gestión del restaurante.",
-  "parameters": {
-    "type": "object",
-    "properties": {
-      "nombre_cliente": {
-        "type": "string",
-        "description": "Nombre y apellido de la persona que reserva."
+        <!-- CONSEJO PRO -->
+        <div class="pro-tip-box">
+          <div class="pro-tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+            <span>Consejo Pro: Limita el Catálogo a Menos de 8 Herramientas Simultáneas</span>
+          </div>
+          <p class="pro-tip-text">
+            Enviar más de 10 herramientas en un solo prompt satura la atención de Llama 3 8B y aumenta el riesgo de selección errónea de función (<i>Tool Hallucination</i>). Aplica <b>enrutamiento contextual de herramientas</b>: si el usuario está en la etapa de pago, envía solo herramientas financieras; si está consultando menús, envía solo herramientas de catálogo.
+          </p>
+        </div>
+
+        <!-- QUIZ 3 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.3.3</span>
+          </div>
+          <div class="quiz-question">¿Por qué la propiedad 'description' dentro del esquema de una función es tan crítica para el éxito del Tool Calling?</div>
+          <button class="quiz-option" data-correct="false">A) Porque Meta la imprime en los reportes mensuales de facturación.</button>
+          <button class="quiz-option" data-correct="true">B) Porque Llama 3 utiliza esa descripción en lenguaje natural para razonar y decidir si el mensaje del usuario amerita o no invocar esa herramienta específica.</button>
+          <button class="quiz-option" data-correct="false">C) Porque define el color del botón en la aplicación de WhatsApp.</button>
+          <button class="quiz-option" data-correct="false">D) Porque es obligatoria para compilar el código en C++.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
+
+      <!-- SUBTEMA 2.3.4 -->
+      <article class="tema-card" id="tema-2-3-4">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.3.4 · Rendimiento y Latencia</div>
+          <h3 class="tema-title">Latencia del Ciclo Completo: El Desafío de los 3 Segundos</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Presupuesto de Tiempo</span> La Suma de Cada Milisegundo</h4>
+          <p class="prose-p">
+            En WhatsApp, un retraso superior a 5 segundos provoca que el usuario envíe signos de interrogación o abandone la conversación. La latencia total del ciclo de Function Calling es una cascada:
+          </p>
+
+          <div class="table-responsive-wrapper">
+            <table class="table-pro">
+              <thead>
+                <tr>
+                  <th>Etapa de la Cascada</th>
+                  <th>Tiempo Promedio</th>
+                  <th>Estrategia de Optimización</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>1. Webhook de Meta a tu Backend</strong></td>
+                  <td>150 - 300 ms</td>
+                  <td>Servidor cercano a los centros de datos de Meta (US-East / US-West).</td>
+                </tr>
+                <tr>
+                  <td><strong>2. Inferencia 1 (Detección de Tool Call)</strong></td>
+                  <td>600 - 1,200 ms</td>
+                  <td>Uso de modelos optimizados (Llama 3.1 8B Instruct cuantizado con vLLM o TensorRT-LLM).</td>
+                </tr>
+                <tr>
+                  <td><strong>3. Ejecución de Base de Datos / API Externa</strong></td>
+                  <td>100 - 400 ms</td>
+                  <td>Índices en bases de datos relacionales y pools de conexiones asíncronas con <code>asyncpg</code>.</td>
+                </tr>
+                <tr>
+                  <td><strong>4. Inferencia 2 (Síntesis de Respuesta)</strong></td>
+                  <td>800 - 1,400 ms</td>
+                  <td>Prompts concisos con límite de tokens de salida (<code>max_tokens: 150</code>).</td>
+                </tr>
+                <tr>
+                  <td><strong>5. Despacho a WhatsApp Graph API</strong></td>
+                  <td>150 - 300 ms</td>
+                  <td>Uso de clientes HTTP asíncronos persistentes (<code>httpx.AsyncClient</code>).</td>
+                </tr>
+                <tr>
+                  <td><strong>TOTAL CICLO COMPLETO</strong></td>
+                  <td><strong>1.8s - 3.6s</strong></td>
+                  <td><strong>Experiencia fluida y profesional.</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FÓRMULA DE CASCADA DE LATENCIA CON ACORDEÓN -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$T_{\text{total}} = T_{\text{webhook\_in}} + T_{\text{inferencia\_1}} + T_{\text{database}} + T_{\text{inferencia\_2}} + T_{\text{graph\_api\_out}} \le 3.5\,\text{s}$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de los Componentes de Latencia E2E</span>
+                <span class="breakdown-count-tag">5 métricas</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{webhook\_in}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Tránsito de Red Entrante:</strong> Latencia HTTPS desde el router de Meta Cloud API hasta tu servidor FastAPI ($\approx 200\text{ms}$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{inferencia\_1}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Evaluación de Herramienta:</strong> Tiempo de generación del JSON de parámetros en GPU ($\approx 900\text{ms}$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{database}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Consulta de Negocio:</strong> Lectura/escritura en PostgreSQL o CRM con pool asíncrono ($\approx 150\text{ms}$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{inferencia\_2}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Síntesis Conversacional:</strong> Redacción del texto final para WhatsApp ($\approx 1000\text{ms}$).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{graph\_api\_out}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Despacho Saliente:</strong> Petición POST a <code>graph.facebook.com/v20.0/.../messages</code> ($\approx 250\text{ms}$).
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil: La carrera de relevos 4x100</span>
+          </div>
+          <p class="easy-text">
+            Imagina una <b>carrera de relevos 4x100 metros</b> en las olimpiadas. Si el primer corredor (el webhook) corre en 10 segundos, pero el segundo corredor (la GPU) se tropieza y tarda 30 segundos, el equipo pierde la carrera aunque el corredor final sea velocísimo. Cada milisegundo en la cadena cuenta para no hacer esperar al usuario en WhatsApp.
+          </p>
+        </div>
+
+        <!-- CONSEJO PRO -->
+        <div class="pro-tip-box">
+          <div class="pro-tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+            <span>Consejo Pro: Mensaje de Estado Intermedio (Typing Indicator)</span>
+          </div>
+          <p class="pro-tip-text">
+            Si tu API externa tarda más de 2 segundos, despacha un mensaje rápido de estado (<i>"Consultando disponibilidad en tiempo real, un momento por favor..."</i>) o envía una señal de <code>typing_on</code> a WhatsApp para que el usuario sepa que su petición está en curso.
+          </p>
+        </div>
+
+        <!-- QUIZ 4 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.3.4</span>
+          </div>
+          <div class="quiz-question">Si una consulta a un sistema legacy externo tarda 6 segundos en responder, ¿qué técnica de experiencia de usuario en WhatsApp debe aplicarse?</div>
+          <button class="quiz-option" data-correct="false">A) Dejar al usuario esperando en silencio hasta que termine.</button>
+          <button class="quiz-option" data-correct="true">B) Enviar un mensaje de estado intermedio rápido (ej. 'Consultando disponibilidad en el sistema, un momento por favor...') y luego despachar la respuesta definitiva cuando la API termine.</button>
+          <button class="quiz-option" data-correct="false">C) Cancelar la petición y bloquear al usuario.</button>
+          <button class="quiz-option" data-correct="false">D) Reiniciar el servidor de WhatsApp.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
+
+      <!-- SUBTEMA 2.3.5 -->
+      <article class="tema-card" id="tema-2-3-5">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.3.5 · Resiliencia e Idempotencia</div>
+          <h3 class="tema-title">Idempotencia con <code>wamid</code> y Tolerancia a Fallos</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Problema de los Reintentos de Meta</span> Evitar Cobros o Reservas Dobles</h4>
+          <p class="prose-p">
+            Si tu backend tarda más de 3 segundos en responder <code>HTTP 200</code> a Meta, los servidores de WhatsApp asumirán que el paquete se perdió y <b>reenviarán exactamente el mismo webhook 2 o 3 veces</b>.
+          </p>
+          <p class="prose-p">
+            La <b>idempotencia</b> garantiza que una misma operación ejecutada múltiples veces produzca exactamente el mismo resultado sin efectos secundarios duplicados. Cada mensaje de WhatsApp posee un identificador global único: <code>wamid</code>.
+          </p>
+        </div>
+
+        <!-- FÓRMULA DE IDEMPOTENCIA CON ACORDEÓN KATEX -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{Filtro en Redis: } \text{SETNX}(\text{"processed:"} + \text{wamid}, \text{"OK"}, \text{EX}=86400)$$
+            $$\text{Si Llave Ya Existe} \implies \text{Retornar HTTP 200 OK Inmediato (Sin re-ejecutar la función)}$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose del Filtro Atómico de Idempotencia</span>
+                <span class="breakdown-count-tag">3 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{SETNX}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Set If Not Exists (Operación Atómica):</strong> Comando en Redis que almacena la llave únicamente si no existía previamente, devolviendo 1 (éxito) o 0 (ya procesado) en $\approx 1\text{ms}$.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{wamid}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>WhatsApp Message ID:</strong> Cadena alfanumérica única universal asignada por Meta a cada mensaje entrante (ej. <code>wamid.HBgLM...</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{EX}=86400$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Expiración TTL de 24 Horas:</strong> Tiempo de vida suficiente para proteger contra reintentos de Meta liberando memoria RAM automáticamente.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil: El sello de 'PAGADO' en una factura</span>
+          </div>
+          <p class="easy-text">
+            Imagina que vas al banco a pagar la luz. La cajera recibe tu factura, le pone un <b>sello físico de 'PAGADO'</b> con tinta indeleble y registra el folio en el libro mayor. Si por error el cartero te vuelve a entregar una copia de la misma factura al día siguiente y vas al banco, la cajera revisa el folio, ve el sello y te dice: <i>"Esta factura ya fue liquidada ayer, no tiene que volver a pagar"</i>. El <code>wamid</code> es el folio de la factura y Redis es el sello de tinta.
+          </p>
+        </div>
+
+        <!-- CÓDIGO PYTHON IDEMPOTENCIA -->
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">Código de Producción</span> Middleware de Idempotencia con Redis &amp; FastAPI</h4>
+          <p class="prose-p">Patrón de producción para interceptar webhooks repetidos de Meta:</p>
+
+          <div class="code-box">
+            <div class="code-header">
+              <span class="code-lang">Python 3.11 · idempotency_guard.py</span>
+              <div class="code-actions">
+                <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+              </div>
+            </div>
+            <pre class="code-content"><code class="language-python"><span class="code-kw">import</span> <span class="code-var">redis.asyncio</span> <span class="code-kw">as</span> <span class="code-var">aioredis</span>
+<span class="code-kw">from</span> <span class="code-var">fastapi</span> <span class="code-kw">import</span> <span class="code-type">FastAPI</span>, <span class="code-type">Request</span>, <span class="code-type">Response</span>, <span class="code-type">status</span>
+
+<span class="code-var">app</span> = <span class="code-type">FastAPI</span>()
+<span class="code-var">redis_client</span> = <span class="code-var">aioredis</span>.<span class="code-fn">from_url</span>(<span class="code-str">"redis://localhost:6379/0"</span>)
+
+<span class="code-kw">async def</span> <span class="code-fn">es_mensaje_duplicado</span>(<span class="code-var">wamid</span>: <span class="code-type">str</span>) -> <span class="code-type">bool</span>:
+    <span class="code-cm"># SETNX atómico con TTL de 24 horas</span>
+    <span class="code-var">fue_insertado</span> = <span class="code-kw">await</span> <span class="code-var">redis_client</span>.<span class="code-fn">set</span>(
+        <span class="code-str">f"processed_wamid:{wamid}"</span>, 
+        <span class="code-str">"1"</span>, 
+        <span class="code-var">nx</span>=<span class="code-kw">True</span>, 
+        <span class="code-var">ex</span>=<span class="code-num">86400</span>
+    )
+    <span class="code-kw">return not</span> <span class="code-var">fue_insertado</span>  <span class="code-cm"># True si ya existía (es duplicado)</span>
+
+<span class="code-dec">@app.post</span>(<span class="code-str">"/webhook"</span>)
+<span class="code-kw">async def</span> <span class="code-fn">recibir_webhook_whatsapp</span>(<span class="code-var">request</span>: <span class="code-type">Request</span>):
+    <span class="code-var">body</span> = <span class="code-kw">await</span> <span class="code-var">request</span>.<span class="code-fn">json</span>()
+    <span class="code-var">wamid</span> = <span class="code-var">body</span>[<span class="code-str">"entry"</span>][<span class="code-num">0</span>][<span class="code-str">"changes"</span>][<span class="code-num">0</span>][<span class="code-str">"value"</span>][<span class="code-str">"messages"</span>][<span class="code-num">0</span>][<span class="code-str">"id"</span>]
+    
+    <span class="code-kw">if await</span> <span class="code-fn">es_mensaje_duplicado</span>(<span class="code-var">wamid</span>):
+        <span class="code-cm"># Respondemos HTTP 200 inmediatamente sin re-ejecutar la lógica</span>
+        <span class="code-kw">return</span> <span class="code-type">Response</span>(<span class="code-var">content</span>=<span class="code-str">"DUPLICATE_IGNORED"</span>, <span class="code-var">status_code</span>=<span class="code-var">status</span>.<span class="code-var">HTTP_200_OK</span>)
+        
+    <span class="code-cm"># Procesar mensaje con Llama 3 en BackgroundTasks...</span>
+    <span class="code-kw">return</span> <span class="code-type">Response</span>(<span class="code-var">content</span>=<span class="code-str">"EVENT_RECEIVED"</span>, <span class="code-var">status_code</span>=<span class="code-var">status</span>.<span class="code-var">HTTP_200_OK</span>)</code></pre>
+          </div>
+        </div>
+
+        <!-- QUIZ 5 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.3.5</span>
+          </div>
+          <div class="quiz-question">¿Por qué es obligatorio almacenar el 'wamid' en una caché rápida como Redis al recibir un webhook en WhatsApp?</div>
+          <button class="quiz-option" data-correct="false">A) Para rastrear la ubicación GPS del usuario.</button>
+          <button class="quiz-option" data-correct="true">B) Para implementar idempotencia: si Meta reintenta el webhook por un micro-retraso de red, tu backend detecta el wamid existente y descarta la duplicación sin ejecutar dos veces la reserva o el cobro.</button>
+          <button class="quiz-option" data-correct="false">C) Para convertir el audio de WhatsApp a texto.</button>
+          <button class="quiz-option" data-correct="false">D) Para pagar menos comisiones por mensaje a Meta.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ==========================================================================
+      BANCOS INTERACTIVOS & LABORATORIOS EN VIVO (5 SIMULADORES)
+      ========================================================================== -->
+    <section id="simuladores" style="margin-top:4rem;">
+      <div style="text-align:center; margin-bottom:2.5rem;">
+        <div class="tema-eyebrow" style="justify-content:center; margin-bottom:0.6rem;">Laboratorios Prácticos en Vivo</div>
+        <h2 style="font-size:2.2rem; font-family:var(--font-disp); font-weight:800; color:var(--text-primary); margin:0 0 0.8rem;">Bancos Interactivos de la Unidad 2.3</h2>
+        <p style="color:var(--text-secondary); max-width:70ch; margin:0 auto; font-size:1.05rem;">Prueba la ejecución de Function Calling en 4 etapas, diseña esquemas JSON Schema, calcula latencias E2E y simula filtros de idempotencia.</p>
+      </div>
+
+      <!-- BANCO 1: SIMULADOR VISUAL DE FUNCTION CALLING -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.3.1 · Simulador Visual de Function Calling en Vivo (Llama 3 Tool Dispatcher)</span>
+          <div class="workbench-actions">
+            <button class="btn-reset-sm" id="fc-btn-reset" title="Restablecer simulador de Function Calling">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Restablecer</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.2rem;">
+            <button class="glossary-filter-pill fc-preset-pill" data-text="Hola, quiero reservar una mesa para 4 personas este viernes a las 8 de la noche en la terraza">Preset 1: Mesa para 4 en Terraza (Viernes 20:00)</button>
+            <button class="glossary-filter-pill fc-preset-pill" data-text="Buenas tardes, somos 2 personas para cenar mañana a las 9pm">Preset 2: Pareja para cenar (21:00)</button>
+            <button class="glossary-filter-pill fc-preset-pill" data-text="Necesito una mesa grande para 8 personas el sábado a las 2pm">Preset 3: Grupo grande de 8 personas</button>
+          </div>
+
+          <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem;">
+            <input type="text" id="fc-user-input" class="bench-input-clean" value="Hola, quiero reservar una mesa para 4 personas este viernes a las 8 de la noche en la terraza" placeholder="Escribe tu petición de reserva..." style="flex:1;" />
+            <button id="fc-btn-execute" class="btn-primary">Ejecutar Ciclo de Function Calling</button>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem; margin-bottom:1.2rem;">
+            <div class="flow-step-tracker" id="fc-step-1">1. Webhook Entrante</div>
+            <div class="flow-step-tracker" id="fc-step-2">2. Inferencia 1 (Tool JSON)</div>
+            <div class="flow-step-tracker" id="fc-step-3">3. Backend DB Execution</div>
+            <div class="flow-step-tracker" id="fc-step-4">4. Inferencia 2 &amp; Despacho</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:1.2rem;">
+            <pre id="fc-console-log" style="background:#0f172a; color:#f8fafc; padding:1rem; border-radius:8px; font-family:var(--font-mono); font-size:0.78rem; height:240px; overflow-y:auto; white-space:pre-wrap;"></pre>
+            <div style="background:#0b141a; border-radius:12px; padding:1rem; display:flex; flex-direction:column; justify-content:space-between; height:240px; box-sizing:border-box;">
+              <div style="color:#e9edef; font-weight:700; font-size:0.85rem; border-bottom:1px solid #202c33; padding-bottom:0.4rem;">Respuesta Entregada en WhatsApp:</div>
+              <div class="chat-bubble bot-bubble" style="max-width:100%; margin-top:0.5rem;">
+                <div class="bubble-text" id="fc-final-reply">Haz clic en "Ejecutar Ciclo de Function Calling" para ver la respuesta en vivo...</div>
+                <div class="bubble-time">10:00 AM · Meta AI</div>
+              </div>
+              <div style="font-size:0.72rem; color:#00a884; text-align:right;">Entregado vía Graph API</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANCO 2: DISEÑADOR JSON SCHEMA -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.3.2 · Diseñador &amp; Validador de Esquemas JSON Schema para Herramientas</span>
+          <div class="workbench-actions">
+            <button class="btn-reset-sm" id="schema-btn-reset" title="Restablecer diseñador de esquema">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Restablecer</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div style="display:grid; grid-template-columns:1.1fr 1.3fr; gap:1.5rem;">
+            <div>
+              <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.3rem;">Nombre de la Función:</label>
+              <input type="text" id="schema-fn-name" class="bench-input-clean" value="consultar_estatus_pedido" style="width:100%; margin-bottom:0.75rem;" />
+
+              <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.3rem;">Descripción para Llama 3:</label>
+              <textarea id="schema-fn-desc" class="bench-input-clean" style="width:100%; height:65px; margin-bottom:0.75rem;">Consulta el estatus de un envío de e-commerce mediante su número de guía.</textarea>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:0.75rem;">
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.3rem;">Parámetro Clave:</label>
+                  <input type="text" id="schema-param-name" class="bench-input-clean" value="pedido_id" style="width:100%;" />
+                </div>
+                <div>
+                  <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.3rem;">Tipo de Dato:</label>
+                  <select id="schema-param-type" class="bench-select-clean" style="width:100%;">
+                    <option value="string">string (Texto)</option>
+                    <option value="integer">integer (Número)</option>
+                    <option value="boolean">boolean (Verdadero/Falso)</option>
+                  </select>
+                </div>
+              </div>
+
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:0.4rem;">
+                <input type="checkbox" id="schema-param-required" checked /> Marcar como parámetro obligatorio (required)
+              </label>
+            </div>
+
+            <div class="code-box">
+              <div class="code-header">
+                <span class="code-lang">JSON Schema Generado</span>
+                <div class="code-actions">
+                  <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                  <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+                </div>
+              </div>
+              <pre class="code-content"><code class="language-json" id="schema-json-output">{}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANCO 3: CALCULADORA DE LATENCIA E2E -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.3.3 · Calculadora de Cascada de Latencia E2E &amp; Presupuesto SLA</span>
+          <div class="workbench-actions">
+            <span class="bench-badge-status status-success" id="lat-status-pill">SLA Cumplido (&lt; 3.0s)</span>
+            <button class="btn-reset-sm" id="lat-btn-reset" title="Restablecer calculadora de latencia">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Restablecer</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+            <div>
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between;">
+                <span>Inferencia 1 (Detección de Tool):</span>
+                <strong id="lat-inf1-val" style="color:var(--meta-blue);">900 ms</strong>
+              </label>
+              <input type="range" id="lat-inf1-slider" min="300" max="3000" step="50" value="900" style="width:100%; margin-top:0.3rem;" />
+
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between; margin-top:0.75rem;">
+                <span>Ejecución DB / API Externa:</span>
+                <strong id="lat-db-val" style="color:var(--accent-success);">250 ms</strong>
+              </label>
+              <input type="range" id="lat-db-slider" min="50" max="4000" step="50" value="250" style="width:100%; margin-top:0.3rem;" />
+
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between; margin-top:0.75rem;">
+                <span>Inferencia 2 (Síntesis de Respuesta):</span>
+                <strong id="lat-inf2-val" style="color:var(--meta-purple);">1050 ms</strong>
+              </label>
+              <input type="range" id="lat-inf2-slider" min="300" max="3000" step="50" value="1050" style="width:100%; margin-top:0.3rem;" />
+
+              <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between; margin-top:0.75rem;">
+                <span>Latencia de Red Meta Webhooks (Entrada + Salida):</span>
+                <strong id="lat-net-val" style="color:#f59e0b;">400 ms</strong>
+              </label>
+              <input type="range" id="lat-net-slider" min="100" max="1500" step="50" value="400" style="width:100%; margin-top:0.3rem;" />
+            </div>
+
+            <div style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:flex; flex-direction:column; justify-content:space-around;">
+              <div>
+                <span style="font-size:0.78rem; color:var(--text-muted);">Latencia Total del Ciclo E2E:</span>
+                <strong id="lat-total-display" style="font-size:1.8rem; color:var(--accent-success); display:block; font-family:var(--font-disp);">2.60 segundos</strong>
+              </div>
+              <div style="margin-top:0.5rem;">
+                <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:0.3rem;">
+                  <span>Límite SLA WhatsApp:</span>
+                  <strong>3.5s Máximo</strong>
+                </div>
+                <div style="width:100%; height:8px; background:var(--bg-subtle); border-radius:4px; overflow:hidden;">
+                  <div id="lat-progress-bar" style="width:74%; height:100%; background:var(--accent-success); transition:width 0.3s ease, background 0.3s ease;"></div>
+                </div>
+              </div>
+              <div id="lat-advice-text" style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.5rem; line-height:1.4;">
+                Excelente: Tu ciclo responde en menos de 3 segundos, garantizando una interacción fluida en WhatsApp.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANCO 4: SIMULADOR DE IDEMPOTENCIA -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.3.4 · Simulador de Filtro de Idempotencia contra Reintentos de Webhook</span>
+          <div class="workbench-actions">
+            <button class="btn-reset-sm" id="idem-btn-reset" title="Restablecer simulador de idempotencia">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Restablecer</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1rem;">
+            Simula el envío de un webhook de cobro/reserva y comprueba cómo Redis intercepta los reintentos duplicados de Meta sin volver a ejecutar la función en la base de datos.
+          </p>
+
+          <div style="display:flex; gap:0.75rem; margin-bottom:1.2rem;">
+            <button id="idem-btn-send" class="btn-primary">1. Enviar Webhook Original (wamid_9941)</button>
+            <button id="idem-btn-retry" class="btn-secondary">2. Simular Reintento de Meta (Mismo wamid)</button>
+            <button id="idem-btn-new" class="btn-secondary">3. Enviar Mensaje Nuevo (wamid_9942)</button>
+          </div>
+
+          <pre id="idem-log-console" style="background:#0f172a; color:#38bdf8; padding:1rem; border-radius:8px; font-family:var(--font-mono); font-size:0.8rem; height:180px; overflow-y:auto; white-space:pre-wrap;"></pre>
+        </div>
+      </div>
+
+      <!-- BANCO 5: MANEJO DE EXCEPCIONES -->
+      <div class="workbench-section" style="margin-bottom:3rem;">
+        <div class="workbench-top">
+          <span class="workbench-label">Banco 2.3.5 · Laboratorio de Resiliencia: Fallos en Herramientas &amp; Auto-Healing</span>
+          <div class="workbench-actions">
+            <button class="btn-reset-sm" id="resil-btn-reset" title="Restablecer laboratorio de fallos">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
+              <span>Restablecer</span>
+            </button>
+          </div>
+        </div>
+        <div style="padding:1.5rem;">
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+            <button class="glossary-filter-pill resil-scenario-pill" data-scenario="api_timeout">Escenario 1: Timeout de API de Pagos (504)</button>
+            <button class="glossary-filter-pill resil-scenario-pill" data-scenario="validation_error">Escenario 2: Parámetro Inválido (Pydantic ValidationError)</button>
+            <button class="glossary-filter-pill resil-scenario-pill" data-scenario="db_lock">Escenario 3: Concurrencia / Mesa Ya Ocupada</button>
+          </div>
+
+          <div id="resil-explanation-card" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); font-size:0.88rem; color:var(--text-secondary); line-height:1.6;">
+            Selecciona un escenario de fallo para inspeccionar la estrategia de auto-recuperación sin colapsar el webhook.
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==========================================================================
+      EJERCICIOS PRÁCTICOS OFICIALES (3 DESAFÍOS INDUSTRIALES CON SOLUCIONES DETALLADAS)
+      ========================================================================== -->
+    <section class="module-block" id="ejercicios" style="margin-bottom: 4rem;">
+      <div class="module-header">
+        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Autoevaluación Práctica &amp; Análisis de Sistemas</div>
+        <h2 class="module-title">Ejercicios Prácticos Oficiales de la Unidad 2.3</h2>
+        <p class="module-desc">Resuelve los 3 desafíos de Function Calling y arquitectura de herramientas del temario oficial. Despliega cada solución para revisar el código y los criterios de ingeniería.</p>
+      </div>
+
+      <!-- EJERCICIO 1 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <span class="exercise-num-badge">Ejercicio 1</span>
+          <h4 class="exercise-title">Diseño de un Tool Schema para Reservas de Restaurante</h4>
+        </div>
+        <div class="exercise-context-box">
+          <div class="exercise-context-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            Enunciado de la Especificación de Herramienta
+          </div>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+            Diseña el esquema JSON Schema completo para una herramienta llamada <code>crear_reserva_restaurante</code> que requiera: nombre del cliente, número de personas (entero positivo), fecha y hora en formato ISO 8601, teléfono de contacto y zona del restaurante (opcional: 'interior' o 'terraza'). Justifica los tipos de datos elegidos.
+          </p>
+        </div>
+
+        <details class="exercise-solution-details">
+          <summary class="exercise-solution-summary">
+            <span>Ver Solución de Ingeniería Paso a Paso &amp; Tool Schema Oficial</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="exercise-solution-panel">
+            <div class="step-flow-list">
+              <div class="step-flow-item">
+                <div class="step-num-badge">1</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Definición Formal en JSON Schema</h5>
+                  <div class="code-box">
+                    <div class="code-header">
+                      <span class="code-lang">JSON Schema</span>
+                      <div class="code-actions">
+                        <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                        <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+                      </div>
+                    </div>
+                    <pre class="code-content"><code class="language-json">{
+  "type": "function",
+  "function": {
+    "name": "crear_reserva_restaurante",
+    "description": "Registra una reserva formal en la base de datos tras confirmar disponibilidad de mesa.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "nombre_cliente": {
+          "type": "string",
+          "description": "Nombre y apellido del titular de la reserva."
+        },
+        "personas": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12,
+          "description": "Cantidad de comensales."
+        },
+        "fecha_hora": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Fecha y hora en formato ISO 8601 (ej. '2026-08-28T20:00:00-06:00')."
+        },
+        "telefono": {
+          "type": "string",
+          "pattern": "^\\+[1-9]\\d{1,14}$",
+          "description": "Número telefónico en formato E.164 con código de país."
+        },
+        "zona": {
+          "type": "string",
+          "enum": ["interior", "terraza"],
+          "default": "interior",
+          "description": "Zona preferida del restaurante."
+        }
       },
-      "telefono": {
-        "type": "string",
-        "pattern": "^\+[1-9]\d{1,14}$",
-        "description": "Teléfono internacional en formato E.164 (ej. +5215587654321)."
-      },
-      "personas": {
-        "type": "integer",
-        "minimum": 1,
-        "maximum": 20,
-        "description": "Cantidad exacta de comensales (debe ser un número entero)."
-      },
-      "fecha_hora": {
-        "type": "string",
-        "format": "date-time",
-        "description": "Fecha y hora en formato ISO 8601 (ej. 2026-08-23T20:00:00-06:00)."
-      }
-    },
-    "required": ["nombre_cliente", "telefono", "personas", "fecha_hora"]
+      "required": ["nombre_cliente", "personas", "fecha_hora", "telefono"]
+    }
   }
 }</code></pre>
-</div>
-</div>
-</div>
-<div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
-<div class="step-num-badge" style="background:var(--accent-success);">2</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Justificación de Seguridad &amp; Integridad de Datos</h5>
-<p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  • <b>Tipado Estricto de <code>personas: integer</code>:</b> Si Llama 3 emitiera <code>"cuatro"</code> (texto), el ORM de SQLAlchemy fallaría con <code>DataError: invalid input syntax for type integer</code>, abortando la transacción.<br/>
-                  • <b>Formato ISO 8601 en <code>fecha_hora</code>:</b> Previene ambigüedades de zona horaria (UTC vs Local) y asegura compatibilidad con índices temporales B-Tree en PostgreSQL.<br/>
-                  • <b>Regex en <code>telefono</code>:</b> Garantiza que el número sea invocable mediante WhatsApp Graph API sin errores de enrutamiento telefónico.
-                </p>
-</div>
-</div>
-</div>
-</div>
-</details>
-</article>
-<!-- EJERCICIO 2 -->
-<article class="exercise-card">
-<div class="exercise-header">
-<span class="exercise-num-badge">Ejercicio 2</span>
-<h4 class="exercise-title">Cálculo y Optimización de la Latencia del Ciclo Completo</h4>
-</div>
-<div class="exercise-context-box">
-<div class="exercise-context-title">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4m0-4h.01"></path></svg>
-          Enunciado de Presupuesto de Rendimiento SLA
-        </div>
-<p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
-          Si la primera inferencia de Llama toma 1,200 ms, la consulta a base de datos tarda 400 ms y la segunda inferencia toma 1,300 ms (más 400 ms de red en webhooks), ¿cuál es la latencia total? ¿Qué estrategia implementarías si la base de datos sube su tiempo a 3,000 ms?
-        </p>
-</div>
-<details class="exercise-solution-details">
-<summary class="exercise-solution-summary">
-<span>Ver Solución de Ingeniería Paso a Paso &amp; Desglose Waterfall</span>
-<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6"></path></svg>
-</summary>
-<div class="exercise-solution-panel">
-<div class="step-flow-list">
-<div class="step-flow-item">
-<div class="step-num-badge">1</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Desglose Matemático de la Latencia E2E</h5>
-<div class="formula-card" style="margin:0.4rem 0;">
-<div class="formula-math-area">
-                    $$T_{\text{total}} = T_{\text{in}} + T_{\text{inferencia\_1}} + T_{\text{DB}} + T_{\text{inferencia\_2}} + T_{\text{out}}$$
-                    $$T_{\text{total}} = 200\text{ms} + 1200\text{ms} + 400\text{ms} + 1300\text{ms} + 200\text{ms} = 3,300\text{ms} \quad (3.30\text{ segundos})$$
                   </div>
-</div>
-<p style="margin:0.4rem 0 0 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  Una latencia de 3.3s se encuentra en el límite de la tolerancia conversacional en mensajería móvil.
-                </p>
-</div>
-</div>
-<div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
-<div class="step-num-badge" style="background:var(--accent-success);">2</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Estrategia Arquitectónica ante Latencia de DB Elevada ($T_{\text{DB}} = 3.0\text{s}$)</h5>
-<p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  Sin optimización, la latencia total escalaría a <b>5.90 segundos</b>, provocando que el usuario piense que el bot se trabó o vuelva a escribir.
-                </p>
-<div class="step-flow-list">
-<div class="step-flow-item" style="border-left-color:var(--meta-blue);">
-<div class="step-flow-content">
-<strong style="color:var(--meta-blue); font-size:0.9rem;">1. Mensaje de Estado Intermedio (Sub-300ms):</strong>
-<p style="margin:0.2rem 0 0 0; font-size:0.85rem; color:var(--text-secondary);">El webhook despacha de inmediato un mensaje efímero: <i>"Consultando disponibilidad en cocina, un momento por favor..."</i>.</p>
-</div>
-</div>
-<div class="step-flow-item" style="border-left-color:var(--accent-success);">
-<div class="step-flow-content">
-<strong style="color:var(--accent-success); font-size:0.9rem;">2. Desacoplamiento Asíncrono con BackgroundTasks / Celery:</strong>
-<p style="margin:0.2rem 0 0 0; font-size:0.85rem; color:var(--text-secondary);">El backend libera el hilo del servidor HTTP y procesa la DB + Inferencia 2 en segundo plano, enviando la confirmación final por Graph API cuando el cómputo finaliza.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</details>
-</article>
-<!-- EJERCICIO 3 -->
-<article class="exercise-card">
-<div class="exercise-header">
-<span class="exercise-num-badge">Ejercicio 3</span>
-<h4 class="exercise-title">Diagnóstico de Fallo y Auto-Corrección en Ejecución de Herramientas</h4>
-</div>
-<div class="exercise-context-box">
-<div class="exercise-context-title">
-<svg fill="none" height="14" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24" width="14"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4m0-4h.01"></path></svg>
-          Enunciado de Resiliencia y Auto-Healing
-        </div>
-<p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
-          Llama genera un JSON con <code>personas: "cuatro"</code> (string) cuando la función exige <code>personas: 4</code> (integer). Explica qué capa debe atrapar este error de validación y cómo debe reaccionar el agente sin colapsar el servicio ni romper el webhook de WhatsApp.
-        </p>
-</div>
-<details class="exercise-solution-details">
-<summary class="exercise-solution-summary">
-<span>Ver Solución de Ingeniería Paso a Paso &amp; Patrón de Reintento de Dos Pasos</span>
-<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><path d="M6 9l6 6 6-6"></path></svg>
-</summary>
-<div class="exercise-solution-panel">
-<div class="step-flow-list">
-<div class="step-flow-item">
-<div class="step-num-badge">1</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Capa de Validación con Pydantic v2</h5>
-<p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  El error debe ser capturado por la capa de validación del backend (FastAPI/Pydantic) <b>antes</b> de invocar a la base de datos:
-                </p>
-<div class="code-box"><div class="code-header"><span class="code-lang">Python 3</span><div class="code-actions"><button class="btn-copy-code" onclick="copyCode(this)">Copiar</button><button class="btn-download-code" onclick="downloadCode(this)">Descargar</button></div></div>
-<pre class="code-content"><code class="language-python"><span class="code-kw">from</span> <span class="code-var">pydantic</span> <span class="code-kw">import</span> <span class="code-fn">BaseModel</span>, <span class="code-fn">ValidationError</span>
+                </div>
+              </div>
 
-<span class="code-kw">class</span> <span class="code-fn">ReservaArgs</span>(<span class="code-fn">BaseModel</span>):
-    <span class="code-var">nombre_cliente</span>: <span class="code-var">str</span>
-    <span class="code-var">personas</span>: <span class="code-var">int</span>
-    <span class="code-var">fecha_hora</span>: <span class="code-var">str</span>
+              <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+                <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Justificación Arquitectónica de Tipos</h5>
+                  <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    • <b>Tipado Estricto de <code>personas: integer</code>:</b> Si Llama 3 emitiera <code>"cuatro"</code> (texto), el ORM de SQLAlchemy fallaría con <code>DataError: invalid input syntax for type integer</code>, abortando la transacción.<br/>
+                    • <b>Formato ISO 8601 en <code>fecha_hora</code>:</b> Previene ambigüedades de zona horaria (UTC vs Local) y asegura compatibilidad con índices temporales B-Tree en PostgreSQL.<br/>
+                    • <b>Regex en <code>telefono</code>:</b> Garantiza que el número sea invocable mediante WhatsApp Graph API sin errores de enrutamiento telefónico.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </article>
+
+      <!-- EJERCICIO 2 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <span class="exercise-num-badge">Ejercicio 2</span>
+          <h4 class="exercise-title">Cálculo y Optimización de la Latencia del Ciclo Completo</h4>
+        </div>
+        <div class="exercise-context-box">
+          <div class="exercise-context-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            Enunciado de Presupuesto de Rendimiento SLA
+          </div>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+            Si la primera inferencia de Llama toma 1,200 ms, la consulta a base de datos tarda 400 ms y la segunda inferencia toma 1,300 ms (más 400 ms de red en webhooks), ¿cuál es la latencia total? ¿Qué estrategia implementarías si la base de datos sube su tiempo a 3,000 ms?
+          </p>
+        </div>
+
+        <details class="exercise-solution-details">
+          <summary class="exercise-solution-summary">
+            <span>Ver Solución de Ingeniería Paso a Paso &amp; Desglose Waterfall</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="exercise-solution-panel">
+            <div class="step-flow-list">
+              <div class="step-flow-item">
+                <div class="step-num-badge">1</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Desglose Matemático de la Latencia E2E</h5>
+                  <div class="formula-card" style="margin:0.4rem 0;">
+                    <div class="formula-math-area">
+                      $$T_{\text{total}} = T_{\text{in}} + T_{\text{inferencia\_1}} + T_{\text{DB}} + T_{\text{inferencia\_2}} + T_{\text{out}}$$
+                      $$T_{\text{total}} = 200\text{ms} + 1200\text{ms} + 400\text{ms} + 1300\text{ms} + 200\text{ms} = 3,300\text{ms} \quad (3.30\text{ segundos})$$
+                    </div>
+                  </div>
+                  <p style="margin:0.4rem 0 0 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Una latencia de 3.3s se encuentra en el límite de la tolerancia conversacional en mensajería móvil.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+                <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Estrategia Arquitectónica ante Latencia de DB Elevada ($T_{\text{DB}} = 3.0\text{s}$)</h5>
+                  <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Sin optimización, la latencia total escalaría a <b>5.90 segundos</b>, provocando que el usuario piense que el bot se trabó o vuelva a escribir.
+                  </p>
+                  <div class="step-flow-list">
+                    <div class="step-flow-item" style="border-left-color:var(--meta-blue);">
+                      <div class="step-flow-content">
+                        <strong style="color:var(--meta-blue); font-size:0.9rem;">1. Mensaje de Estado Intermedio (Sub-300ms):</strong>
+                        <p style="margin:0.2rem 0 0 0; font-size:0.85rem; color:var(--text-secondary);">El webhook despacha de inmediato un mensaje efímero: <i>"Consultando disponibilidad en cocina, un momento por favor..."</i>.</p>
+                      </div>
+                    </div>
+                    <div class="step-flow-item" style="border-left-color:var(--accent-success);">
+                      <div class="step-flow-content">
+                        <strong style="color:var(--accent-success); font-size:0.9rem;">2. Desacoplamiento Asíncrono con BackgroundTasks / Celery:</strong>
+                        <p style="margin:0.2rem 0 0 0; font-size:0.85rem; color:var(--text-secondary);">El backend libera el hilo del servidor HTTP y procesa la DB + Inferencia 2 en segundo plano, enviando la confirmación final por Graph API cuando el cómputo finaliza.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </article>
+
+      <!-- EJERCICIO 3 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <span class="exercise-num-badge">Ejercicio 3</span>
+          <h4 class="exercise-title">Diagnóstico de Fallo y Auto-Corrección en Ejecución de Herramientas</h4>
+        </div>
+        <div class="exercise-context-box">
+          <div class="exercise-context-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            Enunciado de Resiliencia y Auto-Healing
+          </div>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+            Llama genera un JSON con <code>personas: "cuatro"</code> (string) cuando la función exige <code>personas: 4</code> (integer). Explica qué capa debe atrapar este error de validación y cómo debe reaccionar el agente sin colapsar el servicio ni romper el webhook de WhatsApp.
+          </p>
+        </div>
+
+        <details class="exercise-solution-details">
+          <summary class="exercise-solution-summary">
+            <span>Ver Solución de Ingeniería Paso a Paso &amp; Patrón de Reintento de Dos Pasos</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="exercise-solution-panel">
+            <div class="step-flow-list">
+              <div class="step-flow-item">
+                <div class="step-num-badge">1</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Capa de Validación con Pydantic v2</h5>
+                  <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    El error debe ser capturado por la capa de validación del backend (FastAPI/Pydantic) <b>antes</b> de invocar a la base de datos:
+                  </p>
+                  <div class="code-box">
+                    <div class="code-header">
+                      <span class="code-lang">Python 3.11</span>
+                      <div class="code-actions">
+                        <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                        <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+                      </div>
+                    </div>
+                    <pre class="code-content"><code class="language-python"><span class="code-kw">from</span> <span class="code-var">pydantic</span> <span class="code-kw">import</span> <span class="code-type">BaseModel</span>, <span class="code-type">ValidationError</span>
+
+<span class="code-kw">class</span> <span class="code-type">ReservaArgs</span>(<span class="code-type">BaseModel</span>):
+    <span class="code-var">nombre_cliente</span>: <span class="code-type">str</span>
+    <span class="code-var">personas</span>: <span class="code-type">int</span>
+    <span class="code-var">fecha_hora</span>: <span class="code-type">str</span>
 
 <span class="code-kw">try</span>:
-    args = <span class="code-fn">ReservaArgs</span>.<span class="code-fn">model_validate_json</span>(raw_tool_args_str)
-<span class="code-kw">except</span> <span class="code-fn">ValidationError</span> <span class="code-kw">as</span> err:
+    <span class="code-var">args</span> = <span class="code-type">ReservaArgs</span>.<span class="code-fn">model_validate_json</span>(<span class="code-var">raw_tool_args_str</span>)
+<span class="code-kw">except</span> <span class="code-type">ValidationError</span> <span class="code-kw">as</span> <span class="code-var">err</span>:
     <span class="code-cm"># Captura controlada del error sin lanzar HTTP 500</span>
-    error_msg = f<span class="code-str">"Error en argumento 'personas': Se recibió un string, pero se requiere un entero numérico (ej. 4)."</span></code></pre>
-</div>
-</div>
-</div>
-<div class="step-flow-item" style="border-left-color:var(--meta-purple); background:rgba(139,92,246,0.04);">
-<div class="step-num-badge" style="background:#8b5cf6;">2</div>
-<div class="step-flow-content" style="flex:1; min-width:0;">
-<h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:#8b5cf6;">Ciclo de Auto-Corrección (Self-Healing Loop)</h5>
-<p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
-                  En lugar de romper el servicio, el backend inyecta un mensaje de rol <code>tool</code> con el error estructurado: <code>{"tool_call_id": "call_123", "content": "ValidationError: 'personas' debe ser entero"}</code>. En la siguiente pasada, Llama 3 detecta su propia discrepancia y corrige automáticamente el payload a <code>{"personas": 4}</code> o formula una pregunta clarificatoria amigable al cliente.
-                </p>
-</div>
-</div>
-</div>
-</div>
-</details>
-</article>
-</section>
-<!-- ==========================================================================
-  GLOSARIO TÉCNICO OFICIAL
+    <span class="code-var">error_msg</span> = <span class="code-str">f"Error en argumento 'personas': Se recibió un string, pero se requiere un entero numérico (ej. 4)."</span></code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="step-flow-item" style="border-left-color:var(--meta-purple); background:rgba(139,92,246,0.04);">
+                <div class="step-num-badge" style="background:#8b5cf6;">2</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:#8b5cf6;">Ciclo de Auto-Corrección (Self-Healing Loop)</h5>
+                  <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    En lugar de romper el servicio, el backend inyecta un mensaje de rol <code>tool</code> con el error estructurado: <code>{"tool_call_id": "call_123", "content": "ValidationError: 'personas' debe ser entero"}</code>. En la siguiente pasada, Llama 3 detecta su propia discrepancia y corrige automáticamente el payload a <code>{"personas": 4}</code> o formula una pregunta clarificatoria amigable al cliente.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </article>
+
+    </section>
+
+    <!-- ==========================================================================
+      GLOSARIO TÉCNICO OFICIAL
+      ========================================================================== -->
+    <section class="module-block" id="glosario" style="margin-bottom: 4rem;">
+      <div class="module-header">
+        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Diccionario de Conceptos</div>
+        <h2 class="module-title">Glosario Técnico Oficial · Unidad 2.3</h2>
+        <p class="module-desc">Términos clave sobre Function Calling, esquemas tipados y latencia en WhatsApp.</p>
+      </div>
+
+      <div style="margin-bottom: 1.5rem; display:flex; flex-direction:column; gap:1rem;">
+        <input type="text" id="glossary-search-input" class="bench-input-clean" placeholder="Buscar término en el glosario (ej. Function Calling, Idempotencia, Latencia, Tool Schema)..." style="width:100%; box-sizing:border-box;" />
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <button class="glossary-filter-pill active" data-category="todos">Todos</button>
+          <button class="glossary-filter-pill" data-category="tools">Herramientas &amp; JSON</button>
+          <button class="glossary-filter-pill" data-category="rendimiento">Rendimiento &amp; Latencia</button>
+          <button class="glossary-filter-pill" data-category="resiliencia">Resiliencia &amp; Red</button>
+        </div>
+      </div>
+
+      <div class="glossary-stack" style="display:flex; flex-direction:column; gap:1rem;">
+        <div class="glossary-row-item" data-category="tools" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Llamada a Función (Function Calling)</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Capacidad de un LLM de generar una estructura estructurada de datos (JSON) con el nombre de una función y los parámetros requeridos para que el backend la ejecute en el mundo real.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="tools" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Esquema de Herramienta (Tool Schema)</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Definición formal en formato JSON Schema de las funciones disponibles para el modelo, incluyendo su nombre, descripción semántica, tipos de parámetros y campos obligatorios.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="resiliencia" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">Idempotencia</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Propiedad técnica de una operación que garantiza que ejecutarla una o múltiples veces con los mismos identificadores (ej. el mismo wamid) genera exactamente el mismo efecto sin duplicaciones.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="rendimiento" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Latencia de Ciclo Completo</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Tiempo total transcurrido desde que el usuario envía su mensaje en WhatsApp hasta que recibe la respuesta final, sumando webhooks, inferencias y llamadas a bases de datos.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="rendimiento" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ec4899; font-size:1.05rem;">Mensaje de Estado Intermedio</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Respuesta breve enviada al usuario de WhatsApp antes de iniciar una tarea pesada para confirmar la recepción y mitigar la percepción de lentitud mientras se completa la acción.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+      FUENTES OFICIALES & BIBLIOGRAFÍA
+      ========================================================================== -->
+    <section id="fuentes-oficiales" style="margin-bottom: 4rem;">
+      <div class="module-header">
+        <div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Guías Técnicas</div>
+        <h2 class="module-title">Fuentes de Referencia de la Unidad 2.3</h2>
+      </div>
+
+      <div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Meta Llama 3</span>
+            <span class="source-type-pill">Documentación de Modelos</span>
+          </div>
+          <h4 class="source-title">Llama 3 Tool Use &amp; Function Calling</h4>
+          <p class="source-desc">Guía oficial sobre tokens especiales de herramientas y formatos JSON compatibles con OpenAI API.</p>
+          <a href="https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3_1/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>llama.meta.com/docs &rarr;</span>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">JSON Schema Org</span>
+            <span class="source-type-pill">Estándar Abierto</span>
+          </div>
+          <h4 class="source-title">JSON Schema Specification Draft 2020-12</h4>
+          <p class="source-desc">Especificación técnica del estándar de validación de objetos y tipos de datos utilizado por los ecosistemas de LLMs.</p>
+          <a href="https://json-schema.org/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>json-schema.org &rarr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+      PAGINACIÓN INFERIOR ESTILO GITHUB
+      ========================================================================== -->
+    <nav class="course-pagination-nav" aria-label="Navegación del Curso">
+      <a href="modulo2-tema2.html" class="pagination-link pagination-link--prev">
+        <div class="pagination-link__sublabel">
+          <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          <span>Tema Anterior</span>
+        </div>
+        <div class="pagination-link__label">
+          <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <span>Unidad 2.2 · Diseño de Agentes &amp; Memoria</span>
+        </div>
+      </a>
+
+      <a href="modulo2-tema4.html" class="pagination-link pagination-link--next">
+        <div class="pagination-link__sublabel">
+          <span>Siguiente Tema</span>
+          <svg class="nav-arrow-svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+        </div>
+        <div class="pagination-link__label">
+          <span>Unidad 2.4 · Proyecto Integrador &amp; Llama Guard</span>
+          <svg class="nav-arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </nav>
+
+  </main>
+
+  <!-- ==========================================================================
+   FOOTER CON AUTORÍA OFICIAL
   ========================================================================== -->
-<section class="module-block" id="glosario" style="margin-bottom: 4rem;">
-<div class="module-header">
-<div class="tema-eyebrow" style="margin-bottom:0.6rem;">Diccionario de Conceptos</div>
-<h2 class="module-title">Glosario Técnico Oficial · Unidad 2.3</h2>
-<p class="module-desc">Términos clave sobre Function Calling, esquemas tipados y latencia en WhatsApp.</p>
-</div>
-<div style="margin-bottom: 1.5rem; display:flex; flex-direction:column; gap:1rem;">
-<input class="bench-input-clean" id="glossary-search-input" placeholder="Buscar término en el glosario (ej. Function Calling, Idempotencia, Latencia, Tool Schema)..." style="width:100%; box-sizing:border-box;" type="text"/>
-<div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-<button class="glossary-filter-pill active" data-category="todos">Todos</button>
-<button class="glossary-filter-pill" data-category="tools">Herramientas &amp; JSON</button>
-<button class="glossary-filter-pill" data-category="rendimiento">Rendimiento &amp; Latencia</button>
-<button class="glossary-filter-pill" data-category="resiliencia">Resiliencia &amp; Red</button>
-</div>
-</div>
-<div class="glossary-stack" style="display:flex; flex-direction:column; gap:1rem;">
-<div class="glossary-row-item" data-category="tools" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Llamada a Función (Function Calling)</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Capacidad de un LLM de generar una estructura estructurada de datos (JSON) con el nombre de una función y los parámetros requeridos para que el backend la ejecute en el mundo real.
-        </div>
-</div>
-<div class="glossary-row-item" data-category="tools" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Esquema de Herramienta (Tool Schema)</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Definición formal en formato JSON Schema de las funciones disponibles para el modelo, incluyendo su nombre, descripción semántica, tipos de parámetros y campos obligatorios.
-        </div>
-</div>
-<div class="glossary-row-item" data-category="resiliencia" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">Idempotencia</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Propiedad técnica de una operación que garantiza que ejecutarla una o múltiples veces con los mismos identificadores (ej. el mismo wamid) genera exactamente el mismo efecto sin duplicaciones.
-        </div>
-</div>
-<div class="glossary-row-item" data-category="rendimiento" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Latencia de Ciclo Completo</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Tiempo total transcurrido desde que el usuario envía su mensaje en WhatsApp hasta que recibe la respuesta final, sumando webhooks, inferencias y llamadas a bases de datos.
-        </div>
-</div>
-<div class="glossary-row-item" data-category="rendimiento" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-<div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ec4899; font-size:1.05rem;">Mensaje de Estado Intermedio</div>
-<div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-          Respuesta breve enviada al usuario de WhatsApp antes de iniciar una tarea pesada para confirmar la recepción y mitigar la percepción de lentitud mientras se completa la acción.
-        </div>
-</div>
-</div>
-</section>
-<!-- ==========================================================================
-  FUENTES OFICIALES & BIBLIOGRAFÍA
-  ========================================================================== -->
-<section id="fuentes-oficiales" style="margin-bottom: 4rem;">
-<div class="module-header">
-<div class="tema-eyebrow" style="margin-bottom:0.6rem;">Documentación Oficial &amp; Guías Técnicas</div>
-<h2 class="module-title">Fuentes de Referencia de la Unidad 2.3</h2>
-</div>
-<div class="stat-grid-clean" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
-<div class="source-card">
-<div class="source-card-header">
-<span class="source-tag">Meta Llama 3</span>
-<span class="source-type-pill">Documentación de Modelos</span>
-</div>
-<h4 class="source-title">Llama 3 Tool Use &amp; Function Calling</h4>
-<p class="source-desc">Guía oficial sobre tokens especiales de herramientas <code>&lt;|start_header_id|&gt;ipython&lt;|end_header_id|&gt;</code> y formatos JSON.</p>
-<a class="source-link-btn" href="https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3_1/" rel="noopener noreferrer" target="_blank">
-<span>llama.meta.com/docs →</span>
-</a>
-</div>
-<div class="source-card">
-<div class="source-card-header">
-<span class="source-tag">JSON Schema Org</span>
-<span class="source-type-pill">Estándar Abierto</span>
-</div>
-<h4 class="source-title">JSON Schema Specification Draft 2020-12</h4>
-<p class="source-desc">Especificación técnica del estándar de validación de objetos y tipos de datos utilizado por los ecosistemas de LLMs.</p>
-<a class="source-link-btn" href="https://json-schema.org/" rel="noopener noreferrer" target="_blank">
-<span>json-schema.org →</span>
-</a>
-</div>
-</div>
-</section>
-<!-- ==========================================================================
-  PAGINACIÓN INFERIOR ESTILO GITHUB
-  ========================================================================== -->
-<nav aria-label="Navegación del Curso" class="course-pagination-nav">
-<a class="pagination-link pagination-link--prev" href="modulo2-tema2.html">
-<div class="pagination-link__sublabel">
-<svg class="nav-arrow-svg" fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
-<span>Tema Anterior</span>
-</div>
-<div class="pagination-link__label">
-<svg class="nav-arrow-svg" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="18"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>
-<span>Unidad 2.2 · Diseño de Agentes &amp; Memoria</span>
-</div>
-</a>
-<a class="pagination-link pagination-link--next" href="modulo2-tema4.html">
-<div class="pagination-link__sublabel">
-<span>Siguiente Tema</span>
-<svg class="nav-arrow-svg" fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path></svg>
-</div>
-<div class="pagination-link__label">
-<span>Unidad 2.4 · Proyecto Integrador &amp; Llama Guard</span>
-<svg class="nav-arrow-svg" fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="18"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
-</div>
-</a>
-</nav>
-</main>
-<!-- ==========================================================================
- FOOTER CON AUTORÍA OFICIAL
-========================================================================== -->
-<footer class="course-footer">
-<div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem;">
-<h2 style="font-size: 1.85rem; font-family: var(--font-disp); margin-bottom: 0.8rem; color: var(--text-primary);">Unidad 2.3 Completada</h2>
-<p style="color: var(--text-secondary); margin-bottom: 1.6rem; font-size: 1.05rem;">Continúa con la Unidad 2.4 para culminar el Proyecto Integrador con Llama Guard o experimenta con el simulador de Function Calling.</p>
-<a class="btn-secondary" href="#overview">Volver arriba</a>
-<div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; gap: 0.35rem;">
-<p style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">
-        Página creada por <span style="color: var(--text-primary); font-weight: 700;">Ing. Jesús Javier Hernandez Olvera</span>
-</p>
-<p style="font-size: 0.82rem; color: var(--text-muted);">Meta AI · Formación en Ingeniería de Inteligencia Artificial</p>
-</div>
-</div>
-</footer>
+  <footer class="course-footer">
+    <div style="max-width: 800px; margin: 0 auto; padding: 0 1.5rem;">
+      <h2 style="font-size: 1.85rem; font-family: var(--font-disp); margin-bottom: 0.8rem; color: var(--text-primary);">Unidad 2.3 Completada</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 1.6rem; font-size: 1.05rem;">Continúa con la Unidad 2.4 para culminar el Proyecto Integrador con Llama Guard o experimenta con el simulador de Function Calling.</p>
+      <a href="#overview" class="btn-secondary">Volver arriba</a>
+      <div style="margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: center; gap: 0.35rem;">
+        <p style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500;">
+          Página creada por <span style="color: var(--text-primary); font-weight: 700;">Ing. Jesús Javier Hernandez Olvera</span>
+        </p>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">Meta AI · Formación en Ingeniería de Inteligencia Artificial</p>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
