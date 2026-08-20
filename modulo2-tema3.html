@@ -263,7 +263,51 @@
           <button class="quiz-option" data-correct="false">D) Que Function Calling solo está permitido para empresas bancarias.</button>
           <div class="quiz-feedback"></div>
         </div>
-      </article>
+      
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Muestreo Guiado por Gramáticas BNF</span> Garantía Matemática de Conformidad JSON</h4>
+          <p class="prose-p">
+            Tradicionalmente, para obtener JSON de un LLM se recurría a pedirle en el prompt <i>"Responde solo en formato JSON"</i> y luego usar <code>json.loads()</code> en Python, cruzando los dedos para que el modelo no agregara texto explicativo como <i>"Aquí tienes tu JSON:"</i>. Este enfoque probabilístico produce una tasa de error del 2% al 8% en producción.
+          </p>
+          <p class="prose-p">
+            La solución moderna de grado industrial es el <b>Muestreo Guiado (Constrained Decoding)</b> implementado en motores como <i>vLLM</i> y <i>Outlines</i>. Durante cada paso de generación $t$, se aplica una máscara binaria $M_t \in \{0, -\infty\}$ sobre los logits del vocabulario:
+          </p>
+          <div class="formula-card">
+            <div class="formula-math-area">
+              $$P(w_t \mid w_{1:t-1}) = 	ext{softmax}\left( \mathbf{z}_t + \mathbf{M}_t(	ext{FSM}(	ext{Grammar})) 
+ight)$$
+            </div>
+            <details class="formula-breakdown-details">
+              <summary class="formula-breakdown-summary">
+                <div class="summary-left">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                  <span>Desglose de Máscara de Logits por Autómata Finito</span>
+                  <span class="breakdown-count-tag">3 conceptos</span>
+                </div>
+                <span class="summary-toggle-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+              </summary>
+              <div class="formula-breakdown-panel">
+                <div class="breakdown-list-stack">
+                  <div class="breakdown-list-row">
+                    <span class="breakdown-row-badge">$\mathbf{M}_t(v) = -\infty$</span>
+                    <div class="breakdown-row-text">
+                      <strong>Tokens Prohibidos:</strong> Si el autómata espera un número de teléfono tras <code>"telefono": "</code>, cualquier token que no sea un dígito o comilla de cierre recibe $-\infty$ de probabilidad, haciendo matemáticamente imposible generar un JSON corrupto.
+                    </div>
+                  </div>
+                  <div class="breakdown-list-row">
+                    <span class="breakdown-row-badge">$	ext{Cero Penalización}$</span>
+                    <div class="breakdown-row-text">
+                      <strong>Velocidad Nativa:</strong> La indexación de la FSM se compila una sola vez en el inicio del servidor, manteniendo una velocidad de inferencia superior a 80 tokens por segundo en GPU.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+</article>
 
       <!-- SUBTEMA 2.3.2 -->
       <article class="tema-card" id="tema-2-3-2">
@@ -818,6 +862,168 @@
         </div>
       </article>
 
+          <!-- SUBTEMA 2.3.6 -->
+      <article class="tema-card" id="tema-2-3-6">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.3.6 · Orquestación Avanzada</div>
+          <h3 class="tema-title">Orquestación Multi-Herramienta y Grafos de Ejecución (DAG)</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Problema de las Herramientas Encadenadas</span> De Consultas Simples a Pipelines Complejos</h4>
+          <p class="prose-p">
+            En casos de uso reales de WhatsApp, un usuario rara vez solicita una acción aislada. Por ejemplo: <i>"Verifica si tengo saldo, calcula el costo del envío a Guadalajara y si me alcanza, crea la orden de compra"</i>. Este flujo requiere resolver una cadena de dependencias donde el resultado de la <b>Herramienta A</b> condiciona la invocación de la <b>Herramienta B</b> y los argumentos de la <b>Herramienta C</b>.
+          </p>
+
+          <p class="prose-p">
+            Para evitar que Llama 3 sufra de deriva de objetivos (<i>Goal Drift</i>) o ejecute pasos fuera de orden, modelamos la interacción como un <b>Grafo Acíclico Dirigido (DAG)</b> de ejecución de tareas:
+          </p>
+
+          <div class="table-responsive-wrapper">
+            <table class="table-pro">
+              <thead>
+                <tr>
+                  <th>Fase del Grafo (DAG)</th>
+                  <th>Herramienta Invocada</th>
+                  <th>Validación Previa Requerida</th>
+                  <th>Manejo en Caso de Error</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Paso 1: Consulta</strong></td>
+                  <td><code>consultar_saldo_usuario(wa_id)</code></td>
+                  <td>Autenticación de sesión en Redis.</td>
+                  <td>Notificar al usuario y detener ejecución.</td>
+                </tr>
+                <tr>
+                  <td><strong>Paso 2: Cotización</strong></td>
+                  <td><code>calcular_tarifa_envio(destino, peso)</code></td>
+                  <td>Validación de código postal con Pydantic.</td>
+                  <td>Solicitar aclaración de dirección.</td>
+                </tr>
+                <tr>
+                  <td><strong>Paso 3: Transacción</strong></td>
+                  <td><code>crear_orden_compra(items, total)</code></td>
+                  <td>Saldo $\ge$ Total + Envío (Condición Atómica).</td>
+                  <td>Rollback en PostgreSQL con Redlock.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FÓRMULA DE PROBABILIDAD DE ÉXITO EN DAG CON ACORDEÓN -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$P(	ext{Éxito Pipeline}) = \prod_{k=1}^{M} P(	ext{Tool}_k \mid 	ext{Context}_k) 	imes P(	ext{Schema}_k = 1) \ge 0.95$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose Matemático de Fiabilidad Multi-Paso</span>
+                <span class="breakdown-count-tag">3 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\prod_{k=1}^{M} P(	ext{Tool}_k)$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Probabilidad Conjunta Acumulativa:</strong> Cada herramienta adicional en la cadena multiplica el riesgo de fallo. Si cada paso tiene 95% de éxito, una cadena de 4 herramientas tiene solo $0.95^4 pprox 81.4\%$ de éxito si no se implementan guardrails deterministas.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$P(	ext{Schema}_k = 1)$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Conformidad Sintáctica Estricta:</strong> Garantía de que los argumentos de salida del paso $k-1$ se mapean sin error de tipos al paso $k$ mediante Pydantic.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$	ext{Manejo DAG}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Puntos de Control (Checkpoints):</strong> Cada paso confirmado persiste su estado en Redis para permitir reanudación si el usuario tarda minutos en contestar.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- CÓDIGO PYTHON ORQUESTADOR DAG -->
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">Python 3.11 · dag_tool_orchestrator.py</span>
+            <div class="code-actions">
+              <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+              <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+            </div>
+          </div>
+          <pre class="code-content"><code class="language-python"><span class="code-kw">import</span> <span class="code-var">asyncio</span>
+<span class="code-kw">from</span> <span class="code-var">pydantic</span> <span class="code-kw">import</span> <span class="code-type">BaseModel</span>
+
+<span class="code-kw">class</span> <span class="code-type">OrdenPipeline</span>(<span class="code-type">BaseModel</span>):
+    <span class="code-var">wa_id</span>: <span class="code-type">str</span>
+    <span class="code-var">items</span>: <span class="code-type">list</span>[<span class="code-type">str</span>]
+    <span class="code-var">direccion_envio</span>: <span class="code-type">str</span>
+
+<span class="code-kw">async def</span> <span class="code-fn">ejecutar_pipeline_orden</span>(<span class="code-var">datos</span>: <span class="code-type">OrdenPipeline</span>) -> <span class="code-type">dict</span>:
+    <span class="code-cm"># 1. Ejecución paralela de validación de saldo y cotización</span>
+    <span class="code-var">saldo_task</span> = <span class="code-var">consultar_saldo_usuario</span>(<span class="code-var">datos</span>.<span class="code-var">wa_id</span>)
+    <span class="code-var">envio_task</span> = <span class="code-var">calcular_tarifa_envio</span>(<span class="code-var">datos</span>.<span class="code-var">direccion_envio</span>)
+    <span class="code-var">saldo</span>, <span class="code-var">tarifa_envio</span> = <span class="code-kw">await</span> <span class="code-var">asyncio</span>.<span class="code-fn">gather</span>(<span class="code-var">saldo_task</span>, <span class="code-var">envio_task</span>)
+    
+    <span class="code-var">costo_total</span> = <span class="code-fn">sum</span>([<span class="code-num">250.0</span> <span class="code-kw">for</span> <span class="code-var">_</span> <span class="code-kw">in</span> <span class="code-var">datos</span>.<span class="code-var">items</span>]) + <span class="code-var">tarifa_envio</span>
+    
+    <span class="code-cm"># 2. Guardia determinista de saldo antes de transaccionar</span>
+    <span class="code-kw">if</span> <span class="code-var">saldo</span> < <span class="code-var">costo_total</span>:
+        <span class="code-kw">return</span> {<span class="code-str">"status"</span>: <span class="code-str">"INSUFFICIENT_FUNDS"</span>, <span class="code-str">"faltante"</span>: <span class="code-var">costo_total</span> - <span class="code-var">saldo</span>}
+        
+    <span class="code-cm"># 3. Transacción atómica</span>
+    <span class="code-var">orden_id</span> = <span class="code-kw">await</span> <span class="code-var">crear_orden_compra</span>(<span class="code-var">datos</span>.<span class="code-var">wa_id</span>, <span class="code-var">datos</span>.<span class="code-var">items</span>, <span class="code-var">costo_total</span>)
+    <span class="code-kw">return</span> {<span class="code-str">"status"</span>: <span class="code-str">"SUCCESS"</span>, <span class="code-str">"orden_id"</span>: <span class="code-var">orden_id</span>, <span class="code-str">"total"</span>: <span class="code-var">costo_total</span>}</code></pre>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil: La línea de ensamblaje en una fábrica de autos</span>
+          </div>
+          <p class="easy-text">
+            Un grafo DAG es como una <b>línea de ensamblaje de automóviles</b>. No puedes pintar la carrocería si el chasis no ha sido soldado, ni puedes colocar los neumáticos antes de los ejes. El orquestador se asegura de que cada robot (herramienta) haga su trabajo en el orden exacto. Si falta una pieza, la línea se pausa ordenadamente en lugar de fabricar un auto roto.
+          </p>
+        </div>
+
+        <!-- CONSEJO PRO -->
+        <div class="pro-tip-box">
+          <div class="pro-tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+            <span>Consejo Pro: Ejecución Paralela con asyncio.gather para Herramientas Read-Only</span>
+          </div>
+          <p class="pro-tip-text">
+            Si dos herramientas son independientes y de solo lectura (ej. consultar clima y consultar disponibilidad de vuelos), dispáralas concurrentemente con <code>asyncio.gather()</code>. Reducirás la latencia acumulada del paso a la mitad ($pprox 300	ext{ms}$ en lugar de $600	ext{ms}$).
+          </p>
+        </div>
+
+        <!-- QUIZ 6 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.3.6</span>
+          </div>
+          <div class="quiz-question">¿Por qué no se debe delegar la decisión de cobrar una tarjeta de crédito exclusivamente al texto generado por un LLM?</div>
+          <button class="quiz-option" data-correct="false">A) Porque Meta cobra una comisión del 30% por cada cobro automatizado.</button>
+          <button class="quiz-option" data-correct="true">B) Porque los LLMs son probabilísticos y pueden sufrir alucinaciones o inyecciones de prompt; las operaciones financieras deben estar blindadas por código determinista y guardias atómicas en backend.</button>
+          <button class="quiz-option" data-correct="false">C) Porque Python no soporta conexiones asíncronas con pasarelas de pago.</button>
+          <button class="quiz-option" data-correct="false">D) Porque WhatsApp solo permite transferencias bancarias en efectivo.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
     </section>
 
     <!-- ==========================================================================
@@ -1336,7 +1542,66 @@
         </details>
       </article>
 
-    </section>
+    
+        <!-- EJERCICIO 5 -->
+        <div class="exercise-card" id="ejercicio-5">
+          <div class="exercise-header">
+            <span class="exercise-tag">Ejercicio 5 · Nivel Arquitecto</span>
+            <span class="exercise-time">25 min</span>
+          </div>
+          <h4 class="exercise-title">Circuit Breaker &amp; Gateway Multi-Herramienta con Fallback Graceful</h4>
+          <p class="exercise-desc">
+            Diseña un enrutador de herramientas asíncrono en FastAPI que implemente el patrón <strong>Circuit Breaker</strong> (estados: CLOSED, OPEN, HALF-OPEN). Si el endpoint de la pasarela de pagos supera un umbral de 3 fallos consecutivos en 60 segundos, el sistema debe abrir el circuito automáticamente, registrar la incidencia en Prometheus y responder al usuario de WhatsApp con una opción alternativa sin colapsar el agente.
+          </p>
+          <details class="exercise-solution-details">
+            <summary class="exercise-solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              <span>Ver Implementación Oficial con Circuit Breaker</span>
+            </summary>
+            <div class="code-box" style="margin-top: 1rem;">
+              <div class="code-header">
+                <span class="code-lang">Python 3.11 · circuit_breaker_gateway.py</span>
+                <div class="code-actions">
+                  <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                  <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+                </div>
+              </div>
+              <pre class="code-content"><code class="language-python"><span class="code-kw">import</span> <span class="code-var">time</span>
+<span class="code-kw">import</span> <span class="code-var">httpx</span>
+<span class="code-kw">from</span> <span class="code-var">pydantic</span> <span class="code-kw">import</span> <span class="code-type">BaseModel</span>
+
+<span class="code-kw">class</span> <span class="code-type">CircuitBreaker</span>:
+    <span class="code-kw">def</span> <span class="code-fn">__init__</span>(<span class="code-var">self</span>, <span class="code-var">umbral_fallos</span>=<span class="code-num">3</span>, <span class="code-var">tiempo_recuperacion</span>=<span class="code-num">60</span>):
+        <span class="code-var">self</span>.<span class="code-var">umbral</span> = <span class="code-var">umbral_fallos</span>
+        <span class="code-var">self</span>.<span class="code-var">recuperacion</span> = <span class="code-var">tiempo_recuperacion</span>
+        <span class="code-var">self</span>.<span class="code-var">fallos</span> = <span class="code-num">0</span>
+        <span class="code-var">self</span>.<span class="code-var">ultimo_fallo</span> = <span class="code-num">0</span>
+        <span class="code-var">self</span>.<span class="code-var">estado</span> = <span class="code-str">"CLOSED"</span>  <span class="code-cm"># CLOSED | OPEN | HALF_OPEN</span>
+
+    <span class="code-kw">async def</span> <span class="code-fn">ejecutar</span>(<span class="code-var">self</span>, <span class="code-var">coro_func</span>, *<span class="code-var">args</span>):
+        <span class="code-var">ahora</span> = <span class="code-var">time</span>.<span class="code-fn">time</span>()
+        <span class="code-kw">if</span> <span class="code-var">self</span>.<span class="code-var">estado</span> == <span class="code-str">"OPEN"</span>:
+            <span class="code-kw">if</span> <span class="code-var">ahora</span> - <span class="code-var">self</span>.<span class="code-var">ultimo_fallo</span> > <span class="code-var">self</span>.<span class="code-var">recuperacion</span>:
+                <span class="code-var">self</span>.<span class="code-var">estado</span> = <span class="code-str">"HALF_OPEN"</span>
+            <span class="code-kw">else</span>:
+                <span class="code-kw">return</span> {<span class="code-str">"status"</span>: <span class="code-str">"FALLBACK"</span>, <span class="code-str">"msg"</span>: <span class="code-str">"Servicio de pagos en mantenimiento temporal. Te enviaremos un link de pago por SMS."</span>}
+
+        <span class="code-kw">try</span>:
+            <span class="code-var">resultado</span> = <span class="code-kw">await</span> <span class="code-fn">coro_func</span>(*<span class="code-var">args</span>)
+            <span class="code-kw">if</span> <span class="code-var">self</span>.<span class="code-var">estado</span> == <span class="code-str">"HALF_OPEN"</span>:
+                <span class="code-var">self</span>.<span class="code-var">estado</span> = <span class="code-str">"CLOSED"</span>
+                <span class="code-var">self</span>.<span class="code-var">fallos</span> = <span class="code-num">0</span>
+            <span class="code-kw">return</span> <span class="code-var">resultado</span>
+        <span class="code-kw">except</span> <span class="code-type">Exception</span>:
+            <span class="code-var">self</span>.<span class="code-var">fallos</span> += <span class="code-num">1</span>
+            <span class="code-var">self</span>.<span class="code-var">ultimo_fallo</span> = <span class="code-var">ahora</span>
+            <span class="code-kw">if</span> <span class="code-var">self</span>.<span class="code-var">fallos</span> >= <span class="code-var">self</span>.<span class="code-var">umbral</span>:
+                <span class="code-var">self</span>.<span class="code-var">estado</span> = <span class="code-str">"OPEN"</span>
+            <span class="code-kw">return</span> {<span class="code-str">"status"</span>: <span class="code-str">"FALLBACK"</span>, <span class="code-str">"msg"</span>: <span class="code-str">"No pudimos conectar con el banco. Por favor intenta en un momento."</span>}</code></pre>
+            </div>
+          </details>
+        </div>
+</section>
 
     <!-- ==========================================================================
       GLOSARIO TÉCNICO OFICIAL
@@ -1534,6 +1799,109 @@
           <p class="source-desc">Especificación para formatear respuestas generadas por herramientas en botones de selección rápida y listas en WhatsApp.</p>
           <a href="https://developers.facebook.com/docs/whatsapp/guides/interactive-messages" target="_blank" rel="noopener noreferrer" class="source-link-btn">
             <span>Consultar Interactive Messages</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Redlock Distributed Lock</span>
+            <span class="source-type-pill">Algoritmo Distribuido</span>
+          </div>
+          <h4 class="source-title">Distributed Locks with Redis (Redlock Algorithm)</h4>
+          <p class="source-desc">Implementación de bloqueos distribuidos para garantizar que llamadas a funciones transaccionales (pagos, reservas) sean estrictamente atómicas.</p>
+          <a href="https://redis.io/docs/latest/develop/use/patterns/distributed-locks/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Redlock Algorithm</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Outlines / Guidance</span>
+            <span class="source-type-pill">Gramáticas Estructuradas</span>
+          </div>
+          <h4 class="source-title">Constrained Generation &amp; Guided JSON Sampling</h4>
+          <p class="source-desc">Técnicas de muestreo guiado mediante autómatas de estado finito que garantizan 100% de conformidad sintáctica en salidas JSON.</p>
+          <a href="https://github.com/dottxt-ai/outlines" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Outlines GitHub</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">OpenAPI 3.1.0 Specification</span>
+            <span class="source-type-pill">Estándar API</span>
+          </div>
+          <h4 class="source-title">OpenAPI Specification &amp; Schema Dialects</h4>
+          <p class="source-desc">Alineación del catálogo de herramientas de Llama 3 con las especificaciones de OpenAPI para autogeneración de SDKs cliente.</p>
+          <a href="https://spec.openapis.org/oas/latest.html" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar OpenAPI Spec</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Python Asyncio Pool</span>
+            <span class="source-type-pill">Concurrencia</span>
+          </div>
+          <h4 class="source-title">Asyncio Semaphore &amp; Worker Pools for Tool Execution</h4>
+          <p class="source-desc">Control de concurrencia mediante semáforos asíncronos para proteger APIs externas de saturación por ráfagas de usuarios en WhatsApp.</p>
+          <a href="https://docs.python.org/3/library/asyncio-sync.html" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Asyncio Sync Docs</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">PostgreSQL Transactions</span>
+            <span class="source-type-pill">ACID Transactions</span>
+          </div>
+          <h4 class="source-title">PostgreSQL Serializable Isolation for Tool Transactions</h4>
+          <p class="source-desc">Aislamiento de transacciones de base de datos para prevenir anomalías de lectura fantasma en reservas concurrentes de asientos o inventarios.</p>
+          <a href="https://www.postgresql.org/docs/current/transaction-iso.html" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Postgres Isolation</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Meta Llama 3.1 Function Call</span>
+            <span class="source-type-pill">Paper Técnico</span>
+          </div>
+          <h4 class="source-title">Llama 3.1: Tool Use, Python Interpreter &amp; Web Search</h4>
+          <p class="source-desc">Evaluación del rendimiento en benchmarks de Tool Use (BFCL) alcanzando más del 85% de precisión en llamadas complejas multi-función.</p>
+          <a href="https://ai.meta.com/research/publications/the-llama-3-herd-of-models/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Llama 3.1 Research</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Fault Tolerance Systems</span>
+            <span class="source-type-pill">Ingeniería del Caos</span>
+          </div>
+          <h4 class="source-title">Graceful Degradation Patterns for AI Gateways</h4>
+          <p class="source-desc">Diseño de fallbacks inteligentes que ofrecen opciones pre-calculadas al usuario cuando el servicio externo supera el timeout límite.</p>
+          <a href="https://martinfowler.com/bliki/CircuitBreaker.html" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Martin Fowler Circuit Breaker</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Latency Engineering</span>
+            <span class="source-type-pill">Rendimiento</span>
+          </div>
+          <h4 class="source-title">Time to First Token (TTFT) &amp; Inter-Token Latency Tuning</h4>
+          <p class="source-desc">Técnicas de inferencia acelerada con kernels FlashAttention-2 y cuantización AWQ para reducir el tiempo total del ciclo a menos de 2 segundos.</p>
+          <a href="https://github.com/vllm-project/vllm" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar vLLM Kernels</span>
             <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>

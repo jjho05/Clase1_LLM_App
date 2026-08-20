@@ -802,6 +802,154 @@
         </div>
       </article>
 
+          <!-- SUBTEMA 2.2.5 -->
+      <article class="tema-card" id="tema-2-2-5">
+        <div class="tema-header">
+          <div class="tema-eyebrow">Tema 2.2.5 · Optimización de Memoria</div>
+          <h3 class="tema-title">Compresión de Contexto, Evicción LRU y Gestión de VRAM</h3>
+        </div>
+
+        <div class="tema-section-block">
+          <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Límite de la Memoria</span> Gestión de Sesiones a Gran Escala</h4>
+          <p class="prose-p">
+            Aunque Meta Llama 3.1 soporta de forma nativa hasta <b>128,000 tokens</b> de ventana de contexto, inyectar historiales gigantescos en cada mensaje de WhatsApp es una mala práctica de ingeniería: incrementa el tiempo de procesamiento de la fase de <i>Prefill</i> ($O(N^2)$ en atención), satura la memoria VRAM del servidor GPU y encarece la infraestructura.
+          </p>
+
+          <p class="prose-p">
+            Para soportar miles de usuarios concurrentes de forma eficiente, implementamos una <b>estrategia de memoria en 3 niveles (Three-Tier Memory Architecture)</b>:
+          </p>
+
+          <div class="table-responsive-wrapper">
+            <table class="table-pro">
+              <thead>
+                <tr>
+                  <th>Nivel de Memoria</th>
+                  <th>Tecnología de Almacén</th>
+                  <th>Tiempo de Retención</th>
+                  <th>Función en el Agente de WhatsApp</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Nivel 1: Memoria de Trabajo (Hot)</strong></td>
+                  <td>Ventana Deslizante en Redis RAM</td>
+                  <td>Últimos 4 turnos ($pprox 400$ tokens)</td>
+                  <td>Preserva la inmediatez y coherencia del diálogo en curso.</td>
+                </tr>
+                <tr>
+                  <td><strong>Nivel 2: Resumen Estructurado (Warm)</strong></td>
+                  <td>Hash JSON en Redis</td>
+                  <td>TTL de 24 horas tras último mensaje</td>
+                  <td>Almacena variables clave (nombre, intención, saldo, producto).</td>
+                </tr>
+                <tr>
+                  <td><strong>Nivel 3: Historial Histórico (Cold)</strong></td>
+                  <td>PostgreSQL / SQLite WAL</td>
+                  <td>Permanente (Meses / Años)</td>
+                  <td>Auditoría forense, analítica de negocio y reanudación a largo plazo.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FÓRMULA DE COSTO DE MEMORIA MULTI-NIVEL CON ACORDEÓN -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$	ext{Memoria RAM}_{	ext{Total}} = U_{	ext{activos}} 	imes \left( S_{	ext{sliding\_window}} + S_{	ext{summary\_json}} 
+ight) \le 	ext{MaxRAM}_{	ext{Redis}} 	imes 0.75$$
+          </div>
+
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Capacidad de Memoria Concurrente</span>
+                <span class="breakdown-count-tag">3 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$U_{	ext{activos}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Usuarios Concurrentes:</strong> Número de conversaciones simultáneas en ventana de 24 horas. Para 100,000 usuarios con 2KB por sesión, Redis consume solo $pprox 200	ext{MB}$ de RAM.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$	ext{Política volatile-lru}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Evicción Automática:</strong> Si la memoria alcanza el 75% de capacidad, Redis descarta las sesiones inactivas más antiguas sin interrumpir los chats en curso.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- CÓDIGO PYTHON COMPRESOR DE MEMORIA -->
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">Python 3.11 · context_compactor.py</span>
+            <div class="code-actions">
+              <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+              <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+            </div>
+          </div>
+          <pre class="code-content"><code class="language-python"><span class="code-kw">async def</span> <span class="code-fn">construir_contexto_optimizado</span>(<span class="code-var">redis_conn</span>, <span class="code-var">wa_id</span>: <span class="code-type">str</span>) -> <span class="code-type">list</span>[<span class="code-type">dict</span>]:
+    <span class="code-cm"># 1. Recuperar resumen compacto de variables de sesión</span>
+    <span class="code-var">resumen</span> = <span class="code-kw">await</span> <span class="code-var">redis_conn</span>.<span class="code-fn">hgetall</span>(<span class="code-str">f"session:{wa_id}:summary"</span>)
+    
+    <span class="code-cm"># 2. Recuperar únicamente los últimos 4 turnos (sliding window)</span>
+    <span class="code-var">ultimos_turnos</span> = <span class="code-kw">await</span> <span class="code-var">redis_conn</span>.<span class="code-fn">lrange</span>(<span class="code-str">f"session:{wa_id}:messages"</span>, -<span class="code-num">4</span>, -<span class="code-num">1</span>)
+    
+    <span class="code-var">prompt_contexto</span> = [
+        {<span class="code-str">"role"</span>: <span class="code-str">"system"</span>, <span class="code-str">"content"</span>: <span class="code-str">f"Eres el asistente de Meta. Datos del cliente: {resumen}"</span>}
+    ]
+    <span class="code-kw">for</span> <span class="code-var">msg_json</span> <span class="code-kw">in</span> <span class="code-var">ultimos_turnos</span>:
+        <span class="code-var">prompt_contexto</span>.<span class="code-fn">append</span>(<span class="code-var">json</span>.<span class="code-fn">loads</span>(<span class="code-var">msg_json</span>))
+        
+    <span class="code-kw">return</span> <span class="code-var">prompt_contexto</span></code></pre>
+        </div>
+
+        <!-- ANALOGÍA FÁCIL -->
+        <div class="easy-explainer-box">
+          <div class="easy-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6m-5 3h4m-7-9.5A6.5 6.5 0 1 1 18 11.5c0 2.5-1.5 4-2.5 5h-7c-1-1-2.5-2.5-2.5-5z"/></svg>
+            <span>¿No entendiste? Te lo explico fácil: El cuaderno de notas del médico</span>
+          </div>
+          <p class="easy-text">
+            Imagina que vas al médico. El doctor no te pide que le recites palabra por palabra cada conversación que tuviste con él durante los últimos 10 años. En su lugar, tiene una <b>ficha resumen</b> (<i>"Paciente: Juan, alérgico a penicilina, última visita: mayo"</i>) y solo escucha lo que le dices en la consulta actual. Así ahorra tiempo y atiende a 30 pacientes al día sin colapsar.
+          </p>
+        </div>
+
+        <!-- CONSEJO PRO -->
+        <div class="pro-tip-box">
+          <div class="pro-tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+            <span>Consejo Pro: Configura maxmemory-policy volatile-lru en Redis</span>
+          </div>
+          <p class="pro-tip-text">
+            Asegúrate de que cada clave de sesión tenga siempre configurado su TTL mediante <code>EXPIRE</code>. Con la directiva <code>maxmemory-policy volatile-lru</code>, Redis solo desalojará claves con vencimiento cuando la memoria se llene, protegiendo tus datos permanentes.
+          </p>
+        </div>
+
+        <!-- QUIZ 5 -->
+        <div class="quiz-box">
+          <div class="quiz-header">
+            <span class="quiz-tag">Autoevaluación 2.2.5</span>
+          </div>
+          <div class="quiz-question">¿Cuál es la principal desventaja de reenviar todo el historial de 50 mensajes en cada llamada a Llama 3 en producción?</div>
+          <button class="quiz-option" data-correct="false">A) Que Meta cobra una tarifa adicional por cada emoji enviado.</button>
+          <button class="quiz-option" data-correct="true">B) Que aumenta cuadráticamente el cómputo de la fase de atención (Prefill), incrementando la latencia a varios segundos y saturando la VRAM de la GPU innecesariamente.</button>
+          <button class="quiz-option" data-correct="false">C) Que la base de datos Redis borra automáticamente los números telefónicos.</button>
+          <button class="quiz-option" data-correct="false">D) Que el modelo cambia automáticamente de idioma a francés.</button>
+          <div class="quiz-feedback"></div>
+        </div>
+      </article>
     </section>
 
     <!-- ==========================================================================
@@ -1360,7 +1508,53 @@ EXPIRE tenant:clinica_meta:session:5215587654321 86400  # TTL 24 horas</pre>
         </details>
       </article>
 
-    </section>
+    
+        <!-- EJERCICIO 5 -->
+        <div class="exercise-card" id="ejercicio-5">
+          <div class="exercise-header">
+            <span class="exercise-tag">Ejercicio 5 · Nivel Avanzado</span>
+            <span class="exercise-time">25 min</span>
+          </div>
+          <h4 class="exercise-title">Compresor de Historial Incremental en BackgroundTasks</h4>
+          <p class="exercise-desc">
+            Implementa una función asíncrona en FastAPI que, cada vez que una conversación de WhatsApp alcance 6 turnos en Redis, dispare una tarea en segundo plano para generar un resumen semántico de las preferencias del usuario usando Llama 3. El resultado debe actualizar la clave <code>session:{wa_id}:summary</code> y podar los primeros 4 mensajes de la lista sin bloquear la respuesta de WhatsApp.
+          </p>
+          <details class="exercise-solution-details">
+            <summary class="exercise-solution-summary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              <span>Ver Implementación Oficial con Poda en Segundo Plano</span>
+            </summary>
+            <div class="code-box" style="margin-top: 1rem;">
+              <div class="code-header">
+                <span class="code-lang">Python 3.11 · async_compactor_task.py</span>
+                <div class="code-actions">
+                  <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+                  <button class="btn-download-code" onclick="downloadCode(this)">Descargar</button>
+                </div>
+              </div>
+              <pre class="code-content"><code class="language-python"><span class="code-kw">import</span> <span class="code-var">json</span>
+<span class="code-kw">from</span> <span class="code-var">fastapi</span> <span class="code-kw">import</span> <span class="code-type">BackgroundTasks</span>
+
+<span class="code-kw">async def</span> <span class="code-fn">compactar_sesion_en_background</span>(<span class="code-var">redis_conn</span>, <span class="code-var">wa_id</span>: <span class="code-type">str</span>):
+    <span class="code-var">key_msgs</span> = <span class="code-str">f"session:{wa_id}:messages"</span>
+    <span class="code-var">total_msgs</span> = <span class="code-kw">await</span> <span class="code-var">redis_conn</span>.<span class="code-fn">llen</span>(<span class="code-var">key_msgs</span>)
+    
+    <span class="code-kw">if</span> <span class="code-var">total_msgs</span> >= <span class="code-num">6</span>:
+        <span class="code-cm"># 1. Extraer los mensajes más antiguos para condensar</span>
+        <span class="code-var">antiguos</span> = <span class="code-kw">await</span> <span class="code-var">redis_conn</span>.<span class="code-fn">lrange</span>(<span class="code-var">key_msgs</span>, <span class="code-num">0</span>, <span class="code-num">3</span>)
+        <span class="code-var">dialogo_str</span> = <span class="code-str">"
+"</span>.<span class="code-fn">join</span>([<span class="code-var">m</span>.<span class="code-fn">decode</span>(<span class="code-str">'utf-8'</span>) <span class="code-kw">for</span> <span class="code-var">m</span> <span class="code-kw">in</span> <span class="code-var">antiguos</span>])
+        
+        <span class="code-cm"># 2. Generar resumen compacto con Llama 3</span>
+        <span class="code-var">resumen_actualizado</span> = <span class="code-kw">await</span> <span class="code-fn">generar_resumen_llama3</span>(<span class="code-var">dialogo_str</span>)
+        
+        <span class="code-cm"># 3. Guardar en hash y podar la lista en Redis</span>
+        <span class="code-kw">await</span> <span class="code-var">redis_conn</span>.<span class="code-fn">hset</span>(<span class="code-str">f"session:{wa_id}:summary"</span>, <span class="code-str">"perfil"</span>, <span class="code-var">resumen_actualizado</span>)
+        <span class="code-kw">await</span> <span class="code-var">redis_conn</span>.<span class="code-fn">ltrim</span>(<span class="code-var">key_msgs</span>, <span class="code-num">4</span>, -<span class="code-num">1</span>)</code></pre>
+            </div>
+          </details>
+        </div>
+</section>
 
     <!-- ==========================================================================
       GLOSARIO TÉCNICO OFICIAL
@@ -1565,6 +1759,109 @@ EXPIRE tenant:clinica_meta:session:5215587654321 86400  # TTL 24 horas</pre>
           <p class="source-desc">Estándar para validación de identidad y claims de sesión en arquitecturas conversacionales distribuidas de microservicios.</p>
           <a href="https://datatracker.ietf.org/doc/html/rfc7519" target="_blank" rel="noopener noreferrer" class="source-link-btn">
             <span>Consultar RFC 7519</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Redis Cluster Docs</span>
+            <span class="source-type-pill">Alta Disponibilidad</span>
+          </div>
+          <h4 class="source-title">Redis Sentinel &amp; Cluster Sharding for Session Scale</h4>
+          <p class="source-desc">Estrategias de particionamiento de hash slots para escalar horizontalmente la memoria de más de 500,000 usuarios concurrentes en WhatsApp.</p>
+          <a href="https://redis.io/docs/latest/operate/oss_and_stack/management/scaling/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Redis Cluster Scaling</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">PostgreSQL 16 Docs</span>
+            <span class="source-type-pill">JSONB Indexing</span>
+          </div>
+          <h4 class="source-title">PostgreSQL JSONB GIN Indexes for Long-Term Memory</h4>
+          <p class="source-desc">Indexación de árboles de conversación complejos mediante índices GIN sobre campos JSONB para consultas analíticas instantáneas.</p>
+          <a href="https://www.postgresql.org/docs/current/datatype-json.html" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Postgres JSONB Docs</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Pydantic Library</span>
+            <span class="source-type-pill">Esquemas de Estado</span>
+          </div>
+          <h4 class="source-title">State Schema Modeling with Pydantic Generic Models</h4>
+          <p class="source-desc">Patrones de diseño para serialización y deserialización atómica del estado conversacional evitando corrupción de memoria.</p>
+          <a href="https://docs.pydantic.dev/latest/concepts/models/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Pydantic Models</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Finite State Machine</span>
+            <span class="source-type-pill">Diseño de Software</span>
+          </div>
+          <h4 class="source-title">Deterministic FSM Design for Conversational Agents</h4>
+          <p class="source-desc">Modelado de flujos conversacionales como autómatas finitos deterministas para asegurar el cumplimiento estricto de reglas de negocio.</p>
+          <a href="https://github.com/pytransitions/transitions" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar FSM Transitions</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Meta Llama 3 Prompting</span>
+            <span class="source-type-pill">Formateo de Turnos</span>
+          </div>
+          <h4 class="source-title">Special Tokens &amp; Turn Delimiters in Llama 3.1</h4>
+          <p class="source-desc">Especificación de los delimitadores oficiales <|start_header_id|> y <|eot_id|> para preservar la pureza del contexto conversacional.</p>
+          <a href="https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3_1/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Delimitadores de Turno</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Memory Eviction Policies</span>
+            <span class="source-type-pill">Gestión de RAM</span>
+          </div>
+          <h4 class="source-title">Redis LRU &amp; LFU Cache Eviction Strategies</h4>
+          <p class="source-desc">Configuración de políticas volatile-lru y maxmemory en Redis para descartar automáticamente sesiones antiguas sin interrumpir chats activos.</p>
+          <a href="https://redis.io/docs/latest/operate/oss_and_stack/management/optimization/memory-optimization/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Memoria y Evicción</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">LangChain Core</span>
+            <span class="source-type-pill">Patrones de Memoria</span>
+          </div>
+          <h4 class="source-title">ConversationSummaryBufferMemory: Theory and Practice</h4>
+          <p class="source-desc">Análisis comparativo de algoritmos de compresión de contexto que combinan ventanas deslizantes con resúmenes incrementales generados por LLMs.</p>
+          <a href="https://python.langchain.com/docs/modules/memory/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Memory Patterns</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Meta AI Ethics</span>
+            <span class="source-type-pill">Gobernanza de Datos</span>
+          </div>
+          <h4 class="source-title">Data Privacy &amp; GDPR Compliance in Automated Chatbots</h4>
+          <p class="source-desc">Directrices de cumplimiento legal y derecho al olvido (data deletion request) en agentes de WhatsApp con almacenamiento persistente.</p>
+          <a href="https://ai.meta.com/responsible-ai/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Responsible AI</span>
             <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>
