@@ -5,9 +5,14 @@
  */
 
 (function(){
- "use strict";
+  "use strict";
 
- /* 0. RENDERIZADOR KATEX AUTOMÁTICO */
+  // Asegurar que el navegador preserve y guarde la posición de scroll como siempre
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'auto';
+  }
+
+  /* 0. RENDERIZADOR KATEX AUTOMÁTICO */
  function renderLatex(){
  if(typeof renderMathInElement !== "undefined"){
  renderMathInElement(document.body, {
@@ -178,7 +183,7 @@
  /* 5. MOTOR DE ENTRADA SUAVE POR SCROLL (SCROLL REVEAL) */
  function initScrollReveal(){
  var targets = document.querySelectorAll(
- ".course-hero, .tema-card, .workbench-section, .quiz-box, .stat-card-clean, .example-card, .step-flow-item, .formula-card, .arch-detail-panel, .module-card, .easy-explainer-box, .conclusion-box, .code-box"
+ ".tema-card, .workbench-section, .quiz-box, .stat-card-clean, .example-card, .step-flow-item, .formula-card, .arch-detail-panel, .module-card, .easy-explainer-box, .conclusion-box, .code-box"
  );
 
  if(!("IntersectionObserver" in window)){
