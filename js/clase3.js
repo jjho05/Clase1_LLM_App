@@ -1068,4 +1068,51 @@
  });
  })();
 
+  /* ==========================================================================
+     MOTOR DE QUIZZES CON CONTADOR, FEEDBACK Y CELEBRACIÓN
+     ========================================================================== */
+  (function initQuizEngine() {
+    const quizBoxes = document.querySelectorAll('.quiz-box');
+    if (quizBoxes.length === 0) return;
+
+    function updateScore() {
+      let correct = 0;
+      quizBoxes.forEach(box => {
+        if (box.querySelector('.quiz-option.correct')) correct++;
+      });
+      if (correct >= quizBoxes.length && quizBoxes.length > 0) {
+        if (window.celebrateConfetti) window.celebrateConfetti();
+      }
+    }
+
+    quizBoxes.forEach(box => {
+      const options = box.querySelectorAll('.quiz-option');
+      const feedback = box.querySelector('.quiz-feedback');
+
+      options.forEach(opt => {
+        opt.addEventListener('click', () => {
+          const isCorrect = opt.getAttribute('data-correct') === 'true';
+          options.forEach(o => { o.classList.remove('correct', 'incorrect'); });
+
+          if (isCorrect) {
+            opt.classList.add('correct');
+            if (window.SOUND) window.SOUND.playChime();
+            if (feedback) {
+              feedback.innerHTML = '<span style="color:#059669; font-weight:700;">¡Respuesta Correcta!</span> Has comprendido con precisión los fundamentos matemáticos y arquitectónicos de PEFT y evaluación.';
+              feedback.style.display = 'block';
+            }
+          } else {
+            opt.classList.add('incorrect');
+            if (window.SOUND) window.SOUND.playPop(220);
+            if (feedback) {
+              feedback.innerHTML = '<span style="color:#ef4444; font-weight:700;">Respuesta Incorrecta.</span> Revisa los conceptos del tema y vuelve a intentarlo.';
+              feedback.style.display = 'block';
+            }
+          }
+          updateScore();
+        });
+      });
+    });
+  })();
+
 })();
