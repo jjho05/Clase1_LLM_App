@@ -1395,7 +1395,7 @@ a.step-flow-item:hover {
   padding: 1.2rem;
 }
 
-.chat-bubble {
+.prompt-display-bubble {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   padding: 1.1rem 1.4rem;
@@ -5717,14 +5717,19 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
 
 /* 1. CHAT SIMULADO DE WHATSAPP */
 .chat-bubble {
-  max-width: 82%;
-  padding: 0.65rem 0.95rem;
-  border-radius: 12px;
-  font-size: 0.88rem;
-  line-height: 1.45;
-  position: relative;
-  word-break: break-word;
+  max-width: 86%;
+  padding: 0.65rem 0.95rem !important;
+  border-radius: 10px !important;
+  font-size: 0.86rem !important;
+  line-height: 1.45 !important;
+  position: relative !important;
+  word-break: break-word !important;
   animation: bubblePop 0.22s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  border: none !important;
+  min-height: unset !important;
+  margin: 0 !important;
+  flex-shrink: 0;
+  display: block;
 }
 
 @keyframes bubblePop {
@@ -5734,31 +5739,71 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
 
 .user-bubble {
   align-self: flex-end;
-  background: #005c4b;
-  color: #e9edef;
-  border-bottom-right-radius: 3px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background: #005c4b !important;
+  color: #e9edef !important;
+  border-top-right-radius: 2px !important;
+  border-bottom-right-radius: 10px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  margin-left: auto !important;
 }
 
 .bot-bubble {
   align-self: flex-start;
-  background: #202c33;
-  color: #e9edef;
-  border-bottom-left-radius: 3px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background: #202c33 !important;
+  color: #e9edef !important;
+  border-top-left-radius: 2px !important;
+  border-bottom-left-radius: 10px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  margin-right: auto !important;
 }
 
 .bubble-text {
-  font-size: 0.88rem;
-  line-height: 1.45;
+  font-size: 0.85rem !important;
+  line-height: 1.45 !important;
+  color: #e9edef !important;
+  font-weight: 400 !important;
 }
 
 .bubble-time {
-  font-size: 0.68rem;
-  color: rgba(233, 237, 239, 0.6);
-  text-align: right;
-  margin-top: 0.25rem;
+  font-size: 0.68rem !important;
+  color: #8696a0 !important;
+  text-align: right !important;
+  margin-top: 0.25rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.25rem !important;
 }
+
+/* Contenedor del historial de chat */
+#flow-chat-history,
+.wa-chat-history {
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  padding: 0.75rem 0.25rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+  scroll-behavior: smooth;
+}
+
+#flow-chat-history::-webkit-scrollbar,
+.wa-chat-history::-webkit-scrollbar {
+  width: 5px;
+}
+
+#flow-chat-history::-webkit-scrollbar-track,
+.wa-chat-history::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#flow-chat-history::-webkit-scrollbar-thumb,
+.wa-chat-history::-webkit-scrollbar-thumb {
+  background: #374045;
+  border-radius: 4px;
+}
+
 
 /* 2. RASTREADORES DE FLUJO & BANCOS INTERACTIVOS */
 .flow-step-tracker {
