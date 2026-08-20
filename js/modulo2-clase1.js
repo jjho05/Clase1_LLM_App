@@ -190,11 +190,14 @@
     const outSender = document.getElementById("out-sender-num");
     const outSenderName = document.getElementById("out-sender-name");
     const outMsgId = document.getElementById("out-msg-id");
-    const outMsgType = document.getElementById("out-msg-type");
     const outMsgBody = document.getElementById("out-msg-body");
+    const outContentPath = document.getElementById("out-content-path");
     const outPhoneId = document.getElementById("out-phone-id");
-    const outTimestamp = document.getElementById("out-timestamp");
+    const outEventTypeBadge = document.getElementById("out-event-type-badge");
     const parseStatus = document.getElementById("json-parse-status");
+    const chatUserLabel = document.getElementById("out-chat-user-label");
+    const chatBubbleText = document.getElementById("out-chat-bubble-text");
+    const pythonCodeView = document.getElementById("parser-python-code-view");
 
     const samplePayloads = {
       text: {
@@ -234,6 +237,30 @@
           }
         ]
       },
+      button_reply: {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "104928374619283",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": { "display_phone_number": "+1 555-0199", "phone_number_id": "109823746592831" },
+              "contacts": [{ "profile": { "name": "Lic. Jesús Olvera" }, "wa_id": "5215587654321" }],
+              "messages": [{
+                "from": "5215587654321",
+                "id": "wamid.HBgNNTIxNTU4NzY1NDMyMRUCABEYEjNDNDU2Nzg5MDEyMzQ1Njc4OQA=",
+                "timestamp": "1724089500",
+                "interactive": {
+                  "type": "button_reply",
+                  "button_reply": { "id": "btn_reagendar_cita", "title": "📅 Reagendar Cita para Mañana" }
+                },
+                "type": "interactive"
+              }]
+            },
+            "field": "messages"
+          }]
+        }]
+      },
       location: {
         "object": "whatsapp_business_account",
         "entry": [{
@@ -247,7 +274,7 @@
                 "from": "5215512345678",
                 "id": "wamid.HBgNNTIxNTUxMjM0NTY3OBUCABEYEjFCMTMyNDM1NDY1NzY4Nzk4NwA=",
                 "timestamp": "1724089350",
-                "location": { "latitude": 19.432608, "longitude": -99.133209, "name": "Centro Histórico CDMX" },
+                "location": { "latitude": 19.432608, "longitude": -99.133209, "name": "Sucursal Centro CDMX" },
                 "type": "location"
               }]
             },
@@ -255,7 +282,7 @@
           }]
         }]
       },
-      button_reply: {
+      audio: {
         "object": "whatsapp_business_account",
         "entry": [{
           "id": "104928374619283",
@@ -266,13 +293,30 @@
               "contacts": [{ "profile": { "name": "Ing. Carlos Mendoza" }, "wa_id": "5215599887766" }],
               "messages": [{
                 "from": "5215599887766",
-                "id": "wamid.HBgNNTIxNTU5OTg4Nzc2NgUCABEYEjNDNDU2Nzg5MDEyMzQ1Njc4OQA=",
-                "timestamp": "1724089500",
-                "interactive": {
-                  "type": "button_reply",
-                  "button_reply": { "id": "btn_reagendar_cita", "title": "Reagendar Cita" }
-                },
-                "type": "interactive"
+                "id": "wamid.HBgNNTIxNTU5OTg4Nzc2NgUCABEYEjVDNzg5MDEyMzQ1Njc4OTA5OAA=",
+                "timestamp": "1724089600",
+                "audio": { "id": "media_audio_9941827", "mime_type": "audio/ogg; codecs=opus", "voice": true },
+                "type": "audio"
+              }]
+            },
+            "field": "messages"
+          }]
+        }]
+      },
+      status_read: {
+        "object": "whatsapp_business_account",
+        "entry": [{
+          "id": "104928374619283",
+          "changes": [{
+            "value": {
+              "messaging_product": "whatsapp",
+              "metadata": { "display_phone_number": "+1 555-0199", "phone_number_id": "109823746592831" },
+              "statuses": [{
+                "id": "wamid.HBgLMjUyMTU1ODc4NDk...",
+                "status": "read",
+                "timestamp": "1724089900",
+                "recipient_id": "5215587654321",
+                "conversation": { "id": "conv_991823", "origin": { "type": "user_initiated" } }
               }]
             },
             "field": "messages"
@@ -291,42 +335,111 @@
         const metadata = val && val.metadata;
         const contact = val && val.contacts && val.contacts[0];
         const msg = val && val.messages && val.messages[0];
+        const status = val && val.statuses && val.statuses[0];
 
-        if (!msg) {
-          throw new Error("No se encontró el objeto 'messages[0]' en el payload recibido.");
-        }
+        if (status) {
+          // Evento de Estado (Leído / Entregado)
+          if (outEventTypeBadge) {
+            outEventTypeBadge.textContent = `Status Callback: ${status.status.toUpperCase()}`;
+            outEventTypeBadge.style.background = "rgba(139, 92, 246, 0.12)";
+            outEventTypeBadge.style.color = "var(--meta-purple)";
+          }
+          if (outSender) outSender.textContent = status.recipient_id || "N/A";
+          if (outSenderName) outSenderName.textContent = "(Notificación de lectura / entrega)";
+          if (outMsgId) outMsgId.textContent = status.id || "N/A";
+          if (outContentPath) outContentPath.textContent = "statuses[0].status";
+          if (outMsgBody) outMsgBody.textContent = `👁️ El usuario leyó el mensaje (Status: "${status.status}")`;
+          if (outPhoneId) outPhoneId.textContent = (metadata && metadata.phone_number_id) ? metadata.phone_number_id : "N/A";
 
-        if (outSender) outSender.textContent = msg.from || "Desconocido";
-        if (outSenderName) outSenderName.textContent = (contact && contact.profile && contact.profile.name) ? contact.profile.name : "Sin perfil";
-        if (outMsgId) outMsgId.textContent = msg.id || "N/A";
-        if (outMsgType) outMsgType.textContent = msg.type || "text";
+          if (chatUserLabel) chatUserLabel.textContent = `Notificación de Meta (${status.recipient_id})`;
+          if (chatBubbleText) chatBubbleText.textContent = `✔✔ Mensaje leído por el destinatario (status: ${status.status})`;
+
+          if (pythonCodeView) {
+            pythonCodeView.innerHTML = `<span style="color:#64748b;"># Manejo de Status Callback en FastAPI:</span>
+<span style="color:#38bdf8;">if</span> <span style="color:#a78bfa;">"statuses"</span> <span style="color:#38bdf8;">in</span> value:
+    status_event = value[<span style="color:#a78bfa;">"statuses"</span>][<span style="color:#f59e0b;">0</span>]
+    wamid = status_event[<span style="color:#a78bfa;">"id"</span>]
+    status_str = status_event[<span style="color:#a78bfa;">"status"</span>]  <span style="color:#64748b;"># 'sent', 'delivered', 'read'</span>
+    print(f<span style="color:#22c55e;">"Mensaje {wamid} actualizado a: {status_str}"</span>)
+    <span style="color:#38bdf8;">return</span> {<span style="color:#a78bfa;">"status"</span>: <span style="color:#22c55e;">"ok"</span>}`;
+          }
+        } else if (msg) {
+          // Evento de Mensaje Entrante
+          const senderPhone = msg.from || "Desconocido";
+          const senderProfile = (contact && contact.profile && contact.profile.name) ? contact.profile.name : "Usuario WhatsApp";
+          const messageId = msg.id || "N/A";
+          const phoneId = (metadata && metadata.phone_number_id) ? metadata.phone_number_id : "N/A";
+
+          if (outEventTypeBadge) {
+            outEventTypeBadge.textContent = `Mensaje Entrante: ${msg.type.toUpperCase()}`;
+            outEventTypeBadge.style.background = "rgba(5, 150, 105, 0.12)";
+            outEventTypeBadge.style.color = "var(--accent-success)";
+          }
+
+          if (outSender) outSender.textContent = `+${senderPhone}`;
+          if (outSenderName) outSenderName.textContent = senderProfile;
+          if (outMsgId) outMsgId.textContent = messageId;
+          if (outPhoneId) outPhoneId.textContent = phoneId;
+
+          let bodyText = "";
+          let pathText = `messages[0].${msg.type}`;
+
+          if (msg.type === "text" && msg.text) {
+            bodyText = msg.text.body;
+            pathText = "messages[0].text.body";
+          } else if (msg.type === "interactive" && msg.interactive) {
+            bodyText = `🔘 [ID: ${msg.interactive.button_reply.id}] ${msg.interactive.button_reply.title}`;
+            pathText = "messages[0].interactive.button_reply.title";
+          } else if (msg.type === "location" && msg.location) {
+            bodyText = `📍 Lat: ${msg.location.latitude}, Long: ${msg.location.longitude} (${msg.location.name || 'Ubicación'})`;
+            pathText = "messages[0].location.latitude, longitude";
+          } else if (msg.type === "audio" && msg.audio) {
+            bodyText = `🎙️ Nota de Voz (Media ID: ${msg.audio.id}) [${msg.audio.mime_type}]`;
+            pathText = "messages[0].audio.id";
+          } else {
+            bodyText = JSON.stringify(msg[msg.type] || msg);
+          }
+
+          if (outContentPath) outContentPath.textContent = pathText;
+          if (outMsgBody) outMsgBody.textContent = bodyText;
+
+          if (chatUserLabel) chatUserLabel.textContent = `${senderProfile} (+${senderPhone})`;
+          if (chatBubbleText) chatBubbleText.textContent = bodyText;
+
+          if (pythonCodeView) {
+            pythonCodeView.innerHTML = `<span style="color:#64748b;"># Código FastAPI para extraer este mensaje:</span>
+<span style="color:#38bdf8;">def</span> <span style="color:#a78bfa;">extraer_mensaje_whatsapp</span>(payload: dict):
+    <span style="color:#38bdf8;">try</span>:
+        entry = payload[<span style="color:#a78bfa;">"entry"</span>][<span style="color:#f59e0b;">0</span>][<span style="color:#a78bfa;">"changes"</span>][<span style="color:#f59e0b;">0</span>][<span style="color:#a78bfa;">"value"</span>]
+        phone_id = entry[<span style="color:#a78bfa;">"metadata"</span>][<span style="color:#a78bfa;">"phone_number_id"</span>]  <span style="color:#64748b;"># -> "${phoneId}"</span>
+        contact_name = entry[<span style="color:#a78bfa;">"contacts"</span>][<span style="color:#f59e0b;">0</span>][<span style="color:#a78bfa;">"profile"</span>][<span style="color:#a78bfa;">"name"</span>]  <span style="color:#64748b;"># -> "${senderProfile}"</span>
+        msg = entry[<span style="color:#a78bfa;">"messages"</span>][<span style="color:#f59e0b;">0</span>]
         
-        let bodyText = "";
-        if (msg.type === "text" && msg.text) {
-          bodyText = msg.text.body;
-        } else if (msg.type === "location" && msg.location) {
-          bodyText = `📍 Lat: ${msg.location.latitude}, Long: ${msg.location.longitude} (${msg.location.name || 'Sin nombre'})`;
-        } else if (msg.type === "interactive" && msg.interactive) {
-          bodyText = `🔘 Botón: [${msg.interactive.button_reply.id}] "${msg.interactive.button_reply.title}"`;
+        sender_phone = msg[<span style="color:#a78bfa;">"from"</span>]  <span style="color:#64748b;"># -> "${senderPhone}"</span>
+        msg_id = msg[<span style="color:#a78bfa;">"id"</span>]        <span style="color:#64748b;"># -> "${messageId.substring(0, 20)}..."</span>
+        msg_type = msg[<span style="color:#a78bfa;">"type"</span>]    <span style="color:#64748b;"># -> "${msg.type}"</span>
+        
+        <span style="color:#38bdf8;">if</span> msg_type == <span style="color:#22c55e;">"text"</span>:
+            user_text = msg[<span style="color:#a78bfa;">"text"</span>][<span style="color:#a78bfa;">"body"</span>]
+        <span style="color:#38bdf8;">elif</span> msg_type == <span style="color:#22c55e;">"interactive"</span>:
+            user_text = msg[<span style="color:#a78bfa;">"interactive"</span>][<span style="color:#a78bfa;">"button_reply"</span>][<span style="color:#a78bfa;">"title"</span>]
+        
+        <span style="color:#38bdf8;">return</span> {<span style="color:#a78bfa;">"sender"</span>: sender_phone, <span style="color:#a78bfa;">"name"</span>: contact_name, <span style="color:#a78bfa;">"text"</span>: user_text, <span style="color:#a78bfa;">"phone_id"</span>: phone_id}
+    <span style="color:#38bdf8;">except</span> (KeyError, IndexError) <span style="color:#38bdf8;">as</span> e:
+        <span style="color:#38bdf8;">return</span> <span style="color:#a78bfa;">None</span>`;
+          }
         } else {
-          bodyText = JSON.stringify(msg[msg.type] || msg);
-        }
-        if (outMsgBody) outMsgBody.textContent = bodyText;
-
-        if (outPhoneId) outPhoneId.textContent = (metadata && metadata.phone_number_id) ? metadata.phone_number_id : "N/A";
-        if (outTimestamp) {
-          const date = new Date(parseInt(msg.timestamp) * 1000);
-          outTimestamp.textContent = isNaN(date.getTime()) ? msg.timestamp : date.toLocaleString("es-MX");
+          throw new Error("El JSON recibido no contiene la estructura esperada de 'messages' ni 'statuses'.");
         }
 
         if (parseStatus) {
-          parseStatus.textContent = "Payload Válido (Estructura Meta WhatsApp Oficial)";
+          parseStatus.textContent = "✔ Payload desempaquetado y mapeado exitosamente a variables limpias.";
           parseStatus.style.color = "var(--accent-success)";
         }
         if (window.SOUND) window.SOUND.playPop(520);
       } catch (err) {
         if (parseStatus) {
-          parseStatus.textContent = "Error al parsear JSON: " + err.message;
+          parseStatus.textContent = "❌ Error al parsear JSON: " + err.message;
           parseStatus.style.color = "#ef4444";
         }
       }

@@ -1060,40 +1060,137 @@ ngrok http 8000
     </div>
 
     <!-- BANCO 2: PARSER VISUAL DE PAYLOAD JSON -->
-    <div class="workbench-section" style="margin-bottom:3rem;">
+    <div class="workbench-section" id="banco-parser-section" style="margin-bottom:3.5rem;">
       <div class="workbench-top">
-        <span class="workbench-label">Banco 2.1.2 · Inspector &amp; Parser Visual de Payload JSON de WhatsApp</span>
+        <div style="display:flex; align-items:center; gap:0.6rem;">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--meta-blue)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span class="workbench-label">Banco 2.1.2 · Inspector &amp; Extractor de Payload JSON (¿Qué hace el Parseo?)</span>
+        </div>
         <div class="workbench-actions">
-          <select id="json-preset-select" class="bench-select-clean" style="font-size:0.8rem;">
-            <option value="text">Mensaje de Texto (Pregunta de Pedido)</option>
-            <option value="location">Mensaje con Ubicación Geográfica</option>
-            <option value="button_reply">Respuesta de Botón Interactivo</option>
+          <select id="json-preset-select" class="bench-select-clean" style="font-size:0.8rem; font-weight:700;">
+            <option value="text">📩 1. Mensaje de Texto (Pregunta de Pedido #45210)</option>
+            <option value="button_reply">🔘 2. Botón Interactivo (Respuesta Rápida)</option>
+            <option value="location">📍 3. Ubicación GPS en Tiempo Real</option>
+            <option value="audio">🎙️ 4. Mensaje de Voz / Audio (Media ID)</option>
+            <option value="status_read">👁️ 5. Notificación de Lectura (Status Callback)</option>
           </select>
         </div>
       </div>
-      <div style="padding:1.5rem;">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem;">
-          <div>
-            <label style="font-size:0.82rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.4rem;">Payload JSON Bruto Recibido en Webhook:</label>
-            <textarea id="json-raw-input" style="width:100%; height:260px; font-family:var(--font-mono, monospace); font-size:0.78rem; background:var(--bg-elevated); color:var(--text-primary); border:1px solid var(--border-subtle); border-radius:8px; padding:0.75rem; box-sizing:border-box;"></textarea>
-            <button class="btn-primary" id="json-btn-parse" style="margin-top:0.75rem; width:100%;">Parsear Estructura Oficial</button>
-            <div id="json-parse-status" style="font-size:0.8rem; font-weight:700; margin-top:0.5rem;"></div>
+
+      <div style="padding:1.6rem;">
+        
+        <!-- BANNER DIDÁCTICO: ¿POR QUÉ ES NECESARIO EL PARSEO? -->
+        <div class="parser-info-banner">
+          <strong style="color:var(--meta-blue); font-size:1rem; display:block; margin-bottom:0.35rem;">¿Qué hace exactamente el botón "Extraer y Mapear Campos"?</strong>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
+            Meta entrega cada mensaje dentro de un <b>JSON anidado con 5 capas de profundidad</b> (<code>entry[0] &rarr; changes[0] &rarr; value &rarr; messages[0]</code>). El proceso de <b>parseo</b> consiste en desempaquetar esta estructura compleja y convertirla en <b>variables limpias de Python</b> para que tu servidor sepa: <i>¿Quién escribió?</i>, <i>¿Qué texto envió?</i>, <i>¿A qué número de teléfono de Meta debemos responder?</i> y <i>¿Qué ID de mensaje usamos para evitar duplicados?</i>.
+          </p>
+        </div>
+
+        <div class="parser-grid-layout">
+          
+          <!-- COLUMNA IZQUIERDA: JSON BRUTO ENTRANTE -->
+          <div class="parser-input-card">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <label style="font-size:0.85rem; font-weight:700; color:var(--text-primary);">
+                Payload JSON Bruto Recibido en <code>POST /webhook</code>:
+              </label>
+              <span class="badge-pill" style="font-size:0.72rem; background:rgba(8,102,255,0.08); color:var(--meta-blue);">HTTP Body Crudo</span>
+            </div>
+
+            <textarea id="json-raw-input" style="width:100%; height:290px; font-family:var(--font-mono, monospace); font-size:0.78rem; background:var(--bg-elevated); color:var(--text-primary); border:1px solid var(--border-subtle); border-radius:8px; padding:0.75rem; box-sizing:border-box; line-height:1.5;"></textarea>
+
+            <button class="btn-primary" id="json-btn-parse" style="width:100%; padding:0.8rem; font-size:0.92rem; justify-content:center;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              <span>Extraer y Mapear Campos Críticos</span>
+            </button>
+            <div id="json-parse-status" style="font-size:0.82rem; font-weight:700; text-align:center;"></div>
           </div>
 
-          <div style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle);">
-            <div style="font-size:0.85rem; font-weight:800; color:var(--meta-blue); margin-bottom:1rem; border-bottom:1px solid var(--border-subtle); padding-bottom:0.5rem;">Datos Extraídos por tu Backend</div>
-            
-            <div style="display:flex; flex-direction:column; gap:0.75rem; font-size:0.88rem;">
-              <div><strong style="color:var(--text-muted);">Remitente (from):</strong> <span id="out-sender-num" style="color:var(--accent-success); font-family:var(--font-mono); font-weight:700;">-</span></div>
-              <div><strong style="color:var(--text-muted);">Nombre de Perfil:</strong> <span id="out-sender-name" style="font-weight:600;">-</span></div>
-              <div><strong style="color:var(--text-muted);">Message ID (wamid):</strong> <span id="out-msg-id" style="font-family:var(--font-mono); font-size:0.75rem; word-break:break-all;">-</span></div>
-              <div><strong style="color:var(--text-muted);">Tipo de Mensaje:</strong> <span id="out-msg-type" class="badge-pill" style="font-size:0.75rem;">-</span></div>
-              <div><strong style="color:var(--text-muted);">Cuerpo / Contenido:</strong> <div id="out-msg-body" style="background:rgba(8,102,255,0.06); padding:0.6rem; border-radius:6px; margin-top:0.3rem; font-weight:500;">-</div></div>
-              <div><strong style="color:var(--text-muted);">Phone Number ID:</strong> <span id="out-phone-id" style="font-family:var(--font-mono); font-size:0.8rem;">-</span></div>
-              <div><strong style="color:var(--text-muted);">Timestamp:</strong> <span id="out-timestamp" style="font-size:0.8rem;">-</span></div>
+          <!-- COLUMNA DERECHA: CAMPOS EXTRAÍDOS CON SU PROPÓSITO -->
+          <div class="parser-output-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border-subtle); padding-bottom:0.6rem;">
+              <div style="font-size:0.92rem; font-weight:800; color:var(--meta-blue);">Variables Extraídas por tu Backend</div>
+              <span class="badge-pill" id="out-event-type-badge" style="font-size:0.72rem; background:rgba(5,150,105,0.1); color:var(--accent-success);">Evento: Mensaje Entrante</span>
             </div>
+
+            <!-- PREVIEW DE CHAT DE WHATSAPP -->
+            <div class="parser-chat-preview" id="parser-chat-preview-box">
+              <div style="width:32px; height:32px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:0.75rem;">WA</div>
+              <div style="flex:1;">
+                <div style="font-size:0.75rem; color:#8696a0; margin-bottom:0.15rem;" id="out-chat-user-label">Lic. Jesús Olvera (+52 1 55 8765 4321)</div>
+                <div style="background:#005c4b; padding:0.45rem 0.75rem; border-radius:6px; display:inline-block; font-size:0.83rem;" id="out-chat-bubble-text">¿Hola! ¿Cuál es el estatus del pedido #45210?</div>
+              </div>
+            </div>
+
+            <!-- LISTA DE CAMPOS EXTRAÍDOS -->
+            <div style="display:flex; flex-direction:column; gap:0.6rem; max-height:300px; overflow-y:auto; padding-right:0.2rem;">
+              
+              <!-- CAMPO 1: FROM -->
+              <div class="parser-item-row">
+                <div class="parser-item-top">
+                  <span class="parser-item-label">📱 Remitente (from)</span>
+                  <span class="parser-item-path">messages[0].from</span>
+                </div>
+                <div class="parser-item-val" id="out-sender-num" style="color:var(--accent-success);">-</div>
+                <div class="parser-item-purpose"><b>¿Para qué sirve?</b> Número telefónico al que responderemos mediante la Graph API.</div>
+              </div>
+
+              <!-- CAMPO 2: NOMBRE DE PERFIL -->
+              <div class="parser-item-row">
+                <div class="parser-item-top">
+                  <span class="parser-item-label">👤 Nombre de Perfil</span>
+                  <span class="parser-item-path">contacts[0].profile.name</span>
+                </div>
+                <div class="parser-item-val" id="out-sender-name">-</div>
+                <div class="parser-item-purpose"><b>¿Para qué sirve?</b> Permite que Llama 3 salude al usuario por su nombre.</div>
+              </div>
+
+              <!-- CAMPO 3: CONTENIDO / BODY -->
+              <div class="parser-item-row">
+                <div class="parser-item-top">
+                  <span class="parser-item-label">💬 Contenido del Mensaje</span>
+                  <span class="parser-item-path" id="out-content-path">messages[0].text.body</span>
+                </div>
+                <div class="parser-item-val" id="out-msg-body" style="color:var(--meta-blue);">-</div>
+                <div class="parser-item-purpose"><b>¿Para qué sirve?</b> El texto o acción que se le pasa al modelo Llama 3 para razonar.</div>
+              </div>
+
+              <!-- CAMPO 4: WAMID -->
+              <div class="parser-item-row">
+                <div class="parser-item-top">
+                  <span class="parser-item-label">🔑 ID del Mensaje (wamid)</span>
+                  <span class="parser-item-path">messages[0].id</span>
+                </div>
+                <div class="parser-item-val" id="out-msg-id" style="font-size:0.75rem; color:var(--text-muted);">-</div>
+                <div class="parser-item-purpose"><b>¿Para qué sirve?</b> Idempotencia: evita procesar dos veces el mismo mensaje si Meta reintenta.</div>
+              </div>
+
+              <!-- CAMPO 5: PHONE_NUMBER_ID -->
+              <div class="parser-item-row">
+                <div class="parser-item-top">
+                  <span class="parser-item-label">🏢 Phone Number ID (Meta)</span>
+                  <span class="parser-item-path">metadata.phone_number_id</span>
+                </div>
+                <div class="parser-item-val" id="out-phone-id">-</div>
+                <div class="parser-item-purpose"><b>¿Para qué sirve?</b> Identifica qué número empresarial de tu cuenta recibió el mensaje.</div>
+              </div>
+
+            </div>
+
           </div>
+
         </div>
+
+        <!-- GENERADOR DE CÓDIGO PYTHON EN VIVO -->
+        <div style="margin-top:1.5rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+            <span style="font-size:0.85rem; font-weight:700; color:var(--text-primary);">Código Python Equivalente para tu Servidor FastAPI:</span>
+            <button class="btn-copy-code" id="btn-copy-parser-py" onclick="copyCode(this)">Copiar Código Python</button>
+          </div>
+          <pre class="parser-python-code-box" id="parser-python-code-view"><code class="language-python"># Código generado automáticamente al parsear...</code></pre>
+        </div>
+
       </div>
     </div>
 
