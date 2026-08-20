@@ -259,17 +259,22 @@ body {
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   color: var(--text-primary);
-  padding: 0.45rem 0.85rem;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  white-space: nowrap;
+}
+
+.btn-text-label {
+  display: none !important;
 }
 
 .btn-icon svg {

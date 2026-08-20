@@ -119,6 +119,7 @@
 
  function updateThemeState(t){
  if(themeIconContainer) themeIconContainer.innerHTML = t === "light" ? sunSvg : moonSvg;
+ if(themeBtn) themeBtn.title = t === "light" ? "Cambiar a Modo Oscuro" : "Cambiar a Modo Claro";
  if(themeLabel) themeLabel.textContent = t === "light" ? "Modo Claro" : "Modo Oscuro";
  }
 
@@ -167,6 +168,7 @@
  if(soundBtn){
  soundBtn.addEventListener("click", function(){
  var isMuted = window.SOUND.toggle();
+ soundBtn.title = isMuted ? "Activar Efectos de Audio" : "Silenciar Audio";
  if(soundLabel) soundLabel.textContent = isMuted ? "Audio OFF" : "Audio ON";
  });
  }
