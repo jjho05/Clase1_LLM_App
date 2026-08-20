@@ -434,38 +434,187 @@
  });
  }
 
- if(document.readyState === "loading"){
- document.addEventListener("DOMContentLoaded", function(){
- initSmoothAccordions();
- initPageTransitions();
- initMobileDrawer();
- });
- } else {
- initSmoothAccordions();
- initPageTransitions();
- initMobileDrawer();
- }
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", function(){
+      initSmoothAccordions();
+      initPageTransitions();
+      initMobileDrawer();
+      initCodeBoxActions();
+    });
+  } else {
+    initSmoothAccordions();
+    initPageTransitions();
+    initMobileDrawer();
+    initCodeBoxActions();
+  }
+
+  // Listener global para inicializar bloques de código cuando se abren acordeones <details>
+  document.addEventListener("click", function(e){
+    if (e.target && (e.target.tagName === "SUMMARY" || e.target.closest("summary"))) {
+      setTimeout(initCodeBoxActions, 50);
+    }
+  });
 
 })();
 
-/* 7. FUNCIÓN GLOBAL DE COPIAR CÓDIGO */
+/* 7. GESTOR Y ACCIONES DE BLOQUES DE CÓDIGO (COPIAR & DESCARGAR) */
+function initCodeBoxActions() {
+  var boxes = document.querySelectorAll(".code-box");
+  boxes.forEach(function(box) {
+    var header = box.querySelector(".code-header");
+    if (!header) {
+      header = document.createElement("div");
+      header.className = "code-header";
+      var codeEl = box.querySelector("code");
+      var langClass = codeEl ? (codeEl.className || "") : "";
+      var langName = "Snippet de Código";
+      if (langClass.includes("python")) langName = "Python 3";
+      else if (langClass.includes("json")) langName = "JSON Schema / Payload";
+      else if (langClass.includes("bash") || langClass.includes("sh")) langName = "Bash / Shell";
+      else if (langClass.includes("ini")) langName = "Config / Systemd";
+      else if (langClass.includes("text")) langName = "Texto / Plantilla";
+      
+      header.innerHTML = '<span class="code-lang">' + langName + '</span>';
+      box.insertBefore(header, box.firstChild);
+    }
+
+    var actions = header.querySelector(".code-actions");
+    if (!actions) {
+      actions = document.createElement("div");
+      actions.className = "code-actions";
+      
+      var existingBtns = header.querySelectorAll("button");
+      existingBtns.forEach(function(b) {
+        actions.appendChild(b);
+      });
+      header.appendChild(actions);
+    }
+
+    // Verificar botón Copiar
+    var copyBtn = actions.querySelector(".btn-copy-code");
+    if (!copyBtn) {
+      copyBtn = document.createElement("button");
+      copyBtn.className = "btn-copy-code";
+      copyBtn.setAttribute("type", "button");
+      copyBtn.setAttribute("onclick", "copyCode(this)");
+      copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copiar</span>';
+      actions.appendChild(copyBtn);
+    } else if (!copyBtn.querySelector("svg")) {
+      var copyText = copyBtn.textContent.trim() || "Copiar";
+      copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>' + copyText + '</span>';
+    }
+
+    // Verificar botón Descargar
+    var downloadBtn = actions.querySelector(".btn-download-code");
+    if (!downloadBtn) {
+      downloadBtn = document.createElement("button");
+      downloadBtn.className = "btn-download-code";
+      downloadBtn.setAttribute("type", "button");
+      downloadBtn.setAttribute("onclick", "downloadCode(this)");
+      downloadBtn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg><span>Descargar</span>';
+      actions.appendChild(downloadBtn);
+    }
+  });
+}
+
 function copyCode(btn){
- var codeBlock = btn.parentElement.nextElementSibling ? btn.parentElement.nextElementSibling.querySelector("code") : null;
- if(!codeBlock) {
- codeBlock = btn.closest(".code-box").querySelector(".code-content");
- }
- if(!codeBlock) return;
- var text = codeBlock.innerText;
- navigator.clipboard.writeText(text).then(function(){
- if(window.SOUND) window.SOUND.playPop(580);
- var oldText = btn.textContent;
- btn.textContent = "¡Copiado!";
- btn.style.background = "#059669";
- btn.style.color = "#ffffff";
- setTimeout(function(){
- btn.textContent = oldText;
- btn.style.background = "";
- btn.style.color = "";
- }, 2000);
- });
+  var codeBox = btn.closest(".code-box");
+  var codeEl = codeBox ? (codeBox.querySelector("code") || codeBox.querySelector(".code-content") || codeBox.querySelector("pre")) : null;
+  if(!codeEl && btn.parentElement && btn.parentElement.nextElementSibling) {
+    codeEl = btn.parentElement.nextElementSibling.querySelector("code") || btn.parentElement.nextElementSibling;
+  }
+  if(!codeEl) return;
+  var text = codeEl.innerText || codeEl.textContent;
+  navigator.clipboard.writeText(text).then(function(){
+    if(window.SOUND) window.SOUND.playPop(580);
+    var oldHtml = btn.innerHTML;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> <span>¡Copiado!</span>';
+    btn.style.background = "#0866ff";
+    btn.style.color = "#ffffff";
+    btn.style.borderColor = "#0866ff";
+    setTimeout(function(){
+      btn.innerHTML = oldHtml;
+      btn.style.background = "";
+      btn.style.color = "";
+      btn.style.borderColor = "";
+    }, 2000);
+  });
+}
+
+function downloadCode(btn){
+  var codeBox = btn.closest(".code-box");
+  if (!codeBox) return;
+  var codeEl = codeBox.querySelector("code") || codeBox.querySelector(".code-content") || codeBox.querySelector("pre");
+  if (!codeEl) return;
+
+  var codeText = codeEl.innerText || codeEl.textContent;
+  if (!codeText || !codeText.trim()) return;
+
+  var header = codeBox.querySelector(".code-header");
+  var headerText = header ? header.innerText : "";
+  var langAttr = codeEl.className || "";
+
+  var extension = "py";
+  var filename = "script.py";
+
+  if (langAttr.includes("json") || headerText.toLowerCase().includes(".json") || headerText.toLowerCase().includes("json")) {
+    extension = "json";
+    filename = "snippet.json";
+  } else if (langAttr.includes("bash") || langAttr.includes("sh") || headerText.toLowerCase().includes(".sh") || headerText.toLowerCase().includes("bash") || headerText.toLowerCase().includes("terminal")) {
+    extension = "sh";
+    filename = "script.sh";
+  } else if (langAttr.includes("sql") || headerText.toLowerCase().includes(".sql") || headerText.toLowerCase().includes("sql")) {
+    extension = "sql";
+    filename = "query.sql";
+  } else if (langAttr.includes("ini") || headerText.toLowerCase().includes(".service") || headerText.toLowerCase().includes("systemd") || headerText.toLowerCase().includes(".ini")) {
+    extension = headerText.toLowerCase().includes(".service") ? "service" : "ini";
+    filename = "config." + extension;
+  } else if (langAttr.includes("yaml") || langAttr.includes("yml") || headerText.toLowerCase().includes("docker") || headerText.toLowerCase().includes("yaml")) {
+    extension = "yml";
+    filename = "docker-compose.yml";
+  } else if (langAttr.includes("markdown") || langAttr.includes("md") || headerText.toLowerCase().includes(".md")) {
+    extension = "md";
+    filename = "document.md";
+  } else if (langAttr.includes("html") || headerText.toLowerCase().includes("html")) {
+    extension = "html";
+    filename = "index.html";
+  } else if (langAttr.includes("javascript") || langAttr.includes("js")) {
+    extension = "js";
+    filename = "app.js";
+  } else if (langAttr.includes("python") || headerText.toLowerCase().includes("python") || headerText.toLowerCase().includes(".py")) {
+    extension = "py";
+    filename = "meta_llama_script.py";
+  } else {
+    extension = "txt";
+    filename = "code_snippet.txt";
+  }
+
+  var match = headerText.match(/([a-zA-Z0-9_\-]+\.[a-zA-Z0-9]+)/);
+  if (match && match[1]) {
+    filename = match[1];
+  }
+
+  var blob = new Blob([codeText], { type: "text/plain;charset=utf-8" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  if (window.SOUND) window.SOUND.playChime();
+
+  var oldHtml = btn.innerHTML;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> <span>¡Descargado!</span>';
+  btn.style.background = "#059669";
+  btn.style.color = "#ffffff";
+  btn.style.borderColor = "#059669";
+  setTimeout(function(){
+    btn.innerHTML = oldHtml;
+    btn.style.background = "";
+    btn.style.color = "";
+    btn.style.borderColor = "";
+  }, 2000);
 }

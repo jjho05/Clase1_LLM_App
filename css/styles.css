@@ -1931,7 +1931,14 @@ a.step-flow-item:hover {
   align-items: center;
 }
 
-.btn-copy-code {
+.code-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.btn-copy-code,
+.btn-download-code {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.15);
   color: #d4d4d4;
@@ -1941,12 +1948,23 @@ a.step-flow-item:hover {
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+  line-height: 1;
 }
 
 .btn-copy-code:hover {
   background: var(--meta-blue);
-  color: #fff;
+  color: #ffffff;
   border-color: var(--meta-blue);
+}
+
+.btn-download-code:hover {
+  background: var(--accent-success);
+  color: #ffffff;
+  border-color: var(--accent-success);
 }
 
 .code-content {
