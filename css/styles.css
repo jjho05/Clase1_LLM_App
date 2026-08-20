@@ -6260,6 +6260,8 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
   justify-content: flex-start;
   align-items: flex-start;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+  word-break: break-word;
 }
 
 .flow-card-item:hover {
@@ -6294,6 +6296,15 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
   line-height: 1.65;
   margin: 0;
   width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.flow-card-desc code {
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  display: inline;
 }
 
 /* Grid balanceado de 4 objetivos (2x2 simétrico en desktop/tablet, 4x1 en ultra-wide, 1 col en móvil) */

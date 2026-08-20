@@ -282,9 +282,9 @@
 
         <div class="flow-card-item">
           <div class="flow-card-title" style="color:var(--meta-purple);">Paso 3: Tú respondes</div>
-          <span class="flow-card-badge">GRAPH API DISPATCH (POST /messages)</span>
+          <span class="flow-card-badge">GRAPH API DISPATCH (POST /MESSAGES)</span>
           <p class="flow-card-desc">
-            Tu backend envía una petición HTTP autenticada con Bearer Token al endpoint <code>https://graph.facebook.com/v20.0/{PHONE_NUMBER_ID}/messages</code>. Meta recibe la orden y entrega el mensaje al chat del usuario.
+            Tu backend envía una petición HTTP autenticada con Bearer Token al endpoint <code>POST /v20.0/{phone_number_id}/messages</code> en Meta Graph API (<code>graph.facebook.com</code>). Meta recibe la orden y entrega el mensaje al chat del usuario.
           </p>
         </div>
       </div>
