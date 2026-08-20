@@ -6848,6 +6848,139 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
   border: 1px solid rgba(255,255,255,0.08);
 }
 
+/* ==========================================================================
+   EJERCICIOS PRÁCTICOS OFICIALES: DIAGRAMAS, TABLAS & SOLUCIONES GUIADAS
+   ========================================================================== */
+.exercise-diagram-box {
+  background: var(--bg-subtle-alt);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.25rem 1.4rem;
+  margin: 1.2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.exercise-arch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 800px) {
+  .exercise-arch-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.exercise-arch-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.exercise-arch-header {
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.5rem;
+}
+
+.exercise-comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.86rem;
+  background: var(--bg-surface);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.exercise-comp-table th {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  font-weight: 700;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.exercise-comp-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.exercise-comp-table tr:last-child td {
+  border-bottom: none;
+}
+
+.exercise-comp-table tr:hover td {
+  background: var(--bg-subtle-alt);
+}
+
+.exercise-path-flow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: var(--bg-surface);
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  margin: 0.85rem 0;
+}
+
+.exercise-path-node {
+  background: rgba(8, 102, 255, 0.1);
+  color: var(--meta-blue);
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  font-weight: 700;
+  border: 1px solid rgba(8, 102, 255, 0.2);
+}
+
+.exercise-triage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.exercise-triage-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.exercise-triage-step {
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+
 
 
 
