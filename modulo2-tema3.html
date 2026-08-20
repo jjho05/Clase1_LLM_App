@@ -1281,6 +1281,61 @@
         </details>
       </article>
 
+      <!-- EJERCICIO 4 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <span class="exercise-num-badge">Ejercicio 4</span>
+          <h4 class="exercise-title">Enrutador Dinámico de Herramientas con Backoff Exponencial y Fallback</h4>
+        </div>
+        <div class="exercise-context-box">
+          <div class="exercise-context-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            Enunciado de Resiliencia Transaccional
+          </div>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+            Implementa un middleware en Python con <code>tenacity</code> que ejecute llamadas a APIs externas activadas por Llama 3 con reintentos exponenciales ($2^k \times 100\text{ms}$) y devuelva una respuesta degradada controlada (Graceful Degradation) si el servicio de terceros no responde en menos de 2.5 segundos.
+          </p>
+        </div>
+
+        <details class="exercise-solution-details">
+          <summary class="exercise-solution-summary">
+            <span>Ver Solución de Ingeniería Paso a Paso &amp; Pipeline con Tenacity</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="exercise-solution-panel">
+            <div class="step-flow-list">
+              <div class="step-flow-item">
+                <div class="step-num-badge">1</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Decorador de Reintentos Asíncronos con Jitter</h5>
+                  <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Evitamos el efecto de manada (Thundering Herd) con reintentos aleatorizados:
+                  </p>
+                  <pre style="background:var(--bg-subtle); padding:0.8rem; border-radius:6px; font-family:var(--font-mono); font-size:0.8rem; overflow-x:auto;"><span class="code-kw">from</span> tenacity <span class="code-kw">import</span> retry, stop_after_attempt, wait_random_exponential
+
+<span class="code-dec">@retry</span>(wait=wait_random_exponential(multiplier=0.1, max=1.0), stop=stop_after_attempt(3))
+<span class="code-kw">async def</span> <span class="code-fn">ejecutar_herramienta_resiliente</span>(fn_name: str, args: dict):
+    <span class="code-kw">async with</span> httpx.AsyncClient(timeout=2.0) <span class="code-kw">as</span> client:
+        resp = <span class="code-kw">await</span> client.post(f"https://api.negocio.com/{fn_name}", json=args)
+        resp.raise_for_status()
+        <span class="code-kw">return</span> resp.json()</pre>
+                </div>
+              </div>
+
+              <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+                <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Manejo del Fallback Conversacional en Llama 3</h5>
+                  <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Si se agotan los 3 intentos, se inyecta un mensaje <code>tool</code> estructurado con <code>{"status": "TEMPORARY_UNAVAILABLE", "retry_after_sec": 60}</code> para que Llama 3 redacte una disculpa profesional ofreciendo alternativas (<i>"En este momento no pude consultar el sistema de reservas, pero he registrado tu solicitud y un asesor te confirmará en breve"</i>).
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </article>
+
     </section>
 
     <!-- ==========================================================================
@@ -1305,37 +1360,65 @@
 
       <div class="glossary-stack" style="display:flex; flex-direction:column; gap:1rem;">
         <div class="glossary-row-item" data-category="tools" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Llamada a Función (Function Calling)</div>
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Function Calling (Tool Use)</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Capacidad de un LLM de generar una estructura estructurada de datos (JSON) con el nombre de una función y los parámetros requeridos para que el backend la ejecute en el mundo real.
+            Mecanismo estructurado donde el modelo analiza una consulta en lenguaje natural y emite un objeto JSON con el nombre de una función y argumentos tipados para su ejecución en backend.
           </div>
         </div>
 
         <div class="glossary-row-item" data-category="tools" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Esquema de Herramienta (Tool Schema)</div>
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Ciclo en Dos Pasos (Two-Pass)</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Definición formal en formato JSON Schema de las funciones disponibles para el modelo, incluyendo su nombre, descripción semántica, tipos de parámetros y campos obligatorios.
+            Protocolo de invocación desacoplado: Inferencia 1 genera la llamada a herramienta; el servidor ejecuta la lógica de negocio; e Inferencia 2 sintetiza los datos devueltos en lenguaje natural.
           </div>
         </div>
 
-        <div class="glossary-row-item" data-category="resiliencia" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">Idempotencia</div>
+        <div class="glossary-row-item" data-category="schema" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">JSON Schema Draft 2020-12</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Propiedad técnica de una operación que garantiza que ejecutarla una o múltiples veces con los mismos identificadores (ej. el mismo wamid) genera exactamente el mismo efecto sin duplicaciones.
+            Estándar de definición de tipos y restricciones para objetos JSON que delimita el rango permitido de parámetros, enums y campos obligatorios de cada herramienta.
           </div>
         </div>
 
-        <div class="glossary-row-item" data-category="rendimiento" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Latencia de Ciclo Completo</div>
+        <div class="glossary-row-item" data-category="idempotencia" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Idempotencia con wamid</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Tiempo total transcurrido desde que el usuario envía su mensaje en WhatsApp hasta que recibe la respuesta final, sumando webhooks, inferencias y llamadas a bases de datos.
+            Propiedad que garantiza que reintentos de red de Meta con el mismo identificador de mensaje (<code>wamid</code>) no ejecuten transacciones duplicadas en la base de datos.
           </div>
         </div>
 
-        <div class="glossary-row-item" data-category="rendimiento" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ec4899; font-size:1.05rem;">Mensaje de Estado Intermedio</div>
+        <div class="glossary-row-item" data-category="latencia" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ec4899; font-size:1.05rem;">Cascada de Latencia (Latency Waterfall)</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Respuesta breve enviada al usuario de WhatsApp antes de iniciar una tarea pesada para confirmar la recepción y mitigar la percepción de lentitud mientras se completa la acción.
+            Desglose acumulativo del tiempo de respuesta E2E: red entrante + inferencia 1 + base de datos + inferencia 2 + red saliente de Graph API.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="tools" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Tool Hallucination</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Fallo en el que el modelo inventa nombres de funciones inexistentes o inventa argumentos no declarados en el JSON Schema por falta de especificidad en las descripciones.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="schema" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Pydantic V2 Coercion</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Conversión segura y tipada de cadenas de texto a enteros, fechas o modelos anidados con motor en Rust, bloqueando valores malformados antes de consultar SQL.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="idempotencia" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#8b5cf6; font-size:1.05rem;">Circuit Breaker (Cortocircuito)</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Patrón de resiliencia que interrumpe temporalmente llamadas a APIs externas colapsadas para evitar el agotamiento de sockets HTTP en el servidor de WhatsApp.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="latencia" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ef4444; font-size:1.05rem;">Prepared Statements SQL Guard</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Ejecución parametrizada de sentencias en bases de datos que neutraliza cualquier intento de inyección SQL indirecta presente en los argumentos generados por el LLM.
           </div>
         </div>
       </div>
@@ -1400,6 +1483,57 @@
           <p class="source-desc">Driver de conexión asíncrona de alto rendimiento para ejecución de consultas parametrizadas en milisegundos bajo alta concurrencia.</p>
           <a href="https://magicstack.github.io/asyncpg/current/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
             <span>Consultar Documentación asyncpg</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Tenacity Library · Python</span>
+            <span class="source-type-pill">Resiliencia</span>
+          </div>
+          <h4 class="source-title">Retrying Code Execution with Exponential Backoff &amp; Jitter</h4>
+          <p class="source-desc">Librería estándar para manejo de reintentos en llamadas a herramientas externas para evitar colapsos en cascada.</p>
+          <a href="https://tenacity.readthedocs.io/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Tenacity Docs</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">OpenAI API Compatibility</span>
+            <span class="source-type-pill">Estándar de Inferencia</span>
+          </div>
+          <h4 class="source-title">OpenAI Tool Calling API Specification in vLLM</h4>
+          <p class="source-desc">Implementación del endpoint /v1/chat/completions con soporte de herramientas estructuradas para modelos Llama 3.</p>
+          <a href="https://docs.vllm.ai/en/latest/serving/openai_compatible_server.html" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar vLLM Server API</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">HTTPX Async Client</span>
+            <span class="source-type-pill">Cliente HTTP</span>
+          </div>
+          <h4 class="source-title">HTTPX: Next-Generation Async HTTP Client for Python</h4>
+          <p class="source-desc">Cliente HTTP asíncrono con soporte HTTP/2 y connection pooling para comunicación con Meta Graph API en submilisegundos.</p>
+          <a href="https://www.python-httpx.org/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar HTTPX Docs</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Meta Graph API v20.0</span>
+            <span class="source-type-pill">Mensajería Interactiva</span>
+          </div>
+          <h4 class="source-title">Interactive Messages: Buttons, Lists &amp; Flow Triggers</h4>
+          <p class="source-desc">Especificación para formatear respuestas generadas por herramientas en botones de selección rápida y listas en WhatsApp.</p>
+          <a href="https://developers.facebook.com/docs/whatsapp/guides/interactive-messages" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Interactive Messages</span>
             <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>

@@ -1191,6 +1191,61 @@
         </details>
       </article>
 
+      <!-- EJERCICIO 5 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <span class="exercise-num-badge">Ejercicio 5</span>
+          <h4 class="exercise-title">Arquitectura de Notificaciones de Alerta SRE con Prometheus y Webhook de Guardia</h4>
+        </div>
+        <div class="exercise-context-box">
+          <div class="exercise-context-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            Enunciado de Alerta Crítica en Producción
+          </div>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+            Diseña una regla de alerta en Prometheus (Alertmanager) que dispare una notificación prioritaria al equipo de guardia si la latencia P95 supera 3.5 segundos durante 3 minutos consecutivos o si la tasa de errores HTTP 5xx supera el 2%.
+          </p>
+        </div>
+
+        <details class="exercise-solution-details">
+          <summary class="exercise-solution-summary">
+            <span>Ver Solución de Ingeniería Paso a Paso &amp; Regla PromQL de Producción</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="exercise-solution-panel">
+            <div class="step-flow-list">
+              <div class="step-flow-item">
+                <div class="step-num-badge">1</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Regla de Alerta PromQL para Alertmanager</h5>
+                  <pre style="background:var(--bg-subtle); padding:0.8rem; border-radius:6px; font-family:var(--font-mono); font-size:0.8rem; overflow-x:auto;">groups:
+  - name: whatsapp_agent_alerts
+    rules:
+      - alert: HighLatencyP95
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 3.5
+        for: 3m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Latencia P95 del agente WhatsApp supera los 3.5 segundos"
+          description: "La latencia actual es {{ $value }}s, afectando la experiencia de los usuarios en WhatsApp."</pre>
+                </div>
+              </div>
+
+              <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+                <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Respuesta Operativa Automática</h5>
+                  <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Al dispararse la alerta, Alertmanager notifica al canal de Slack/PagerDuty e invoca un webhook que activa una instancia secundaria de vLLM en GPU para balancear la carga de inferencia de Llama 3 hasta restablecer el SLA por debajo de 2 segundos.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </article>
+
     </section>
 
     <!-- ==========================================================================
@@ -1215,37 +1270,65 @@
 
       <div class="glossary-stack" style="display:flex; flex-direction:column; gap:1rem;">
         <div class="glossary-row-item" data-category="seguridad" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Llama Guard 3</div>
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Llama Guard 3 (8B &amp; 1B)</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Modelo de seguridad de Meta ajustado por instrucción para clasificar y moderar prompts y respuestas en 14 categorías de riesgo estándar de la industria.
+            Modelo clasificador de seguridad open-source de Meta entrenado para auditar entradas y salidas conversacionales contra una taxonomía formal de 14 categorías de riesgo.
           </div>
         </div>
 
         <div class="glossary-row-item" data-category="seguridad" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Prompt Guard</div>
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Prompt Guard 86M</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Clasificador ultraligero de 86M de parámetros diseñado para detectar ataques de inyección de prompt y Jailbreaks en menos de 30 milisegundos.
+            Clasificador ultraligero basado en mDeBERTa-v3 capaz de detectar inyecciones de prompt y ataques de Jailbreak en menos de 10ms antes de invocar modelos grandes.
           </div>
         </div>
 
-        <div class="glossary-row-item" data-category="infra" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">Proxy Inverso (NGINX)</div>
+        <div class="glossary-row-item" data-category="infraestructura" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">Docker Compose Multi-Stage</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Servidor perimetral que recibe las peticiones HTTPS públicas de Meta en el puerto 443, valida certificados TLS y las enruta a los contenedores internos de la aplicación.
+            Orquestación inmutable de microservicios (Nginx, FastAPI, Redis, Postgres) con compilación en múltiples etapas para reducir el tamaño de imagen y vectores de ataque.
           </div>
         </div>
 
-        <div class="glossary-row-item" data-category="telemetria" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Circuit Breaker</div>
+        <div class="glossary-row-item" data-category="observabilidad" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Latencia P95 &amp; P99</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Patrón de diseño de resiliencia que interrumpe automáticamente el tráfico hacia un servicio degradado (ej. GPU saturada) para evitar un colapso en cascada.
+            Métricas percentiles que miden el tiempo de respuesta garantizado para el 95% y 99% de las peticiones, excluyendo valores atípicos y asegurando un SLA uniforme.
           </div>
         </div>
 
-        <div class="glossary-row-item" data-category="telemetria" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ec4899; font-size:1.05rem;">SLA (Service Level Agreement)</div>
+        <div class="glossary-row-item" data-category="seguridad" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ec4899; font-size:1.05rem;">OWASP LLM Top 10</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Acuerdo formal de nivel de servicio que establece el porcentaje mínimo de disponibilidad operativa que el sistema debe mantener en producción.
+            Estándar internacional que categoriza las 10 amenazas más críticas en aplicaciones con IA generativa (Prompt Injection, Insecure Output Handling, Data Poisoning).
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="infraestructura" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">NGINX SSL Reverse Proxy</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Servidor perimetral que realiza terminación TLS/SSL, comprime tráfico HTTP/2, aplica Rate Limiting y enruta webhooks hacia el contenedor FastAPI.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="observabilidad" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">SLA (Service Level Agreement) 99.9%</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Compromiso de disponibilidad operativa ("tres nueves") que limita el tiempo de inactividad no programado a un máximo de 43.8 minutos al mes.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="observabilidad" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#8b5cf6; font-size:1.05rem;">MTTR (Mean Time To Recovery)</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Tiempo medio transcurrido desde la detección de una falla en el agente hasta su resolución automática o manual mediante supervisores Systemd/Docker.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="infraestructura" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ef4444; font-size:1.05rem;">Rate Limiting Token Bucket</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Algoritmo de control de flujo que protege el backend limitando las peticiones por segundo por número de WhatsApp, mitigando ataques de denegación de servicio.
           </div>
         </div>
       </div>
@@ -1310,6 +1393,57 @@
           <p class="source-desc">Patrones de orquestación con Docker Compose, certificados Let's Encrypt automatizados y terminación SSL segura para microservicios de IA.</p>
           <a href="https://docs.docker.com/compose/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
             <span>Consultar Guía Docker Compose</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Prometheus Project</span>
+            <span class="source-type-pill">Monitoreo &amp; Métricas</span>
+          </div>
+          <h4 class="source-title">Prometheus Metric Types &amp; PromQL Alerting Rules</h4>
+          <p class="source-desc">Guía de instrumentación de métricas de latencia de percentil (Histogram) y tasas de error para microservicios de inferencia.</p>
+          <a href="https://prometheus.io/docs/prometheus/latest/querying/basics/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Prometheus Querying</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Grafana Labs</span>
+            <span class="source-type-pill">Dashboards en Tiempo Real</span>
+          </div>
+          <h4 class="source-title">Grafana Dashboard Design for Production LLM Gateways</h4>
+          <p class="source-desc">Plantillas de visualización de throughput de tokens por segundo, estado de la GPU y tiempos de respuesta de webhooks.</p>
+          <a href="https://grafana.com/docs/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Grafana Docs</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Let's Encrypt / Certbot</span>
+            <span class="source-type-pill">Seguridad TLS/SSL</span>
+          </div>
+          <h4 class="source-title">Automated SSL Certificate Renewal with Certbot &amp; NGINX</h4>
+          <p class="source-desc">Configuración de renovación automática de certificados criptográficos para evitar la desconexión del webhook de Meta.</p>
+          <a href="https://certbot.eff.org/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Certbot EFF</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Systemd Documentation</span>
+            <span class="source-type-pill">Supervisión de Procesos</span>
+          </div>
+          <h4 class="source-title">Systemd Service Management for 24/7 Production AI Daemons</h4>
+          <p class="source-desc">Directivas Restart=always, Resource Limiting (MemoryMax) y journalctl para demonios de inferencia en Linux.</p>
+          <a href="https://systemd.io/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar systemd.io</span>
             <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>

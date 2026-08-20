@@ -1310,6 +1310,56 @@ Instrucción: Ofrece amablemente los 3 horarios del sábado para odontología si
         </details>
       </article>
 
+      <!-- EJERCICIO 4 -->
+      <article class="exercise-card">
+        <div class="exercise-header">
+          <span class="exercise-num-badge">Ejercicio 4</span>
+          <h4 class="exercise-title">Diseño de Almacén Multi-Tenant en Redis con TTL Dinámico y Fallback a SQLite</h4>
+        </div>
+        <div class="exercise-context-box">
+          <div class="exercise-context-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+            Enunciado de Arquitectura de Alta Disponibilidad
+          </div>
+          <p style="margin:0; font-size:0.92rem; color:var(--text-secondary); line-height:1.55;">
+            Diseña un esquema de almacenamiento de sesiones multi-inquilino en Redis con expiración dinámica (TTL de 24 horas tras el último mensaje) y un mecanismo de respaldo (fallback) hacia SQLite en caso de caída temporal del clúster de Redis.
+          </p>
+        </div>
+
+        <details class="exercise-solution-details">
+          <summary class="exercise-solution-summary">
+            <span>Ver Solución de Ingeniería Paso a Paso &amp; Código de Resiliencia</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="exercise-solution-panel">
+            <div class="step-flow-list">
+              <div class="step-flow-item">
+                <div class="step-num-badge">1</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--text-primary);">Estructura de Claves Multi-Tenant en Redis</h5>
+                  <p style="margin:0 0 0.5rem 0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Utilizamos namespaces jerárquicos: <code>tenant:{empresa_id}:session:{wa_id}</code> para aislar datos entre clientes:
+                  </p>
+                  <pre style="background:var(--bg-subtle); padding:0.8rem; border-radius:6px; font-family:var(--font-mono); font-size:0.8rem; overflow-x:auto;"># Redis Hash Key: tenant:clinica_meta:session:5215587654321
+HSET tenant:clinica_meta:session:5215587654321 service "Ortodoncia" step "CONFIRMING"
+EXPIRE tenant:clinica_meta:session:5215587654321 86400  # TTL 24 horas</pre>
+                </div>
+              </div>
+
+              <div class="step-flow-item" style="border-left-color:var(--accent-success); background:rgba(5,150,105,0.04);">
+                <div class="step-num-badge" style="background:var(--accent-success);">2</div>
+                <div class="step-flow-content" style="flex:1; min-width:0;">
+                  <h5 style="margin:0 0 0.3rem 0; font-size:1rem; font-family:var(--font-head); color:var(--accent-success);">Patrón Circuit Breaker con Fallback a Base de Datos Local</h5>
+                  <p style="margin:0; font-size:0.88rem; color:var(--text-secondary); line-height:1.55;">
+                    Si la conexión a Redis lanza <code>redis.ConnectionError</code> o supera un timeout de 200ms, el middleware conmuta de inmediato a SQLite local para leer el último estado y encola una tarea de sincronización asíncrona para cuando Redis se restablezca, garantizando 0% de mensajes perdidos para los usuarios de WhatsApp.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </article>
+
     </section>
 
     <!-- ==========================================================================
@@ -1348,23 +1398,58 @@ Instrucción: Ofrece amablemente los 3 horarios del sábado para odontología si
         </div>
 
         <div class="glossary-row-item" data-category="agentes" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">Flujo Conversacional</div>
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-purple); font-size:1.05rem;">Flujo Conversacional Híbrido</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Diseño de la conducción de una conversación automatizada que equilibra reglas fijas para decisiones críticas con la libertad del modelo para interpretar lenguaje natural y responder con fluidez.
+            Diseño que combina máquinas de estado finitas (FSM) para etapas críticas (pagos, agendas) con razonamiento generativo libre de Llama 3 para resolver dudas abiertas.
           </div>
         </div>
 
         <div class="glossary-row-item" data-category="optimizacion" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
-          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Ventana de Contexto</div>
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Ventana de Contexto (Context Window)</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Cantidad total de texto, medida en tokens, que un modelo puede procesar en una sola inferencia (ej. 128k en Llama 3); define el límite físico de memoria que se puede inyectar en cada interacción.
+            Límite máximo de tokens procesables en un pase de inferencia (128k en Llama 3). Requiere estrategias de compresión para evitar latencias elevadas en producción.
           </div>
         </div>
 
         <div class="glossary-row-item" data-category="agentes" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
           <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ec4899; font-size:1.05rem;">Identificador de Usuario (wa_id)</div>
           <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
-            Dato único (número telefónico internacional en WhatsApp) que permite asociar el estado y las variables de una conversación con la persona correcta en bases de datos multi-inquilino.
+            Identificador único internacional del cliente en WhatsApp utilizado como clave primaria de indexación para particionar la memoria en almacenes de clave-valor.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="optimizacion" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--meta-blue); font-size:1.05rem;">Sliding Window Memory</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Estrategia de truncamiento que retiene únicamente los últimos $K$ turnos conversacionales exactos en el prompt, descartando los mensajes más antiguos para mantener el costo constante.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="optimizacion" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.05rem;">Compresión de Resumen (Summary Buffer)</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Proceso asíncrono que sintetiza periódicamente el historial antiguo en un párrafo denso de variables clave para no perder el contexto histórico sin saturar la GPU.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="stack" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#8b5cf6; font-size:1.05rem;">TTL (Time To Live) de Sesión</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Mecanismo de expiración automática en Redis que libera la memoria RAM de sesiones inactivas tras 24 o 48 horas, evitando sobrecostos de infraestructura.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="agentes" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#f59e0b; font-size:1.05rem;">Determinismo en Máquina de Estados</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Garantía de que ante una acción crítica (ej. confirmar cobro con tarjeta), el sistema solo avanza si se satisfacen precondiciones formales, eliminando alucinaciones del modelo.
+          </div>
+        </div>
+
+        <div class="glossary-row-item" data-category="optimizacion" style="background:var(--card-surface); padding:1.2rem; border-radius:10px; border:1px solid var(--border-subtle); display:grid; grid-template-columns:240px 1fr; gap:1.5rem;">
+          <div class="glossary-term-name" style="font-family:var(--font-disp); font-weight:800; color:#ef4444; font-size:1.05rem;">Prefill Latency</div>
+          <div class="glossary-term-desc" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.6;">
+            Fase inicial de inferencia en la que la GPU procesa en paralelo todos los tokens del prompt histórico antes de generar el primer token de respuesta ($O(N^2)$ en atención).
           </div>
         </div>
       </div>
@@ -1429,6 +1514,57 @@ Instrucción: Ofrece amablemente los 3 horarios del sábado para odontología si
           <p class="source-desc">Documentación del motor de corrutinas en Python para coordinar peticiones concurrentes de WhatsApp sin bloquear el hilo del servidor.</p>
           <a href="https://docs.python.org/3/library/asyncio.html" target="_blank" rel="noopener noreferrer" class="source-link-btn">
             <span>Consultar Python Docs asyncio</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">SQLite Development Team</span>
+            <span class="source-type-pill">Motor Embebido</span>
+          </div>
+          <h4 class="source-title">SQLite WAL Mode (Write-Ahead Logging) for Sessions</h4>
+          <p class="source-desc">Técnicas de concurrencia y persistencia atómica con SQLite para almacenamiento local de conversaciones con bajo consumo de memoria.</p>
+          <a href="https://www.sqlite.org/wal.html" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Documentación SQLite WAL</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Meta Open Source</span>
+            <span class="source-type-pill">Herramientas de Agente</span>
+          </div>
+          <h4 class="source-title">Llama Agent Tooling &amp; Memory Safety Patterns</h4>
+          <p class="source-desc">Directrices de seguridad y aislamiento de memoria para agentes que interactúan con múltiples usuarios en plataformas de mensajería.</p>
+          <a href="https://llama.meta.com/docs/llama-stack/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar Llama Agent Docs</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">Hugging Face &amp; vLLM</span>
+            <span class="source-type-pill">Optimización de KV Cache</span>
+          </div>
+          <h4 class="source-title">PagedAttention: Memory Management for LLMs</h4>
+          <p class="source-desc">Arquitectura de memoria paginada para reducir la fragmentación de la memoria VRAM durante la gestión de múltiples sesiones simultáneas.</p>
+          <a href="https://vllm.ai/" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar vLLM Architecture</span>
+            <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
+          </a>
+        </div>
+
+        <div class="source-card">
+          <div class="source-card-header">
+            <span class="source-tag">IETF RFC 7519</span>
+            <span class="source-type-pill">Estándar de Token</span>
+          </div>
+          <h4 class="source-title">JSON Web Tokens (JWT) for Stateful Session Authentication</h4>
+          <p class="source-desc">Estándar para validación de identidad y claims de sesión en arquitecturas conversacionales distribuidas de microservicios.</p>
+          <a href="https://datatracker.ietf.org/doc/html/rfc7519" target="_blank" rel="noopener noreferrer" class="source-link-btn">
+            <span>Consultar RFC 7519</span>
             <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"></path></svg>
           </a>
         </div>
