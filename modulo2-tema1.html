@@ -174,15 +174,89 @@
         <h3 class="tema-title">De la API de Negocio al Cloud API: Qué Cambia Radicalmente</h3>
       </div>
 
+      <!-- 1. ANALOGÍA INTUITIVA -->
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Intuición &amp; Analogía</span> Central Telefónica en el Sótano vs. Telefonía Gestionada en la Nube</h4>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Intuición &amp; Analogía</span> Central Telefónica en el Sótano vs. Telefonía Global en la Nube</h4>
+        <div class="easy-explainer-box">
+          <div class="easy-explainer-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+          </div>
+          <div class="easy-explainer-content">
+            <strong style="color:var(--meta-blue); font-size:1.05rem; display:block; margin-bottom:0.4rem;">La Metáfora de la Infraestructura de Telecomunicaciones:</strong>
+            <p class="prose-p" style="margin:0;">
+              Imagina que para poder recibir llamadas de tus clientes tuvieras que <b>comprar e instalar un conmutador físico de 200 kg en el sótano de tu empresa</b>, contratar técnicos para parcharlo cada mes, pagar la luz del aire acondicionado y sufrir si se corta el suministro eléctrico. Ese era el modelo <b>On-Premises (BSP)</b>. En cambio, la <b>WhatsApp Cloud API</b> equivale a contratar un número digital en la red global de Meta: tú solo consumes endpoints REST por HTTPS y Meta se encarga de que la red nunca se caiga en todo el planeta.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. CONCEPTO FORMAL & FÓRMULAS MATEMÁTICAS -->
+      <div class="tema-section-block">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Concepto Formal</span> Costo Total de Propiedad ($TCO$) y Disponibilidad Compuesta ($SLA$)</h4>
         <p class="prose-p">
-          Para comprender la revolución de la <b>WhatsApp Cloud API</b>, imagina la diferencia entre tener que <b>instalar una centralita telefónica física con cables de cobre en el sótano de tu empresa</b> o contratar un servicio moderno de telefonía digital en la nube:
+          Desde la perspectiva de la ingeniería de software y finanzas operativas (FinOps), la decisión de arquitectura entre On-Premises y Cloud API se modela a través del <b>Costo Total de Propiedad ($TCO$)</b> y la <b>Disponibilidad Compuesta del Sistema ($A_{\text{Sistema}}$)</b>:
         </p>
-        <ul class="clean-bullet-list" style="margin: 1rem 0 1.5rem 1.5rem; line-height: 1.8; color: var(--text-secondary);">
-          <li><strong>El Modelo Antiguo (On-Premises):</strong> Exigía levantar clústeres de contenedores Docker con el <i>WhatsApp Business Client</i>, aprovisionar bases de datos MySQL dedicadas, configurar balanceadores de carga, renovar certificados SSL cada mes y aplicar parches de seguridad obligatorios cada 180 días bajo pena de corte de servicio. Si tus servidores colapsaban a las 3:00 AM, tus clientes se quedaban sin servicio y tu equipo de DevOps debía resolverlo.</li>
-          <li><strong>El Modelo Moderno (Cloud API):</strong> Meta asume el 100% de la infraestructura física, el cifrado de extremo a extremo, la redundancia en centros de datos globales y la escalabilidad elástica. Tu equipo se conecta a una URL HTTPS estándar en <code>graph.facebook.com</code> mediante llamadas REST sencillas y webhooks.</li>
-        </ul>
+
+        <!-- FORMULA CARD: TCO & DISPONIBILIDAD -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$TCO_{\text{On-Prem}} = C_{\text{Servidores}} + C_{\text{DevOps}} + C_{\text{DB/Storage}} + C_{\text{Certificados/SSL}} + \sum_{k} N_k \cdot P_k$$
+            $$TCO_{\text{Cloud}} = \$0_{\text{Infraestructura}} + \$0_{\text{Mantenimiento\_Base}} + \sum_{k} N_k \cdot P_k$$
+            $$A_{\text{Compuesta\_OnPrem}} = A_{\text{Hardware}} \times A_{\text{Docker}} \times A_{\text{MySQL}} \times A_{\text{ISP}} \le 0.9850 \quad\text{vs}\quad A_{\text{Meta\_Cloud}} \ge 0.9995$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose Exhaustivo de Variables: FinOps &amp; Confiabilidad</span>
+                <span class="breakdown-count-tag">6 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$C_{\text{Servidores}} \approx \$250\text{ USD/mes}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Cómputo Dedicado On-Premises:</strong> Costo de 2 instancias AWS EC2 <code>t3.xlarge</code> (CoreApp + Webhook Gateway) para garantizar redundancia mínima.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$C_{\text{DevOps}} \approx \$600\text{ USD/mes}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Horas de Ingeniería de Mantenimiento:</strong> Horas mensuales dedicadas a actualizar imágenes Docker de Meta (parches obligatorios semestrales) y monitorizar caídas de red.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\sum N_k \cdot P_k$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Tarifa Oficial de Conversaciones de Meta:</strong> Costo por sesión de 24 horas según categoría ($P_{\text{servicio}} \approx \$0.008\text{ USD}$, $P_{\text{marketing}} \approx \$0.045\text{ USD}$). Es idéntico en ambos modelos.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$A_{\text{Compuesta}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Disponibilidad E2E (SLA):</strong> En On-Premises, la probabilidad de que el servicio esté activo es la multiplicación de las disponibilidades de cada componente local ($99\% \times 99.5\% \times 99.9\% \approx 98.4\%$), resultando en hasta 11 horas de caída al mes.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$A_{\text{Meta\_Cloud}} \ge 99.95\%$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Redundancia Anycast Global de Meta:</strong> Menos de 21 minutos de indisponibilidad acumulada por año garantizada por la red perimetral de centros de datos de Meta.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\Delta TCO \ge \$10,000\text{ USD/año}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Ahorro Neto Directo:</strong> Reducción neta de gasto fijo al adoptar la Cloud API, liberando presupuesto para cómputo de inferencia en modelos Llama 3.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
 
         <div class="callout-box" style="background: rgba(8, 102, 255, 0.06); border-left: 4px solid var(--meta-blue); padding: 1.25rem 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
           <strong style="color: var(--meta-blue); font-size: 1rem; display: block; margin-bottom: 0.35rem;">¿Dónde reside la Inteligencia Artificial (Llama 3)?</strong>
@@ -192,47 +266,112 @@
         </div>
       </div>
 
-      <div class="table-responsive-wrapper">
-        <table class="table-pro">
-          <thead>
-            <tr>
-              <th>Dimensión de Ingeniería</th>
-              <th>WhatsApp Business API (On-Premises)</th>
-              <th>WhatsApp Cloud API (Alojada por Meta)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Alojamiento de Mensajería</strong></td>
-              <td>Servidores propios (AWS EC2, GCP Compute, Docker local).</td>
-              <td>Infraestructura global distribuida de Meta.</td>
-            </tr>
-            <tr>
-              <td><strong>Mantenimiento y Parches</strong></td>
-              <td>Manual: Actualizaciones obligatorias de contenedores cada 6 meses.</td>
-              <td>Automático: Cero mantenimiento de infraestructura de mensajería.</td>
-            </tr>
-            <tr>
-              <td><strong>Costo Fijo de Servidores</strong></td>
-              <td>Alto ($150 - $600 USD/mes solo en cómputo e infraestructura base).</td>
-              <td>$0 USD en servidores de mensajería (Solo pagas por conversación activa).</td>
-            </tr>
-            <tr>
-              <td><strong>Modelo de Facturación Meta</strong></td>
-              <td>Por conversación iniciada (Marketing, Utilidad, Servicio).</td>
-              <td>Mismo esquema oficial de Meta (1,000 conversaciones de servicio gratuitas al mes).</td>
-            </tr>
-            <tr>
-              <td><strong>SLA y Disponibilidad</strong></td>
-              <td>Responsabilidad exclusiva del equipo de infraestructura interno.</td>
-              <td>Garantizado por los centros de datos de Meta (99.95%+).</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- 3. MATRIZ DE INGENIERÍA COMPARATIVA -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Arquitectura &amp; Comparativa</span> Matriz de 8 Dimensiones de Ingeniería</h4>
+        <div class="table-responsive-wrapper">
+          <table class="table-pro">
+            <thead>
+              <tr>
+                <th>Dimensión de Ingeniería</th>
+                <th>WhatsApp Business API (On-Premises / BSP)</th>
+                <th>WhatsApp Cloud API (Meta Oficial)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Alojamiento de Mensajería</strong></td>
+                <td>Servidores propios (AWS EC2, GCP Compute, Docker local).</td>
+                <td>Infraestructura global distribuida de Meta (Anycast Edge).</td>
+              </tr>
+              <tr>
+                <td><strong>Mantenimiento y Parches</strong></td>
+                <td>Manual: Actualizaciones obligatorias de contenedores cada 180 días.</td>
+                <td>Automático: Cero mantenimiento de infraestructura de mensajería.</td>
+              </tr>
+              <tr>
+                <td><strong>Costo Fijo de Servidores</strong></td>
+                <td>Alto ($150 - $600 USD/mes solo en cómputo e infraestructura base).</td>
+                <td>$0 USD en servidores de mensajería (Solo pagas por conversación activa).</td>
+              </tr>
+              <tr>
+                <td><strong>Tier Gratuito Oficial</strong></td>
+                <td>Depende del Business Solution Provider (muchos cobran comisión extra).</td>
+                <td>1,000 conversaciones de servicio gratuitas cada mes directamente de Meta.</td>
+              </tr>
+              <tr>
+                <td><strong>Latencia de Entrega E2E</strong></td>
+                <td>Variable (depende del enrutamiento de tu servidor y base de datos MySQL).</td>
+                <td>Ultrarrápida (&lt; 200 ms a nivel perimetral de red de Meta).</td>
+              </tr>
+              <tr>
+                <td><strong>Cifrado y Seguridad</strong></td>
+                <td>Cifrado E2E gestionado por tu clúster de base de datos local.</td>
+                <td>Cifrado TLS 1.3 en tránsito y en reposo certificado por Meta.</td>
+              </tr>
+              <tr>
+                <td><strong>Capacidad de Escalado</strong></td>
+                <td>Manual: Requiere auto-scaling groups y sharding de bases de datos.</td>
+                <td>Elástico: Soporta hasta 1,000 mensajes por segundo sin configuración.</td>
+              </tr>
+              <tr>
+                <td><strong>Integración con Llama 3</strong></td>
+                <td>Compleja: Múltiples capas intermedias propietarias del BSP.</td>
+                <td>Directa y limpia mediante Webhooks REST estándar a tu FastAPI.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. IMPLEMENTACIÓN EN CÓDIGO -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">4. Implementación &amp; Configuración</span> Gestión de Credenciales con Pydantic Settings</h4>
+        <p class="prose-p">
+          Para conectar tu servidor con la Cloud API de forma robusta y segura, define un esquema de configuración con <b>Pydantic Settings</b> que valide automáticamente las variables de entorno al iniciar la aplicación:
+        </p>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">Python · config.py (Pydantic V2 Settings)</span>
+            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <pre class="code-content"><code class="language-python"><span class="code-keyword">from</span> pydantic_settings <span class="code-keyword">import</span> BaseSettings
+<span class="code-keyword">from</span> pydantic <span class="code-keyword">import</span> Field, SecretStr
+
+<span class="code-keyword">class</span> <span class="code-type">WhatsAppSettings</span>(BaseSettings):
+    <span class="code-comment"># Identificadores de Meta for Developers</span>
+    WHATSAPP_TOKEN: SecretStr = Field(..., description=<span class="code-string">"Bearer Token permanente del System User"</span>)
+    PHONE_NUMBER_ID: str = Field(..., description=<span class="code-string">"ID único del número telefónico asignado por Meta"</span>)
+    APP_SECRET: SecretStr = Field(..., description=<span class="code-string">"Clave secreta de la App para validación HMAC SHA-256"</span>)
+    VERIFY_TOKEN: str = Field(..., description=<span class="code-string">"Token arbitrario configurado para el Handshake GET"</span>)
+    
+    <span class="code-comment"># Configuración de Inferencia y API</span>
+    API_VERSION: str = Field(default=<span class="code-string">"v20.0"</span>, description=<span class="code-string">"Versión de Meta Graph API"</span>)
+    LLAMA_MODEL_ID: str = Field(default=<span class="code-string">"meta-llama/Llama-3.1-8B-Instruct"</span>)
+
+    <span class="code-keyword">class</span> <span class="code-type">Config</span>:
+        env_file = <span class="code-string">".env"</span>
+        env_file_encoding = <span class="code-string">"utf-8"</span>
+
+<span class="code-comment"># Instancia global validada</span>
+settings = WhatsAppSettings()</code></pre>
+        </div>
+      </div>
+
+      <!-- 5. ANTI-PATRONES Y ADVERTENCIAS -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">5. Anti-patrones en Producción</span> Trampas Comunes al Iniciar con la Cloud API</h4>
+        <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.2rem 0;">
+          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">⚠️ Trampa Crítica: Usar el Token Temporal de 24 Horas en Producción</strong>
+          <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
+            El panel de pruebas de Meta genera un <i>Temporary Access Token</i> que expira exactamente tras 24 horas. Si despliegas tu bot con este token, tu agente dejará de responder al día siguiente. <b>Solución de Grado Industrial:</b> Crea un <i>Usuario del Sistema (System User)</i> en tu <b>Meta Business Manager</b> con rol de Administrador y genera un <b>Token de Acceso Permanente</b> con los permisos <code>whatsapp_business_messaging</code> y <code>whatsapp_business_management</code>.
+          </p>
+        </div>
       </div>
 
       <!-- QUIZ 1 -->
-      <div class="quiz-box">
+      <div class="quiz-box" style="margin-top:2rem;">
         <div class="quiz-header">
           <span class="quiz-tag">Autoevaluación 2.1.1</span>
         </div>
@@ -252,102 +391,202 @@
         <h3 class="tema-title">El Flujo de un Mensaje: El Ciclo Bidireccional Ping-Pong y la Regla de los 3 Segundos</h3>
       </div>
 
+      <!-- 1. ANALOGÍA INTUITIVA -->
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Ciclo Obligatorio</span> Dos Canales Asíncronos Desacoplados</h4>
-        <p class="prose-p">
-          Una duda frecuente al comenzar es: <i>"¿Puedo responder al usuario de WhatsApp retornando texto en la respuesta HTTP del webhook?"</i>. La respuesta es <b>NO</b>. La arquitectura de WhatsApp es estrictamente <b>asíncrona y desacoplada</b>:
-        </p>
-        <p class="prose-p">
-          Imagina una <b>partida de ping-pong sincronizada</b>. El usuario saca el servicio al enviar un mensaje desde su app de WhatsApp. Meta recibe el mensaje y lanza la bola hacia tu backend mediante una notificación <b>Webhook HTTP POST</b>. Tu servidor debe confirmar de inmediato que recibió la bola retornando un código <code>HTTP 200 OK</code> en menos de 3 segundos. Posteriormente, tu servidor procesa la inferencia con Llama 3 y ejecuta el remate: envía la respuesta mediante una petición separada a la <b>Graph API de Meta</b>.
-        </p>
-      </div>
-
-      <!-- DIAGRAMA VISUAL DEL FLUJO EN 3 PASOS -->
-      <div class="flow-card-grid">
-        <div class="flow-card-item">
-          <div class="flow-card-title" style="color:var(--meta-blue);">Paso 1: Meta te avisa</div>
-          <span class="flow-card-badge">WEBHOOK INCOMING (HTTP POST)</span>
-          <p class="flow-card-desc">
-            Cuando el usuario escribe, Meta contacta a tu URL de webhook con el payload JSON: número del remitente (<code>from</code>), ID único (<code>wamid</code>) y el texto exacto. Tu servidor responde <code>HTTP 200 OK</code> inmediatamente.
-          </p>
-        </div>
-
-        <div class="flow-card-item">
-          <div class="flow-card-title" style="color:var(--accent-success);">Paso 2: Tu servidor procesa</div>
-          <span class="flow-card-badge">LLAMA 3 / LOGIC ENGINE (ASÍNCRONO)</span>
-          <p class="flow-card-desc">
-            En una tarea en segundo plano (<code>BackgroundTasks</code>), FastAPI valida la firma criptográfica HMAC, recupera la memoria de conversación, consulta herramientas en base de datos y genera la respuesta final con Llama 3.
-          </p>
-        </div>
-
-        <div class="flow-card-item">
-          <div class="flow-card-title" style="color:var(--meta-purple);">Paso 3: Tú respondes</div>
-          <span class="flow-card-badge">GRAPH API DISPATCH (POST /MESSAGES)</span>
-          <p class="flow-card-desc">
-            Tu backend envía una petición HTTP autenticada con Bearer Token al endpoint <code>POST /v20.0/{phone_number_id}/messages</code> en Meta Graph API (<code>graph.facebook.com</code>). Meta recibe la orden y entrega el mensaje al chat del usuario.
-          </p>
-        </div>
-      </div>
-
-      <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.5rem 0;">
-        <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">La Regla Crítica del Timeout de 3 Segundos:</strong>
-        <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
-          Si tu endpoint de webhook tarda más de <b>3 segundos</b> en responder <code>HTTP 200 OK</code> (por ejemplo, si bloqueas la ejecución esperando una inferencia lenta de Llama o una consulta pesada a base de datos), Meta asumirá que tu servidor se cayó y <b>reenviará el mismo webhook múltiples veces</b>, provocando tormentas de peticiones duplicadas y respuestas repetidas al usuario. La solución arquitectónica es procesar la inferencia en segundo plano (<i>BackgroundTasks</i>).
-        </p>
-      </div>
-
-      <!-- FORMULA CARD: PRESUPUESTO DE TIEMPO Y TIMEOUT -->
-      <div class="formula-card">
-        <div class="formula-math-area">
-          $$\text{Latencia}_{\text{Webhook}} = T_{\text{Meta}\to\text{ngrok}} + T_{\text{ngrok}\to\text{Local}} + T_{\text{FastAPI\_ACK}} \le 3000\text{ ms}$$
-          $$\text{Pipeline}_{\text{Asíncrono}} = T_{\text{RAG/DB}} + T_{\text{Llama 3}}(N_{\text{tokens}}) + T_{\text{Graph API Dispatch}}$$
-        </div>
-        <details class="formula-breakdown-details">
-          <summary class="formula-breakdown-summary">
-            <div class="summary-left">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-              <span>Desglose de Variables: Presupuesto de Latencia &amp; Timeout</span>
-              <span class="breakdown-count-tag">5 variables</span>
-            </div>
-            <span class="summary-toggle-icon">
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-            </span>
-          </summary>
-          <div class="formula-breakdown-panel">
-            <div class="breakdown-list-stack">
-              <div class="breakdown-list-row">
-                <span class="breakdown-row-badge">$T_{\text{FastAPI\_ACK}} \le 50\text{ ms}$</span>
-                <div class="breakdown-row-text">
-                  <strong>Confirmación Inmediata de Recepción:</strong> Retorno síncrono de <code>{"status": "ok"}</code> (HTTP 200) para evitar que Meta reintente la entrega.
-                </div>
-              </div>
-              <div class="breakdown-list-row">
-                <span class="breakdown-row-badge">$T_{\text{ngrok}} \approx 80\text{ ms}$</span>
-                <div class="breakdown-row-text">
-                  <strong>Sobrecarga del Túnel TLS:</strong> Latencia de enrutamiento inverso desde internet hacia localhost durante desarrollo.
-                </div>
-              </div>
-              <div class="breakdown-list-row">
-                <span class="breakdown-row-badge">$T_{\text{Llama 3}}(N)$</span>
-                <div class="breakdown-row-text">
-                  <strong>Inferencia Generativa en Tarea Background:</strong> Tiempo de generación $N \times t_{\text{token}}$ ejecutado de forma no bloqueante (1500 - 3000 ms).
-                </div>
-              </div>
-              <div class="breakdown-list-row">
-                <span class="breakdown-row-badge">$T_{\text{Graph API}} \approx 250\text{ ms}$</span>
-                <div class="breakdown-row-text">
-                  <strong>Despacho de Salida:</strong> Petición HTTP POST final al endpoint <code>/messages</code> de Meta para entregar la respuesta al usuario.
-                </div>
-              </div>
-              <div class="breakdown-list-row">
-                <span class="breakdown-row-badge">$\text{Límite} = 3000\text{ ms}$</span>
-                <div class="breakdown-row-text">
-                  <strong>Ventana de Cancelación de Meta:</strong> Tiempo máximo que espera Meta antes de declarar <i>Webhook Delivery Failed</i> y reintentar.
-                </div>
-              </div>
-            </div>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Intuición &amp; Analogía</span> El Cartero Expreso y la Partida de Ping-Pong Asíncrona</h4>
+        <div class="easy-explainer-box">
+          <div class="easy-explainer-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
-        </details>
+          <div class="easy-explainer-content">
+            <strong style="color:var(--meta-blue); font-size:1.05rem; display:block; margin-bottom:0.4rem;">La Metáfora del Acuse de Recibo Inmediato:</strong>
+            <p class="prose-p" style="margin:0;">
+              Imagina que un cartero llega a tu puerta y te entrega una carta importante. Si te quedas leyendo la carta de 10 páginas antes de firmarle la planilla, el cartero se desesperará, asumirá que nadie le abrió y se marchará para volver a tocar el timbre 5 minutos después. En WhatsApp ocurre exactamente igual: Meta espera que <b>firmes el acuse de recibo (HTTP 200 OK) en menos de 3 segundos</b>. Luego, en tu propio tiempo y en segundo plano, tu modelo Llama 3 lee el mensaje, razona la respuesta y despacha una nueva carta al usuario mediante la Graph API.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. CONCEPTO FORMAL & FÓRMULAS MATEMÁTICAS -->
+      <div class="tema-section-block">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Concepto Formal</span> Presupuesto de Latencia E2E y Desacoplamiento de Procesos</h4>
+        <p class="prose-p">
+          En sistemas distribuidos de mensajería en tiempo real, el flujo no es una tubería síncrona monohilo, sino una <b>arquitectura orientada a eventos desacoplada</b>. El presupuesto temporal se modela mediante dos ecuaciones deterministas:
+        </p>
+
+        <!-- FORMULA CARD: PRESUPUESTO DE TIEMPO Y TIMEOUT -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$T_{\text{Webhook\_ACK}} = T_{\text{Meta}\to\text{Proxy}} + T_{\text{Proxy}\to\text{FastAPI}} + T_{\text{HMAC\_Check}} + T_{\text{Queue}} \le 3000\text{ ms}$$
+            $$T_{\text{Latencia\_E2E}} = T_{\text{Webhook\_ACK}} + T_{\text{Redis\_Lock}} + T_{\text{RAG/DB}} + \sum_{i=1}^{N_{\text{tok}}} \frac{1}{\text{TPS}_{\text{Llama}}} + T_{\text{Graph\_API\_POST}}$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Variables: Presupuesto de Latencia &amp; Timeout</span>
+                <span class="breakdown-count-tag">6 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Webhook\_ACK}} \le 50\text{ ms}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Confirmación Inmediata de Recepción:</strong> Retorno síncrono de <code>{"status": "ok"}</code> (HTTP 200) para evitar que Meta reintente la entrega del paquete.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{HMAC\_Check}} \approx 2\text{ ms}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Validación Criptográfica de Cabecera:</strong> Tiempo de cómputo en CPU para validar la firma <code>X-Hub-Signature-256</code> antes de admitir la carga.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{TPS}_{\text{Llama}} \ge 35\text{ tokens/s}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Velocidad de Inferencia de Llama 3:</strong> Tasa de generación de texto ejecutada en una GPU acelerada o endpoint de inferencia optimizado.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Graph\_API}} \approx 180\text{ ms}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Despacho de Salida:</strong> Petición HTTP POST final al endpoint <code>/messages</code> de Meta para entregar la respuesta al usuario.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Límite} = 3000\text{ ms}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Ventana de Cancelación de Meta:</strong> Tiempo máximo que espera Meta antes de declarar <i>Webhook Delivery Failed</i> y reintentar.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Total\_Usuario}} \approx 1.2\text{ s}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Experiencia E2E del Usuario:</strong> Tiempo total percibido por el cliente desde que envía su duda en WhatsApp hasta que ve el mensaje de respuesta.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.5rem 0;">
+          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">La Regla Crítica del Timeout de 3 Segundos:</strong>
+          <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
+            Si tu endpoint de webhook tarda más de <b>3 segundos</b> en responder <code>HTTP 200 OK</code> (por ejemplo, si bloqueas la ejecución esperando una inferencia lenta de Llama o una consulta pesada a base de datos), Meta asumirá que tu servidor se cayó y <b>reenviará el mismo webhook múltiples veces</b>, provocando tormentas de peticiones duplicadas y respuestas repetidas al usuario. La solución arquitectónica es procesar la inferencia en segundo plano (<i>BackgroundTasks</i>).
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. DIAGRAMA VISUAL DEL FLUJO EN 4 PASOS -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Arquitectura del Flujo</span> Las 4 Fases del Ciclo Bidireccional Asíncrono</h4>
+        <div class="flow-card-grid">
+          <div class="flow-card-item">
+            <div class="flow-card-title" style="color:var(--meta-blue);">1. Webhook Incoming</div>
+            <span class="flow-card-badge">HTTP POST DE META</span>
+            <p class="flow-card-desc">
+              Meta entrega el payload con el remitente (<code>from</code>), ID único (<code>wamid</code>) y el texto del usuario a tu URL pública segura.
+            </p>
+          </div>
+
+          <div class="flow-card-item">
+            <div class="flow-card-title" style="color:var(--accent-success);">2. Confirmación Inmediata</div>
+            <span class="flow-card-badge">HTTP 200 OK (&lt; 50 MS)</span>
+            <p class="flow-card-desc">
+              Tu servidor valida la firma HMAC, encola la tarea en background y retorna <code>{"status": "ok"}</code> de inmediato a Meta para cerrar el ciclo de red.
+            </p>
+          </div>
+
+          <div class="flow-card-item">
+            <div class="flow-card-title" style="color:var(--meta-purple);">3. Razonamiento Llama 3</div>
+            <span class="flow-card-badge">BACKGROUND TASK</span>
+            <p class="flow-card-desc">
+              El worker en segundo plano recupera el historial de chat, consulta la base de conocimiento y genera la respuesta con Meta Llama 3.1.
+            </p>
+          </div>
+
+          <div class="flow-card-item">
+            <div class="flow-card-title" style="color:var(--meta-orange);">4. Graph API Dispatch</div>
+            <span class="flow-card-badge">POST /MESSAGES</span>
+            <p class="flow-card-desc">
+              Tu backend ejecuta una llamada REST a <code>graph.facebook.com</code> con el token Bearer para entregar la respuesta al WhatsApp del usuario.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. IMPLEMENTACIÓN EN CÓDIGO -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">4. Implementación en Código</span> Patrón Asíncrono con FastAPI BackgroundTasks</h4>
+        <p class="prose-p">
+          El siguiente patrón de producción demuestra cómo desacoplar la recepción del webhook de la ejecución del agente con Llama 3:
+        </p>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">Python · webhook_handler.py (FastAPI Async)</span>
+            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <pre class="code-content"><code class="language-python"><span class="code-keyword">from</span> fastapi <span class="code-keyword">import</span> FastAPI, Request, BackgroundTasks, status
+<span class="code-keyword">import</span> httpx
+
+app = FastAPI(title=<span class="code-string">"WhatsApp AI Agent Core"</span>)
+
+<span class="code-decorator">@app.post</span>(<span class="code-string">"/webhook"</span>, status_code=status.HTTP_200_OK)
+<span class="code-keyword">async def</span> <span class="code-function">receive_whatsapp_webhook</span>(request: Request, bg: BackgroundTasks):
+    <span class="code-comment"># 1. Parsear el cuerpo de la petición</span>
+    payload = <span class="code-keyword">await</span> request.json()
+    
+    <span class="code-comment"># 2. Extraer datos con manejo seguro de excepciones</span>
+    <span class="code-keyword">try</span>:
+        change = payload[<span class="code-string">"entry"</span>][<span class="code-number">0</span>][<span class="code-string">"changes"</span>][<span class="code-number">0</span>][<span class="code-string">"value"</span>]
+        <span class="code-keyword">if</span> <span class="code-string">"messages"</span> <span class="code-keyword">in</span> change:
+            msg_obj = change[<span class="code-string">"messages"</span>][<span class="code-number">0</span>]
+            sender_id = msg_obj[<span class="code-string">"from"</span>]
+            text_body = msg_obj.get(<span class="code-string">"text"</span>, {}).get(<span class="code-string">"body"</span>, <span class="code-string">""</span>)
+            phone_id = change[<span class="code-string">"metadata"</span>][<span class="code-string">"phone_number_id"</span>]
+            
+            <span class="code-comment"># 3. Delegar procesamiento pesado a tarea en segundo plano</span>
+            bg.add_task(ejecutar_pipeline_llama, sender_id, text_body, phone_id)
+            
+    <span class="code-keyword">except</span> (KeyError, IndexError):
+        <span class="code-keyword">pass</span>  <span class="code-comment"># Notificaciones de estado (sent, delivered, read)</span>
+
+    <span class="code-comment"># 4. Responder HTTP 200 en menos de 25 ms</span>
+    <span class="code-keyword">return</span> {<span class="code-string">"status"</span>: <span class="code-string">"received"</span>}
+
+<span class="code-keyword">async def</span> <span class="code-function">ejecutar_pipeline_llama</span>(sender: str, mensaje: str, phone_number_id: str):
+    <span class="code-comment"># A. Inferencia con Llama 3</span>
+    respuesta_ia = <span class="code-string">f"Hola! He procesado tu mensaje: {mensaje}"</span>
+    
+    <span class="code-comment"># B. Despacho a WhatsApp Cloud API</span>
+    url = <span class="code-string">f"https://graph.facebook.com/v20.0/{phone_number_id}/messages"</span>
+    headers = {<span class="code-string">"Authorization"</span>: <span class="code-string">"Bearer TU_TOKEN_DE_ACCESO"</span>}
+    body = {
+        <span class="code-string">"messaging_product"</span>: <span class="code-string">"whatsapp"</span>,
+        <span class="code-string">"to"</span>: sender,
+        <span class="code-string">"type"</span>: <span class="code-string">"text"</span>,
+        <span class="code-string">"text"</span>: {<span class="code-string">"body"</span>: respuesta_ia}
+    }
+    <span class="code-keyword">async with</span> httpx.AsyncClient(timeout=<span class="code-number">10.0</span>) <span class="code-keyword">as</span> client:
+        <span class="code-keyword">await</span> client.post(url, json=body, headers=headers)</code></pre>
+        </div>
+      </div>
+
+      <!-- 5. ANTI-PATRONES Y ADVERTENCIAS -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">5. Anti-patrones en Producción</span> Errores de Bloqueo Síncrono</h4>
+        <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.2rem 0;">
+          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">⚠️ Anti-patrón Mortal: Usar <code>requests.post</code> Síncrono dentro del Endpoint</strong>
+          <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
+            Usar la librería <code>requests</code> clásica bloquea el hilo principal de ejecución de Uvicorn/FastAPI. Si 50 usuarios escriben al mismo tiempo, las peticiones se encolarán y superarán los 3 segundos de timeout, provocando que Meta envíe ráfagas de reintentos duplicados. <b>Regla de Oro:</b> Utiliza siempre <code>httpx.AsyncClient</code> con <code>async/await</code> y procesa la inferencia en <code>BackgroundTasks</code> o colas tipo Celery/Redis Queue.
+          </p>
+        </div>
       </div>
 
       <!-- QUIZ 2 -->
@@ -371,176 +610,34 @@
         <h3 class="tema-title">Webhooks a Fondo: El Handshake GET, la Estructura JSON y la Validación HMAC SHA-256</h3>
       </div>
 
-      <!-- SECCIÓN 1: EL HANDSHAKE GET -->
+      <!-- 1. ANALOGÍA INTUITIVA -->
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Handshake Inicial</span> El Salvoconducto Secreto de Verificación (GET /webhook)</h4>
-        <p class="prose-p">
-          Antes de que Meta envíe el primer mensaje de un usuario a tu servidor, debe comprobar que tú eres el propietario legítimo de la URL configurada. Para ello, Meta for Developers ejecuta una <b>verificación de apretón de manos (Handshake GET)</b> enviando una petición HTTP GET a tu endpoint con 3 parámetros de consulta (Query Parameters):
-        </p>
-
-        <div class="table-responsive-wrapper">
-          <table class="table-pro">
-            <thead>
-              <tr>
-                <th>Parámetro Query</th>
-                <th>Valor Enviado por Meta</th>
-                <th>Propósito y Acción de tu Backend</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>hub.mode</code></td>
-                <td><code>"subscribe"</code></td>
-                <td>Indica que Meta solicita suscribir esta URL a eventos de WhatsApp.</td>
-              </tr>
-              <tr>
-                <td><code>hub.verify_token</code></td>
-                <td>Cadena secreta configurada por ti</td>
-                <td><b>Validación de seguridad:</b> Tu servidor debe comparar este valor con su variable de entorno <code>VERIFY_TOKEN</code>. Si no coinciden, debes rechazar con <code>HTTP 403 Forbidden</code>.</td>
-              </tr>
-              <tr>
-                <td><code>hub.challenge</code></td>
-                <td>Número aleatorio en texto plano (ej. <code>1158201444</code>)</td>
-                <td><b>Desafío criptográfico:</b> Si el token es correcto, tu backend <b>debe devolver exactamente este número en texto plano con código HTTP 200</b>.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p class="prose-p" style="margin-top: 1rem;">
-          Así se programa el endpoint de verificación en <b>FastAPI (Python)</b>:
-        </p>
-
-        <div class="code-box">
-          <div class="code-header">
-            <span class="code-lang">Python · FastAPI (GET /webhook)</span>
-            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Intuición &amp; Analogía</span> El Santo y Seña en la Puerta y el Sello de Lacre Inviolable</h4>
+        <div class="easy-explainer-box">
+          <div class="easy-explainer-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <pre class="code-content"><code class="language-python"><span class="code-keyword">from</span> fastapi <span class="code-keyword">import</span> FastAPI, Query, HTTPException, Response
-<span class="code-keyword">import</span> os
-
-app = FastAPI()
-VERIFY_TOKEN = os.getenv(<span class="code-string">"VERIFY_TOKEN"</span>, <span class="code-string">"MI_TOKEN_SECRETO_2026"</span>)
-
-<span class="code-decorator">@app.get</span>(<span class="code-string">"/webhook"</span>)
-<span class="code-keyword">def</span> <span class="code-function">verificar_webhook</span>(
-    hub_mode: str = Query(<span class="code-keyword">None</span>, alias=<span class="code-string">"hub.mode"</span>),
-    hub_verify_token: str = Query(<span class="code-keyword">None</span>, alias=<span class="code-string">"hub.verify_token"</span>),
-    hub_challenge: str = Query(<span class="code-keyword">None</span>, alias=<span class="code-string">"hub.challenge"</span>)
-):
-    <span class="code-comment"># 1. Validar que el modo sea 'subscribe' y el token coincida con el secreto</span>
-    <span class="code-keyword">if</span> hub_mode == <span class="code-string">"subscribe"</span> <span class="code-keyword">and</span> hub_verify_token == VERIFY_TOKEN:
-        <span class="code-comment"># 2. Retornar el challenge exacto en texto plano con HTTP 200</span>
-        <span class="code-keyword">return</span> Response(content=hub_challenge, media_type=<span class="code-string">"text/plain"</span>, status_code=<span class="code-number">200</span>)
-    
-    <span class="code-comment"># 3. Si el token no coincide, denegar el acceso</span>
-    <span class="code-keyword">raise</span> HTTPException(status_code=<span class="code-number">403</span>, detail=<span class="code-string">"Token de verificación inválido"</span>)</code></pre>
+          <div class="easy-explainer-content">
+            <strong style="color:var(--meta-blue); font-size:1.05rem; display:block; margin-bottom:0.4rem;">La Metáfora de la Verificación en Dos Fases:</strong>
+            <p class="prose-p" style="margin:0;">
+              El <b>Handshake GET inicial</b> equivale al santo y seña que le dices al guardia para que te deje abrir la embajada: Meta te dice <i>"el código secreto es X, devuélvemelo tal cual para saber que eres tú"</i>. Pero una vez abierta la embajada, cada carta que entra (<b>Webhook POST</b>) viene protegida con un <b>sello de cera criptográfico (HMAC SHA-256)</b> estampado con tu clave privada (App Secret). Si un atacante intenta enviar un sobre falso sin el sello exacto, tu servidor lo destruye al instante.
+            </p>
+          </div>
         </div>
       </div>
 
-      <!-- SECCIÓN 2: LA ESTRUCTURA JSON DE META -->
-      <div class="tema-section-block" style="margin-top:2.5rem;">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Anatomía del Webhook POST</span> Estructura y Extracción de Datos Críticos</h4>
+      <!-- 2. CONCEPTO FORMAL & FÓRMULAS CRIPTOGRÁFICAS -->
+      <div class="tema-section-block">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Concepto Formal</span> Construcción Matemática de HMAC SHA-256 (RFC 2104)</h4>
         <p class="prose-p">
-          Cuando un usuario real envía un mensaje en WhatsApp, Meta envía una petición <code>POST /webhook</code> con un payload JSON anidado. La jerarquía estandarizada sigue esta ruta:
+          Para garantizar la <b>autenticidad del origen</b> y la <b>integridad de los datos</b> contra ataques Man-In-The-Middle (MITM) o inyecciones maliciosas, Meta firma el cuerpo exacto en bytes de cada webhook mediante el estándar criptográfico <b>HMAC (Hash-based Message Authentication Code)</b>:
         </p>
-
-        <div class="formula-card">
-          <div class="formula-math-area">
-            $$\text{Payload} \longrightarrow \text{entry}[0] \longrightarrow \text{changes}[0] \longrightarrow \text{value} \longrightarrow \text{messages}[0]$$
-          </div>
-        </div>
-
-        <div class="code-box">
-          <div class="code-header">
-            <span class="code-lang">JSON · Estructura Oficial de Webhook Entrante</span>
-            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
-          </div>
-          <pre class="code-content"><code class="language-json">{
-  <span class="code-property">"object"</span>: <span class="code-string">"whatsapp_business_account"</span>,
-  <span class="code-property">"entry"</span>: [{
-    <span class="code-property">"id"</span>: <span class="code-string">"104928374659281"</span>,
-    <span class="code-property">"changes"</span>: [{
-      <span class="code-property">"value"</span>: {
-        <span class="code-property">"messaging_product"</span>: <span class="code-string">"whatsapp"</span>,
-        <span class="code-property">"metadata"</span>: {
-          <span class="code-property">"display_phone_number"</span>: <span class="code-string">"15551234567"</span>,
-          <span class="code-property">"phone_number_id"</span>: <span class="code-string">"109823746592831"</span>  <span class="code-comment">// &lt;-- ID para responder</span>
-        },
-        <span class="code-property">"contacts"</span>: [{
-          <span class="code-property">"profile"</span>: { <span class="code-property">"name"</span>: <span class="code-string">"Lic. Jesús Olvera"</span> },
-          <span class="code-property">"wa_id"</span>: <span class="code-string">"5215587654321"</span>
-        }],
-        <span class="code-property">"messages"</span>: [{
-          <span class="code-property">"from"</span>: <span class="code-string">"5215587654321"</span>,              <span class="code-comment">// &lt;-- Número del usuario</span>
-          <span class="code-property">"id"</span>: <span class="code-string">"wamid.HBgLMjUyMTU1ODc..."</span>,       <span class="code-comment">// &lt;-- ID único para idempotencia</span>
-          <span class="code-property">"timestamp"</span>: <span class="code-string">"1724109823"</span>,
-          <span class="code-property">"type"</span>: <span class="code-string">"text"</span>,
-          <span class="code-property">"text"</span>: {
-            <span class="code-property">"body"</span>: <span class="code-string">"¿Cuál es el estatus de mi pedido #45210?"</span>
-          }
-        }]
-      },
-      <span class="code-property">"field"</span>: <span class="code-string">"messages"</span>
-    }]
-  }]
-}</code></pre>
-        </div>
-      </div>
-
-      <!-- SECCIÓN 3: VALIDACIÓN CRIPTOGRÁFICA HMAC -->
-      <div class="tema-section-block" style="margin-top:2.5rem;">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Blindaje Criptográfico</span> Validación de Firmas con HMAC SHA-256</h4>
-        <p class="prose-p">
-          Dado que tu URL de webhook está expuesta en internet, <b>cualquier persona que descubra tu dominio podría enviar peticiones POST falsas con cURL simulando ser Meta</b>.
-        </p>
-        <p class="prose-p">
-          Para evitar ataques de denegación de servicio, inyecciones maliciosas o suplantación de identidad, Meta firma cada petición enviando la cabecera <code>X-Hub-Signature-256</code>. El proceso de verificación criptográfica funciona así:
-        </p>
-
-        <div class="step-flow-container" style="display:flex; flex-direction:column; gap:0.85rem; margin:1.2rem 0;">
-          <div style="background:var(--card-surface); padding:1rem; border-left:4px solid var(--meta-blue); border-radius:8px; font-size:0.92rem;">
-            <strong>Paso A:</strong> Meta calcula el hash <code>HMAC-SHA256</code> utilizando el cuerpo crudo de la petición (<i>Raw Bytes</i>) y el <b>App Secret</b> de tu aplicación como clave secreta, adjuntándolo como <code>sha256=&lt;hash_hex&gt;</code>.
-          </div>
-          <div style="background:var(--card-surface); padding:1rem; border-left:4px solid var(--accent-success); border-radius:8px; font-size:0.92rem;">
-            <strong>Paso B:</strong> Tu servidor recibe el cuerpo crudo y recalcula el hash con su propio <code>APP_SECRET</code>.
-          </div>
-          <div style="background:var(--card-surface); padding:1rem; border-left:4px solid var(--meta-purple); border-radius:8px; font-size:0.92rem;">
-            <strong>Paso C:</strong> Se comparan los hashes usando <code>hmac.compare_digest()</code> (función de tiempo constante que protege contra ataques de temporización). Si coinciden, el webhook es 100% auténtico de Meta.
-          </div>
-        </div>
-
-        <div class="code-box">
-          <div class="code-header">
-            <span class="code-lang">Python · Verificador de Firmas HMAC SHA-256</span>
-            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
-          </div>
-          <pre class="code-content"><code class="language-python"><span class="code-keyword">import</span> hmac
-<span class="code-keyword">import</span> hashlib
-
-<span class="code-keyword">def</span> <span class="code-function">validar_firma_meta</span>(raw_payload: bytes, signature_header: str, app_secret: str) -> bool:
-    <span class="code-keyword">if</span> <span class="code-keyword">not</span> signature_header <span class="code-keyword">or</span> <span class="code-keyword">not</span> signature_header.startswith(<span class="code-string">"sha256="</span>):
-        <span class="code-keyword">return</span> <span class="code-keyword">False</span>
-    
-    <span class="code-comment"># 1. Extraer el hash recibido descartando el prefijo 'sha256='</span>
-    firma_recibida = signature_header.split(<span class="code-string">"sha256="</span>)[<span class="code-number">1</span>]
-    
-    <span class="code-comment"># 2. Recalcular el hash esperado con el App Secret y los bytes crudos</span>
-    hash_calculado = hmac.new(
-        key=app_secret.encode(<span class="code-string">"utf-8"</span>),
-        msg=raw_payload,
-        digestmod=hashlib.sha256
-    ).hexdigest()
-    
-    <span class="code-comment"># 3. Comparación segura en tiempo constante</span>
-    <span class="code-keyword">return</span> hmac.compare_digest(hash_calculado, firma_recibida)</code></pre>
-        </div>
 
         <!-- FORMULA CARD: CONSTRUCCIÓN HMAC SHA-256 (RFC 2104) -->
         <div class="formula-card">
           <div class="formula-math-area">
             $$\text{HMAC}(K, m) = \text{H}\Big(\big(K' \oplus \text{opad}\big) \parallel \text{H}\big((K' \oplus \text{ipad}) \parallel m\big)\Big)$$
-            $$\text{Firma}_{\text{Meta}} = \text{"sha256="} + \text{HexEncode}\Big(\text{HMAC}\big(\text{AppSecret},\, \text{Payload}_{\text{UTF-8}}\big)\Big)$$
+            $$\text{Firma}_{\text{Meta}} = \text{"sha256="} + \text{HexEncode}\Big(\text{HMAC}\big(\text{AppSecret},\, \text{Payload}_{\text{RawBytes}}\big)\Big)$$
           </div>
           <details class="formula-breakdown-details">
             <summary class="formula-breakdown-summary">
@@ -595,7 +692,103 @@ VERIFY_TOKEN = os.getenv(<span class="code-string">"VERIFY_TOKEN"</span>, <span 
             </div>
           </details>
         </div>
+      </div>
 
+      <!-- 3. PROTOCOLO DE DOS FASES -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Protocolo en 2 Fases</span> Handshake GET Inicial vs. Validación POST Continua</h4>
+        <div class="table-responsive-wrapper">
+          <table class="table-pro">
+            <thead>
+              <tr>
+                <th>Dimensión</th>
+                <th>Fase 1: Handshake Inicial (GET /webhook)</th>
+                <th>Fase 2: Mensajes en Vivo (POST /webhook)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Método HTTP</strong></td>
+                <td><code>GET</code> (Ejecutado por Meta al registrar el webhook).</td>
+                <td><code>POST</code> (Ejecutado cada vez que un usuario interactúa).</td>
+              </tr>
+              <tr>
+                <td><strong>Parámetros Clave</strong></td>
+                <td><code>hub.mode</code>, <code>hub.verify_token</code>, <code>hub.challenge</code>.</td>
+                <td>Cabecera <code>X-Hub-Signature-256</code> y Body JSON.</td>
+              </tr>
+              <tr>
+                <td><strong>Mecanismo de Seguridad</strong></td>
+                <td>Validación de cadena compartida (<code>VERIFY_TOKEN</code>).</td>
+                <td>Firma criptográfica HMAC SHA-256 con <code>APP_SECRET</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Respuesta Esperada</strong></td>
+                <td><code>hub.challenge</code> en texto plano con código <code>HTTP 200</code>.</td>
+                <td>JSON <code>{"status": "ok"}</code> con código <code>HTTP 200</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4. IMPLEMENTACIÓN EN CÓDIGO -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">4. Implementación en Código</span> Middleware de Verificación HMAC en FastAPI</h4>
+        <p class="prose-p">
+          Así se programa la verificación criptográfica integral para proteger tus endpoints en Python:
+        </p>
+
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">Python · security.py (HMAC Validator)</span>
+            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <pre class="code-content"><code class="language-python"><span class="code-keyword">import</span> hmac
+<span class="code-keyword">import</span> hashlib
+<span class="code-keyword">from</span> fastapi <span class="code-keyword">import</span> Request, HTTPException, status
+
+<span class="code-keyword">async def</span> <span class="code-function">verificar_firma_meta</span>(request: Request, app_secret: str) -> bytes:
+    <span class="code-comment"># 1. Extraer la cabecera de firma de Meta</span>
+    firma_header = request.headers.get(<span class="code-string">"X-Hub-Signature-256"</span>)
+    <span class="code-keyword">if</span> <span class="code-keyword">not</span> firma_header <span class="code-keyword">or</span> <span class="code-keyword">not</span> firma_header.startswith(<span class="code-string">"sha256="</span>):
+        <span class="code-keyword">raise</span> HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=<span class="code-string">"Cabecera X-Hub-Signature-256 ausente o formato inválido"</span>
+        )
+    
+    firma_recibida = firma_header.split(<span class="code-string">"sha256="</span>)[<span class="code-number">1</span>]
+    
+    <span class="code-comment"># 2. Obtener el cuerpo de la petición en BYTES CRUDOS</span>
+    raw_body = <span class="code-keyword">await</span> request.body()
+    
+    <span class="code-comment"># 3. Recalcular el hash HMAC SHA-256</span>
+    hash_esperado = hmac.new(
+        key=app_secret.encode(<span class="code-string">"utf-8"</span>),
+        msg=raw_body,
+        digestmod=hashlib.sha256
+    ).hexdigest()
+    
+    <span class="code-comment"># 4. Comparación en tiempo constante para mitigar timing attacks</span>
+    <span class="code-keyword">if</span> <span class="code-keyword">not</span> hmac.compare_digest(hash_esperado, firma_recibida):
+        <span class="code-keyword">raise</span> HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=<span class="code-string">"Firma HMAC inválida: origen no autenticado"</span>
+        )
+    
+    <span class="code-keyword">return</span> raw_body</code></pre>
+        </div>
+      </div>
+
+      <!-- 5. ANTI-PATRONES Y ADVERTENCIAS -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">5. Anti-patrones en Producción</span> Vulnerabilidad por Comparación Insegura de Cadenas</h4>
+        <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.2rem 0;">
+          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">⚠️ Riesgo de Seguridad: Usar el Operador <code>==</code> en Lugar de <code>hmac.compare_digest</code></strong>
+          <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
+            El operador <code>hash_esperado == firma_recibida</code> se interrumpe en el primer caracter que no coincide (tiempo variable). Un atacante con miles de peticiones automatizadas puede medir las diferencias de microsegundos para adivinar el hash byte a byte (<i>Timing Attack</i>). <b>Regla Criptográfica Mandatoria:</b> Utiliza siempre <code>hmac.compare_digest()</code> para garantizar que la comparación tome exactamente el mismo tiempo sin importar cuántos caracteres coincidan.
+          </p>
+        </div>
       </div>
 
       <!-- QUIZ 3 -->
@@ -619,22 +812,93 @@ VERIFY_TOKEN = os.getenv(<span class="code-string">"VERIFY_TOKEN"</span>, <span 
         <h3 class="tema-title">Túneles de Desarrollo Seguro con ngrok: Cómo Exponer tu Servidor Local</h3>
       </div>
 
+      <!-- 1. ANALOGÍA INTUITIVA -->
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. El Problema Local</span> Tu Laptop no Tiene IP Pública ni Certificado SSL Válido</h4>
-        <p class="prose-p">
-          Cuando programas en tu máquina local, tu servidor de FastAPI corre en <code>http://localhost:8000</code>. Los servidores de Meta en la nube no tienen forma de conectarse a la dirección privada de tu computadora y, además, Meta <b>prohíbe el uso de HTTP plano</b> (exige obligatoriamente HTTPS con cifrado TLS).
-        </p>
-        <p class="prose-p">
-          <b>ngrok</b> resuelve este obstáculo actuando como un túnel seguro: abre una conexión reversa y te asigna una URL pública temporal con certificado SSL (por ejemplo <code>https://a3f8-55-12.ngrok-free.app</code>) que reenvía instantáneamente todo el tráfico que recibe hacia tu puerto local <code>8000</code>.
-        </p>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Intuición &amp; Analogía</span> El Túnel Submarino Privado con Garita TLS</h4>
+        <div class="easy-explainer-box">
+          <div class="easy-explainer-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <div class="easy-explainer-content">
+            <strong style="color:var(--meta-blue); font-size:1.05rem; display:block; margin-bottom:0.4rem;">La Metáfora de la Dirección Privada vs la Red Pública:</strong>
+            <p class="prose-p" style="margin:0;">
+              Tu computadora portátil dentro de la red Wi-Fi de tu casa u oficina tiene una dirección privada como <code>192.168.1.15</code> (o <code>localhost:8000</code>). Los centros de datos de Meta en California no tienen forma de llegar a tu sala de estar y, además, Meta exige obligatoriamente cifrado <b>HTTPS TLS 1.3</b>. <b>ngrok</b> actúa como un <b>túnel subterráneo blindado</b>: crea una garita de seguridad en internet con un dominio público (<code>https://xxx.ngrok-free.app</code>) y transporta instantáneamente los paquetes que llegan de Meta directo al puerto <code>8000</code> de tu máquina sin necesidad de abrir puertos en tu módem.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div class="code-box">
-        <div class="code-header">
-          <span class="code-lang">Bash · Flujo de Trabajo en Terminal</span>
-          <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+      <!-- 2. CONCEPTO FORMAL & FÓRMULAS DE RED -->
+      <div class="tema-section-block">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Concepto Formal</span> Latencia de Túnel Inverso y Encapsulación TCP Multiplexada</h4>
+        <p class="prose-p">
+          El funcionamiento de un túnel inverso como ngrok introduce una pequeña sobrecarga de latencia que debe ser considerada durante las pruebas de tiempo de respuesta de webhooks:
+        </p>
+
+        <!-- FORMULA CARD: LATENCIA DE TÚNEL NGROK -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$T_{\text{Túnel}} = 2 \times \text{RTT}_{\text{Anycast\_Edge}} + T_{\text{TLS\_Terminación}} + T_{\text{Mux\_Forwarding}} + T_{\text{Local\_Socket}}$$
+            $$\text{Throughput}_{\text{Efectivo}} = \min\big(\text{BW}_{\text{ISP\_Local}},\, \text{BW}_{\text{ngrok\_Edge}}\big) \times (1 - \text{Overhead}_{\text{Encapsulación}})$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Variables: Red y Transporte del Túnel</span>
+                <span class="breakdown-count-tag">5 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{RTT}_{\text{Anycast}} \approx 30\text{ ms}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Round Trip Time al Servidor Perimetral:</strong> Tiempo de ida y vuelta entre Meta y el punto de presencia (PoP) de ngrok más cercano.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{TLS\_Terminación}} \approx 15\text{ ms}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Terminación SSL en el Borde:</strong> El servidor de ngrok descifra el tráfico HTTPS de Meta y lo retransmite por el canal seguro establecido con tu cliente local.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Mux\_Forwarding}} \approx 25\text{ ms}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Reenvío Multiplexado en Túnel:</strong> Transmisión del paquete a través de la conexión persistente TCP/TLS abierta por el agente ngrok en tu laptop.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Local\_Socket}} \le 1\text{ ms}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Entrega a Loopback (127.0.0.1):</strong> Paso del paquete HTTP al proceso de Uvicorn/FastAPI en tu puerto 8000.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$T_{\text{Overhead\_Total}} \approx 70\text{ - }100\text{ ms}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Impacto Total en Desarrollo:</strong> Sobrecarga despreciable que permite validar el flujo sin requerir despliegues continuos a la nube.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
-        <pre class="code-content"><code class="language-bash"><span class="code-comment"># Paso 1: Iniciar servidor FastAPI en el puerto 8000</span>
+      </div>
+
+      <!-- 3. TOPOLOGÍA DE RED Y BASH SETUP -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Configuración Práctica</span> Puesta en Marcha en Terminal</h4>
+        <div class="code-box">
+          <div class="code-header">
+            <span class="code-lang">Bash · Flujo de Trabajo en Terminal</span>
+            <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
+          </div>
+          <pre class="code-content"><code class="language-bash"><span class="code-comment"># Paso 1: Iniciar el servidor FastAPI en el puerto 8000</span>
 uvicorn main:app --reload --port 8000
 
 <span class="code-comment"># Paso 2: En una segunda terminal, abrir el túnel seguro con ngrok</span>
@@ -643,10 +907,22 @@ ngrok http 8000
 <span class="code-comment"># Salida generada por ngrok en pantalla:</span>
 <span class="code-comment"># Forwarding: https://a3f8-55-12.ngrok-free.app -> http://localhost:8000</span>
 <span class="code-comment"># Configurar en Meta for Developers: https://a3f8-55-12.ngrok-free.app/webhook</span></code></pre>
+        </div>
+      </div>
+
+      <!-- 4. ANTI-PATRONES -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">4. Anti-patrones en Producción</span> ngrok es Exclusivo para Desarrollo Local</h4>
+        <div class="callout-box" style="background:rgba(239, 68, 68, 0.06); border-left:4px solid #ef4444; padding:1.25rem 1.5rem; border-radius:8px; margin:1.2rem 0;">
+          <strong style="color:#ef4444; font-size:1rem; display:block; margin-bottom:0.35rem;">⚠️ Advertencia de Arquitectura: Jamás uses ngrok en Producción</strong>
+          <p style="margin:0; font-size:0.93rem; color:var(--text-primary); line-height:1.6;">
+            ngrok está diseñado para acelerar la iteración local. Si tu laptop entra en modo reposo, se desconecta del Wi-Fi o reinicias el proceso de ngrok, la URL cambia y tu bot quedará desconectado de WhatsApp. Para producción, despliega tu FastAPI en un contenedor Docker en un VPS (AWS EC2, DigitalOcean, Google Cloud Run) con un dominio estático y certificado SSL gestionado por Caddy, Traefik o Nginx.
+          </p>
+        </div>
       </div>
 
       <!-- QUIZ 4 -->
-      <div class="quiz-box">
+      <div class="quiz-box" style="margin-top:2rem;">
         <div class="quiz-header">
           <span class="quiz-tag">Autoevaluación 2.1.4</span>
         </div>
@@ -666,247 +942,124 @@ ngrok http 8000
         <h3 class="tema-title">Caso Práctico: El Pipeline de 5 Fases para el Asistente de Estatus de Pedidos</h3>
       </div>
 
+      <!-- 1. ANALOGÍA INTUITIVA -->
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Disciplina de Ingeniería</span> Validar la Infraestructura de Transporte ANTES de la Inteligencia</h4>
-        <p class="prose-p">
-          Imagina que una empresa de comercio electrónico te contrata para construir un agente de WhatsApp que consulte el estatus de envíos de paquetes mediante Llama 3. El error más costoso y común de un desarrollador novato es conectar el modelo de lenguaje generativo en el día 1. Si el usuario escribe un mensaje y no recibe respuesta, <b>resulta imposible determinar la causa raíz a ciegas</b>:
-        </p>
-        <ul class="clean-bullet-list" style="margin: 0.8rem 0 1.2rem 1.5rem; line-height: 1.8; color: var(--text-secondary);">
-          <li>¿Expiró el token de Meta for Developers?</li>
-          <li>¿El túnel de ngrok cambió de URL o se cerró la sesión?</li>
-          <li>¿El webhook de FastAPI falló al parsear el JSON anidado?</li>
-          <li>¿La clave secreta de HMAC rechazó la petición?</li>
-          <li>¿O el prompt de Llama 3 arrojó un error de formato o rate limit?</li>
-        </ul>
-        <p class="prose-p">
-          Para eliminar el caos, la ingeniería de sistemas distribuidos aplica un <b>Pipeline Incremental de 5 Fases</b>. Cada fase tiene un <b>entregable verificable</b>: hasta que una fase no arroja un resultado 100% exitoso, está estrictamente prohibido pasar a la siguiente.
-        </p>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Intuición &amp; Analogía</span> La Línea de Ensamblaje Automotriz y las Pruebas por Estación</h4>
+        <div class="easy-explainer-box">
+          <div class="easy-explainer-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div class="easy-explainer-content">
+            <strong style="color:var(--meta-blue); font-size:1.05rem; display:block; margin-bottom:0.4rem;">La Metáfora de la Verificación por Etapas:</strong>
+            <p class="prose-p" style="margin:0;">
+              En una fábrica de automóviles de alta gama, jamás se instala el motor turbo antes de verificar que el chasis esté soldado y los frenos funcionen. Si el coche no avanza, conectar el motor solo añade ruido. En el desarrollo de agentes con Llama 3, el <b>Pipeline de 5 Fases</b> garantiza que la tubería de comunicación (Meta, túnel, webhook y API de envío) esté certificada al 100% antes de introducir la variabilidad del modelo de Inteligencia Artificial.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <!-- DESGLOSE DETALLADO DE LAS 5 FASES EN TARJETAS EXPANDIDAS -->
-      <div class="phase-pipeline-grid">
-        
-        <!-- FASE 1 -->
-        <div class="phase-card-expanded phase-1">
-          <div class="phase-card-header">
-            <div class="phase-card-title-group">
-              <span class="phase-num-badge">Fase 1</span>
-              <h4 class="phase-card-title">Aprovisionamiento en Meta for Developers</h4>
-            </div>
-            <span class="phase-deliverable-tag">Entregable: Credenciales y cURL 200</span>
+      <!-- 2. CONCEPTO FORMAL & FÓRMULAS MATEMÁTICAS -->
+      <div class="tema-section-block">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Concepto Formal</span> Idempotencia Criptográfica y Probabilidad de Colisión en Redis</h4>
+        <p class="prose-p">
+          Debido a la naturaleza asíncrona de Meta, un mismo mensaje puede ser entregado más de una vez (<i>At-Least-Once Delivery</i>). Para evitar que tu modelo Llama 3 procese dos veces la misma consulta o cobre dos veces un pedido, se implementa una <b>capa de Idempotencia Distribuida</b>:
+        </p>
+
+        <!-- FORMULA CARD: IDEMPOTENCIA Y PREVENCIÓN DE DUPLICADOS -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{Llave}_{\text{Idempotencia}} = \text{"msg\_ack:"} + \text{SHA256}\big(\text{wamid} \parallel \text{phone\_number\_id}\big)$$
+            $$P_{\text{Colisión}} \approx 1 - \exp\left(-\frac{N^2}{2 \times 2^{256}}\right) \approx 0 \quad (\text{para } N = 10^9 \text{ mensajes})$$
+            $$\text{Acción} = \begin{cases} \text{Ignorar / Retornar HTTP 200}, & \text{si } \text{Redis.SET}(\text{Llave}, \text{TTL}=86400, \text{NX}) = \text{nil} \\ \text{Procesar con Llama 3}, & \text{si } \text{Redis.SET}(\text{Llave}, \text{TTL}=86400, \text{NX}) = \text{OK} \end{cases}$$
           </div>
-          <div class="phase-card-body">
-            <p>
-              Consiste en dar de alta una <b>App Empresarial (tipo Business)</b> en el portal oficial de Meta, agregar el producto <b>WhatsApp</b> y vincular una cuenta comercial (WABA). En esta fase Meta te asigna un número telefónico de prueba gratuito (Sandbox) para pruebas iniciales.
-            </p>
-            <div class="phase-deliverable-box">
-              <span class="phase-deliverable-icon">📋</span>
-              <div class="phase-deliverable-text">
-                <strong>Variables de Entorno Requeridas (.env):</strong><br>
-                <code>PHONE_NUMBER_ID=109823746592831</code> &bull; <code>WABA_ID=104928374659281</code><br>
-                <code>META_ACCESS_TOKEN=EAAQ...</code> &bull; <code>APP_SECRET=a8f4c2...</code> &bull; <code>VERIFY_TOKEN=MI_TOKEN_SECRETO_2026</code>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Variables: Idempotencia y Blindaje de Reintentos</span>
+                <span class="breakdown-count-tag">5 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{wamid}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>WhatsApp Message ID:</strong> Identificador criptográfico único asignado por Meta a cada mensaje entrante (ej. <code>wamid.HBgL...</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{TTL} = 86400\text{ s}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Time-to-Live (24 Horas):</strong> Ventana de expiración automática en memoria Redis para purgar identificadores obsoletos de forma óptima.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{NX (Not Exists)}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Operación Atómica Mutex:</strong> <code>SET key 1 NX EX 86400</code> garantiza que solo el primer hilo procese el mensaje si Meta envía reintentos en paralelo.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$P_{\text{Colisión}} \approx 10^{-77}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Probabilidad de Falso Positivo:</strong> Prácticamente cero debido al espacio de claves de 256 bits, garantizando que jamás se descarte un mensaje legítimo diferente.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Ahorro Financiero}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Prevención de Costos Dobles:</strong> Evita que Llama 3 ejecute inferencias duplicadas y que la Graph API despache dos respuestas idénticas al usuario.
+                  </div>
+                </div>
               </div>
             </div>
-            <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted);">
-              <b>Validación de éxito:</b> Ejecutas un <code>cURL POST</code> a la Graph API enviando la plantilla <code>hello_world</code> a tu propio número y recibes el mensaje en WhatsApp.
-            </p>
-          </div>
+          </details>
         </div>
-
-        <!-- FASE 2 -->
-        <div class="phase-card-expanded phase-2">
-          <div class="phase-card-header">
-            <div class="phase-card-title-group">
-              <span class="phase-num-badge">Fase 2</span>
-              <h4 class="phase-card-title">Servidor Local y Túnel Seguro con ngrok</h4>
-            </div>
-            <span class="phase-deliverable-tag">Entregable: URL HTTPS Pública Activa</span>
-          </div>
-          <div class="phase-card-body">
-            <p>
-              Inicias tu servidor <b>FastAPI en el puerto 8000</b> en tu computadora y, en una terminal paralela, abres el túnel seguro con <code>ngrok http 8000</code>. Esto genera un dominio público con certificado SSL (ejemplo: <code>https://a3f8-55-12.ngrok-free.app</code>).
-            </p>
-            <div class="phase-deliverable-box">
-              <span class="phase-deliverable-icon">🌐</span>
-              <div class="phase-deliverable-text">
-                <strong>Configuración del Túnel:</strong><br>
-                Tráfico de Meta &rarr; <code>https://a3f8-55-12.ngrok-free.app/webhook</code> &rarr; Túnel TLS &rarr; <code>http://localhost:8000/webhook</code>
-              </div>
-            </div>
-            <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted);">
-              <b>Validación de éxito:</b> Abres la interfaz web de inspección de ngrok en <code>http://127.0.0.1:4040</code> y compruebas que el túnel está en estado <code>online</code>.
-            </p>
-          </div>
-        </div>
-
-        <!-- FASE 3 -->
-        <div class="phase-card-expanded phase-3">
-          <div class="phase-card-header">
-            <div class="phase-card-title-group">
-              <span class="phase-num-badge">Fase 3</span>
-              <h4 class="phase-card-title">Verificación del Handshake GET en Meta</h4>
-            </div>
-            <span class="phase-deliverable-tag">Entregable: Checkmark Verde en Meta</span>
-          </div>
-          <div class="phase-card-body">
-            <p>
-              En la pestaña <i>WhatsApp &gt; Configuración de la API</i> en Meta for Developers, pegas la <b>URL de devolución de llamada</b> (<code>https://a3f8-55-12.ngrok-free.app/webhook</code>) y tu <b>Token de verificación</b> (<code>MI_TOKEN_SECRETO_2026</code>), haciendo clic en <i>"Verificar y Guardar"</i>.
-            </p>
-            <div class="phase-deliverable-box">
-              <span class="phase-deliverable-icon">🤝</span>
-              <div class="phase-deliverable-text">
-                <strong>Apretón de Manos Exitoso:</strong><br>
-                Meta ejecuta <code>GET /webhook?hub.mode=subscribe&amp;hub.verify_token=...&amp;hub.challenge=1158201444</code>. Tu servidor valida el token y retorna <code>1158201444</code> con <code>HTTP 200 OK</code>. A continuación, te suscribes al campo <b>messages</b>.
-              </div>
-            </div>
-            <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted);">
-              <b>Validación de éxito:</b> El panel de Meta muestra el icono verde de verificación y en tu consola de FastAPI queda registrado el código <code>GET /webhook HTTP/1.1 200 OK</code>.
-            </p>
-          </div>
-        </div>
-
-        <!-- FASE 4 -->
-        <div class="phase-card-expanded phase-4">
-          <div class="phase-card-header">
-            <div class="phase-card-title-group">
-              <span class="phase-num-badge">Fase 4</span>
-              <h4 class="phase-card-title">Validación del Ciclo con Respuesta Fija (Echo Test)</h4>
-            </div>
-            <span class="phase-deliverable-tag">Entregable: Cableado Bidireccional Certificado</span>
-          </div>
-          <div class="phase-card-body">
-            <p>
-              <b>La fase más importante de toda la metodología:</b> Programas el endpoint <code>POST /webhook</code> para recibir el mensaje del usuario y responder de inmediato con un mensaje estático predeterminado (por ejemplo: <i>"Echo: Recibido tu mensaje -> [texto]"</i>) <b>sin invocar a ningún modelo de Inteligencia Artificial</b>.
-            </p>
-
-            <div class="code-box" style="margin: 1rem 0;">
-              <div class="code-header">
-                <span class="code-lang">Python · Echo Dispatcher de Aislamiento</span>
-                <button class="btn-copy-code" onclick="copyCode(this)">Copiar</button>
-              </div>
-              <pre class="code-content"><code class="language-python"><span class="code-keyword">import</span> httpx
-
-<span class="code-keyword">async def</span> <span class="code-function">despachar_echo_test</span>(remitente: str, texto_recibido: str, phone_id: str, token: str):
-    url = f<span class="code-string">"https://graph.facebook.com/v20.0/{phone_id}/messages"</span>
-    headers = {
-        <span class="code-string">"Authorization"</span>: f<span class="code-string">"Bearer {token}"</span>,
-        <span class="code-string">"Content-Type"</span>: <span class="code-string">"application/json"</span>
-    }
-    payload = {
-        <span class="code-string">"messaging_product"</span>: <span class="code-string">"whatsapp"</span>,
-        <span class="code-string">"to"</span>: remitente,
-        <span class="code-string">"type"</span>: <span class="code-string">"text"</span>,
-        <span class="code-string">"text"</span>: {<span class="code-string">"body"</span>: f<span class="code-string">" Echo Servidor: Hemos recibido tu consulta '{texto_recibido}' correctamente."</span>}
-    }
-    <span class="code-keyword">async with</span> httpx.AsyncClient() <span class="code-keyword">as</span> client:
-        response = <span class="code-keyword">await</span> client.post(url, json=payload, headers=headers)
-        <span class="code-keyword">return</span> response.status_code == <span class="code-number">200</span></code></pre>
-            </div>
-
-            <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted);">
-              <b>Validación de éxito:</b> Envías <i>"Hola"</i> desde tu WhatsApp personal al bot y recibes el mensaje de Echo en tu teléfono en menos de 1 segundo. <b>El canal está 100% certificado</b>.
-            </p>
-          </div>
-        </div>
-
-        <!-- FASE 5 -->
-        <div class="phase-card-expanded phase-5">
-          <div class="phase-card-header">
-            <div class="phase-card-title-group">
-              <span class="phase-num-badge">Fase 5</span>
-              <h4 class="phase-card-title">Inyección del Modelo Llama 3 con Consulta a Base de Datos</h4>
-            </div>
-            <span class="phase-deliverable-tag">Entregable: Agente de IA en Producción</span>
-          </div>
-          <div class="phase-card-body">
-            <p>
-              Con el puente de transporte plenamente probado y garantizado, reemplazas la función estática de Echo por el <b>motor de razonamiento de Llama 3</b>. Ahora el sistema extrae el número de pedido del mensaje (ej. <code>#45210</code>), consulta la base de datos de envíos y Llama genera una respuesta cálida, precisa y con formato profesional en WhatsApp.
-            </p>
-            <div class="phase-deliverable-box">
-              <span class="phase-deliverable-icon">🧠</span>
-              <div class="phase-deliverable-text">
-                <strong>Simulación de Consulta con Llama 3:</strong><br>
-                <em>Usuario:</em> "¿Dónde viene mi pedido #45210?"<br>
-                <em>Base de Datos:</em> <code>{"id": "45210", "guia": "DHL-9921", "estado": "En reparto", "hora_estimada": "16:30 hrs"}</code><br>
-                <em>Llama 3:</em> "¡Hola Lic. Jesús!  Tu pedido <b>#45210</b> va en camino con DHL (Guía: <code>DHL-9921</code>). La entrega estimada es hoy a las <b>4:30 PM</b>. ¿Deseas recibir notificación cuando esté en tu puerta?"
-              </div>
-            </div>
-            <p style="margin: 0; font-size: 0.88rem; color: var(--text-muted);">
-              <b>Validación de éxito:</b> El agente responde consultas dinámicas de cualquier pedido con comprensión natural de lenguaje y cero caídas de infraestructura.
-            </p>
-          </div>
-        </div>
-
       </div>
 
-      <!-- SIMULADOR INTERACTIVO DE PIPELINE (LABORATORIO EN VIVO) -->
-      <div class="pipeline-sim-container" id="pipeline-simulator-lab">
-        <div class="pipeline-sim-header">
-          <div class="pipeline-sim-title">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--meta-blue)" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            <span>Simulador Interactivo del Pipeline de 5 Fases</span>
+      <!-- 3. SIMULADOR INTERACTIVO DEL PIPELINE EN 5 FASES -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Arquitectura del Pipeline</span> Las 5 Fases de Implementación en Producción</h4>
+        <p class="prose-p">
+          Selecciona una fase en la barra de control para inspeccionar su objetivo, comando de ejecución y salida esperada en la consola interactiva:
+        </p>
+
+        <div class="pipeline-interactive-box">
+          <div class="pipeline-stepper">
+            <button class="pipeline-step-btn active" data-phase="1">
+              <span class="step-badge">Fase 1</span>
+              <span class="step-title">1. Credenciales Meta</span>
+            </button>
+            <button class="pipeline-step-btn" data-phase="2">
+              <span class="step-badge">Fase 2</span>
+              <span class="step-title">2. Túnel ngrok</span>
+            </button>
+            <button class="pipeline-step-btn" data-phase="3">
+              <span class="step-badge">Fase 3</span>
+              <span class="step-title">3. Handshake GET</span>
+            </button>
+            <button class="pipeline-step-btn" data-phase="4">
+              <span class="step-badge">Fase 4</span>
+              <span class="step-title">4. Echo Test</span>
+            </button>
+            <button class="pipeline-step-btn" data-phase="5">
+              <span class="step-badge">Fase 5</span>
+              <span class="step-title">5. Cerebro Llama 3</span>
+            </button>
           </div>
-          <span class="bench-badge-status status-info" id="pipeline-status-badge">Fase 4: Echo Test Activa</span>
-        </div>
 
-        <!-- PESTAÑAS DE NAVEGACIÓN DE FASES -->
-        <div class="pipeline-step-nav" id="pipeline-step-tabs">
-          <button class="pipeline-nav-btn" data-phase="1">
-            <span class="pipeline-nav-num">Fase 1</span>
-            <span class="pipeline-nav-name">Meta App &amp; WABA</span>
-          </button>
-          <button class="pipeline-nav-btn" data-phase="2">
-            <span class="pipeline-nav-num">Fase 2</span>
-            <span class="pipeline-nav-name">ngrok Túnel TLS</span>
-          </button>
-          <button class="pipeline-nav-btn" data-phase="3">
-            <span class="pipeline-nav-num">Fase 3</span>
-            <span class="pipeline-nav-name">Handshake GET</span>
-          </button>
-          <button class="pipeline-nav-btn active" data-phase="4">
-            <span class="pipeline-nav-num">Fase 4</span>
-            <span class="pipeline-nav-name">Echo Test (Aislamiento)</span>
-          </button>
-          <button class="pipeline-nav-btn" data-phase="5">
-            <span class="pipeline-nav-num">Fase 5</span>
-            <span class="pipeline-nav-name">Llama 3 + E-commerce</span>
-          </button>
-        </div>
-
-        <!-- ESPACIO DE TRABAJO Y CONSOLA EN VIVO -->
-        <div class="pipeline-sim-workspace">
-          <!-- PANEL IZQUIERDO: CONTROLES DE LA FASE -->
-          <div class="pipeline-panel-box">
-            <div class="pipeline-panel-title">
-              <span id="pipeline-panel-name">Fase 4: Test de Respuesta Fija (Echo)</span>
-              <span style="font-size:0.75rem; color:var(--text-muted);" id="pipeline-panel-mode">Modo: Aislamiento</span>
-            </div>
-
-            <div id="pipeline-controls-content">
-              <label style="font-size:0.85rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.4rem;">
-                Mensaje de Prueba desde WhatsApp del Usuario:
-              </label>
-              <input type="text" id="pipeline-user-msg" value="¿Cuál es el estatus de mi pedido #45210?" class="bench-input" style="width:100%; margin-bottom:0.85rem;" placeholder="Escribe un mensaje de WhatsApp...">
-
-              <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-                <button class="btn-primary" id="pipeline-btn-run" style="flex:1;">
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                  <span>Ejecutar Simulación de Fase</span>
-                </button>
-                <button class="btn-secondary" id="pipeline-btn-preset-echo" style="font-size:0.82rem;">Preset Echo</button>
-                <button class="btn-secondary" id="pipeline-btn-preset-llama" style="font-size:0.82rem;">Preset Llama 3</button>
+          <div class="pipeline-terminal-container">
+            <div class="pipeline-terminal-header">
+              <div class="terminal-dots">
+                <span class="dot dot-red"></span>
+                <span class="dot dot-yellow"></span>
+                <span class="dot dot-green"></span>
               </div>
-            </div>
-
-            <div style="background:var(--bg-surface); padding:0.85rem; border-radius:8px; border:1px solid var(--border-subtle); font-size:0.83rem; color:var(--text-secondary);" id="pipeline-explanation-box">
-              <strong>Objetivo de esta fase:</strong> Certificar que el Webhook entrante y el endpoint de Graph API funcionan antes de involucrar inteligencia artificial.
-            </div>
-          </div>
-
-          <!-- PANEL DERECHO: TERMINAL Y LOGS DE RED -->
-          <div class="pipeline-panel-box">
-            <div class="pipeline-panel-title">
-              <span>Terminal &amp; Trazas de Red (FastAPI + Meta Cloud)</span>
+              <span class="terminal-title" id="pipeline-term-title">Fase 1: Credenciales y Conectividad con Meta Cloud API</span>
               <button class="btn-copy-code" id="pipeline-btn-clear" style="font-size:0.75rem;">Limpiar</button>
             </div>
             <pre class="pipeline-terminal" id="pipeline-console-log">// Selecciona una fase y presiona "Ejecutar Simulación de Fase" para observar el flujo paso a paso...</pre>
@@ -914,9 +1067,9 @@ ngrok http 8000
         </div>
       </div>
 
-      <!-- TABLA DE RESOLUCIÓN DE FALLOS POR FASE -->
+      <!-- 4. MATRIZ DE TROUBLESHOOTING -->
       <div class="tema-section-block" style="margin-top:2.5rem;">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Matriz de Troubleshooting</span> Diagnóstico Rápido de Errores por Fase</h4>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">4. Matriz de Troubleshooting</span> Diagnóstico Rápido de Errores por Fase</h4>
         <div class="table-responsive-wrapper">
           <table class="table-pro">
             <thead>
@@ -956,57 +1109,10 @@ ngrok http 8000
                 <td><strong style="color:var(--meta-pink);">Fase 5 (Llama 3)</strong></td>
                 <td>Webhook timeout &gt; 3s o respuestas duplicadas</td>
                 <td>La inferencia del LLM es sincrónica y bloquea la respuesta HTTP 200 a Meta.</td>
-                <td>Mover la llamada de Llama 3 a <code>BackgroundTasks</code> y retornar <code>HTTP 200 OK</code> en menos de 200ms.</td>
+                <td>Mover la llamada de Llama 3 a <code>BackgroundTasks</code> y retornar <code>HTTP 200 OK</code> en menos de 50ms.</td>
               </tr>
             </tbody>
           </table>
-        </div>
-        <!-- FORMULA CARD: IDEMPOTENCIA Y PREVENCIÓN DE DUPLICADOS -->
-        <div class="formula-card" style="margin-top:2rem;">
-          <div class="formula-math-area">
-            $$\text{Llave}_{\text{Idempotencia}} = \text{"msg\_ack:"} + \text{SHA256}\big(\text{wamid} \parallel \text{phone\_number\_id}\big)$$
-            $$\text{Acción} = \begin{cases} \text{Ignorar / Retornar HTTP 200}, & \text{si } \text{Redis.exists}(\text{Llave}) = 1 \\ \text{Procesar con Llama 3}, & \text{si } \text{Redis.set}(\text{Llave}, \text{TTL}=86400) = \text{OK} \end{cases}$$
-          </div>
-          <details class="formula-breakdown-details">
-            <summary class="formula-breakdown-summary">
-              <div class="summary-left">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                <span>Desglose de Variables: Idempotencia y Blindaje de Reintentos</span>
-                <span class="breakdown-count-tag">4 variables</span>
-              </div>
-              <span class="summary-toggle-icon">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-              </span>
-            </summary>
-            <div class="formula-breakdown-panel">
-              <div class="breakdown-list-stack">
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{wamid}$</span>
-                  <div class="breakdown-row-text">
-                    <strong>WhatsApp Message ID:</strong> Identificador criptográfico único asignado por Meta a cada mensaje entrante (ej. <code>wamid.HBgL...</code>).
-                  </div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{TTL} = 86400\text{ s}$</span>
-                  <div class="breakdown-row-text">
-                    <strong>Time-to-Live (24 Horas):</strong> Ventana de expiración automática en caché Redis para limpiar identificadores obsoletos de forma eficiente.
-                  </div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{SETNX}$ Atómico</span>
-                  <div class="breakdown-row-text">
-                    <strong>Operación Concurrente Segura:</strong> <code>SET key 1 NX EX 86400</code> garantiza que solo el primer hilo procese el mensaje si Meta envía reintentos paralelos.
-                  </div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Mitigación}$</span>
-                  <div class="breakdown-row-text">
-                    <strong>Prevención de Costos Dobles:</strong> Evita que Llama 3 genere dos veces la respuesta y que la Graph API envíe dos mensajes idénticos al usuario.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
         </div>
       </div>
 
@@ -1031,8 +1137,93 @@ ngrok http 8000
         <h3 class="tema-title">Estrategia de Canal: Cuándo Usar WhatsApp y Cuándo Descartarlo</h3>
       </div>
 
+      <!-- 1. ANALOGÍA INTUITIVA -->
       <div class="tema-section-block">
-        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Criterios de Decisión</span> Cuándo WhatsApp es el Canal Óptimo</h4>
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">1. Intuición &amp; Analogía</span> El Mostrador Express vs. La Notaría para Trámites Complejos</h4>
+        <div class="easy-explainer-box">
+          <div class="easy-explainer-icon">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="easy-explainer-content">
+            <strong style="color:var(--meta-blue); font-size:1.05rem; display:block; margin-bottom:0.4rem;">La Metáfora de la Fricción Cognitiva por Canal:</strong>
+            <p class="prose-p" style="margin:0;">
+              WhatsApp es el <b>mostrador express de café para llevar</b>: perfecto para consultar si tu pedido está listo, cambiar la hora de una cita o recibir un ticket de compra. Pero nadie va a un mostrador express a redactar un contrato legal de 40 páginas ni a editar una hoja de cálculo con 50 columnas financieras. Si fuerzas a tu usuario a llenar un formulario denso en un chat de WhatsApp, el usuario abandonará el proceso. Como arquitecto de software, debes saber <b>cuándo automatizar en WhatsApp y cuándo redirigir a una Web App</b>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. CONCEPTO FORMAL & FÓRMULAS FINANCIERAS -->
+      <div class="tema-section-block">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">2. Concepto Formal</span> Modelo de Facturación de 24 Horas y ROI de Automatización</h4>
+        <p class="prose-p">
+          El retorno de inversión de implementar un agente de Llama 3 en WhatsApp se calcula comparando el costo de atención humana versus el costo de la Cloud API e inferencia del modelo:
+        </p>
+
+        <!-- FORMULA CARD: MODELO DE FACTURACIÓN Y CONVERSACIONES DE 24 HORAS -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{Costo}_{\text{Mensual}} = \max\big(0,\, N_{\text{servicio}} - 1000\big) \times P_{\text{servicio}} + \sum_{k \in \{\text{utilidad, auth, mkt}\}} N_{k} \times P_{k}$$
+            $$\text{ROI}_{\text{Automatización}} = \frac{\big(C_{\text{Humano}} \times N_{\text{tickets}}\big) - \big(\text{Costo}_{\text{Meta}} + \text{Costo}_{\text{Inferencia}}\big)}{\text{Costo}_{\text{Meta}} + \text{Costo}_{\text{Inferencia}}} \times 100\%$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Costos &amp; Retorno de Inversión (ROI)</span>
+                <span class="breakdown-count-tag">6 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$1000\text{ Gratis / mes}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Tier Gratuito Oficial de Meta:</strong> Las primeras 1,000 conversaciones de servicio (iniciadas por el usuario) de cada mes son 100% libres de costo.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Ventana de } 24\text{h}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Sesión Conversacional Ilimitada:</strong> Durante 24 horas desde el último mensaje del cliente, tu agente puede intercambiar mensajes ilimitados sin costo extra por mensaje.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$P_{\text{servicio}} \approx \$0.008\text{ USD}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Tarifa de Conversación de Servicio:</strong> Costo fijo por sesión de atención al cliente una vez superadas las 1,000 gratuitas.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$C_{\text{Humano}} \approx \$1.20\text{ USD/ticket}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Costo Promedio de Agente Humano:</strong> Salario, infraestructura de call center y tiempo por ticket resuelto por personal operativo.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Costo}_{\text{Inferencia}} \approx \$0.002\text{ USD}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Cómputo Llama 3.1 8B:</strong> Costo promedio de procesar 5 turnos conversacionales (~1,200 tokens de prompt/completion).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{ROI} \ge 1,100\%$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Retorno de Inversión Neto:</strong> Ahorro masivo que supera el 90% del gasto operativo en atención a clientes transaccionales.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- 3. MATRIZ DE DECISIÓN DE CANAL -->
+      <div class="tema-section-block" style="margin-top:2.5rem;">
+        <h4 class="tema-subheading"><span class="tema-subheading-tag">3. Matriz de Fricción</span> Cuándo Usar WhatsApp vs. Cuándo Descartarlo</h4>
         <div class="stat-grid-clean" style="grid-template-columns: 1fr 1fr; gap:1.5rem; margin-top:1rem;">
           <div class="stat-card-clean" style="border-top:4px solid var(--accent-success);">
             <div style="font-family:var(--font-disp); font-weight:800; color:var(--accent-success); font-size:1.1rem; margin-bottom:0.6rem;">Casos Idóneos para WhatsApp</div>
@@ -1053,59 +1244,6 @@ ngrok http 8000
               <li><strong>Alta Sensibilidad sin Almacenamiento Local:</strong> Datos ultra-confidenciales que no deben quedar en el historial del teléfono.</li>
             </ul>
           </div>
-        </div>
-
-        <!-- FORMULA CARD: MODELO DE FACTURACIÓN Y CONVERSACIONES DE 24 HORAS -->
-        <div class="formula-card" style="margin-top:2rem;">
-          <div class="formula-math-area">
-            $$\text{Costo}_{\text{Mensual}} = \max\big(0,\, N_{\text{servicio}} - 1000\big) \times P_{\text{servicio}} + \sum_{k \in \{\text{utilidad, auth, mkt}\}} N_{k} \times P_{k}$$
-          </div>
-          <details class="formula-breakdown-details">
-            <summary class="formula-breakdown-summary">
-              <div class="summary-left">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                <span>Desglose de Costos: Facturación por Conversación de 24 Horas</span>
-                <span class="breakdown-count-tag">5 factores</span>
-              </div>
-              <span class="summary-toggle-icon">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-              </span>
-            </summary>
-            <div class="formula-breakdown-panel">
-              <div class="breakdown-list-stack">
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$1000\text{ Gratis / mes}$</span>
-                  <div class="breakdown-row-text">
-                    <strong>Tier Gratuito Oficial de Meta:</strong> Las primeras 1,000 conversaciones de servicio (iniciadas por el usuario) de cada mes son 100% libres de costo.
-                  </div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Ventana de } 24\text{h}$</span>
-                  <div class="breakdown-row-text">
-                    <strong>Sesión Conversacional Ilimitada:</strong> Durante 24 horas desde el último mensaje del usuario, tu agente de Llama 3 puede enviar mensajes ilimitados sin costo adicional por mensaje.
-                  </div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$P_{\text{servicio}} \approx \$0.008\text{ USD}$</span>
-                  <div class="breakdown-row-text">
-                    <strong>Tarifa de Conversación de Servicio:</strong> Costo fijo por sesión de atención al cliente una vez superadas las 1,000 gratuitas.
-                  </div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$P_{\text{utilidad}} \;\text{vs}\; P_{\text{mkt}}$</span>
-                  <div class="breakdown-row-text">
-                    <strong>Notificaciones Proactivas (HSM):</strong> Plantillas de confirmación de envío (utilidad) vs promociones y ventas (marketing).
-                  </div>
-                </div>
-                <div class="breakdown-list-row">
-                  <span class="breakdown-row-badge">$\text{Ahorro Cloud API}$</span>
-                  <div class="breakdown-row-text">
-                    <strong>Eliminación de Costo de Servidor:</strong> En comparación con On-Premises ($300 - $1,500 USD/mes en servidores dedicados y DevOps), la Cloud API reduce el costo fijo a $0 USD.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </details>
         </div>
       </div>
 
