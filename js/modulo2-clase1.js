@@ -178,6 +178,22 @@
     }
 
     btnTest.addEventListener("click", runVerification);
+
+    const btnReset = document.getElementById("hs-btn-reset");
+    if (btnReset) {
+      btnReset.addEventListener("click", function() {
+        if (callbackUrlInput) callbackUrlInput.value = "https://a3f8-55-12.ngrok-free.app/webhook";
+        if (tokenInput) tokenInput.value = "MI_TOKEN_SECRETO_2026";
+        if (modeInput) modeInput.value = "subscribe";
+        if (challengeInput) challengeInput.value = "1158201444";
+        if (serverTokenInput) serverTokenInput.value = "MI_TOKEN_SECRETO_2026";
+        if (responseFormatSelect) responseFormatSelect.value = "plain";
+        if (casePresetSelect) casePresetSelect.value = "success";
+        if (outputConsole) outputConsole.innerHTML = "// Selecciona un preset o presiona \"Verificar y Guardar\" para inspeccionar las trazas HTTP de red en tiempo real...";
+        updateResultUI("waiting", "Esperando Verificación", "Presiona \"Verificar y Guardar\" para enviar la solicitud de comprobación de Meta a tu backend.", "Esperando Verificación", "bench-badge-status status-info");
+        if (window.SOUND) window.SOUND.playPop(280);
+      });
+    }
   }
 
   /* ==========================================================================
@@ -459,6 +475,16 @@
       rawInput.value = JSON.stringify(samplePayloads.text, null, 2);
       parsePayload();
     }
+
+    const btnReset = document.getElementById("json-btn-reset");
+    if (btnReset) {
+      btnReset.addEventListener("click", function() {
+        if (presetSelect) presetSelect.value = "text";
+        if (rawInput) rawInput.value = JSON.stringify(samplePayloads.text, null, 2);
+        parsePayload();
+        if (window.SOUND) window.SOUND.playPop(280);
+      });
+    }
   }
 
   /* ==========================================================================
@@ -519,22 +545,24 @@
             replyText = `[Echo de prueba] Hemos recibido tu solicitud sobre: "${text}". El puente bidireccional funciona correctamente.`;
             tokensCount = 0;
           } else {
-            appendLog("3. [META LLAMA 3 INFERENCE] Prompting con contexto de pedido #45210. Temperatura T=0.2...", "#a855f7");
-            if (text.toLowerCase().includes("pedido") || text.toLowerCase().includes("estatus")) {
-              replyText = `¡Hola Jesús! Con gusto te informo que tu pedido #45210 fue despachado hoy a las 09:30 AM con DHL Express (Guía: 984729104). Se encuentra en ruta y la entrega estimada es mañana antes de las 14:00 hrs. 📦🚚`;
-            } else if (text.toLowerCase().includes("precio") || text.toLowerCase().includes("costo")) {
-              replyText = `El costo del servicio de auditoría de agentes con Meta Llama 3 es de $450 USD e incluye infraestructura en servidor y configuración de Llama Guard.`;
+            appendLog("3. [INFERENCIA LLAMA 3] Procesando prompt con Meta Llama 3.1 8B Instruct...", "#c084fc");
+            if (text.toLowerCase().includes("pedido") || text.includes("45210")) {
+              replyText = "¡Hola Lic. Jesús! Tu pedido #45210 fue despachado hoy por DHL Express y se encuentra en ruta. Entrega estimada: Mañana antes de las 14:00 hrs.";
+              tokensCount = 42;
+            } else if (text.toLowerCase().includes("hola") || text.toLowerCase().includes("buenas")) {
+              replyText = "¡Hola! Con gusto te asisto. Soy un agente impulsado por Meta Llama 3 en FastAPI. ¿En qué puedo ayudarte hoy?";
+              tokensCount = 31;
             } else {
-              replyText = `¡Hola! Soy tu asistente inteligente con Meta Llama 3. He recibido tu mensaje: "${text}". ¿Deseas consultar el estado de tu pedido, agendar una cita o comunicarte con un asesor?`;
+              replyText = `He analizado tu mensaje "${text}". Como agente inteligente en WhatsApp, puedo consultar pedidos, agendar citas y resolver tus dudas al instante.`;
+              tokensCount = 38;
             }
-            tokensCount = Math.round(replyText.length / 3.8);
           }
 
           setTimeout(() => {
             setStepCompleted(2);
-            // Paso 4: Llamada de retorno a WhatsApp Cloud API
+            // Paso 4: Despacho a WhatsApp Cloud API
             setStepActive(3);
-            appendLog("4. [POST /v20.0/PHONE_ID/messages] Enviando payload JSON con Bearer Token de Meta...", "#38bdf8");
+            appendLog(`4. [GRAPH API DISPATCH] Despachando POST /v20.0/messages a Meta para el destinatario...`, "#38bdf8");
 
             setTimeout(() => {
               setStepCompleted(3);
@@ -556,6 +584,24 @@
         }, 500);
       }, 400);
     });
+
+    const btnResetFlow = document.getElementById("flow-btn-reset");
+    if (btnResetFlow) {
+      btnResetFlow.addEventListener("click", function() {
+        chatContainer.innerHTML = `
+          <div class="chat-bubble bot-bubble">
+            <div class="bubble-text">¡Hola! Soy tu agente con Meta Llama 3. Pregúntame sobre tu pedido #45210 o escribe cualquier duda.</div>
+            <div class="bubble-time">10:00 AM · Meta AI</div>
+          </div>
+        `;
+        stepCards.forEach(s => s.classList.remove("active", "completed"));
+        if (logConsole) logConsole.innerHTML = '<span style="color:#64748b;">// Esperando envío de mensaje desde WhatsApp...</span>';
+        if (metricsLatency) metricsLatency.textContent = "-";
+        if (metricsTokens) metricsTokens.textContent = "-";
+        if (userMsgInput) userMsgInput.value = "¿Cuál es el estatus de mi pedido #45210?";
+        if (window.SOUND) window.SOUND.playPop(280);
+      });
+    }
 
     function setStepActive(idx) {
       if (stepCards[idx]) {
@@ -717,6 +763,23 @@ PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
       });
     });
 
+    const btnResetApi = document.getElementById("api-btn-reset");
+    if (btnResetApi) {
+      btnResetApi.addEventListener("click", function() {
+        if (phoneIdInput) phoneIdInput.value = "109823746592831";
+        if (recipientInput) recipientInput.value = "5215587654321";
+        if (tokenInput) tokenInput.value = "EAAG_META_WHATSAPP_TOKEN_SECRET";
+        if (messageInput) messageInput.value = "¡Tu pedido #45210 está en camino con DHL Express!";
+        activeLang = "python";
+        tabBtns.forEach(b => {
+          if (b.getAttribute("data-lang") === "python") b.classList.add("active");
+          else b.classList.remove("active");
+        });
+        updateCode();
+        if (window.SOUND) window.SOUND.playPop(280);
+      });
+    }
+
     updateCode();
   }
 
@@ -788,6 +851,17 @@ PHONE_NUMBER_ID = <span class="code-string">"${phoneId}"</span>
         } catch(e) {
           outputConsole.innerHTML = `<span style="color:#ef4444;">Error al verificar: ${e.message}</span>`;
         }
+      });
+    }
+
+    const btnResetHmac = document.getElementById("hmac-btn-reset");
+    if (btnResetHmac) {
+      btnResetHmac.addEventListener("click", function() {
+        if (payloadInput) payloadInput.value = '{"object":"whatsapp_business_account","entry":[{"id":"104928"}]}';
+        if (secretInput) secretInput.value = "8f92a1d47c90e32b61f8";
+        if (signatureInput) signatureInput.value = "";
+        if (outputConsole) outputConsole.innerHTML = "Calcula la firma HMAC o verifica la cabecera...";
+        if (window.SOUND) window.SOUND.playPop(280);
       });
     }
   }

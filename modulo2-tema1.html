@@ -296,6 +296,60 @@
         </p>
       </div>
 
+      <!-- FORMULA CARD: PRESUPUESTO DE TIEMPO Y TIMEOUT -->
+      <div class="formula-card">
+        <div class="formula-math-area">
+          $$\text{Latencia}_{\text{Webhook}} = T_{\text{Meta}\to\text{ngrok}} + T_{\text{ngrok}\to\text{Local}} + T_{\text{FastAPI\_ACK}} \le 3000\text{ ms}$$
+          $$\text{Pipeline}_{\text{Asíncrono}} = T_{\text{RAG/DB}} + T_{\text{Llama 3}}(N_{\text{tokens}}) + T_{\text{Graph API Dispatch}}$$
+        </div>
+        <details class="formula-breakdown-details">
+          <summary class="formula-breakdown-summary">
+            <div class="summary-left">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              <span>Desglose de Variables: Presupuesto de Latencia &amp; Timeout</span>
+              <span class="breakdown-count-tag">5 variables</span>
+            </div>
+            <span class="summary-toggle-icon">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </span>
+          </summary>
+          <div class="formula-breakdown-panel">
+            <div class="breakdown-list-stack">
+              <div class="breakdown-list-row">
+                <span class="breakdown-row-badge">$T_{\text{FastAPI\_ACK}} \le 50\text{ ms}$</span>
+                <div class="breakdown-row-text">
+                  <strong>Confirmación Inmediata de Recepción:</strong> Retorno síncrono de <code>{"status": "ok"}</code> (HTTP 200) para evitar que Meta reintente la entrega.
+                </div>
+              </div>
+              <div class="breakdown-list-row">
+                <span class="breakdown-row-badge">$T_{\text{ngrok}} \approx 80\text{ ms}$</span>
+                <div class="breakdown-row-text">
+                  <strong>Sobrecarga del Túnel TLS:</strong> Latencia de enrutamiento inverso desde internet hacia localhost durante desarrollo.
+                </div>
+              </div>
+              <div class="breakdown-list-row">
+                <span class="breakdown-row-badge">$T_{\text{Llama 3}}(N)$</span>
+                <div class="breakdown-row-text">
+                  <strong>Inferencia Generativa en Tarea Background:</strong> Tiempo de generación $N \times t_{\text{token}}$ ejecutado de forma no bloqueante (1500 - 3000 ms).
+                </div>
+              </div>
+              <div class="breakdown-list-row">
+                <span class="breakdown-row-badge">$T_{\text{Graph API}} \approx 250\text{ ms}$</span>
+                <div class="breakdown-row-text">
+                  <strong>Despacho de Salida:</strong> Petición HTTP POST final al endpoint <code>/messages</code> de Meta para entregar la respuesta al usuario.
+                </div>
+              </div>
+              <div class="breakdown-list-row">
+                <span class="breakdown-row-badge">$\text{Límite} = 3000\text{ ms}$</span>
+                <div class="breakdown-row-text">
+                  <strong>Ventana de Cancelación de Meta:</strong> Tiempo máximo que espera Meta antes de declarar <i>Webhook Delivery Failed</i> y reintentar.
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
       <!-- QUIZ 2 -->
       <div class="quiz-box" style="margin-top:2rem;">
         <div class="quiz-header">
@@ -481,6 +535,67 @@ VERIFY_TOKEN = os.getenv(<span class="code-string">"VERIFY_TOKEN"</span>, <span 
     <span class="code-comment"># 3. Comparación segura en tiempo constante</span>
     <span class="code-keyword">return</span> hmac.compare_digest(hash_calculado, firma_recibida)</code></pre>
         </div>
+
+        <!-- FORMULA CARD: CONSTRUCCIÓN HMAC SHA-256 (RFC 2104) -->
+        <div class="formula-card">
+          <div class="formula-math-area">
+            $$\text{HMAC}(K, m) = \text{H}\Big(\big(K' \oplus \text{opad}\big) \parallel \text{H}\big((K' \oplus \text{ipad}) \parallel m\big)\Big)$$
+            $$\text{Firma}_{\text{Meta}} = \text{"sha256="} + \text{HexEncode}\Big(\text{HMAC}\big(\text{AppSecret},\, \text{Payload}_{\text{UTF-8}}\big)\Big)$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose Criptográfico: Estándar RFC 2104 en Meta Webhooks</span>
+                <span class="breakdown-count-tag">6 componentes</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$K = \text{AppSecret}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Clave Secreta Compartida:</strong> El secreto de tu aplicación en Meta Developers (ej. <code>8f92a1d47c90...</code>), conocido únicamente por Meta y tu backend.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$m = \text{RawBody}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Payload Bruto en Bytes:</strong> El contenido HTTP POST exacto antes de ser parseado a JSON (obtenido mediante <code>await request.body()</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{ipad} = \text{0x36}$ / $\text{opad} = \text{0x5C}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Constantes de Relleno Interno y Externo:</strong> Bloques de 64 bytes que previenen ataques de extensión de longitud (<i>length extension attacks</i>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{H} = \text{SHA-256}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Función Hash Criptográfica:</strong> Produce un digest unidireccional de 256 bits (32 bytes).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\oplus \;\text{y}\; \parallel$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Operadores de Bits y Concatenación:</strong> $\oplus$ representa XOR bit a bit y $\parallel$ la unión secuencial de streams de bytes.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{hmac.compare\_digest}()$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Comparación en Tiempo Constante:</strong> Función en Python que evita fugas de información por ataques de temporización (<i>timing attacks</i>).
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
       </div>
 
       <!-- QUIZ 3 -->
@@ -846,6 +961,53 @@ ngrok http 8000
             </tbody>
           </table>
         </div>
+        <!-- FORMULA CARD: IDEMPOTENCIA Y PREVENCIÓN DE DUPLICADOS -->
+        <div class="formula-card" style="margin-top:2rem;">
+          <div class="formula-math-area">
+            $$\text{Llave}_{\text{Idempotencia}} = \text{"msg\_ack:"} + \text{SHA256}\big(\text{wamid} \parallel \text{phone\_number\_id}\big)$$
+            $$\text{Acción} = \begin{cases} \text{Ignorar / Retornar HTTP 200}, & \text{si } \text{Redis.exists}(\text{Llave}) = 1 \\ \text{Procesar con Llama 3}, & \text{si } \text{Redis.set}(\text{Llave}, \text{TTL}=86400) = \text{OK} \end{cases}$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Variables: Idempotencia y Blindaje de Reintentos</span>
+                <span class="breakdown-count-tag">4 variables</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{wamid}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>WhatsApp Message ID:</strong> Identificador criptográfico único asignado por Meta a cada mensaje entrante (ej. <code>wamid.HBgL...</code>).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{TTL} = 86400\text{ s}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Time-to-Live (24 Horas):</strong> Ventana de expiración automática en caché Redis para limpiar identificadores obsoletos de forma eficiente.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{SETNX}$ Atómico</span>
+                  <div class="breakdown-row-text">
+                    <strong>Operación Concurrente Segura:</strong> <code>SET key 1 NX EX 86400</code> garantiza que solo el primer hilo procese el mensaje si Meta envía reintentos paralelos.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Mitigación}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Prevención de Costos Dobles:</strong> Evita que Llama 3 genere dos veces la respuesta y que la Graph API envíe dos mensajes idénticos al usuario.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
       </div>
 
       <!-- QUIZ 5 -->
@@ -892,6 +1054,59 @@ ngrok http 8000
             </ul>
           </div>
         </div>
+
+        <!-- FORMULA CARD: MODELO DE FACTURACIÓN Y CONVERSACIONES DE 24 HORAS -->
+        <div class="formula-card" style="margin-top:2rem;">
+          <div class="formula-math-area">
+            $$\text{Costo}_{\text{Mensual}} = \max\big(0,\, N_{\text{servicio}} - 1000\big) \times P_{\text{servicio}} + \sum_{k \in \{\text{utilidad, auth, mkt}\}} N_{k} \times P_{k}$$
+          </div>
+          <details class="formula-breakdown-details">
+            <summary class="formula-breakdown-summary">
+              <div class="summary-left">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Desglose de Costos: Facturación por Conversación de 24 Horas</span>
+                <span class="breakdown-count-tag">5 factores</span>
+              </div>
+              <span class="summary-toggle-icon">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </summary>
+            <div class="formula-breakdown-panel">
+              <div class="breakdown-list-stack">
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$1000\text{ Gratis / mes}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Tier Gratuito Oficial de Meta:</strong> Las primeras 1,000 conversaciones de servicio (iniciadas por el usuario) de cada mes son 100% libres de costo.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Ventana de } 24\text{h}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Sesión Conversacional Ilimitada:</strong> Durante 24 horas desde el último mensaje del usuario, tu agente de Llama 3 puede enviar mensajes ilimitados sin costo adicional por mensaje.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$P_{\text{servicio}} \approx \$0.008\text{ USD}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Tarifa de Conversación de Servicio:</strong> Costo fijo por sesión de atención al cliente una vez superadas las 1,000 gratuitas.
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$P_{\text{utilidad}} \;\text{vs}\; P_{\text{mkt}}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Notificaciones Proactivas (HSM):</strong> Plantillas de confirmación de envío (utilidad) vs promociones y ventas (marketing).
+                  </div>
+                </div>
+                <div class="breakdown-list-row">
+                  <span class="breakdown-row-badge">$\text{Ahorro Cloud API}$</span>
+                  <div class="breakdown-row-text">
+                    <strong>Eliminación de Costo de Servidor:</strong> En comparación con On-Premises ($300 - $1,500 USD/mes en servidores dedicados y DevOps), la Cloud API reduce el costo fijo a $0 USD.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
       </div>
 
       <!-- QUIZ 6 -->
@@ -936,6 +1151,7 @@ ngrok http 8000
             <option value="server_down">🔌 Caso 5: Servidor Apagado / Timeout (504 Gateway Timeout)</option>
           </select>
           <span class="bench-badge-status status-info" id="hs-status-pill">Esperando Verificación</span>
+          <button class="btn-secondary" id="hs-btn-reset" style="font-size:0.8rem; padding:0.35rem 0.65rem; display:flex; align-items:center; gap:0.3rem;" title="Restablecer valores por defecto">↺ Reiniciar</button>
         </div>
       </div>
 
@@ -1074,6 +1290,7 @@ ngrok http 8000
             <option value="audio">🎙️ 4. Mensaje de Voz / Audio (Media ID)</option>
             <option value="status_read">👁️ 5. Notificación de Lectura (Status Callback)</option>
           </select>
+          <button class="btn-secondary" id="json-btn-reset" style="font-size:0.8rem; padding:0.35rem 0.65rem; display:flex; align-items:center; gap:0.3rem;" title="Restablecer JSON original">↺ Restablecer</button>
         </div>
       </div>
 
@@ -1203,6 +1420,7 @@ ngrok http 8000
             <option value="llama">Modo Inteligente (Meta Llama 3.1 8B)</option>
             <option value="mock">Modo Echo / Respuesta Fija (Fase 4)</option>
           </select>
+          <button class="btn-secondary" id="flow-btn-reset" style="font-size:0.8rem; padding:0.35rem 0.65rem; display:flex; align-items:center; gap:0.3rem;" title="Limpiar historial de chat y telemetría">↺ Limpiar Chat</button>
         </div>
       </div>
       <div style="padding:1.5rem;">
@@ -1264,6 +1482,7 @@ ngrok http 8000
           <button class="api-tab-btn active" data-lang="python">Python (httpx)</button>
           <button class="api-tab-btn" data-lang="fastapi">Microservicio FastAPI</button>
           <button class="api-tab-btn" data-lang="curl">cURL</button>
+          <button class="btn-secondary" id="api-btn-reset" style="font-size:0.8rem; padding:0.35rem 0.65rem; display:flex; align-items:center; gap:0.3rem;" title="Restablecer parámetros de envío">↺ Restablecer</button>
         </div>
       </div>
       <div style="padding:1.5rem;">
@@ -1300,6 +1519,9 @@ ngrok http 8000
     <div class="workbench-section" style="margin-bottom:3rem;">
       <div class="workbench-top">
         <span class="workbench-label">Banco 2.1.5 · Validador Criptográfico de Firmas HMAC SHA-256 (X-Hub-Signature-256)</span>
+        <div class="workbench-actions">
+          <button class="btn-secondary" id="hmac-btn-reset" style="font-size:0.8rem; padding:0.35rem 0.65rem; display:flex; align-items:center; gap:0.3rem;" title="Restablecer validador criptográfico">↺ Reiniciar</button>
+        </div>
       </div>
       <div style="padding:1.5rem;">
         <p style="font-size:0.92rem; color:var(--text-secondary); margin-bottom:1.2rem;">
