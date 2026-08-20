@@ -5702,3 +5702,468 @@ button:active, a.btn-primary:active, a.btn-secondary:active, a.btn-module-action
   color: #93c5fd;
   border-color: rgba(59, 130, 246, 0.35);
 }
+
+/* ==========================================================================
+   COMPONENTES MÓDULO 2 & SIMULADORES WHATSAPP CLOUD API UNIFICADOS
+   ========================================================================== */
+
+/* 1. CHAT SIMULADO DE WHATSAPP */
+.chat-bubble {
+  max-width: 82%;
+  padding: 0.65rem 0.95rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  position: relative;
+  word-break: break-word;
+  animation: bubblePop 0.22s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+@keyframes bubblePop {
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.user-bubble {
+  align-self: flex-end;
+  background: #005c4b;
+  color: #e9edef;
+  border-bottom-right-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.bot-bubble {
+  align-self: flex-start;
+  background: #202c33;
+  color: #e9edef;
+  border-bottom-left-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.bubble-text {
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.bubble-time {
+  font-size: 0.68rem;
+  color: rgba(233, 237, 239, 0.6);
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+/* 2. RASTREADORES DE FLUJO & BANCOS INTERACTIVOS */
+.flow-step-tracker {
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.flow-step-tracker.active {
+  background: var(--meta-blue-subtle);
+  color: var(--meta-blue);
+  border-color: var(--meta-blue);
+  box-shadow: 0 0 12px var(--meta-blue-subtle);
+  transform: translateY(-1px);
+}
+
+.flow-step-tracker.completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--accent-success);
+  border-color: var(--accent-success);
+}
+
+/* Badges de estado en simuladores */
+.bench-badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.bench-badge-status.status-info {
+  background: var(--meta-blue-subtle);
+  color: var(--meta-blue);
+  border: 1px solid var(--meta-blue-border);
+}
+
+.bench-badge-status.status-success {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--accent-success);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.bench-badge-status.status-error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Inputs y Selects limpios */
+.bench-input-clean,
+.bench-select-clean {
+  background: var(--bg-input);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 0.55rem 0.85rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bench-input-clean:focus,
+.bench-select-clean:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--meta-blue-subtle);
+}
+
+/* Pestañas de código API */
+.api-tab-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.api-tab-btn:hover {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+.api-tab-btn.active {
+  background: var(--meta-blue);
+  color: #ffffff;
+  border-color: var(--meta-blue);
+  box-shadow: 0 2px 8px var(--meta-blue-subtle);
+}
+
+/* 3. TARJETAS DE ESTADÍSTICAS Y FLUJO */
+.stat-grid-clean {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+.stat-card-clean {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.4rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card-clean:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+.stat-num-clean {
+  font-family: var(--font-disp);
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.stat-label-clean {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+/* 4. TABLAS PROFESIONALES */
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-sm);
+}
+
+.table-pro {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+  background: var(--bg-surface);
+}
+
+.table-pro th {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  font-family: var(--font-head);
+  font-weight: 700;
+  padding: 0.95rem 1.2rem;
+  border-bottom: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+
+.table-pro td {
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.table-pro tr:last-child td {
+  border-bottom: none;
+}
+
+.table-pro tr:hover td {
+  background: var(--bg-subtle-alt);
+}
+
+/* 5. GLOSARIO EN FILAS Y FILTRADO */
+.glossary-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.glossary-row-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.glossary-row-item:hover {
+  border-color: var(--border-strong);
+  transform: translateX(3px);
+}
+
+@media (max-width: 768px) {
+  .glossary-row-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+.glossary-filter-pill {
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 0.35rem 0.95rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.glossary-filter-pill:hover {
+  color: var(--meta-blue);
+  border-color: var(--meta-blue-border);
+}
+
+.glossary-filter-pill.active {
+  background: var(--meta-blue);
+  color: #ffffff;
+  border-color: var(--meta-blue);
+}
+
+/* 6. FUENTES & CARDS DE REFERENCIA */
+.source-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.source-card:hover {
+  border-color: var(--meta-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+.source-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.source-tag {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--meta-blue);
+}
+
+.source-type-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  padding: 0.2rem 0.55rem;
+  border-radius: 12px;
+}
+
+.source-title {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.source-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.source-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--meta-blue);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  margin-top: 0.4rem;
+}
+
+.source-link-btn:hover {
+  color: var(--meta-blue-hover);
+  text-decoration: underline;
+}
+
+/* 7. BOTÓN MENÚ HAMBURGUESA MÓVIL */
+.btn-menu-toggle {
+  display: none;
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-menu-toggle:hover {
+  background: var(--meta-blue-subtle);
+  color: var(--meta-blue);
+}
+
+@media (max-width: 1024px) {
+  .btn-menu-toggle {
+    display: flex;
+  }
+}
+
+
+/* Estilos adicionales para utilidades de Módulo 2 */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.callout-box {
+  background: var(--meta-blue-subtle);
+  border-left: 4px solid var(--meta-blue);
+  padding: 1.25rem 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.clean-bullet-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.clean-bullet-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.clean-bullet-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--meta-blue);
+  font-weight: 700;
+}
+
+.step-flow-container {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.step-flow-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.4rem;
+  transition: border-color 0.2s ease;
+}
+
+.step-flow-item:hover {
+  border-color: var(--meta-blue-border);
+}
+
+.exercise-solution-toggle {
+  cursor: pointer;
+}
+
+.exercise-solution-content {
+  border-radius: 8px;
+  animation: mainFadeIn 0.25s ease;
+}
+
+.code-comment {
+  color: #64748b;
+  font-style: italic;
+}
+
+.code-lang {
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
