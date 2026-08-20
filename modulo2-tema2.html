@@ -813,44 +813,86 @@
         <p style="color:var(--text-secondary); max-width:70ch; margin:0 auto; font-size:1.05rem;">Experimenta con memoria de estado en tiempo real, construye configuraciones de Llama Stack y prueba el enrutador de flujos híbridos.</p>
       </div>
 
-      <!-- BANCO 1: SIMULADOR DE MEMORIA DE ESTADO -->
+      <!-- BANCO 1: SIMULADOR DE MEMORIA DE ESTADO Y CONTEXT WINDOW -->
       <div class="workbench-section" style="margin-bottom:3rem;">
         <div class="workbench-top">
           <span class="workbench-label">Banco 2.2.1 · Simulador de Memoria de Estado y Context Window (Stateless vs Stateful)</span>
           <div class="workbench-actions">
-            <button class="btn-reset-sm" id="mem-btn-reset">
+            <span class="bench-badge-status status-success" id="mem-mode-badge">MODO STATEFUL (CON MEMORIA)</span>
+            <button class="btn-reset-sm" id="mem-btn-reset" title="Reiniciar conversación y variables">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8m0 0V3m0 5h5"/></svg>
               <span>Reiniciar Conversación</span>
             </button>
           </div>
         </div>
         <div style="padding:1.5rem;">
+          <!-- Selector de Modo: Stateful vs Stateless -->
+          <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap; margin-bottom:1.2rem; background:var(--bg-subtle); padding:0.75rem 1rem; border-radius:10px; border:1px solid var(--border-subtle);">
+            <span style="font-size:0.82rem; font-weight:800; color:var(--text-primary);">Seleccionar Modo de Operación:</span>
+            <button id="mem-mode-stateful-btn" class="glossary-filter-pill active" style="font-weight:700; border-color:var(--accent-success); color:var(--accent-success);">Modo Con Estado (Stateful Agent · Memoria Activa)</button>
+            <button id="mem-mode-stateless-btn" class="glossary-filter-pill" style="font-weight:700; border-color:#ef4444; color:#ef4444;">Modo Sin Estado (Stateless LLM · Amnesia Total)</button>
+          </div>
+
+          <!-- Pasos Guiados para Probar -->
+          <div style="margin-bottom:1.2rem;">
+            <span style="font-size:0.78rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:0.4rem;">Paso a Paso Rápido (Haz clic para cargar el mensaje del turno):</span>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <button class="glossary-filter-pill mem-quick-step" data-step="1" data-msg="Hola, quiero agendar una cita para limpieza dental">Turno 1: "Cita para limpieza dental"</button>
+              <button class="glossary-filter-pill mem-quick-step" data-step="2" data-msg="¿Tienen disponibilidad este sábado por la mañana?">Turno 2: "¿Tienen este sábado?"</button>
+              <button class="glossary-filter-pill mem-quick-step" data-step="3" data-msg="Sí, a las 10:00 AM con la Dra. Morales, por favor">Turno 3: "A las 10:00 AM con la Dra. Morales"</button>
+              <button class="glossary-filter-pill mem-quick-step" data-step="4" data-msg="¿A qué hora quedó agendada mi cita y para qué servicio?">Turno 4: "¿A qué hora quedó mi cita?"</button>
+            </div>
+          </div>
+
           <div style="display:grid; grid-template-columns:1.1fr 1.3fr; gap:1.5rem;">
             <!-- Chat UI Dental Clinic -->
-            <div style="background:#0b141a; border-radius:14px; padding:1rem; display:flex; flex-direction:column; height:440px; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
-              <div style="display:flex; align-items:center; gap:0.75rem; padding-bottom:0.75rem; border-bottom:1px solid #202c33;">
-                <div style="width:36px; height:36px; border-radius:50%; background:#10b981; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800;">DC</div>
-                <div>
-                  <div style="color:#e9edef; font-weight:700; font-size:0.9rem;">Dental Clinic Meta</div>
-                  <div style="color:#00a884; font-size:0.75rem;">Agente con Memoria de Estado</div>
+            <div style="background:#0b141a; border-radius:14px; padding:1rem; display:flex; flex-direction:column; height:460px; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:0.75rem; border-bottom:1px solid #202c33;">
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                  <div style="width:36px; height:36px; border-radius:50%; background:#10b981; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800;">DC</div>
+                  <div>
+                    <div style="color:#e9edef; font-weight:700; font-size:0.9rem;">Dental Clinic Meta</div>
+                    <div id="mem-chat-status-text" style="color:#00a884; font-size:0.75rem;">En línea · Memoria de Estado Activa</div>
+                  </div>
                 </div>
+                <span id="mem-chat-mode-tag" style="font-size:0.7rem; font-weight:800; padding:0.2rem 0.6rem; border-radius:12px; background:rgba(16,185,129,0.15); color:#10b981; border:1px solid #10b981;">STATEFUL</span>
               </div>
               <div id="mem-chat-history" style="flex:1; overflow-y:auto; padding:0.75rem 0; display:flex; flex-direction:column; gap:0.75rem;">
                 <!-- Poblado dinámicamente -->
               </div>
               <div style="display:flex; gap:0.5rem; padding-top:0.5rem; border-top:1px solid #202c33;">
-                <input type="text" id="mem-user-input" placeholder="Ej. 'Quiero cita dental' o '¿Tienen el sábado?'" value="Quiero agendar una cita dental" style="flex:1; background:#2a3942; color:#d1d7db; border:none; border-radius:8px; padding:0.6rem 0.8rem; font-size:0.85rem;" />
+                <input type="text" id="mem-user-input" placeholder="Escribe un mensaje o usa los pasos rápidos..." value="Hola, quiero agendar una cita para limpieza dental" style="flex:1; background:#2a3942; color:#d1d7db; border:none; border-radius:8px; padding:0.6rem 0.8rem; font-size:0.85rem;" />
                 <button id="mem-btn-send" class="btn-primary" style="padding:0.6rem 1rem;">Enviar</button>
               </div>
             </div>
 
             <!-- Monitor de Estado y Reconstrucción del Prompt -->
             <div>
-              <div style="font-size:0.85rem; font-weight:800; color:var(--meta-blue); margin-bottom:0.5rem;">Estado Persistente de la Sesión (JSON en Backend):</div>
-              <pre id="mem-state-json" style="background:var(--bg-elevated); color:var(--text-primary); border:1px solid var(--border-subtle); border-radius:8px; padding:0.75rem; font-family:var(--font-mono); font-size:0.75rem; height:120px; overflow-y:auto; margin-bottom:1rem;"></pre>
+              <!-- Inspector de Entidades Detectadas -->
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:0.5rem; margin-bottom:0.75rem;" id="mem-entity-badges">
+                <div style="background:var(--card-surface); border:1px solid var(--border-subtle); padding:0.5rem; border-radius:6px; font-size:0.75rem;">
+                  <span style="color:var(--text-muted); display:block;">Servicio:</span>
+                  <strong id="badge-servicio" style="color:var(--meta-blue);">No definido</strong>
+                </div>
+                <div style="background:var(--card-surface); border:1px solid var(--border-subtle); padding:0.5rem; border-radius:6px; font-size:0.75rem;">
+                  <span style="color:var(--text-muted); display:block;">Fecha:</span>
+                  <strong id="badge-fecha" style="color:var(--accent-success);">No definida</strong>
+                </div>
+                <div style="background:var(--card-surface); border:1px solid var(--border-subtle); padding:0.5rem; border-radius:6px; font-size:0.75rem;">
+                  <span style="color:var(--text-muted); display:block;">Hora / Dr.:</span>
+                  <strong id="badge-hora" style="color:var(--meta-purple);">No asignado</strong>
+                </div>
+                <div style="background:var(--card-surface); border:1px solid var(--border-subtle); padding:0.5rem; border-radius:6px; font-size:0.75rem;">
+                  <span style="color:var(--text-muted); display:block;">Estatus:</span>
+                  <strong id="badge-estatus" style="color:#f59e0b;">En Proceso</strong>
+                </div>
+              </div>
 
-              <div style="font-size:0.85rem; font-weight:800; color:var(--meta-purple); margin-bottom:0.5rem;">Prompt Reconstruido que Viaja a Llama 3:</div>
-              <pre id="mem-reconstructed-prompt" style="background:#0f172a; color:#f8fafc; border-radius:8px; padding:0.75rem; font-family:var(--font-mono); font-size:0.72rem; height:160px; overflow-y:auto; white-space:pre-wrap; margin-bottom:0.75rem;"></pre>
+              <div style="font-size:0.85rem; font-weight:800; color:var(--meta-blue); margin-bottom:0.3rem;">Estado Persistente de la Sesión (JSON en Backend / Redis):</div>
+              <pre id="mem-state-json" style="background:var(--bg-elevated); color:var(--text-primary); border:1px solid var(--border-subtle); border-radius:8px; padding:0.6rem; font-family:var(--font-mono); font-size:0.73rem; height:105px; overflow-y:auto; margin-bottom:0.75rem;"></pre>
+
+              <div style="font-size:0.85rem; font-weight:800; color:var(--meta-purple); margin-bottom:0.3rem;">Prompt Reconstruido que Viaja a Llama 3 (Headers &amp; Contexto):</div>
+              <pre id="mem-reconstructed-prompt" style="background:#0f172a; color:#f8fafc; border-radius:8px; padding:0.6rem; font-family:var(--font-mono); font-size:0.7rem; height:130px; overflow-y:auto; white-space:pre-wrap; margin-bottom:0.75rem;"></pre>
 
               <div>
                 <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:0.3rem;">
